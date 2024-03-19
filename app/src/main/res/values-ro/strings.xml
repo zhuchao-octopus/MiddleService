@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="calibrattion_text">apăsați cruce</string>
+    <string name="button_text_navi">Navigație</string>
+    <string name="button_text_bt">Bluetooth</string>
+    <string name="button_text_bt_music">Muzica Bluetooth</string>
+    <string name="button_text_radio">Radio</string>
+    <string name="button_text_dvd">DVD</string>
+    <string name="button_text_tv">TV</string>
+    <string name="button_text_aux">AUXIN</string>
+    <string name="volume_level">Volum</string>
+    <string name="button_text_music">Muzică</string>
+    <string name="button_text_video">Video</string>
+    <string name="key_not_support">Acest dispozitiv nu acceptă această cheie!</string>
+    <string name="LO">LO</string>
+    <string name="HI">Bună ziua</string>
+    <string name="temp_unic">°C</string>
+    <string name="text_reverse_warning">Avertisment</string>
+    <string name="temp_unic_centigrade">°C</string>
+    <string name="temp_unic_fahrenheit">F</string>
+    <string name="outdoor_temp">Temperatura exterioară:</string>
+    <string name="shut_down">închidere!</string>
+    <string name="eq_text_classic">"Clasica"</string>
+    <string name="eq_text_pop">Pop</string>
+    <string name="eq_text_rock">Rock</string>
+    <string name="eq_text_jazz">Jazz</string>
+    <string name="eq_text_user">"Usuario"</string>
+    <string name="eq_text_normal">"Plana"</string>
+    <string name="cancel">"Anulați"</string>
+    <string name="back">"Atrás"</string>
+
+</resources>

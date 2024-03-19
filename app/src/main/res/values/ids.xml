@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="wind_rate_1" />
+    <item type="id" name="wind_rate_2" />
+    <item type="id" name="wind_rate_3" />
+    <item type="id" name="wind_rate_4" />
+    <item type="id" name="wind_rate_5" />
+    <item type="id" name="wind_rate_6" />
+    <item type="id" name="wind_rate_7" />
+    <item type="id" name="wind_rate_8" />
+    <item type="id" name="wind_rate_9" />
+    <item type="id" name="wind_rate_a" />  
+    <item type="id" name="wind_rate_b" />  
+    <item type="id" name="wind_rate_c" />  
+    <item type="id" name="wind_rate_d" />  
+    <item type="id" name="wind_rate_e" />  
+    <item type="id" name="wind_rate_f" />  
+
+</resources>

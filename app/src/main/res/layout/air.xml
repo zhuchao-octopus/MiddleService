@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/screen1_main"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/panel_background"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50px"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/ac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_ac_1"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ac_max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_ac_max"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ac_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_auto"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/dual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_dual"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/rear_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_rear_lock"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/inner_loop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_inner_loop" />
+
+        <ImageView
+            android:id="@+id/rear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_rear"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/front"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_front"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/air_fwindow_heat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_fwindow_heat"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/max"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_max"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/rear_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_rear"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/fast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_fast"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/soft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_soft"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/eco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_ce_eco"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/sync"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_sync"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/rest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6px"
+            android:src="@drawable/air_title_rest" />
+
+        <ImageView
+            android:id="@+id/wheel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8px"
+            android:scaleType="centerInside"
+            android:src="@drawable/wheel" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="146px"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="146px" >
+
+            <ImageView
+                android:id="@+id/wind_up1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="60px"
+                android:layout_marginTop="5px"
+                android:src="@drawable/air_content_max" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/wind_auto1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="60px"
+                android:layout_marginTop="5px"
+                android:src="@drawable/air_title_ce_auto_mid" >
+            </ImageView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/wind_down1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35px"
+                    android:src="@drawable/air_content_arrow_bottom" >
+                </ImageView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical" >
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" >
+
+                        <ImageView
+                            android:id="@+id/air_perple"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/air_content_air_people" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/wind_horizontal2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:src="@drawable/air_content_arrow_left" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/wind_horizontal1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/air_content_arrow_right" >
+                        </ImageView>
+                    </FrameLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/wind_down2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35px"
+                    android:src="@drawable/air_content_arrow_bottom" >
+                </ImageView>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/wind_up2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="60px"
+                android:layout_marginTop="5px"
+                android:src="@drawable/air_content_max" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/wind_auto2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="60px"
+                android:layout_marginTop="5px"
+                android:src="@drawable/air_title_ce_auto_mid" >
+            </ImageView>
+
+            <LinearLayout
+                android:id="@+id/air_action_seat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/air_content_background"
+                android:orientation="vertical"
+                android:visibility="invisible" >
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10px"
+                    android:src="@drawable/air_seat" >
+                </ImageView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10px"
+                    android:orientation="horizontal" >
+
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:id="@+id/seat_heat_left_4"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind_heat"
+                            android:visibility="invisible" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_heat_left_3"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind_heat" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_heat_left_2"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind_heat" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_heat_left_1"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind_heat" >
+                        </ImageView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:id="@+id/seat_heat_right_1"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind_heat" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_heat_right_2"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind_heat" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_heat_right_3"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind_heat" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_heat_right_4"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind_heat"
+                            android:visibility="invisible" >
+                        </ImageView>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/seat_cold_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5px"
+                    android:orientation="horizontal"
+                    android:visibility="invisible" >
+
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:id="@+id/seat_cold_left_4"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind"
+                            android:visibility="invisible" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_cold_left_3"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_cold_left_2"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_cold_left_1"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind" >
+                        </ImageView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:id="@+id/seat_cold_right_1"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_cold_right_2"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_cold_right_3"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind" >
+                        </ImageView>
+
+                        <ImageView
+                            android:id="@+id/seat_cold_right_4"
+                            android:layout_width="0px"
+                            android:layout_height="12px"
+                            android:layout_marginLeft="5px"
+                            android:layout_weight="1"
+                            android:src="@drawable/air_wind"
+                            android:visibility="invisible" >
+                        </ImageView>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/air_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/air_content_background"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="invisible" >
+
+                <ImageView
+                    android:id="@+id/air_action_user"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:src="@drawable/air_ac" >
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/air_action_on"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:src="@drawable/air_on" >
+                </ImageView>
+            </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/outdoor_temp"
+        android:layout_width="fill_parent"
+        android:layout_height="0px"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50px"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/left_temp"
+            android:layout_width="135px"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:textColor="#ffffffff"
+            android:textSize="22sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="409px"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind_small" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_5"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_6"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_7"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_8"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_9"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_a"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_b"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_c"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_d"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_e"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@id/wind_rate_f"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind"
+                android:visibility="gone" >
+            </ImageView>
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/air_wind_large" >
+            </ImageView>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/right_temp"
+            android:layout_width="123px"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:textColor="#ffffffff"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="680px"
+    android:layout_height="410px"
+    android:background="#ff000000"
+    android:orientation="vertical"
+    android:paddingBottom="5px" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#cccccccc"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70px"
+            android:paddingRight="60px"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/rx"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="RX"
+                android:textColor="#ff0000"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/tx"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="TX"
+                android:textColor="#ff0000"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/stop_debug"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="@string/debug_pause"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/switch_debug"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="CAN"
+                android:textColor="#ff0000"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/export"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="@string/debug_export"
+                android:textSize="14sp"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/clear_debug"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="@string/debug_clear"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/quit_debug"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="@string/debug_quit"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#dd000000"
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:textColor="#ffff0000"
+            android:textSize="22px" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/tv_sd_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#000000"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0.0px" 
+            android:fadingEdge="none" />
+
+        <ScrollView
+            android:id="@+id/debug_scrollview"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:id="@+id/msg_debug"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:textColor="#ff0000"
+                android:textSize="15sp" />
+        </ScrollView>
+    </LinearLayout>
+
+</LinearLayout>

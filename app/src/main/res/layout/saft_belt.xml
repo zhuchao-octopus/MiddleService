@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/panel_background"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/CommonStyleFonts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/safebelt_icon"
+        android:gravity="center"
+        android:scaleType="center"
+        android:text="@string/saft_belt"
+        android:textSize="24px" />
+
+</LinearLayout>

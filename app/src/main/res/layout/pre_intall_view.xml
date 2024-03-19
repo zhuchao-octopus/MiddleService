@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="#dd000000"
+    android:paddingBottom="5px"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="10" >
+
+        <TextView
+            android:id="@+id/install_apk_status"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textColor="#ffffffff"
+            android:gravity="center" />
+
+        <ProgressBar
+            android:id="@+id/tr_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="67px"
+            android:layout_height="67px"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4px"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1.5"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/install_quit"
+            android:layout_width="160px"
+            android:textColor="#ffffffff"
+            android:text="@string/quit"
+            android:layout_height="match_parent"
+            android:gravity="center" />
+        
+        <TextView
+            android:id="@+id/install_finish"
+            android:layout_width="160px"
+            android:textColor="#ffffffff"
+            android:visibility="gone"
+            android:text="@string/finish"
+            android:layout_height="match_parent"
+            android:gravity="center" />
+    </LinearLayout>
+
+</LinearLayout>

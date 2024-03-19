@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="calibrattion_text">"πατήστε το σταυρό"</string>
+    <string name="button_text_navi">"Πλοήγηση"</string>
+    <string name="button_text_bt_music">"BT Μουσική"</string>
+    <string name="button_text_radio">"Ράδιο"</string>
+    <string name="volume_level">"Ένταση"</string>
+    <string name="button_text_music">"Μουσική"</string>
+    <string name="button_text_video">"Βίντεο"</string>
+    <string name="key_not_support">"Αυτή η συσκευή δεν υποστηρίζει αυτό το κουμπί!"</string>
+    <string name="text_reverse_warning">"Προειδοποίηση "</string>
+    <string name="outdoor_temp">"Εξωτερική θερμοκρασία:"</string>
+    <string name="shut_down">"απενεργοποιείται!"</string>
+    
+    
+    <string name="disconnect_video">"Χωρίς σήμα!"</string>
+
+
+    <string name="warning_driving">"Αυτή η εφαρμογή απενεργοποιείται για την ασφάλειά σας! Παρακαλώ παρκάρετε το αυτοκίνητο για να το χρησιμοποιήσετε."</string>
+
+    
+    <string name="update_system">"Βρέθηκε αρχείο συστήματος %s, θέλετε να αναβαθμίσετε? "</string>
+
+        <string name="set">"Ρύθμιση"</string>
+
+    <string name="testing">"Δοκιμή"</string>
+
+    <string name="time_out">"Τέλος χρόνου"</string>
+    
+
+    <string name="cancel">"Ακύρωση"</string>
+    <string name="back">"Πίσω"</string>
+
+    
+</resources>

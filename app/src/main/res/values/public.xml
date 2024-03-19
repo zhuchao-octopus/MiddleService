@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <public type="id" name="wind_rate_1" id="0x7f0806ff" />
+    <public type="id" name="wind_rate_2" id="0x7f080700" />
+    <public type="id" name="wind_rate_3" id="0x7f080701" />
+    <public type="id" name="wind_rate_4" id="0x7f080702" />
+    <public type="id" name="wind_rate_5" id="0x7f080703" />
+    <public type="id" name="wind_rate_6" id="0x7f080704" />
+    <public type="id" name="wind_rate_7" id="0x7f080705" />
+    <public type="id" name="wind_rate_8" id="0x7f080706" />
+    <public type="id" name="wind_rate_9" id="0x7f080707" />
+    <public type="id" name="wind_rate_a" id="0x7f080708" />
+    <public type="id" name="wind_rate_b" id="0x7f080709" />
+    <public type="id" name="wind_rate_c" id="0x7f08070a" />
+    <public type="id" name="wind_rate_d" id="0x7f08070b" />
+    <public type="id" name="wind_rate_e" id="0x7f08070c" />
+    <public type="id" name="wind_rate_f" id="0x7f08070d" />
+</resources>

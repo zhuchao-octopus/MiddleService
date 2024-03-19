@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="calibrattion_text">"нажмите на крестик"</string>
+    <string name="button_text_navi">"Навигация"</string>
+    <string name="button_text_bt">Bluetooth</string>
+    <string name="button_text_bt_music">"Музыка BT"</string>
+    <string name="button_text_radio">"Радио"</string>
+    <string name="button_text_dvd">DVD</string>
+    <string name="button_text_tv">TV</string>
+    <string name="button_text_aux">"AUX IN"</string>
+    <string name="volume_level">"Громкость"</string>
+    <string name="button_text_music">"Музыка"</string>
+    <string name="button_text_video">"Видео"</string>
+    <string name="key_not_support">"Это устройство не поддерживает данный ключ"</string>
+    <string name="text_reverse_warning">"Внимание"</string>
+    <string name="outdoor_temp">"Температура снаружи"</string>
+    <string name="shut_down">"Выключение!"</string>
+
+
+    <string name="on">"ВКЛ"</string>
+    <string name="off">"ВЫКЛ"</string>
+
+    <string name="disconnect_video">"Нет сигнала!"</string>
+
+    <string name="update_system">"Найден системный файл %s, выполнить обновление?"</string>
+
+    <string name="eq_text_classic">"Классика"</string>
+    <string name="eq_text_pop">"Поп"</string>
+    <string name="eq_text_rock">"Рок"</string>
+    <string name="eq_text_jazz">"Джаз"</string>
+    <string name="eq_text_user">"Пользоват."</string>
+    <string name="eq_text_normal">"Норм."</string>
+
+    <string name="cancel">"Отмен"</string>
+    <string name="back">"Назад"</string>
+
+    <string name="can37info_01">Убедитесь в безопасности маневра</string>
+    <string name="can37info_02">Помощь при парковке недоступна</string>
+    <string name="can37info_03">Меняйте сторону указ-м поворота</string>
+    <string name="can37info_04">Выберите переднюю передачу</string>
+    <string name="can37info_05">Пространство найдено, двигайтесь вперед</string>
+    <string name="can37info_06">Остановка рядом с пустым парковочным местом</string>
+    <string name="can37info_07">Нажмите \ "△ ▽ \", чтобы установить парковочное положение</string>
+    <string name="can37info_08">Отрегулируйте целевое положение</string>
+    <string name="can37info_09">Парк-пилот отменен</string>
+    <string name="can37info_0a">Двигаться задом наперед</string>
+    <string name="can37info_0b">Остановись и выбери задний ход</string>
+    <string name="can37info_0c">Двигайтесь вперед</string>
+    <string name="can37info_0d">Остановитесь и выберите переднюю передачу</string>
+    <string name="can37info_0e">Park Assist закончен</string>
+    <string name="can37info_12">Центральный руль</string>
+    <string name="can37info_13">Удалить трейлер</string>
+    <string name="can37info_14">VDC должен быть включен</string>
+    <string name="can37info_15">Закройте дверь, чтобы начать</string>
+    <string name="can37info_16">Системная ошибка</string>
+    <string name="can37info_17">Ошибка Park Assist</string>
+    <string name="can37info_18">Превышение скорости</string>
+    <string name="can37info_19">Рулевое управление вмешалось</string>
+    <string name="can37info_1a">Трейлер включен</string>
+    <string name="can37info_1b">VDC активный</string>
+    <string name="can37info_1c">Дверь открыта / ремень выключен</string>
+    <string name="can37info_1d">Время истекло</string>
+    <string name="can37info_22">Двигатель не активен</string>
+    <string name="can37info_23">ESP не активен</string>
+    <string name="can37info_24">Передний механизм за пределами парковочного места</string>
+    <string name="can37info_25">Резюме не возможно</string>
+    <string name="can37info_27">Стоп</string>
+    <string name="can37info_28">Выберите передачу заднего хода</string>
+    <string name="can37info_42">Проверьте окрестности</string>
+    <string name="can37info_43">Остановитесь возле парковочного места, чтобы начать помощь при парковке</string>
+    <string name="can37info_45">Снизить скорость</string>
+    <string name="can37info_4c">Рулевое вращение</string>
+    <string name="can37info_4d">Двигайтесь вперед с осторожностью</string>
+    <string name="can37info_4e">Двигайтесь назад с осторожностью</string>
+    <string name="can37info_4f">Проверьте препятствие</string>
+    
+    
+        <string name="start">Старт</string>
+</resources>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_canbus_vw"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:visibility="gone" >
+
+    <ImageView
+        android:id="@+id/vw_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        android:scaleType="centerInside"
+        android:layout_marginRight="20px"
+        android:layout_marginTop="20px"
+        android:src="@drawable/vw_show" />
+
+    <LinearLayout
+        android:id="@+id/layout_canbus_vw_main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_weight="8"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0px"
+                android:layout_weight="6"
+                android:orientation="horizontal" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:background="#ff000000"
+                android:orientation="horizontal"
+                android:paddingLeft="30px" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/reverse_warning" />
+
+                <TextView
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginStart="10.0px"
+                    android:layout_weight="4.0"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:text="@string/notify_for_safe"
+                    android:textColor="#ffffffff"
+                    android:textSize="24sp" />
+
+                <ImageView
+                    android:id="@+id/vw_radar_v_on"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_radar_volume_on"
+                    android:tag="ak_paramter=100,50" />
+
+                <ImageView
+                    android:id="@+id/vw_radar_v_off"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_radar_volume_off"
+                    android:tag="ak_paramter=100,50" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="#ff000000"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/close"
+                android:layout_width="fill_parent"
+                android:layout_height="0px"
+                android:layout_weight="1.0"
+                android:scaleType="centerInside"
+                android:src="@drawable/vw_close" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0px"
+                android:layout_weight="5"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/vw_0"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_0"
+                    android:tag="ak_paramter=100,50" />
+
+                <ImageView
+                    android:id="@+id/vw_1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_1"
+                    android:tag="ak_paramter=100,50" />
+
+                <ImageView
+                    android:id="@+id/vw_2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_2"
+                    android:tag="ak_paramter=100,50" />
+
+                <ImageView
+                    android:id="@+id/vw_3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_3"
+                    android:tag="ak_paramter=100,50" />
+
+                <ImageView
+                    android:id="@+id/vw_l"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_l"
+                    android:tag="ak_paramter=100,50" />
+
+                <ImageView
+                    android:id="@+id/vw_r"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_r"
+                    android:tag="ak_paramter=100,50" />
+
+                <ImageView
+                    android:id="@+id/vw_lr"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1.0"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/vw_lr"
+                    android:tag="ak_paramter=100,50" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/vw_color"
+                android:layout_width="fill_parent"
+                android:layout_height="0px"
+                android:layout_weight="1.0"
+                android:scaleType="centerInside"
+                android:src="@drawable/vw_color"
+                android:tag="ak_paramter=100,50" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/backligt_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <include layout="@layout/backlight_layout" />
+    </RelativeLayout>
+
+</RelativeLayout>

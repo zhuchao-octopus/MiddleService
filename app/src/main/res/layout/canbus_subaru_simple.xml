@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_canbus_subaru_simple"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:visibility="gone" >
+
+    <RelativeLayout
+        android:layout_width="140px"
+        android:layout_height="120px"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20px"
+        android:layout_marginRight="30px"
+        android:background="@drawable/subaru_mid"
+        android:orientation="horizontal" >
+
+        <View
+            android:id="@+id/subaru_left"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/subaru_left" />
+        
+        
+        <View
+            android:id="@+id/subaru_right"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/subaru_right" />
+    </RelativeLayout>
+
+</RelativeLayout>

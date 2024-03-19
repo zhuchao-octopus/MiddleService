@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="600px"
+        android:layout_height="280px"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:background="#88000000"
+                android:textColor="#ffffffff"
+                android:text="@string/left_right" />
+
+            <Button
+                android:id="@+id/camera_lr_m"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/minus" />
+
+            <TextView
+                android:id="@+id/left_right"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:background="#88000000"
+                android:gravity="center"
+                android:textColor="#ffffffff"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/camera_lr_a"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/add" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_marginTop="2px"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:background="#88000000"
+                android:textColor="#ffffffff"
+                android:text="@string/up_down" />
+
+            <Button
+                android:id="@+id/angle_b_m"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/minus" />
+
+            <TextView
+                android:id="@+id/up_down"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/angle_b_a"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/add" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_marginTop="2px"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:background="#88000000"
+                android:textColor="#ffffffff"
+                android:text="@string/width" />
+
+            <Button
+                android:id="@+id/car_w_m"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/minus" />
+
+            <TextView
+                android:id="@+id/width"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:background="#88000000"
+                android:gravity="center"
+                android:textColor="#ffffffff"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/car_w_a"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/add" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:layout_marginTop="2px"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:background="#88000000"
+                android:textColor="#ffffffff"
+                android:text="@string/camera_heigt" />
+
+            <Button
+                android:id="@+id/camera_h_m"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/minus" />
+
+            <TextView
+                android:id="@+id/camera_heigt"
+                android:layout_width="0px"
+                android:background="#88000000"
+                android:textColor="#ffffffff"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/camera_h_a"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/add" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:text="@android:string/cancel" >
+            </Button>
+
+            <Button
+                android:id="@+id/reset"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:text="reset" >
+            </Button>
+
+            <Button
+                android:id="@+id/ok"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:text="@android:string/ok" >
+            </Button>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

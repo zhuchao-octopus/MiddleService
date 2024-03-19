@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="calibrattion_text">请准确点击屏幕上的十字架进行校准</string>
+    <string name="button_text_navi">导航</string>
+    <string name="button_text_bt">藍牙</string>
+    <string name="button_text_radio">收音</string>
+<!--     <string name="button_text_dvd">碟片</string> -->
+    <string name="button_text_music">音乐</string>
+    <string name="button_text_video">视频</string>
+    <string name="button_text_bt_music">蓝牙音乐</string>
+    <string name="key_not_support">设备不支持此按键!</string>
+    <string name="shut_down">正在關機!</string>
+
+    
+    <string name="f_camera">前攝像頭</string>
+    
+    <string name="park_info0" />
+    <string name="park_info1" />
+    <string name="park_info2">從右側搜索泊車位置</string>
+    <string name="park_info3">從右側搜索泊車位置</string>
+    <string name="park_info4">從右側搜索泊車位置</string>
+    <string name="park_info5">從左側搜索泊車位置</string>
+    <string name="park_info6">從左側搜索泊車位置</string>
+    <string name="park_info7">"左側發現泊車位置
+繼續前進，準備泊車"</string>
+    <string name="park_info8">"右側發現泊車位置
+繼續前進，準備泊車"</string>
+    <string name="park_info9">"左側發現泊車位置
+繼續前進，準備泊車"</string>
+    <string name="park_info10">"右側發現泊車位置
+繼續前進，準備泊車"</string>
+    <string name="park_info11">"左側發現泊車位置
+停車，準備開始泊車"</string>
+    <string name="park_info12">"右側發現泊車位置
+停車，準備開始泊車"</string>
+    <string name="park_info13">"請將手離開方向盤
+換至《R》檔，準備左側停車"</string>
+    <string name="park_info14">"請將手離開方向盤
+換至《R》檔，準備右側停車"</string>
+    <string name="park_info15">"為了安全請注意檢查車輛周圍環境
+正往左側泊車
+請掛R檔、緩慢後退"</string>
+    <string name="park_info16">"為了安全請注意檢查車輛周圍環境
+正往右側泊車
+請掛R檔、緩慢後退"</string>
+    <string name="park_info17">"為了安全請注意檢查車輛周圍環境
+正往左側泊車
+請掛R檔、緩慢後退"</string>
+    <string name="park_info18">"為了安全請注意檢查車輛周圍環境
+正往右側泊車
+請掛R檔、緩慢後退"</string>
+    <string name="park_info19">"為了安全請注意檢查車輛周圍環境
+停車
+請掛前進檔、緩慢前進"</string>
+    <string name="park_info20">"為了安全請注意檢查車輛周圍環境
+停車
+請掛前進檔、緩慢前進"</string>
+    <string name="park_info21">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛前進檔、緩慢前進"</string>
+    <string name="park_info22">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛前進檔、緩慢前進"</string>
+    <string name="park_info23">"為了安全請注意檢查車輛周圍環境
+停車
+請掛R檔、緩慢後退"</string>
+    <string name="park_info24">"為了安全請注意檢查車輛周圍環境
+停車
+請掛R檔、緩慢後退"</string>
+    <string name="park_info25">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛R檔、緩慢後退"</string>
+    <string name="park_info26">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛R檔、緩慢後退"</string>
+    <string name="park_info27">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛R檔、緩慢後退"</string>
+    <string name="park_info28">從右側搜索泊車位置</string>
+    <string name="park_info29">從右側搜索泊車位置</string>
+    <string name="park_info30">從右側搜索泊車位置</string>
+    <string name="park_info31">從右側搜索泊車位置</string>
+    <string name="park_info32">從右側搜索泊車位置</string>
+    <string name="park_info33">從右側搜索泊車位置</string>
+    <string name="park_info34">從右側搜索泊車位置</string>
+    <string name="park_info35">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛前進檔、緩慢前進"</string>
+    <string name="park_info36">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛前進檔、緩慢前進"</string>
+    <string name="park_info37">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛R檔、緩慢後退"</string>
+    <string name="park_info38">"為了安全請注意檢查車輛周圍環境
+請小心
+請掛R檔、緩慢後退"</string>
+    <string name="park_info39">從右側搜索泊車位置</string>
+    <string name="careful">注意</string>
+    <string name="prompt02">"減速以繼續
+主動泊車輔助"</string>
+    <string name="prompt03">减速</string>
+    <string name="prompt06">"主動泊車輔助
+錯誤
+請參考老用戶手冊"</string>
+    <string name="prompt1b">主動泊車輔助已完成</string>
+    <string name="prompt1c">按按鈕恢復泊車</string>
+    <string name="prompt1d">主動泊車輔助已取消</string>
+    <string name="prompt1e">"因速度過快
+主動泊車輔助已取消"</string>
+    <string name="prompt1f">"主動泊車輔助
+已經被駕駛員取消"</string>
+    <string name="prompt20">"主動泊車輔助
+不可用"</string>
+    <string name="prompt21">"因為ESC
+主動泊車輔助已取消"</string>
+    <string name="prompt22">"因為ABS系統事件、
+主動泊車輔助已取消"</string>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="button_text_navi">"내비게이션"</string>
+    <string name="button_text_bt_music">"BT음악"</string>
+    <string name="button_text_radio">"라디오"</string>
+    <string name="volume_level">"볼륨"</string>
+    <string name="button_text_music">"음악"</string>
+    <string name="button_text_video">"동영상"</string>
+    <string name="text_reverse_warning">"경고!"</string>
+    <string name="shut_down">shutting down!</string>
+
+    
+    <string name="disconnect_video">"신호 없음"</string>
+
+    <string name="warning_driving">"운전 중에는 동영상을 시청하실수 없습니다."</string>
+   
+     
+        <string name="eq_text_classic">"클래식"</string>
+    <string name="eq_text_pop">"팝"</string>
+    <string name="eq_text_rock">"락"</string>
+    <string name="eq_text_jazz">"재즈"</string>
+    <string name="eq_text_user">"사용자 정의"</string>
+    <string name="eq_text_normal">"일반"</string>
+    
+</resources>

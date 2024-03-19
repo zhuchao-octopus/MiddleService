@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/screen1_radar"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="0px"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0px" >
+
+            <com.my.canbox.RadarView1
+                android:id="@+id/reverse_left_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/reverse_left_pic" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <ImageButton
+                android:id="@+id/radar_switch"
+                android:layout_width="64px"
+                android:layout_height="64px"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/radar_icon"
+                android:onClick="onCickReverse"
+                android:tag="ak_paramter=100,50" >
+            </ImageButton>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

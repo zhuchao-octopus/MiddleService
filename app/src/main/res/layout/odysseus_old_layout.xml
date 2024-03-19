@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/air_condition"
+    android:layout_width="fill_parent"
+    android:layout_height="280px"
+    android:background="#cc222222"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="0.0dip"
+        android:layout_height="fill_parent"
+        android:layout_weight="5.0"
+        android:orientation="vertical" >
+
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="16.0sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/number1"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.0"
+                android:src="@drawable/odyssey1"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/number2"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.0"
+                android:src="@drawable/odyssey2"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/number3"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.0"
+                android:src="@drawable/odyssey3"
+                android:visibility="visible" />
+
+            <Space
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <ImageView
+                android:id="@+id/number4"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.0"
+                android:src="@drawable/odyssey4"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/number5"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.0"
+                android:src="@drawable/odyssey5"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/number6"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.0"
+                android:src="@drawable/odyssey6"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="3.0"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/number"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="6"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.0dip"
+                    android:layout_weight="1.0"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/number11"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:src="@drawable/odyssey11"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/number12"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:src="@drawable/odyssey12"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/number13"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:src="@drawable/odyssey13"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/number14"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:src="@drawable/odyssey14"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/number15"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:src="@drawable/odyssey15"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/number16"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:src="@drawable/odyssey16"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="0.0dip"
+                    android:layout_weight="3.0"
+                    android:orientation="horizontal" >
+
+                    <com.my.view.LedView
+                        android:id="@+id/odyssey19"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+
+                    <com.my.view.LedView
+                        android:id="@+id/odyssey20"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+
+                    <com.my.view.LedView
+                        android:id="@+id/odyssey21"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+
+                    <com.my.view.LedView
+                        android:id="@+id/odyssey22"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+
+                    <com.my.view.LedView
+                        android:id="@+id/odyssey23"
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" >
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:id="@+id/number24_st"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/odysseyst"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/number24_zhong1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/zhong1"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/number24_zhong2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/zhong2"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/number24_ch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ch"
+                        android:visibility="visible" />
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12.0sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0.0dip"
+        android:layout_height="fill_parent"
+        android:layout_weight="5.0"
+        android:orientation="vertical" >
+
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="16.0sp" />
+
+        <LinearLayout
+            android:id="@+id/lin1"
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/number7"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:src="@drawable/odyssey7"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/number8"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:src="@drawable/odyssey8"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/number9"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:src="@drawable/odyssey9"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/number10"
+                android:layout_width="0.0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:src="@drawable/odyssey10"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="12.0sp" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="7.0"
+            android:gravity="bottom"
+            android:orientation="horizontal" >
+
+            <com.my.view.LedView
+                android:id="@+id/odyssey25"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="1.0sp"
+                android:layout_weight="1.0"
+                android:scaleType="centerInside" />
+
+            <Space
+                android:layout_width="15.0sp"
+                android:layout_height="wrap_content" />
+
+            <com.my.view.LedView
+                android:id="@+id/odyssey26"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="1.0sp"
+                android:layout_weight="1.0"
+                android:scaleType="centerInside" />
+
+            <Space
+                android:layout_width="15.0sp"
+                android:layout_height="wrap_content" />
+
+            <com.my.view.LedView
+                android:id="@+id/odyssey27"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="1.0sp"
+                android:layout_weight="1.0"
+                android:scaleType="centerInside" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="20.0px" />
+
+                <ImageView
+                    android:id="@+id/number17_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.0dip"
+                    android:layout_weight="1.0"
+                    android:src="@drawable/odyssey18"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/number17_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.0dip"
+                    android:layout_weight="1.0"
+                    android:src="@drawable/odyssey18"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/number17_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0.0dip"
+                    android:layout_weight="1.0"
+                    android:src="@drawable/odyssey18"
+                    android:visibility="visible" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="20.0px" />
+            </LinearLayout>
+
+            <com.my.view.LedView
+                android:id="@+id/odyssey28"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="1.0sp"
+                android:layout_weight="1.0"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/number18"
+                android:layout_width="1.0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="20.0sp"
+                android:layout_weight="0.25"
+                android:scaleType="centerInside"
+                android:src="@drawable/odyssey18"
+                android:visibility="visible" />
+
+            <com.my.view.LedView
+                android:id="@+id/odyssey29"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="1.0sp"
+                android:layout_weight="1.0"
+                android:scaleType="centerInside" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="12.0sp" />
+    </LinearLayout>
+
+</LinearLayout>

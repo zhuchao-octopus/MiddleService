@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="calibrattion_text">请准确点击屏幕上的十字架进行校准</string>
+    <string name="button_text_navi">导航</string>
+    <string name="button_text_bt">蓝牙</string>
+    <string name="button_text_radio">收音</string>
+<!--     <string name="button_text_dvd">碟片</string> -->
+    <string name="button_text_music">音乐</string>
+    <string name="button_text_video">视频</string>
+    <string name="button_text_bt_music">蓝牙音乐</string>
+    <string name="key_not_support">设备不支持此按键!</string>
+    <string name="shut_down">正在关机!</string>
+    
+    
+    <string name="on">开</string>
+    <string name="off">关</string>
+
+    
+    <string name="text_reverse_warning">警告!</string>
+<!--     <string name="disconnect_video">无信号!</string> -->
+    <string name="warn0_1">变速箱过热请安全停车</string>
+    <string name="warn0_2">变速箱故障请立即检修</string>
+    <string name="warn0_3">引擎故障请立即检修</string>
+    
+    
+    <string name="warning_driving">"禁止行车时使用！请停车拉手刹后继续使用"</string>
+    
+    <string name="warn0_4">Dlesel filter ouerloaded Refer to manual</string>
+    <string name="warn0_5">Engine oil change due Seruice required</string>
+    <string name="warn0_6">Engine oil pressure low Stop safely</string>
+    <string name="warn0_7">Hill start assist not available</string>
+    <string name="warn1_0">Airbag malfunction Seruice now</string>
+    <string name="warn1_1">Brake system malfunction Stop safely</string>
+    <string name="warn1_2">Brake fluid leuel low Seruice now</string>
+    <string name="warn1_3">ABS malfunction Seruice now</string>
+    <string name="warn1_4">OFF ESP OFF</string>
+    <string name="warn1_5">OFF ESP malfunction Next service</string>
+    <string name="warn1_6">Power steering malfunction Service now</string>
+    <string name="warn2_0">Boot open</string>
+    <string name="warn2_1">Bonnet open</string>
+    <string name="warn2_2">Passenger side rear door open</string>
+    <string name="warn2_3">Drlver slde rear door open</string>
+    <string name="warn2_4">Passenger door open</string>
+    <string name="warn2_5">Driver door open</string>
+    <string name="warn2_7">Auto StartStop Engine starting</string>
+    <string name="warn3_0">Left indicator malfunction Change bulb</string>
+    <string name="warn3_1">Right indicator malfunction Change bulb</string>
+    <string name="warn3_2">Bonnet open</string>
+    <string name="warn3_3">Boot open</string>
+    <string name="warn3_4">Passenger side rear door open</string>
+    <string name="warn3_5">Driver side rear door open</string>
+    <string name="warn3_6">Passenger door open</string>
+    <string name="warn3_7">Driver door open</string>
+    <string name="warn4_0">Press clutch to start</string>
+    <string name="warn4_1">Press brake to start</string>
+    <string name="warn4_2">Key Battery low Replace battery</string>
+    <string name="warn4_3">Auto startStop press a pedal to start engine</string>
+    <string name="warn4_4">Alarm system malfunction Service required</string>
+    <string name="warn4_5">Key Battery low replace battery</string>
+    <string name="warn4_6">lnterior scan deactivated</string>
+    <string name="warn4_7">Auto wiper/lights malfunctioa Service required</string>
+    <string name="warn5_0">Auto StartStop Manual start required</string>
+    <string name="warn5_1">Close boot or use spare key</string>
+    <string name="warn5_2">Steering lock engaged Turn steering wheel</string>
+    <string name="warn5_3">Steering lock malfunction Stop safely</string>
+    <string name="warn5_4">Steering lock malfunction Service now</string>
+    <string name="warn5_5">Key outside car</string>
+    <string name="warn5_6">Key not detected</string>
+    <string name="warn5_7">Turn ignition off Use POWER button</string>
+    <string name="warn6_0">Door open Apply brake</string>
+    <string name="warn6_1">Select N to start</string>
+    <string name="warn6_2">Press brake to start</string>
+    <string name="warn6_3">Auto StartStop Select neutral</string>
+    <string name="warn6_4">Select N or P to start</string>
+    <string name="warn6_5">Vehicle not in Park Select P</string>
+    <string name="warn6_6">Auto StartStop Switch ignition off</string>
+    <string name="warn6_7">lmmobiliser malfunction Service now</string>
+    <string name="warn7_0">Alarm triggered Check vehicle</string>
+    <string name="warn7_1">Alarm triggered Check vehicle</string>
+    <string name="warn7_2">Alarm triggered Check vehicle</string>
+    <string name="warn7_3">Alarm triggered Check vehicle</string>
+    <string name="warn7_4">Transmission hot Stop or speed up</string>
+    <string name="warn7_5">Transmission hot Stop or speed up</string>
+    <string name="warn7_6">Transmission ready</string>
+    <string name="warn7_7">Transmission hot wait 4 mins</string>
+    <string name="warn8_0">Press brake and clutch to start</string>
+    <string name="warn8_1">Press brake to start</string>
+    <string name="warn8_2">Prsee clutch to start</string>
+    <string name="warn8_3">Active City Stop Auto braking</string>
+    <string name="warn8_4">Active City Stop not available</string>
+    <string name="warn8_5">Active City Stop Sensor blocked Clean screen</string>
+    <string name="warn8_6">Check tyre pressures</string>
+    <string name="warn8_7">Tyre pressure sys malfunction Service required</string>
+    <string name="warn9_0">Engine running</string>
+    <string name="warn9_1">MyKey active Drive safely</string>
+    <string name="warn9_2">MyKey Speed limited to 160 km/h</string>
+    <string name="warn9_3">MyKey Vehicle at top speed</string>
+    <string name="warn10_0">MyKey Check speed Drive safely</string>
+    <string name="warn11_0">MyKey Park ald cannot be deactivated</string>
+    <string name="warn11_1">MyKey ESC cannot be deactivated</string>
+    <string name="warn12_0">Press brake to unlock selector lever</string>
+    <string name="warn12_1">Cranking time exceeded</string>
+    <string name="warn13_3">Check tire pressure</string>
+    <string name="warn13_6">Transmission not in Park</string>
+    <string name="warn13_7">Selector lever unlocked</string>
+    <string name="warn14_0">Park brake applied</string>
+    <string name="warn15_5">MyKey Vehicle near top speed</string>
+    <string name="warn15_7">Selector lever unlocked</string>
+    
+    
+    <string name="park_info0" />
+    <string name="park_info1" />
+    <string name="park_info2">从右侧搜索泊车位置</string>
+    <string name="park_info3">从右侧搜索泊车位置</string>
+    <string name="park_info4">从右侧搜索泊车位置</string>
+    <string name="park_info5">从左侧搜索泊车位置</string>
+    <string name="park_info6">从左侧搜索泊车位置</string>
+    <string name="park_info7">"左侧发现泊车位置
+继续前进，准备泊车"</string>
+    <string name="park_info8">"右侧发现泊车位置
+继续前进，准备泊车"</string>
+    <string name="park_info9">"左侧发现泊车位置
+继续前进，准备泊车"</string>
+    <string name="park_info10">"右侧发现泊车位置
+继续前进，准备泊车"</string>
+    <string name="park_info11">"左侧发现泊车位置
+停车，准备开始泊车"</string>
+    <string name="park_info12">"右侧发现泊车位置
+停车，准备开始泊车"</string>
+    <string name="park_info13">"请将手离开方向盘
+换至《R》档，准备左侧停车"</string>
+    <string name="park_info14">"请将手离开方向盘
+换至《R》档，准备右侧停车"</string>
+    <string name="park_info15">"为了安全 请注意检查车辆周围环境
+正往左侧泊车
+请挂R档、缓慢后退"</string>
+    <string name="park_info16">"为了安全 请注意检查车辆周围环境
+正往右侧泊车
+请挂R档、缓慢后退"</string>
+    <string name="park_info17">"为了安全 请注意检查车辆周围环境
+正往左侧泊车
+请挂R档、缓慢后退"</string>
+    <string name="park_info18">"为了安全 请注意检查车辆周围环境
+正往右侧泊车
+请挂R档、缓慢后退"</string>
+    <string name="park_info19">"为了安全 请注意检查车辆周围环境
+停车
+请挂前进档、缓慢前进"</string>
+    <string name="park_info20">"为了安全 请注意检查车辆周围环境
+停车
+请挂前进档、缓慢前进"</string>
+    <string name="park_info21">"为了安全 请注意检查车辆周围环境
+请小心
+请挂前进档、缓慢前进"</string>
+    <string name="park_info22">"为了安全 请注意检查车辆周围环境
+请小心
+请挂前进档、缓慢前进"</string>
+    <string name="park_info23">"为了安全 请注意检查车辆周围环境
+停车
+请挂R档、缓慢后退"</string>
+    <string name="park_info24">"为了安全 请注意检查车辆周围环境
+停车
+请挂R档、缓慢后退"</string>
+    <string name="park_info25">"为了安全 请注意检查车辆周围环境
+请小心
+请挂R档、缓慢后退"</string>
+    <string name="park_info26">"为了安全 请注意检查车辆周围环境
+请小心
+请挂R档、缓慢后退"</string>
+    <string name="park_info27">"为了安全 请注意检查车辆周围环境
+请小心
+请挂R档、缓慢后退"</string>
+    <string name="park_info28">从右侧搜索泊车位置</string>
+    <string name="park_info29">从右侧搜索泊车位置</string>
+    <string name="park_info30">从右侧搜索泊车位置</string>
+    <string name="park_info31">从右侧搜索泊车位置</string>
+    <string name="park_info32">从右侧搜索泊车位置</string>
+    <string name="park_info33">从右侧搜索泊车位置</string>
+    <string name="park_info34">从右侧搜索泊车位置</string>
+    <string name="park_info35">"为了安全 请注意检查车辆周围环境
+请小心
+请挂前进档、缓慢前进"</string>
+    <string name="park_info36">"为了安全 请注意检查车辆周围环境
+请小心
+请挂前进档、缓慢前进"</string>
+    <string name="park_info37">"为了安全 请注意检查车辆周围环境
+请小心
+请挂R档、缓慢后退"</string>
+    <string name="park_info38">"为了安全 请注意检查车辆周围环境
+请小心
+请挂R档、缓慢后退"</string>
+    <string name="park_info39">从右侧搜索泊车位置</string>
+    <string name="careful">注意</string>
+    <string name="prompt02">"减速以继续
+主动泊车辅助"</string>
+    <string name="prompt03">减速</string>
+    <string name="prompt06">"主动泊车辅助
+错误
+请参考老用户手册"</string>
+    <string name="prompt1b">主动泊车辅助已完成</string>
+    <string name="prompt1c">按按钮恢复泊车</string>
+    <string name="prompt1d">主动泊车辅助已取消</string>
+    <string name="prompt1e">"因速度过快
+主动泊车辅助已取消"</string>
+    <string name="prompt1f">"主动泊车辅助
+已经被驾驶员取消"</string>
+    <string name="prompt20">"主动泊车辅助
+不可用"</string>
+    <string name="prompt21">"因为ESC
+主动泊车辅助已取消"</string>
+    <string name="prompt22">"因为ABS系统事件、
+主动泊车辅助已取消"</string>
+
+    
+    <string name="update_touch_config">找到触摸屏升级文件 %s, 是否更新?</string>
+    <string name="update_system">找到系统升级文件 %s, 是否更新?</string>
+    
+    
+    
+    
+        <string name="eq_text_classic">古典</string>
+    <string name="eq_text_pop">流行</string>
+    <string name="eq_text_rock">摇滚</string>
+    <string name="eq_text_jazz">爵士</string>
+    <string name="eq_text_user">自定义</string>
+    <string name="eq_text_normal">正常</string>    
+    
+    
+        <string name="quit">退出</string>
+        <string name="installing">安装中</string>
+        
+        
+        <string name="start">开始</string>
+        <string name="stop">结束</string>
+        
+    <string name="finish">结束!</string>
+    
+    
+    <string name="debug_clear">清除</string>    
+    <string name="debug_pause">暂停</string>
+<!--     <string name="debug_start">Start</string> -->
+<!--     <string name="debug_switch">Switch</string> -->
+    <string name="debug_export">导出</string>
+    <string name="debug_quit">退出</string>
+    
+    
+    <string name="notify_for_safe">注意!请安全驾驶!</string>
+    <string name="clear_all">"全部清除"</string>
+    <string name="saft_belt">未系安全带</string>
+</resources>

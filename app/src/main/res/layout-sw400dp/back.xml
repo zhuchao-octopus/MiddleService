@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/screen1_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:tag="2"
+    android:background="@color/vehicle_camera_colorkey" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1" >
+
+        <SurfaceView
+            android:id="@+id/camera_surfaceview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+<FrameLayout
+        android:id="@+id/glsuface_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+           <LinearLayout
+            android:id="@+id/no_signal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+                android:background="#000000"
+        android:visibility="gone" >
+
+            <ImageView
+           		android:id="@+id/no_signal_image"
+                style="@style/CommonStyleFonts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#000000"
+                android:gravity="center"
+                android:scaleType="center"
+                android:src="@drawable/no_signal" />
+
+            <TextView
+                android:id="@+id/no_signal_text"
+                style="@style/CommonStyleFonts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/disconnect_video"
+                android:textSize="28px" />
+        </LinearLayout>
+       
+
+
+        <RelativeLayout
+            android:layout_width="1024px"
+            android:layout_height="500px"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="80px" >
+
+            <com.car.view.BackStaticView
+                android:id="@+id/backstatic_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <com.car.view.BackTrackView
+                android:id="@+id/backtrack_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+        </RelativeLayout>
+<!--         hardware camera fix the black bug. so no need this -->
+         <View
+            android:id="@+id/empty"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+         
+          <View
+            android:id="@+id/only_black"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000001" />
+         
+<!--         <include -->
+<!--             layout="@layout/radar" -->
+<!--             android:visibility="gone" /> -->
+        
+        <LinearLayout
+            android:id="@+id/camera4"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="60px"
+            android:layout_marginTop="60px"
+            android:paddingRight="8px"
+            android:visibility="visible"
+            android:orientation="horizontal" >
+            
+            <TextView 
+                android:focusable="false"
+                android:id="@+id/cam1"
+                style="@style/FrontCameraButton"
+                android:text="@string/cam1" />
+
+            <TextView
+                android:focusable="false"
+                android:id="@+id/cam2"
+                style="@style/FrontCameraButton"
+                android:text="@string/cam2" />
+
+            <TextView
+                android:focusable="false"
+                android:id="@+id/cam3"
+                style="@style/FrontCameraButton"
+                android:text="@string/cam3" />
+
+            <TextView
+                android:focusable="false"
+                android:id="@+id/cam4"
+                style="@style/FrontCameraButton"
+                android:text="@string/cam4" />
+                    
+        </LinearLayout>
+        
+        
+        <include layout="@layout/canbus_all"/>
+    </RelativeLayout>
+
+</LinearLayout>
