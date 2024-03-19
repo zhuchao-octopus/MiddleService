@@ -23,6 +23,7 @@ public class ZhidouOD extends Canbox{
 		MAP_KEYS = KEYS_WHEEL;	
 		mIdKey2 = 0x21;
 		MAP_KEYS2 = KEYS_WHEEL2;		
+		
 
 		IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;		
 	}
@@ -143,8 +144,9 @@ public class ZhidouOD extends Canbox{
 		byte y = (byte) (curDate.getYear() - 100);
 		byte mon = (byte)( curDate.getMonth() + 1);
 		byte d = (byte) curDate.getDate();
-		byte []buf = new byte[] { (byte) 0x82, 0x06, y, mon, d, h,m, 0 };
-		//byte []buf = new byte[] { (byte) 0xC9, 0x06, m, h, d, mon,y, 0 };
+		byte []buf = new byte[] { (byte) 0x82, 0x06, y, mon, d, h,
+				m, 0 };
+		
 		sendDataToCanbox(buf, buf.length);
 	}
 

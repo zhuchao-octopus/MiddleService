@@ -51,7 +51,8 @@ public class Canbox {
             for (int i = 1; i < ss.length; ++i) {
                 if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_MCU_BAUD)) {
                     mcuBaud = ss[i].substring(1);
-                } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_MCU_CONFIG)) {
+                } else if (ss[i]
+                        .startsWith(MachineConfig.KEY_SUB_CANBOX_MCU_CONFIG)) {
                     mcuConfig = ss[i].substring(1);
                 }
             }
@@ -60,20 +61,28 @@ public class Canbox {
                 try {
 
                     byte[] data = new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0};
-                    data[2] = (byte) (Integer.parseInt(mcuBaud.substring(0, 2), 16));
-                    data[3] = (byte) (Integer.parseInt(mcuBaud.substring(2, 4), 16));
-                    data[4] = (byte) (Integer.parseInt(mcuBaud.substring(4, 6), 16));
-                    data[5] = (byte) (Integer.parseInt(mcuBaud.substring(6, 8), 16));
+                    data[2] = (byte) (Integer.parseInt(mcuBaud.substring(0, 2),
+                            16));
+                    data[3] = (byte) (Integer.parseInt(mcuBaud.substring(2, 4),
+                            16));
+                    data[4] = (byte) (Integer.parseInt(mcuBaud.substring(4, 6),
+                            16));
+                    data[5] = (byte) (Integer.parseInt(mcuBaud.substring(6, 8),
+                            16));
                     sendCmd(CANBOX_WRITE_MCU_DATA, 0, data);
                     data[1] = 0x2;
-                    data[2] = (byte) (Integer.parseInt(mcuConfig.substring(0, 2), 16));
-                    data[3] = (byte) (Integer.parseInt(mcuConfig.substring(2, 4), 16));
-                    data[4] = (byte) (Integer.parseInt(mcuConfig.substring(4, 6), 16));
-                    data[5] = (byte) (Integer.parseInt(mcuConfig.substring(6, 8), 16));
+                    data[2] = (byte) (Integer.parseInt(mcuConfig.substring(0, 2),
+                            16));
+                    data[3] = (byte) (Integer.parseInt(mcuConfig.substring(2, 4),
+                            16));
+                    data[4] = (byte) (Integer.parseInt(mcuConfig.substring(4, 6),
+                            16));
+                    data[5] = (byte) (Integer.parseInt(mcuConfig.substring(6, 8),
+                            16));
                     sendCmd(CANBOX_WRITE_MCU_DATA, 0, data);
-                } catch (Exception ignored) {
-                }
+                } catch (Exception e) {
 
+                }
             }
         }
         startRepeatSendLcdMsg(false);
@@ -266,7 +275,8 @@ mVolumeMax = ((data & 0xff0000) >> 16);
                 if (ret > 0) {
                     if (mContext != null) {
                         Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
-                        i.putExtra(MyCmd.EXTRA_COMMON_CMD, EQ_REQUEST_ALL_MAX | CMD_GROUP_EQ);
+                        i.putExtra(MyCmd.EXTRA_COMMON_CMD, EQ_REQUEST_ALL_MAX
+                                | CMD_GROUP_EQ);
                         i.putExtra(MyCmd.EXTRA_COMMON_DATA, ret);
                         i.setPackage("com.canboxsetting");
                         mContext.sendBroadcast(i);
@@ -427,6 +437,7 @@ mVolumeMax = ((data & 0xff0000) >> 16);
         requestVersion();
         updateTime();
         //requestDriveData(1);// test
+        Log.d(TAG, "startConnect()");
     }
 
     public void stopConnect() {// default is simple box
@@ -466,7 +477,8 @@ mVolumeMax = ((data & 0xff0000) >> 16);
                 mediaType = 0x30;
                 break;
         }
-        byte[] data = new byte[]{(byte) 0xc0, 0x8, s, mediaType, 0, 0, 0, 0, 0, 0};
+        byte[] data = new byte[]{(byte) 0xc0, 0x8, s, mediaType, 0, 0, 0, 0,
+                0, 0};
         sendDataToCanbox(data, data.length);
     }
 
@@ -722,7 +734,8 @@ mVolumeMax = ((data & 0xff0000) >> 16);
 
     protected void doKey(int value) {
         if (mContext != null) {
-            BroadcastUtil.sendToCarService(mContext, MyCmd.Cmd.APP_REQUEST_SEND_KEY, value);
+            BroadcastUtil.sendToCarService(mContext,
+                    MyCmd.Cmd.APP_REQUEST_SEND_KEY, value);
             Util.setFileValue("/sys/class/ak/source/beep", "2");
         }
     }
@@ -743,9 +756,9 @@ mVolumeMax = ((data & 0xff0000) >> 16);
     }
 
     protected boolean sendCanboxAir(byte[] buf) {
-        ///	if (!AppConfig.getTopActivity().contains("com.canboxsetting.CanAirControlActivity")){
-        ///	return false;
-        ///	}
+//		if (!AppConfig.getTopActivity().contains("com.canboxsetting.CanAirControlActivity")){
+//			return false;
+//		}
         if (mContext != null) {
             Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
             i.putExtra("buf", buf);
@@ -1173,8 +1186,9 @@ mVolumeMax = ((data & 0xff0000) >> 16);
         try {
             if (!file.exists()) {
                 file.createNewFile();
-                //FileUtils.setPermissions(SYSTEM_CONFIG, FileUtils.S_IRWXU  | FileUtils.S_IRWXG | FileUtils.S_IRWXO, -1, -1);
-                //FileUtils.setPermissions(SYSTEM_CONFIG, FileUtils.S_IRWXU  | FileUtils.S_IRWXG | FileUtils.S_IRWXO, -1, -1);
+                ///FileUtils.setPermissions(SYSTEM_CONFIG, FileUtils.S_IRWXU  | FileUtils.S_IRWXG | FileUtils.S_IRWXO, -1, -1);
+                ///FileUtils.setPermissions(SYSTEM_CONFIG, FileUtils.S_IRWXU  | FileUtils.S_IRWXG | FileUtils.S_IRWXO, -1, -1);
+
                 Util.sudoExec("chmod:666:" + getKeyMapFile());
             } else {
 
@@ -2352,7 +2366,8 @@ Bit0
         if (!sendCanboxAir(data) && msg != 0) {
             Handler handler = getHandler("CanService");
             if (null != handler) {
-                handler.sendMessage(handler.obtainMessage(msg, data));
+                handler.sendMessage(handler.obtainMessage(msg,
+                        data));
             }
         }
     }

@@ -71,7 +71,8 @@ public class Mcu {
 		if (len < 2)
 			return;
 		if (mHandler != null) {
-			mHandler.sendMessage(mHandler.obtainMessage(MSG_RECEIVE_MCU_DATA,param));
+			mHandler.sendMessage(mHandler.obtainMessage(MSG_RECEIVE_MCU_DATA,
+					param));
 		}
 	}
 
@@ -83,7 +84,8 @@ public class Mcu {
 		return (byte) ~(sum ^ 0xFF);
 	}
 
-	private native final int nativeSendCommand(int cmd, int param1,	byte[] param2);
+	private native final int nativeSendCommand(int cmd, int param1,
+			byte[] param2);
 
 	public void sendCmd(int cmd) {
 		nativeSendCommand(cmd, 0, null);
@@ -94,9 +96,9 @@ public class Mcu {
 	}
 
 	public int sendCmd(byte[] param2) {
-		/// byte[] param = new byte[param2.length+1];
-		/// Util.byteArrayCopy(param, param2, 0, 0, param2.length);
-		/// param[param2.length] = checkSum(param2, param2.length);
+		// byte[] param = new byte[param2.length+1];
+		// Util.byteArrayCopy(param, param2, 0, 0, param2.length);
+		// param[param2.length] = checkSum(param2, param2.length);
 		Log.e(TAG, "sendCmd:" + Util.byteArrayToHex(param2));
 		DebugMessage.updateText(param2, false);
 		return nativeSendCommand(MCU_WRITE_DATA, param2.length, param2);
@@ -112,7 +114,7 @@ public class Mcu {
 	
 	private void kernelCallback(byte[] param, int len) {
 		// mHandlerKernel.sendMessage(mHandlerKernel.obtainMessage(0, param));
-		// Log.d(TAG, "kernelCallback");
+//		Log.d(TAG, "kernelCallback");
 		if (mOsHandler != null && len > 2) {
 			mOsHandler.sendMessage(mHandler.obtainMessage(MSG_RECEIVE_OS_DATA, param));
 		}

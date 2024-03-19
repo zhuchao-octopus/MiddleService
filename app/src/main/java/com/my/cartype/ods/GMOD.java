@@ -1,6 +1,5 @@
 package com.my.cartype.ods;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -97,7 +96,7 @@ public class GMOD extends Canbox {
 			{ 0x14, MyCmd.Keycode.NAVIGATION },
 			{ 0x15, MyCmd.Keycode.AS },
 			{ 0x16, MyCmd.Keycode.PLAY_PAUSE },
-		    { 0x17, AK_KEYPAD_VOLUME_A },
+		{ 0x17, AK_KEYPAD_VOLUME_A },
 			{ 0x18, AK_KEYPAD_VOLUME_D }, 
 			{ 0x19, MyCmd.Keycode.KEY_SEEK_NEXT },
 			{ 0x1a, MyCmd.Keycode.KEY_SEEK_PREV },
@@ -244,12 +243,14 @@ public class GMOD extends Canbox {
 				} else {
 
 					temp = data[7] - 40;
-					s = temp + mContext.getResources().getString(
+					s = temp
+							+ mContext.getResources().getString(
 									R.string.temp_unic_centigrade);
 
 				}
 
-				GlobalDef.sendByCarServiceToSystemUI(mContext,"com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
+				GlobalDef.sendByCarServiceToSystemUI(mContext,
+						"com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
 			}
 		}
 		
@@ -259,13 +260,14 @@ public class GMOD extends Canbox {
 			send[1] = (byte) 0xff;
 			Util.byteArrayCopy(send, airData, 2, 0, airData.length);
 			sendCanboxInfo("com.canboxsetting", send);
-		    //return;
+		//	return;
 		}
 		
 		if (airControl) {
 			Handler handler = getHandler("CanService");
 			if (null != handler) {
-				handler.sendMessage(handler.obtainMessage(CANBOX_RETURN_AIR,airData));
+				handler.sendMessage(handler.obtainMessage(CANBOX_RETURN_AIR,
+						airData));
 			}
 		}
 
@@ -463,7 +465,6 @@ public class GMOD extends Canbox {
 	
 	private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
 	private int mUnit = 0;
-	@SuppressLint("DefaultLocale")
 	public void updateOutDoorTemp(int temp) {
 
 		if (temp == CarUtil.INVALID_OUT_DOOR_TEMP) {
@@ -491,19 +492,23 @@ public class GMOD extends Canbox {
 
 		String s = "";
 		// if (temp >= -58 && temp <= 171) {
-		if (mUnit != 1)
-		{
-			s = String.format("%d.%d%s",temp / 10,(temp % 10) >= 0 ? (temp % 10) : -(temp % 10),mContext.getResources().getString(
+		if (mUnit != 1) {
+
+			s = String.format(
+					"%d.%d%s",
+					temp / 10,
+					(temp % 10) >= 0 ? (temp % 10) : -(temp % 10),
+					mContext.getResources().getString(
 							R.string.temp_unic_centigrade));
-		}
-		else
-		{
+
+		} else {
 			s = String.format("%d%s", temp / 10, mContext.getResources()
 					.getString(R.string.temp_unic_fahrenheit));
 		}
 
 		if (s.length() > 1) {
-			GlobalDef.sendByCarServiceToSystemUI(mContext,"com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
+			GlobalDef.sendByCarServiceToSystemUI(mContext,
+					"com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
 		}
 		
 	}

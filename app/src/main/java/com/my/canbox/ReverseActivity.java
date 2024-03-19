@@ -46,7 +46,8 @@ public class ReverseActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.back);
-		mRadioUI = ReverseUI.getInstanse(this, findViewById(R.id.screen1_main),0);
+		mRadioUI = ReverseUI.getInstanse(this, findViewById(R.id.screen1_main),
+				0);
 
 		mRadioUI.onCreate();
 

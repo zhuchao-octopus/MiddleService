@@ -171,6 +171,7 @@ import com.my.cartype.ods.VolvoXC60;
 import com.my.cartype.ods.WeiChaiU70OD;
 import com.my.cartype.ods.YeMaOD;
 import com.my.cartype.ods.ZhidouOD;
+import com.my.cartype.ods.ZHONGXINGOD;
 import com.my.cartype.other.BeiqiDianDongCheOther;
 import com.my.cartype.other.TestKLD;
 import com.my.cartype.raise.AudiRaise;
@@ -188,7 +189,6 @@ import com.my.cartype.raise.CarX80;
 import com.my.cartype.raise.ChangChengC30Raise;
 import com.my.cartype.raise.ChangChengFengJun6Raise;
 import com.my.cartype.raise.ChangChengRaise;
-import com.my.cartype.raise.ChangChengRaise_OuDi;
 import com.my.cartype.raise.ChuanQiRaise;
 import com.my.cartype.raise.DaTongRaise;
 import com.my.cartype.raise.DongFengFengShenAX7Raise;
@@ -615,7 +615,7 @@ public class CanboxToPro {
 		BMWE46LuZheng.class,
 		Megane3.class,
 		Teana2005XinChi.class,
-		ChangChengRaise_OuDi.class,
+		ZHONGXINGOD.class
 	};
 	
 	private final static String[] RETURN_TYPE = {
@@ -629,12 +629,13 @@ public class CanboxToPro {
 		Canbox mCanbox = null;
 		
 		if (version >= 3) {
-			try {
+			try 
+			{
 				if (index > 0 && index <= mAllCanbox.length) {
 					index--;
 					mCanbox = (Canbox) mAllCanbox[index].newInstance();
 				} 
-			} catch (Exception ignored) {
+			} catch (Exception e) {
 			}
 		}
 
@@ -642,28 +643,35 @@ public class CanboxToPro {
 			if (mCanboxType != null) {
 				if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_FORD_SIMPLE)) {
 					mCanbox = new CarFordSimple();
-				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOYOTA)) {
+				} else if (mCanboxType
+						.equals(MachineConfig.VALUE_CANBOX_TOYOTA)) {
 					mCanbox = new CarToyota2013();
 				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA)) {
 					mCanbox = new CarMazda();
-				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_BESTURN_X80)) {
+				} else if (mCanboxType
+						.equals(MachineConfig.VALUE_CANBOX_BESTURN_X80)) {
 					mCanbox = new CarX80();
-				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TEANA_2013)) {
+				} else if (mCanboxType
+						.equals(MachineConfig.VALUE_CANBOX_TEANA_2013)) {
 					mCanbox = new CarTEANA();
 				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_OPEL)) {
 					mCanbox = new CarOPEL();
 				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_VW)) {
 					mCanbox = new CarVW();
-				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MITSUBISHI_OUTLANDER_SIMPLE)) {
+				} else if (mCanboxType
+						.equals(MachineConfig.VALUE_CANBOX_MITSUBISHI_OUTLANDER_SIMPLE)) {
 					mCanbox = new MitsubishiOutLanderSimple();
 				} 		
 				else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_HY)) {
 					mCanbox = new CarHY();
-				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PSA_BAGOO)) { //10
+				} else if (mCanboxType
+						.equals(MachineConfig.VALUE_CANBOX_PSA_BAGOO)) { //10
 					mCanbox = new CarPSABagoo();
-				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_GM_SIMPLE)) {
+				} else if (mCanboxType
+						.equals(MachineConfig.VALUE_CANBOX_GM_SIMPLE)) {
 					mCanbox = new CarGMSimple();
-				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_GM_RAISE)) {
+				} else if (mCanboxType
+						.equals(MachineConfig.VALUE_CANBOX_GM_RAISE)) {
 					mCanbox = new GMRaise();
 				} else if (mCanboxType
 						.equals(MachineConfig.VALUE_CANBOX_HONDA_DA_SIMPLE)) {
@@ -842,13 +850,20 @@ public class CanboxToPro {
 					mCanbox = new SubaruSimple();
 				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_GM_OD)) {
 					mCanbox = new GMOD();
-				} else if (mCanboxType
-						.equals(MachineConfig.VALUE_CANBOX_MAZDA_RAISE)) {
+				} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA_RAISE)) {
 					mCanbox = new MazdaRaise();
-				}  else if (mCanboxType
-						.equals(MachineConfig.VALUE_CANBOX_TOYOTA_LOW)) {
+					
+				} 
+				
+				else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOYOTA_LOW)) {
 					mCanbox = new CarToyota2013Low();
-				} else {
+				} 
+				
+				else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ZHONGXING_OD)) {
+					mCanbox = new ZHONGXINGOD();
+				} 
+				
+				else {
 					mCanboxType = null;
 					mCanbox = new CarNone();
 					mCanbox = null;
@@ -865,7 +880,8 @@ public class CanboxToPro {
 	
 
 
-	public final static int getReturnMsgType(String mCanboxType, int version,int index) {
+	public final static int getReturnMsgType(String mCanboxType, int version,
+			int index) {
 		int type = 0;
 
 		if (version >= 3) {
@@ -878,9 +894,9 @@ public class CanboxToPro {
 							return i + 1;
 						}
 					}
-						///	if ((index == RETURN_TYPE[i][0])) {
-						///		return RETURN_TYPE[i][1];
-						///	}
+//					if ((index == RETURN_TYPE[i][0])) {
+//						return RETURN_TYPE[i][1];
+//					}
 				}
 			}
 
@@ -888,7 +904,8 @@ public class CanboxToPro {
 
 			if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA)
 					|| mCanboxType.equals(MachineConfig.VALUE_CANBOX_OPEL)
-					|| mCanboxType.equals(MachineConfig.VALUE_CANBOX_BESTURN_X80)) {
+					|| mCanboxType
+							.equals(MachineConfig.VALUE_CANBOX_BESTURN_X80)) {
 				type = 1;
 			}
 		}

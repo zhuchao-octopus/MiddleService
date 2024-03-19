@@ -23,15 +23,28 @@ import com.my.canbox.RadarManager;
 import com.my.canbox.WarningMsgManager;
 import com.my.cartype.CarUtil;
 
-public class VolvoXC60 extends Canbox {
+import android.os.Handler;
+import android.os.Message;
+import java.util.Date;
 
-	public VolvoXC60() {
+public class ZHONGXINGOD extends Canbox {
 
+	public ZHONGXINGOD() {
+
+		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x01, 0x2, 0x3,
+				0x0, 0x0 });
+		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x02, 0x0, 0x0,
+				0x0, 0x1 });
+				
 		buildCmdVersion((byte) 0x30, (byte) 0x0);
-		buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
+		buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
 
-		buildCmdAngle((byte) 0x26, (byte) 0x0, 0x2710);
+		buildCmdAngle((byte) 0x29, (byte) 0x3, 0x15c2);
 		mIdAC = 0x21;
+		
+		//byte[] data = new byte[] { (byte) 0x81, 0x1, 1 };
+		//sendDataToCanbox(data, data.length);
+		Log.d(TAG,"NEW ZHONGXINGOD CAN BOX.");
 	}
 
 
@@ -116,6 +129,8 @@ public class VolvoXC60 extends Canbox {
 			doKey(MyCmd.Keycode.MULT_PREV_AND_RECEIVE, data[3]);
 			break;
 		case 0x5:
+		case 0x09:
+		case 0x0A:
 			doKey(KEY_BT, data[3]);
 			break;
 		case 0x6:
@@ -213,28 +228,24 @@ public class VolvoXC60 extends Canbox {
 				return;
 			}
 		}
+		
 		mTempOutDoor = temp;
 		int t = temp;
+		
 		if (CarUtil.mTempUnit == 2) {
 			mOutDoorTempUnit |= 0x40;
 		} else if (CarUtil.mTempUnit == 1) {
 			mOutDoorTempUnit = 0;
 		}
 
-		String unit = mContext.getResources().getString(
-				R.string.temp_unic_centigrade);
-		if ((mOutDoorTempUnit & 0x40) != 0){
-			 unit = mContext.getResources().getString(
-						R.string.temp_unic_fahrenheit);
+		String unit = mContext.getResources().getString(R.string.temp_unic_centigrade);
+		if ((mOutDoorTempUnit & 0x40) != 0)
+		{
+			 unit = mContext.getResources().getString(R.string.temp_unic_fahrenheit);
 			 t =   (t*18+320) /10;
 		}
-		GlobalDef.sendByCarServiceToSystemUI(
-				mContext,
-				"com.android.systemui",
-				MyCmd.Cmd.SET_OUT_DOOR_TEMP,
-				""
-						+ t
-						+ unit);
+		
+		GlobalDef.sendByCarServiceToSystemUI(mContext,"com.android.systemui",MyCmd.Cmd.SET_OUT_DOOR_TEMP,""+ t + unit);
 	}
 	
 	
@@ -277,6 +288,7 @@ public class VolvoXC60 extends Canbox {
 	@Override
 	public void parseCanboxData(byte[] data, int len) {
 		// TODO Auto-generated method stub
+		//Log.d(TAG,"parseCanboxData data.len="+len);
 		switch (data[0]) {
 		case 0x20: {
 			if (mSource != MyCmd.SOURCE_AUX){
@@ -294,22 +306,22 @@ public class VolvoXC60 extends Canbox {
 		{
 			byte radar;
 			boolean show = false;
-			radar = getRadarData(data[2]);
+			radar = data[2];//getRadarData(data[2]);
 			if (mRadar[0] != radar){
 				mRadar[0] = radar;
 				show = true;
 			}
-			radar = getRadarData(data[3]);
+			radar = data[3];//getRadarData(data[3]);
 			if (mRadar[1] != radar) {
 				mRadar[1] = radar;
 				show = true;
 			}
-			radar = getRadarData(data[4]);
+			radar = data[4];//getRadarData(data[4]);
 			if (mRadar[2] != radar) {
 				mRadar[2] = radar;
 				show = true;
 			}
-			radar = getRadarData(data[5]);
+			radar = data[5];//getRadarData(data[5]);
 			if (mRadar[3] != radar) {
 				mRadar[3] = radar;
 				show = true;
@@ -335,29 +347,30 @@ public class VolvoXC60 extends Canbox {
 			// byteArrayCopy(mRadar, data, 4, 2, 4);
 			byte radar;
 			boolean show = false;
-			radar = getRadarData(data[2]);
+			radar = data[2];//getRadarData(data[2]);
 			if (mRadar[4] != radar){
 				mRadar[4] = radar;
 				show = true;
 			}
-			radar = getRadarData(data[3]);
+			radar = data[3];//getRadarData(data[3]);
 			if (mRadar[5] != radar) {
 				mRadar[5] = radar;
 				show = true;
 			}
-			radar = getRadarData(data[4]);
+			radar = data[4];//getRadarData(data[4]);
 			if (mRadar[6] != radar) {
 				mRadar[6] = radar;
 				show = true;
 			}
-			radar = getRadarData(data[5]);
+			radar = data[5];//getRadarData(data[5]);
 			if (mRadar[7] != radar) {
 				mRadar[7] = radar;
 				show = true;
 			}
 
 	
-			if (show) {
+			if (show) 
+			{
 				boolean zero = Util.isZero(mRadar);
 				if (!zero) {
 					RadarManager.start(mContext);
@@ -405,11 +418,49 @@ public class VolvoXC60 extends Canbox {
 			}
 		}
 			break;
+			
+		case 0x38:
+		{
+		sendCanboxInfo("com.canboxsetting", data);
+		}
+		break;
+		case 0x39:
+		{
+			if (((data[2] & 0xff) != 0) || ((data[3] & 0xff) != 0)) 
+			{
+				if (!"com.canboxsetting/com.canboxsetting.TPMSActivity".equals(AppConfig.getTopActivity())) {
+
+					try {
+						Intent it = new Intent(Intent.ACTION_VIEW);
+						it.setClassName("com.canboxsetting","com.canboxsetting.TPMSActivity");
+						it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						mContext.startActivity(it);
+						mHandler.sendMessageDelayed(mHandler.obtainMessage(DEALY_SEND_TPMS, data), 1000);
+					} catch (Exception e) {
+						// Log.e(TAG, ""+e);
+					}
+				}
+				else
+				{
+				sendCanboxInfo("com.canboxsetting", data);
+				}
+			} 
+			else
+			{
+			sendCanboxInfo("com.canboxsetting", data);
+			}
+		}
+		
+		break;	
 	default:
 		super.parseCanboxData(data, len);
 
 		}
 		
+	//if (data[0] == 0x40 || data[0] == 0x41 || data[0] == 0x50 || data[0] == 0x63 || data[0] == 0x25 || data[0] == 0x16 || data[0] == 0x65|| data[0] == 0x66) 
+	//{
+	//   sendCanboxInfo("com.canboxsetting", data);
+	//}	
 
 	}
 
@@ -428,4 +479,59 @@ public class VolvoXC60 extends Canbox {
 	public void setMediaSrc(int source) {
 		mSource = source;
 	}
+
+	public int getUpdateTime() {
+		return 60000;
+	}
+	public void updateTime() {
+		Date curDate = new Date(System.currentTimeMillis());
+		byte h = (byte) curDate.getHours();
+		h = fixTimeHour(h);
+		byte m = (byte) curDate.getMinutes();
+		byte y = (byte) (curDate.getYear() - 100);
+		byte mon = (byte)( curDate.getMonth() + 1);
+		byte d = (byte) curDate.getDate();
+		//byte []buf = new byte[] { (byte) 0x82, 0x06, y, mon, d, h,m, 0 };
+		byte []buf = new byte[] { (byte) 0xC9, 0x06, m, h, d, mon,y, 0 };
+		sendDataToCanbox(buf, buf.length);
+	}
+	
+	private final static int HIDE_RADAR = 0;
+	private final static int DEALY_SEND_TPMS = 1;	
+	private Handler mHandler = new Handler() 
+	{
+		public void handleMessage(Message msg) 
+		{
+			switch (msg.what) {
+			case HIDE_RADAR:
+				RadarManager.stop();
+				break;
+			case DEALY_SEND_TPMS:
+				try{
+				sendCanboxInfo("com.canboxsetting", (byte[])(msg.obj));
+				}catch(Exception e){	
+				}
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+	
+	
+		@Override
+	public void startConnect() {
+		// TODO Auto-generated method stub
+		byte[] data = new byte[] { (byte) 0x81, 0x1, 1 };
+		sendDataToCanbox(data, data.length);
+		Log.d(TAG,"ZHONGXINGOD startConnect()");
+	}
+
+	@Override
+	public void stopConnect() {
+		// TODO Auto-generated method stub
+		byte[] data = new byte[] { (byte) 0x81, 0x1, 0 };
+		sendDataToCanbox(data, data.length);
+		Log.d(TAG,"ZHONGXINGOD stopConnect()");
+	}
+	
 }

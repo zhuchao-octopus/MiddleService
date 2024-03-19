@@ -448,42 +448,40 @@ public class CanService {
 							CarUtil.getCanboxInstance().setPhoneEx(status, num, name);
 
 						}
-					} 
-					else if (action.equals(MyCmd.BROADCAST_SEND_TO_CAN) || action.equals(MyCmd.BROADCAST_SEND_TO_CAN_FROM_BT)) 
-					{
+					} else if (action.equals(MyCmd.BROADCAST_SEND_TO_CAN)
+							|| action
+									.equals(MyCmd.BROADCAST_SEND_TO_CAN_FROM_BT)) {
 						if (mCanbox != null) {
 
 							byte[] buf = intent.getByteArrayExtra("buf");
 
-						        //Log.d("can", buf.toString() + "");
+//							Log.d("can", buf.toString() + "");
 							if (buf != null) {
 								mCanbox.sendDataToCanbox(buf, buf.length);
-							} 
-							else 
-							{
+							} else {
 								int cmd = intent.getIntExtra(MyCmd.EXTRA_COMMON_CMD, 0);
-								if (cmd != 0)
-								{
+								if (cmd != 0){
 									int data = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
 									mCanbox.doCmd(cmd, data);
 								}
 							}
 
 						}
-					} 
-					else if (MyCmd.BROADCAST_CMD_FROM_MUSIC.equals(action)) 
-					{
-						if (mCanbox != null || (GlobalDef.mMediaInfoToastBackground != 0)) 
-						{
-							String name = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
+					} else if (MyCmd.BROADCAST_CMD_FROM_MUSIC.equals(action)) {
+						if (mCanbox != null
+								|| (GlobalDef.mMediaInfoToastBackground != 0)) {
+							String name = intent
+									.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
 							
 							if (mAppSource != MyCmd.SOURCE_MUSIC) {
 								return;
 							}
 							
 							if (mCanbox != null) {
-								String artist = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA2);
-								String album = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA3);
+								String artist = intent
+										.getStringExtra(MyCmd.EXTRA_COMMON_DATA2);
+								String album = intent
+										.getStringExtra(MyCmd.EXTRA_COMMON_DATA3);
 
 								mCanbox.setSongName(name);
 

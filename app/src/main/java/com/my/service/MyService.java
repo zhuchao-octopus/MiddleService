@@ -359,7 +359,8 @@ public class MyService extends Service {
 	}
 
 	private void initParamterMachineConfig() {
-		String value = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_TIMEZONE);
+		String value = MachineConfig
+				.getPropertyReadOnly(MachineConfig.KEY_TIMEZONE);
 		Log.d(TAG, "initParamterMachineConfig:" + value);
 		if (value != null) {
 			final AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -370,7 +371,8 @@ public class MyService extends Service {
 			}
 		}
 
-		int hour12 = MachineConfig.getPropertyIntReadOnly(MachineConfig.KEY_TIME12);
+		int hour12 = MachineConfig
+				.getPropertyIntReadOnly(MachineConfig.KEY_TIME12);
 		if (hour12 == 1) {
 			set24Hour(false);
 		}
@@ -439,12 +441,14 @@ public class MyService extends Service {
 		if (value != null) {
 			MachineConfig.setProperty(MachineConfig.KEY_CAN_BOX, value);
 
-			Log.d(TAG,"set KEY_CAN_BOX "+ MachineConfig.getProperty(MachineConfig.KEY_CAN_BOX));
+			Log.d(TAG,
+					"set KEY_CAN_BOX "
+							+ MachineConfig
+									.getProperty(MachineConfig.KEY_CAN_BOX));
 			CanService.updateCanboxEx();
 		}
 
 		value = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_RUDDER);
-		Log.d(TAG,"MachineConfig.KEY_RUDDER="+ value);
 		
 		if (value != null) {
 			MachineConfig.setProperty(MachineConfig.KEY_RUDDER, value);
@@ -455,14 +459,13 @@ public class MyService extends Service {
 			}
 		}
 
-		value = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_VIDEO_ON_DRIVING);
-		Log.d("aaa", "KEY_VIDEO_ON_DRIVING:"+value);
+		value = MachineConfig
+				.getPropertyReadOnly(MachineConfig.KEY_VIDEO_ON_DRIVING);
 		if (value != null) {
 			Util.setFileValue("/sys/class/ak/source/reaksw", value);
 		}
 
 		value = MachineConfig.getPropertyReadOnly(MachineConfig.MCU_ILLUM_ACC_NODE);
-		
 		Log.d("aaa", "MCU_ILLUM_ACC_NODE:"+value);
 		if (value != null) {
 			Util.setFileValue("/sys/class/ak/source/accillumin", value);
@@ -744,8 +747,8 @@ public class MyService extends Service {
 				}
 			}
 		}
+//		sendRudderToSuding();
 		
-		//sendRudderToSuding();		
 		value = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_SUDING_MIC_GAIN);		
 		if (value != null) {
 			Util.setProperty(MachineConfig.KEY_SUDING_MIC_GAIN, value);
@@ -1202,7 +1205,8 @@ public class MyService extends Service {
 						mMcuManager.setMcuBTType(2);
 					}
 				}
-			} catch (Exception ignored) {
+			} catch (Exception e) {
+
 			}
 		}
 
@@ -1244,7 +1248,7 @@ public class MyService extends Service {
 		initVolume();
 
 		registerListener();
-        //registerMountListener(); // move to filemanager
+//		registerMountListener(); // move to filemanager
 		initUIService();
 
 		mHandler.sendEmptyMessageDelayed(MSG_INIT_OTHER, 2000);
@@ -1269,8 +1273,8 @@ public class MyService extends Service {
 		// mHandler.sendEmptyMessageDelayed(MSG_UPDATE_RADIO, 3000);
 
 		// doAutoTest(); //test
-        // DebugMessage.start(this);
-        // doUpdateCanbox();
+//		DebugMessage.start(this);
+//		doUpdateCanbox();
 	}
 
 	AutoTest mAutoTest;
@@ -1457,7 +1461,8 @@ public class MyService extends Service {
 		case MyCmd.Cmd.BT_PHONE_CALLLOG_LIST:{
 			Canbox box = CarUtil.getCanboxInstance();
 			if (box != null) {
-				Object obj = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_OBJECT);
+				//Object obj = intent.getExtra(MyCmd.EXTRA_COMMON_OBJECT);
+				Object obj = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_OBJECT);//MML
 				box.updateCallLog(obj);
 			}
 		}
@@ -1691,6 +1696,7 @@ public class MyService extends Service {
 	void doHideFixGpu() {
 		if (mShowGpuBug && mEmptyView != null) {
 			mWindowManager.removeView(mEmptyView);
+
 			mShowGpuBug = false;
 		}
 	}
@@ -1730,30 +1736,36 @@ public class MyService extends Service {
 					String action = intent.getAction();
 					Log.d(TAG, "onReceive" + action);
 					if (action.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE)
-							|| action.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_ID)
-							|| action.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_UI)
-							|| action.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI)
-							|| action.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI_FRAMEWORK)
-							|| action.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_BT))
-					{
+							|| action
+									.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_ID)
+							|| action
+									.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_UI)
+							|| action
+									.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI)
+							|| action
+									.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI_FRAMEWORK)
+							|| action
+									.equals(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_BT)) {
 						doReceiveAppsCmd(intent);
-					}
-					else if (action.equals(MyCmd.BROADCAST_MACHINECONFIG_UPDATE))
-					{
-						String s = intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD);
+					} else if (action
+							.equals(MyCmd.BROADCAST_MACHINECONFIG_UPDATE)) {
+
+						String s = intent
+								.getStringExtra(MyCmd.EXTRA_COMMON_CMD);
 						if (MachineConfig.KEY_CAN_BOX.equals(s)) {
 							CanService.updateCanboxEx();
 						} else if (MachineConfig.KEY_CAN_BOX_EX.equals(s)) {
 							CarUtil.updateCanboxExData();
-						} else if (SystemConfig.SHOW_FOCUS_CAR_WARNING_MSG.equals(s)) {
+						} else if (SystemConfig.SHOW_FOCUS_CAR_WARNING_MSG
+								.equals(s)) {
 							CanService.updateCanboxSettings();
 						} else if (MachineConfig.KEY_SCREEN1_VIEW.equals(s)) {
 							ReverseManager.reinit(mThis);
 						} else if (MachineConfig.KEY_RUDDER.equals(s)) {
-							GlobalDef.mRudder = intent.getBooleanExtra(MyCmd.EXTRA_COMMON_DATA, false);
-						} 
-						else if (MachineConfig.KEY_SAVE_DRIVER_PACKAGE.equals(s)) 
-						{
+							GlobalDef.mRudder = intent.getBooleanExtra(
+									MyCmd.EXTRA_COMMON_DATA, false);
+						} else if (MachineConfig.KEY_SAVE_DRIVER_PACKAGE
+								.equals(s)) {
 							getSaveDriveConfig();
 						} else if (MachineConfig.KEY_SAVE_DRIVER.equals(s)) {
 							getSaveDriveSwitch();
@@ -1761,9 +1773,12 @@ public class MyService extends Service {
 							OSProManager.mNoReverse = intent.getBooleanExtra(
 									MyCmd.EXTRA_COMMON_DATA, false);
 						} else if (MachineConfig.KEY_SWITCH_TO_FRONT_CAMER.equals(s)) {
-							OSProManager.mSwitchToFrontCameraTime = MachineConfig.getPropertyIntOnce(MachineConfig.KEY_SWITCH_TO_FRONT_CAMER);
+							OSProManager.mSwitchToFrontCameraTime = MachineConfig
+									.getPropertyIntOnce(MachineConfig.KEY_SWITCH_TO_FRONT_CAMER);
+
 						} else if (MachineConfig.KEY_ACC_DELAY_OFF.equals(s)) {
-							String time = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
+							String time = intent
+									.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
 							//if (time != null) {
 								updateAccPowerOffDelay(time);
 							//}
@@ -1774,7 +1789,8 @@ public class MyService extends Service {
 							}
 							udpateUSBDvdConfig(true);
 						}  else if (MachineConfig.KEY_PANEL_KEY_DEF_CONFIG.equals(s)) {
-							int value = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+							int value = intent
+									.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);			
 							
 							GlobalDef.mPannelKeyType = (value & 0xff00) >> 8;
 						}  else if (SystemConfig.CANBOX_TEMP_UNIT.equals(s)) {
@@ -1793,7 +1809,7 @@ public class MyService extends Service {
 								@Override
 								public void run() {
 									// TODO Auto-generated method stub
-									killLauncher(0);
+									killLauncher();
 								}
 							}, 300);
 						} else if (SystemConfig.GPS_BRAKE.equals(s)||
@@ -1832,15 +1848,14 @@ public class MyService extends Service {
 							GlobalDef.mTopIsNeedCanboxInfo = false;
 						}
 						
-						if (s.contains("com.zjinnova.zlink") || 
-						s.contains("com.suding.speedplay") || 
-						s.contains("net.easyconn") || s.contains("com.carletter.car"))
-                        {
+						if (s.contains("com.zjinnova.zlink") || s.contains("com.suding.speedplay") ||
+								s.contains("net.easyconn") ||
+                                s.contains("com.carletter.car")
+								){
 							Util.setProperty("ak.codec.disable_video_out", "0");
 							GlobalDef.mTopIsNoNeedBrakeControl = true;
 							sendRudderToSuding();							
-						} 
-						else {
+						} else {
 							if (GlobalDef.mTopIsNoNeedBrakeControl){
 								GlobalDef.mTopIsNoNeedBrakeControl = false;								
 								mMcuManager.setBrakeProp();
@@ -1909,8 +1924,7 @@ public class MyService extends Service {
 						GlobalDef.sendByCarServiceToSystemUI(mThis,
 								"com.android.systemui",
 								MyCmd.Cmd.SHOW_CUR_APP_NAME);
-					}
-					else if (action.equals(Intent.ACTION_LOCALE_CHANGED)) {
+					} else if (action.equals(Intent.ACTION_LOCALE_CHANGED)) {
 						mToastSaveDrive = null;
 						initToastSaveDrive();
 						
@@ -1918,8 +1932,9 @@ public class MyService extends Service {
 						if (box != null){
 							box.udpateLang();
 						}
-					}
-					else if (action.equals(Intent.ACTION_CONFIGURATION_CHANGED)) {
+						
+					} else if (action
+									.equals(Intent.ACTION_CONFIGURATION_CHANGED)) {
 						mToastSaveDrive = null;
 						initToastSaveDrive();
 						if (Util.isRKSystem()) {
@@ -1928,14 +1943,14 @@ public class MyService extends Service {
 									|| MachineConfig.VALUE_SYSTEM_UI21_RM10_2.equals(GlobalDef.mSystemUI)
 									|| MachineConfig.VALUE_SYSTEM_UI21_RM12.equals(GlobalDef.mSystemUI)/*
 									|| MachineConfig.VALUE_SYSTEM_UI16_7099.equals(GlobalDef.mSystemUI)*/)) {
-								killLauncher(1);
+								killLauncher();
 							}
 						}
-					}
-					else if (action.equals("com.carletter.link")) {
+					} else if (action.equals("com.carletter.link")) {
 						int eventType = intent.getIntExtra("linkMode", 0);
 						String stat = intent.getStringExtra("status");
-						Log.d(TAG, "com.carletter.link eventType=" + eventType + ":" + stat);
+						Log.d(TAG, "com.carletter.link eventType=" + eventType + ":"
+								+ stat);
 						if (eventType == 4) {
 							if ("CONNECTED".equals(stat)){
 								mCarletterConnect = true;
@@ -1946,9 +1961,8 @@ public class MyService extends Service {
 								mCarletterConnect = false;
 							}
 						}
-					}
-					else if (action.equals(ZLINK_BROAST))
-					{
+
+					} else if (action.equals(ZLINK_BROAST)) {
 						String status = intent.getStringExtra("status");
 						Log.d("ffdd", status+"!!!!!!!!!!33:");
 						if ("CONNECTED".equals(status)) {
@@ -1957,7 +1971,6 @@ public class MyService extends Service {
 					}
 				}
 			};
-
 			IntentFilter iFilter = new IntentFilter();
 
 			iFilter.addAction(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE);
@@ -1984,8 +1997,8 @@ public class MyService extends Service {
 	private boolean mCarletterConnect = false;
 	private WakeLock mWakeLock;
 
-	private void killLauncher(int flag) {
-		Log.d(TAG, "killLauncher! flag="+flag);
+	private void killLauncher() {
+		Log.d(TAG, "killLauncher!");
 		try {
 			ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
 			//am.forceStopPackage("com.android.launcher");

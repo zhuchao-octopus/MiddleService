@@ -259,7 +259,9 @@ public class ReverseManager {
 			}
 			// mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 			if (mUI == null) {
-				mUI = ReverseUI.getInstanse(context,mView.findViewById(R.id.screen1_main), 0);
+				mUI = ReverseUI.getInstanse(context,
+						mView.findViewById(R.id.screen1_main), 0);
+
 			}
 
 			mUI.onCreate();

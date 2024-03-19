@@ -119,7 +119,8 @@ public class McuManager {
 		mCanService = CanService.getInstanse(mContext);
 		initEQIndepend();
 
-		String s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_BT_MUSIC_INSIDE);
+		String s = MachineConfig
+				.getPropertyReadOnly(MachineConfig.KEY_BT_MUSIC_INSIDE);
 		if (MachineConfig.VALUE_ON.equals(s)) {
 			mBtMusicInBTapk = true;
 		}
@@ -127,9 +128,10 @@ public class McuManager {
 
 		updateSmallLcd(mAppSource, null);
 		
-		GlobalDef.sendByCarServiceToSystemUI(mContext, "com.android.systemui",MyCmd.Cmd.SYSTEMUI_STATUS_BAR_VISIBLE); //for carsh....
-		/// GlobalDef.makeSureDVDExist(false);
-		/// setMcuSceen0(0);
+		GlobalDef.sendByCarServiceToSystemUI(mContext, "com.android.systemui",
+				MyCmd.Cmd.SYSTEMUI_STATUS_BAR_VISIBLE); //for carsh....
+//		GlobalDef.makeSureDVDExist(false);
+		// setMcuSceen0(0);
 		doLockPowerKey(true);
 		registerReceiver();
 
@@ -179,8 +181,10 @@ public class McuManager {
 					setBrakeProp();
 					break;
 				case 0xa:
-					Intent it = new Intent(MyCmd.BROADCAST_CAR_SERVICE_SEND);
-					it.putExtra(MyCmd.EXTRA_COMMON_CMD,	MyCmd.Cmd.MCU_RETURN_LIGHT_DECTECT );
+					Intent it = new Intent(
+							MyCmd.BROADCAST_CAR_SERVICE_SEND);
+					it.putExtra(MyCmd.EXTRA_COMMON_CMD,
+							MyCmd.Cmd.MCU_RETURN_LIGHT_DECTECT );
 					it.putExtra(MyCmd.EXTRA_COMMON_DATA, param[2]);
 					mContext.sendBroadcast(it);
 					break;
@@ -252,8 +256,10 @@ public class McuManager {
 					if (param[2] == 0x20){//battery
 						
 						if (GlobalDef.mMcuBatteryCell == 1) {
-							Intent it = new Intent(MyCmd.BROADCAST_CAR_SERVICE_SEND_SYSTEM_UI);
-							it.putExtra(MyCmd.EXTRA_COMMON_CMD,MyCmd.Cmd.MCU_BATTERY);
+							Intent it = new Intent(
+									MyCmd.BROADCAST_CAR_SERVICE_SEND_SYSTEM_UI);
+							it.putExtra(MyCmd.EXTRA_COMMON_CMD,
+									MyCmd.Cmd.MCU_BATTERY);
 							it.putExtra(MyCmd.EXTRA_COMMON_DATA, param[3]);
 							it.setPackage("com.android.systemui");
 							mContext.sendBroadcast(it);
@@ -568,13 +574,14 @@ public class McuManager {
 				mLockKey = 0;
 				Log.d(TAG, "MSG_FIRST_RUN_POWERON:" + mAppSource + ":" + msg.arg1+":"+AppConfig.getTopActivity());
 				if (mAppSource == MyCmd.SOURCE_NONE) {
-					if (msg.arg1 < 40 && !AppConfig.getTopActivity().contains("com.android.settings.FallbackHome")) 
-					{
+					if (msg.arg1 < 40
+							&& !AppConfig.getTopActivity().contains(
+									"com.android.settings.FallbackHome")) {
 						doPowerOn();
-						mMcu.sendCmd(ProtocolAk47.generateProtocol1(ProtocolAk47.TYPE_COMMON_SEND, (byte) 0x16,	(byte) 0x0));
-					} 
-					else 
-					{
+						mMcu.sendCmd(ProtocolAk47.generateProtocol1(
+								ProtocolAk47.TYPE_COMMON_SEND, (byte) 0x16,
+								(byte) 0x0));
+					} else {
 						if (msg.arg1 < 40) {
 							mMcuHandler.removeMessages(MSG_FIRST_RUN_POWERON);
 							mMcuHandler.sendMessageDelayed(mMcuHandler
@@ -1104,7 +1111,7 @@ public class McuManager {
 			}
 		}
 
-		Log.d(TAG, "doKey==>:" + key);
+		Log.d(TAG, "doKey:" + key);
 		// checkWakeLock(key);
 		GlobalDef.wakeLockOnce();
 		if (GlobalDef.mIsTesting) {
@@ -1122,7 +1129,6 @@ public class McuManager {
 		if (isLockKeyTime(key)) {
 			return 0;
 		}
-		
 		lockKeyTime(key);
 
 		switch ((byte)key) {
@@ -1131,16 +1137,17 @@ public class McuManager {
 			doKeyMute();
 			break;
 		case MyCmd.Keycode.VOLUME_DOWN:
-			//mContext.sendBroadcast(new Intent(//MyCmd.BROADCAST_ACC_DELAY_POWER_OFF));
-			//MyService.testGPSSpeedp(10);
+//			mContext.sendBroadcast(new Intent(
+//					MyCmd.BROADCAST_ACC_DELAY_POWER_OFF));
+//			MyService.testGPSSpeedp(10);
 			setVoulumeIncrease(false);
 			break;
 		case MyCmd.Keycode.VOLUME_UP:
-			//MyService.testGPSSpeedp(40);
+//			MyService.testGPSSpeedp(40);
 			setVoulumeIncrease(true);
 			break;
 		case MyCmd.Keycode.HOME:
-			 //killAllNoSystemProcess();
+			// killAllNoSystemProcess();
 			Kernel.doKeyEvent(Kernel.KEY_HOMEPAGE);
 			break;
 		case MyCmd.Keycode.BACK:
@@ -1253,9 +1260,11 @@ public class McuManager {
 		case MyCmd.Keycode.KEY_EQ_SEL:
 
 			if (!AppConfig.CAR_EQ.equals(AppConfig.getTopActivity())) {
-				UtilSystem.doRunActivity(mContext, "com.eqset",	"com.eqset.EQActivity");
+				UtilSystem.doRunActivity(mContext, "com.eqset",
+						"com.eqset.EQActivity");
 			} else {
-				BroadcastUtil.sendByCarService(mContext, AppConfig.PACKAGE_EQ,MyCmd.Cmd.EQ_QUIT);
+				BroadcastUtil.sendByCarService(mContext, AppConfig.PACKAGE_EQ,
+						MyCmd.Cmd.EQ_QUIT);
 			}
 			break;
 		case MyCmd.Keycode.KEY_EQ_MODE:
@@ -1287,9 +1296,11 @@ public class McuManager {
 		case MyCmd.Keycode.KEY_AM: {
 			try {
 				Intent it = new Intent(Intent.ACTION_VIEW);
-				it.setClassName(AppConfig.PACKAGE_CAR_UI,"com.my.radio.RadioActivity");
+				it.setClassName(AppConfig.PACKAGE_CAR_UI,
+						"com.my.radio.RadioActivity");
 				it.putExtra("amfm", (byte) 3);
-				it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+				it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+						| Intent.FLAG_ACTIVITY_NEW_TASK);
 				mContext.startActivity(it);
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage());
@@ -1299,9 +1310,11 @@ public class McuManager {
 		case MyCmd.Keycode.KEY_FM: {
 			try {
 				Intent it = new Intent(Intent.ACTION_VIEW);
-				it.setClassName(AppConfig.PACKAGE_CAR_UI,"com.my.radio.RadioActivity");
+				it.setClassName(AppConfig.PACKAGE_CAR_UI,
+						"com.my.radio.RadioActivity");
 				it.putExtra("amfm", (byte) 0);
-				it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+				it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT
+						| Intent.FLAG_ACTIVITY_NEW_TASK);
 				mContext.startActivity(it);
 			} catch (Exception e) {
 				Log.e(TAG, e.getMessage());
@@ -1309,7 +1322,7 @@ public class McuManager {
 		}
 			break;
 		case MyCmd.Keycode.TIME_SETTING:
-			//UtilSystem.doRunActivity(mContext, Settings.ACTION_DATE_SETTINGS);
+//			UtilSystem.doRunActivity(mContext, Settings.ACTION_DATE_SETTINGS);
 			UtilSystem.doRunActivity(mContext, "com.android.deskclock", "com.android.deskclock.DeskClock");			
 			break;
 		case MyCmd.Keycode.RADIO:
@@ -1390,7 +1403,8 @@ public class McuManager {
 				UtilCarKey.doKeyDVD(mContext);
 			} else {
 				if (!(AppConfig.getTopActivity().contains(AppConfig.USB_DVD))) {
-					UtilSystem.doRunActivity(mContext, "com.car.dvdplayer",	AppConfig.USB_DVD);
+					UtilSystem.doRunActivity(mContext, "com.car.dvdplayer",
+							AppConfig.USB_DVD);
 				}
 			}
 			break;
@@ -1398,11 +1412,11 @@ public class McuManager {
 			// Toast.makeText(mContext, R.string.key_not_support,
 			// Toast.LENGTH_SHORT).show();
 			// doKeyEject();
-			//			if (!GlobalDef.mIsUSBDvd) {
+//			if (!GlobalDef.mIsUSBDvd) {
 				prepareKeyEject();
-			//} else {
+//			} else {
 				BroadcastUtil.sendKey(mContext, "com.car.dvdplayer", key);
-			//}
+//			}
 
 			break;
 		case MyCmd.Keycode.UP:
@@ -1478,9 +1492,9 @@ public class McuManager {
 		case MyCmd.Keycode.CANBOX_OPEN_AC_VIEW:
 			toggleAC(1);
 			break;
-		//case MyCmd.Keycode.CANBOX_AC_OFF:
-		//     toggleAC(2);
-		//break;
+//		case MyCmd.Keycode.CANBOX_AC_OFF:
+//			toggleAC(2);
+//			break;
 		default:
 			ret = key;
 			break;
@@ -1529,7 +1543,8 @@ public class McuManager {
 
 	private void toggleAC(int action){
 		if (CarUtil.isShowAC()) {
-			boolean top = "com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity());
+			boolean top = "com.canboxsetting/com.canboxsetting.CanAirControlActivity"
+					.equals(AppConfig.getTopActivity());
 			
 			if ((top && action == 1) || (!top && action == 2)){
 				return ;
@@ -1827,8 +1842,6 @@ public class McuManager {
 	private boolean initModeKeyContent(){
 		if (mToastModeKey != null){			 
 			String s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_MODE_KEY_CONTENT);
-			Log.d(TAG, "initModeKeyContent:"+MachineConfig.KEY_MODE_KEY_CONTENT+"="+s);
-			
 			if (s != null){
 				if (s.contains("radio")) {
 					mListModeKey.add(new mModeKeyConfig(
@@ -1836,10 +1849,11 @@ public class McuManager {
 							R.string.button_text_radio));
 				}
 				if (s.contains("navi")) {
-					mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.NAVIGATION,R.string.button_text_navi));
+					//mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.NAVIGATION,R.string.button_text_navi));
 				}
 				if (s.contains("bt")) {
-					mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.BT,R.string.button_text_bt));
+					mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.BT,
+							R.string.button_text_bt));
 				}
 				if (s.contains("audio")) {
 					mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.AUDIO,
@@ -1858,17 +1872,17 @@ public class McuManager {
 							R.string.button_text_aux));
 				}
 				
-				if (s.contains("dvd")) 
-				{
+				if (s.contains("dvd")) {
 					AppConfig.updateHideAppConfig();
-					if (!GlobalDef.mIsUSBDvd) 
-					{
+					if (!GlobalDef.mIsUSBDvd) {
 						if (!AppConfig.isHidePackage("com.my.dvd.DVDPlayer")) {
-							mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.DVD,R.string.button_text_dvd));
+							mListModeKey
+									.add(new mModeKeyConfig(MyCmd.Keycode.DVD,
+											R.string.button_text_dvd));
 						}
-					} 
-					else {
-						mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.DVD,R.string.button_text_dvd));
+					} else {
+						mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.DVD,
+								R.string.button_text_dvd));
 					}
 				}
 				return true;
@@ -1884,13 +1898,11 @@ public class McuManager {
 			// init mode key list
 			mListModeKey.clear();
 			if (!initModeKeyContent()){
-			mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.KEY_RADIO_ONLY,
-					R.string.button_text_radio));
+			mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.KEY_RADIO_ONLY,R.string.button_text_radio));
 
 			//mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.NAVIGATION,R.string.button_text_navi));
 
-			mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.BT,
-					R.string.button_text_bt));
+			mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.BT,R.string.button_text_bt));
 
 			mListModeKey.add(new mModeKeyConfig(MyCmd.Keycode.AUDIO,
 					R.string.button_text_music));
@@ -1955,6 +1967,7 @@ public class McuManager {
 					mPowerOffDialog.dismiss();
 					mPowerOffDialog = null;
 				} else {
+
 				}
 				break;
 			case MSG_ANDROID_POWER_OFF:
@@ -2018,7 +2031,8 @@ public class McuManager {
 				mToastModeKey.show();
 			}
 			clearKeyMode();
-			mHandleModeKey.sendMessageDelayed(mHandleModeKey.obtainMessage(0),GlobalDef.mModeKeyDelayTime);
+			mHandleModeKey.sendMessageDelayed(mHandleModeKey.obtainMessage(0),
+					GlobalDef.mModeKeyDelayTime);
 		}
 	}
 
@@ -2601,10 +2615,10 @@ public class McuManager {
 			}
 		}
 		if (name != null) {
-			//if (source == MyCmd.SOURCE_BT_MUSIC) {// fix bt_music bug . is not
-			// good...
+//			if (source == MyCmd.SOURCE_BT_MUSIC) {// fix bt_music bug . is not
+													// good...
 				setSource(source);
-			//}
+//			}
 
 			if (!showScreen1) {
 				try {
@@ -2656,7 +2670,8 @@ public class McuManager {
 		}
 
 		if (showScreen1) {
-			BroadcastUtil.sendByCarService(mContext,	MyCmd.Cmd.REQUEST_SCREEN1_SHOW, source);
+			BroadcastUtil.sendByCarService(mContext,
+					MyCmd.Cmd.REQUEST_SCREEN1_SHOW, source);
 		}
 
 	}
@@ -2840,7 +2855,8 @@ public class McuManager {
 											 * MyCmd.SOURCE_AV_OFF
 											 */) {
 			clearKeyMode();
-			BroadcastUtil.sendByCarService(mContext, MyCmd.Cmd.SOURCE_CHANGE,	mAppSource, mOldSource);
+			BroadcastUtil.sendByCarService(mContext, MyCmd.Cmd.SOURCE_CHANGE,
+					mAppSource, mOldSource);
 
 		}
 		updateAutoVideoOut(index);
@@ -3292,7 +3308,7 @@ public class McuManager {
 		}
 	}
 
-	private final int[] mRecoverDevice = new int[] { 0, 0, 0 };
+	private int[] mRecoverDevice = new int[] { 0, 0, 0 };
 
 	public void resetBacklightStatus(int index) {
 		mRecoverDevice[index] = 1;
@@ -3697,7 +3713,6 @@ public class McuManager {
 			if (mConnectivityManager == null) {
 				mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 			}
-
 			//mConnectivityManager.setAirplaneMode(false);
 		} catch (Exception e) {
 

@@ -151,7 +151,8 @@ public class DebugMessage {
 				}
 			});
 
-			mScrollView = (ScrollView) mView.findViewById(R.id.debug_scrollview);
+			mScrollView = (ScrollView) mView
+					.findViewById(R.id.debug_scrollview);
 			mView.findViewById(R.id.clear_debug).setOnClickListener(
 					new OnClickListener() {
 

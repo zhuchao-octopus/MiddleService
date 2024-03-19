@@ -57,11 +57,12 @@ public class CarUtil {
 		if (mSettingCanboxBrake != 0) {
 			McuManager mMcuManager = McuManager.getInstanse();
 			if (mMcuManager != null) {
-				Log.d(TAG, "updateCanboxBrake:" + " brake " + brake + ":"	+ mPreCanboxBrake + "mBrakeSwitch:"	+ mMcuManager.mBrakeSwitch);
+				Log.d(TAG, "updateCanboxBrake:" + " brake " + brake + ":"
+						+ mPreCanboxBrake + "mBrakeSwitch:"
+						+ mMcuManager.mBrakeSwitch);
 				if (mMcuManager.mBrakeSwitch == 0) {
 					return;
 				}
-
 				if (mPreCanboxBrake != brake) {
 					mPreCanboxBrake = brake;
 
@@ -100,16 +101,23 @@ public class CarUtil {
 	}
 	private CarUtil() {
 		clear();
+
 		mCanboxType = getCanboxSetting();
 		initCanboxBrake();
-
+		
 		Log.d(TAG, "mCanboxType:"+mCanboxType+",mProIndex:"+mProIndex);
 		mCanbox = CanboxToPro.getPro(mCanboxType, mProVersion, mProIndex);
+		
 		if (mCanbox != null){
 			mIsUpdating = false;
 			mCanbox.setContext(GlobalDef.getContext());
 			mCanbox.startConnect();
 		}
+		else
+		{
+		  Log.d(TAG,"mCanbox == null!!!!!!!!!!!");
+		}
+
 		initPGBin();
 	}
 
@@ -167,20 +175,20 @@ public class CarUtil {
 							.equals(MachineConfig.VALUE_CANBOX_JEEP_XINBAS)
 					|| mCanboxType
 							.equals(MachineConfig.VALUE_CANBOX_OUSHANG_RAISE)
-					|| mCanboxType
-							.equals(MachineConfig.VALUE_CANBOX_FIAT_EGEA_RAISE)
-					|| mCanboxType.equals(MachineConfig.VALUE_CANBOX_HY_RAISE)) {
+					|| mCanboxType.equals(MachineConfig.VALUE_CANBOX_FIAT_EGEA_RAISE)
+					|| mCanboxType.equals(MachineConfig.VALUE_CANBOX_ZHONGXING_OD)
+					|| mCanboxType.equals(MachineConfig.VALUE_CANBOX_HY_RAISE)) 
+			{
 				return TIME_CANBOX_UPDATE_TIME;
-			} else if (mCanboxType
-					.equals(MachineConfig.VALUE_CANBOX_ACCORD_BINARYTEK)) {
+				
+			} 
+			else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ACCORD_BINARYTEK)) {
 				return 20000;
-			} else if (mCanboxType
-					.equals(MachineConfig.VALUE_CANBOX_VW_MQB_RAISE)) {
+			} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_VW_MQB_RAISE)) {
 				return TIME_CANBOX_UPDATE_TIME;
 			} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_X30_RAISE)) {
 				return 1000;
-			} else if (mCanboxType
-					.equals(MachineConfig.VALUE_CANBOX_LANDROVER_HAOZHENG)) {
+			} else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_LANDROVER_HAOZHENG)) {
 				return -1;
 			}
 		}
@@ -236,10 +244,8 @@ public class CarUtil {
 	}
 
 	public static void sendDataToCanbox(byte[] buf) {
-		if (mCarUtil != null && mCarUtil.mCanbox != null) 
-		{
-			if (buf != null) 
-			{
+		if (mCarUtil != null && mCarUtil.mCanbox != null) {
+			if (buf != null) {
 				mCarUtil.mCanbox.sendDataToCanbox(buf, buf.length);
 			}
 		}

@@ -46,8 +46,11 @@ public class ReverseActivity2 extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.back);
 		Log.d("aa", "onCreate");
-		mRadioUI = mRadioUI.getInstanse(this, findViewById(R.id.screen1_main),0);
+		mRadioUI = mRadioUI.getInstanse(this, findViewById(R.id.screen1_main),
+				0);
+
 		mRadioUI.onCreate();
+
 	}
 
 	@Override

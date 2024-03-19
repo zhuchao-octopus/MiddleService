@@ -155,7 +155,6 @@ public class VWGolfSimple extends Canbox {
 		if (null != handler) {
 			handler.sendMessage(handler.obtainMessage(msg, airData));
 		}
-
 	}
 
 	private int[] mRadarColor = new int[8];
@@ -421,11 +420,13 @@ public class VWGolfSimple extends Canbox {
 			break;
 		case 0x65:
 			if (((data[2] & 0xff) != 0)) {
-				if (!"com.canboxsetting/com.canboxsetting.TPMSActivity".equals(AppConfig.getTopActivity())) {
+				if (!"com.canboxsetting/com.canboxsetting.TPMSActivity"
+						.equals(AppConfig.getTopActivity())) {
 
 					try {
 						Intent it = new Intent(Intent.ACTION_VIEW);
-						it.setClassName("com.canboxsetting","com.canboxsetting.TPMSActivity");
+						it.setClassName("com.canboxsetting",
+								"com.canboxsetting.TPMSActivity");
 						it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						mContext.startActivity(it);
 						mHandler.sendMessageDelayed(

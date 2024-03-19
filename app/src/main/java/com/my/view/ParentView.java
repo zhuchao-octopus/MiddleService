@@ -20,7 +20,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-
+import android.filterfw.geometry.Point;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -65,7 +65,6 @@ import com.common.util.ResourceUtil;
 import com.common.util.Util;
 import com.common.util.UtilSystem;
 import com.common.view.KeyButtonRipple;
-import com.google.ar.core.Point;
 import com.my.canbox.Canbox;
 import com.my.canbox.ReverseManager;
 import com.my.cartype.CarUtil;

@@ -13,6 +13,8 @@ public class JiLiBoRuiOD extends Canbox{
 
 		buildCmdAngle((byte) 0x30, (byte) 0x0, 0x1545);
 
+
+
 		buildCmdVersion((byte) 0x7f, (byte) 0x0);
 		
 		mIdAC = 0x23;
@@ -20,8 +22,11 @@ public class JiLiBoRuiOD extends Canbox{
 		MAP_KEYS = KEYS_WHEEL;
 		mIdKey2 = 0x21;
 		MAP_KEYS2 = KEYS_WHEEL2;
+
 	}
 
+
+	
 	private final static byte KEYS_WHEEL[][] = {
 		{ 0x1, MyCmd.Keycode.VOLUME_UP },
 		{ 0x2, MyCmd.Keycode.VOLUME_DOWN },

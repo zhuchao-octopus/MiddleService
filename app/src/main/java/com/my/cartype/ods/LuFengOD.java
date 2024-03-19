@@ -11,17 +11,18 @@ import com.my.cartype.CarUtil;
 public class LuFengOD extends Canbox{
 
 	public LuFengOD(){
-		//buildCmdRepeatSendCarType(getCarTypeCmd());
+//		buildCmdRepeatSendCarType(getCarTypeCmd());
 		buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
 		buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0x4);
 		buildCmdRadarBack((byte) 0x22, (byte) 0x0, (byte) 0x4);
-		///buildCmdAngle((byte) 0x26, (byte) 0x0, 0x2198);
-		///buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
-		///buildCmdOutTemp((byte) 0x41, (byte) 0x10);
+//		buildCmdAngle((byte) 0x26, (byte) 0x0, 0x2198);
+//		buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
+//		buildCmdOutTemp((byte) 0x41, (byte) 0x10);
 		buildCmdVersion((byte) 0x7f, (byte) 0x0);
 		mIdAC = 0x24;
 		mIdKey = 0x20;
-		MAP_KEYS = KEYS_WHEEL;
+		MAP_KEYS = KEYS_WHEEL;		
+
 		IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;		
 	}
 	
@@ -46,9 +47,8 @@ public class LuFengOD extends Canbox{
 			data = (byte) 0;
 		} else if ((data & 0xff) == 0x40) {
 			data = (byte) 0xff;
-		}
-		else {
-		//data = (byte) (34 + (data & 0xff));
+		} else {
+//			data = (byte) (34 + (data & 0xff));
 		}
 		return data;
 	}
@@ -100,6 +100,9 @@ public class LuFengOD extends Canbox{
 
 	public void setMediaSrc(int source) {
 	}
+	
+
+	
 
 	
 	public int getOutTemp(byte[] data) {//

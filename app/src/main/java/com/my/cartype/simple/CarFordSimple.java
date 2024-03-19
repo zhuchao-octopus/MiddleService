@@ -26,8 +26,10 @@ import com.my.cartype.CarUtil;
 public class CarFordSimple extends Canbox {
 
 	public CarFordSimple() {
-		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x01, 0x2, 0x3,0x0, 0x0 });
-		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x02, 0x0, 0x0,0x0, 0x1 });
+		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x01, 0x2, 0x3,
+				0x0, 0x0 });
+		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x02, 0x0, 0x0,
+				0x0, 0x1 });
 
 		// updateCanboxSettings();
 		
