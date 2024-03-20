@@ -10,17 +10,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -36,10 +33,7 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.widget.AbsoluteLayout;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -47,8 +41,7 @@ import android.widget.TextView;
 
 import com.my.GlobalDef;
 import com.my.cartype.CarUtil;
-import com.my.gl.GLSufaceView;
-import com.my.manager.OSProManager;
+
 import com.my.out.R;
 import com.car.view.BackStaticView;
 import com.car.view.BackTrackView;
@@ -57,9 +50,8 @@ import com.common.util.MachineConfig;
 import com.common.util.MyCmd;
 import com.common.util.SystemConfig;
 import com.common.util.Util;
-
-public class ReverseUI extends UIBase implements View.OnClickListener,
-        SurfaceHolder.Callback {
+import com.rockchip.gl.GLSurfaceView;
+public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHolder.Callback {
     private Canbox mCanBox;
 
     public boolean mPreviewing;
@@ -80,24 +72,19 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     /**
      * Called when the activity is first created.
      */
-    public static ReverseUI getInstanse(Context context, View view, int index) {
+    public static ReverseUI getInstance(Context context, View view, int index) {
         if (index >= MAX_DISPLAY) {
             return null;
         }
-
         mUI[index] = new ReverseUI(context, view, index);
-
         return mUI[index];
     }
 
     public ReverseUI(Context context, View view, int index) {
         super(context, view, index);
-
     }
 
-    private static final int[] BUTTON_ON_CLICK = new int[]{R.id.cam1,
-            R.id.cam2, R.id.cam3, R.id.cam4, R.id.switch_camera,
-            R.id.switch_camera_mirror};
+    private static final int[] BUTTON_ON_CLICK = new int[]{R.id.cam1, R.id.cam2, R.id.cam3, R.id.cam4, R.id.switch_camera, R.id.switch_camera_mirror};
 
     public void onCreate() {
         // super.onCreate(savedInstanceState);
@@ -163,18 +150,12 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
             View v = mMainView.findViewById(R.id.no_signal_image);
             if (v instanceof ImageView) {
                 ImageView new_name = (ImageView) v;
-                Drawable d = Drawable
-                        .createFromPath("/mnt/paramter/auxin_nosignal.png");
+                Drawable d = Drawable.createFromPath("/mnt/paramter/auxin_nosignal.png");
                 if (d != null) {
                     new_name.setImageDrawable(d);
                 }
             }
-        } else if (MachineConfig.VALUE_SYSTEM_UI20_RM10_1
-                .equals(GlobalDef.mSystemUI)
-                || MachineConfig.VALUE_SYSTEM_UI21_RM10_2
-                .equals(GlobalDef.mSystemUI)
-                || MachineConfig.VALUE_SYSTEM_UI21_RM12
-                .equals(GlobalDef.mSystemUI)) {
+        } else if (MachineConfig.VALUE_SYSTEM_UI20_RM10_1.equals(GlobalDef.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM10_2.equals(GlobalDef.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM12.equals(GlobalDef.mSystemUI)) {
 
             View v = mMainView.findViewById(R.id.no_signal_text);
             if (v != null) {
@@ -203,18 +184,12 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
                     Log.d("eed", ":" + arg1.getX() + ":" + arg0.getWidth());
                     if (CarUtil.getCanboxInstance() != null) {
-                        CarUtil.getCanboxInstance().touchInReverse(
-                                (int) arg1.getX(), (int) arg1.getY(),
-                                arg0.getWidth(), arg0.getHeight());
-                        CarUtil.getCanboxInstance().touchInReverseEx(
-                                (int) arg1.getX(), (int) arg1.getY(),
-                                arg0.getWidth(), arg0.getHeight(), 1);
+                        CarUtil.getCanboxInstance().touchInReverse((int) arg1.getX(), (int) arg1.getY(), arg0.getWidth(), arg0.getHeight());
+                        CarUtil.getCanboxInstance().touchInReverseEx((int) arg1.getX(), (int) arg1.getY(), arg0.getWidth(), arg0.getHeight(), 1);
                     }
                 } else if (arg1.getAction() == MotionEvent.ACTION_UP) {
                     if (CarUtil.getCanboxInstance() != null) {
-                        CarUtil.getCanboxInstance().touchInReverseEx(
-                                (int) arg1.getX(), (int) arg1.getY(),
-                                arg0.getWidth(), arg0.getHeight(), 0);
+                        CarUtil.getCanboxInstance().touchInReverseEx((int) arg1.getX(), (int) arg1.getY(), arg0.getWidth(), arg0.getHeight(), 0);
                     }
                 }
                 return false;
@@ -228,12 +203,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                 // TODO Auto-generated method stub
                 // if (!Util.isRKSystem()) {
                 Intent it = new Intent(MyCmd.BROADCAST_START_BACKLIGHTSETTINGS);
-                if (MachineConfig.VALUE_SYSTEM_UI20_RM10_1
-                        .equals(GlobalDef.mSystemUI)
-                        || MachineConfig.VALUE_SYSTEM_UI21_RM10_2
-                        .equals(GlobalDef.mSystemUI)
-                        || MachineConfig.VALUE_SYSTEM_UI21_RM12
-                        .equals(GlobalDef.mSystemUI)) {
+                if (MachineConfig.VALUE_SYSTEM_UI20_RM10_1.equals(GlobalDef.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM10_2.equals(GlobalDef.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM12.equals(GlobalDef.mSystemUI)) {
                     File f = new File(GlobalDef.BRIGHTNESS_CONTRAST);
                     if (f.exists()) {
                         it.putExtra("cmd", -4);//
@@ -249,20 +219,16 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
 
                 View vs = mMainView.findViewById(R.id.backstatic_view);
                 View vb = mMainView.findViewById(R.id.backtrack_view);
-                if ((vs != null && vs.getVisibility() == View.VISIBLE)
-                        || (vb != null && vs.getVisibility() == View.VISIBLE)) {
+                if ((vs != null && vs.getVisibility() == View.VISIBLE) || (vb != null && vs.getVisibility() == View.VISIBLE)) {
                     if (mTrackParamterDialog == null) {
                         mTrackParamterDialog = new TrackParamterDialog(mContext);
-                        mTrackParamterDialog.getWindow().setType(
-                                (WindowManager.LayoutParams.TYPE_SYSTEM_ERROR));
+                        mTrackParamterDialog.getWindow().setType((WindowManager.LayoutParams.TYPE_SYSTEM_ERROR));
                     }
                     if (vs != null && vs.getVisibility() == View.VISIBLE) {
-                        mTrackParamterDialog
-                                .setBackStaticView((BackStaticView) vs);
+                        mTrackParamterDialog.setBackStaticView((BackStaticView) vs);
                     }
                     if (vb != null && vs.getVisibility() == View.VISIBLE) {
-                        mTrackParamterDialog
-                                .setBackTrackView((BackTrackView) vb);
+                        mTrackParamterDialog.setBackTrackView((BackTrackView) vb);
                     }
                     mTrackParamterDialog.show();
 
@@ -272,18 +238,18 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
         });
         // Log.d(TAG, ">>onCreate");
 
-        updateCamerType();
+        updateCameraType();
 
-        if (Util.isGLCamera() && mGLSufaceView == null) {
+        if (Util.isGLCamera() && mGLSurfaceView == null) {
             FrameLayout v = (FrameLayout) mMainView.findViewById(R.id.glsuface_main);
             if (com.common.util.Util.isAndroidP() || com.common.util.Util.isAndroidQ() || com.common.util.Util.isAndroidR()) {
                 v.setVisibility(View.GONE);
-                mGLSufaceView = new GLSufaceView(mContext, (LinearLayout) mMainView.findViewById(R.id.screen1_main));
+                mGLSurfaceView = new GLSurfaceView(mContext, (LinearLayout) mMainView.findViewById(R.id.screen1_main));
 				/*if (Util.isPX6()) {
 					((LinearLayout)mMainView.findViewById(R.id.screen1_main)).setBackgroundColor(Color.TRANSPARENT);
 				}*/
             } else {
-                mGLSufaceView = new GLSufaceView(mContext, v);
+                mGLSurfaceView = new GLSurfaceView(mContext, v);
             }
             mSurfaceView.setVisibility(View.GONE);
             mFirstCheckSignalFast = 15;
@@ -308,12 +274,11 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     private void initMirrorPreview(Context c) {
         try {
             mMirrorPreview = Settings.Global.getInt(c.getContentResolver(), SystemConfig.MIRROR_PREVIEW);
-        } catch (Exception e) {
-
+        } catch (Exception ignored) {
         }
     }
 
-    private GLSufaceView mGLSufaceView;
+    private GLSurfaceView mGLSurfaceView;
 
     private void init4Camera() {
         initPresentationUI();
@@ -321,21 +286,19 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
 
         Intent it = new Intent(MyCmd.BROADCAST_CMD_TO_CARUI_CAMERA);
         mContext.sendBroadcast(it);
-
     }
 
     private int mCameraType = MachineConfig.VAULE_CAMERA_FRONT;
 
-    private void updateCamerType() {
+    private void updateCameraType() {
         String s = MachineConfig.getPropertyOnce(MachineConfig.KEY_CAMERA_TYPE);
         if (s != null) {
-            mCameraType = Integer.valueOf(s);
+            mCameraType = Integer.parseInt(s);
         }
 
         Log.d(TAG, "mCameraType=" + mCameraType);
 
-        if (MachineConfig.VALUE_CANBOX_ZHONGXING_OD.equals(CarUtil.getCanboxType()))
-            mCameraType = MachineConfig.VAULE_CAMERA4;
+        if (MachineConfig.VALUE_CANBOX_ZHONGXING_OD.equals(CarUtil.getCanboxType())) mCameraType = MachineConfig.VAULE_CAMERA4;
 
         if (mCameraType == MachineConfig.VAULE_CAMERA_FRONT) {
 
@@ -429,13 +392,12 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
             }
 
             try {
-                Settings.Global.putInt(mContext.getContentResolver(),
-                        SystemConfig.MIRROR_PREVIEW, mMirrorPreview);
+                Settings.Global.putInt(mContext.getContentResolver(), SystemConfig.MIRROR_PREVIEW, mMirrorPreview);
             } catch (Exception e) {
 
             }
-            mADRotation = mGLSufaceView.getADRotation(mContext);
-            mGLSufaceView.setMirror(mMirrorPreview | mADRotation << 8);
+            mADRotation = mGLSurfaceView.getADRotation(mContext);
+            mGLSurfaceView.setMirror(mMirrorPreview | mADRotation << 8);
 
             mPreSignal = mSignal = -1;
             mSignalView.setVisibility(View.GONE);
@@ -444,8 +406,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                 showBlackEx(true, 1400);
                 closeCamera();
                 mHandler.removeMessages(MSG_RESTART_CAMERA_FAIL);
-                mHandler.sendEmptyMessageDelayed(
-                        MSG_RESTART_CAMERA_FAIL, 200);
+                mHandler.sendEmptyMessageDelayed(MSG_RESTART_CAMERA_FAIL, 200);
                 //	restartPreview();
             } else {
                 showBlackEx(true, 800);
@@ -455,13 +416,9 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
 
     private void showCameraSwitchIcon() {
         if (mCameraIndex == 1) {
-            ((ImageView) mMainView.findViewById(R.id.switch_camera))
-                    .setImageDrawable(mContext.getResources().getDrawable(
-                            R.drawable.f_camera_b));
+            ((ImageView) mMainView.findViewById(R.id.switch_camera)).setImageDrawable(mContext.getResources().getDrawable(R.drawable.f_camera_b));
         } else {
-            ((ImageView) mMainView.findViewById(R.id.switch_camera))
-                    .setImageDrawable(mContext.getResources().getDrawable(
-                            R.drawable.f_camera_f));
+            ((ImageView) mMainView.findViewById(R.id.switch_camera)).setImageDrawable(mContext.getResources().getDrawable(R.drawable.f_camera_f));
         }
     }
 
@@ -563,17 +520,12 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
         }
 
         if (id != 0) {
-            mMainView.findViewById(R.id.cam1).setBackground(
-                    mContext.getDrawable(R.drawable.button_click_back_camera));
-            mMainView.findViewById(R.id.cam2).setBackground(
-                    mContext.getDrawable(R.drawable.button_click_back_camera));
-            mMainView.findViewById(R.id.cam3).setBackground(
-                    mContext.getDrawable(R.drawable.button_click_back_camera));
-            mMainView.findViewById(R.id.cam4).setBackground(
-                    mContext.getDrawable(R.drawable.button_click_back_camera));
+            mMainView.findViewById(R.id.cam1).setBackground(mContext.getDrawable(R.drawable.button_click_back_camera));
+            mMainView.findViewById(R.id.cam2).setBackground(mContext.getDrawable(R.drawable.button_click_back_camera));
+            mMainView.findViewById(R.id.cam3).setBackground(mContext.getDrawable(R.drawable.button_click_back_camera));
+            mMainView.findViewById(R.id.cam4).setBackground(mContext.getDrawable(R.drawable.button_click_back_camera));
 
-            mMainView.findViewById(id).setBackground(
-                    mContext.getDrawable(R.drawable.com_button14));
+            mMainView.findViewById(id).setBackground(mContext.getDrawable(R.drawable.com_button14));
         }
     }
 
@@ -611,8 +563,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     private Size getOptimalPreviewSize(List<Size> sizes, int w, int h) {
         final double ASPECT_TOLERANCE = 0.05;
         double targetRatio = (double) w / h;
-        if (sizes == null)
-            return null;
+        if (sizes == null) return null;
 
         Size optimalSize = null;
         double minDiff = Double.MAX_VALUE;
@@ -622,8 +573,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
         // Try to find an size match aspect ratio and size
         for (Size size : sizes) {
             double ratio = (double) size.width / size.height;
-            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE)
-                continue;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
             if (Math.abs(size.height - targetHeight) < minDiff) {
                 optimalSize = size;
                 minDiff = Math.abs(size.height - targetHeight);
@@ -643,16 +593,13 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
         return optimalSize;
     }
 
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         if (holder.getSurface() == null) {
             return;
         }
         mSurfaceHolder = holder;
-        if (mCameraDevice == null)
-            return;
-        if (mPause)
-            return;
+        if (mCameraDevice == null) return;
+        if (mPause) return;
         if (mPreviewing && holder.isCreating()) {
             setPreviewDisplay(holder);
             Camera.Parameters parameters = mCameraDevice.getParameters();
@@ -694,25 +641,24 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
 
     private void startPreview() throws Exception {
         if (Util.isGLCamera()) {
-            mADRotation = mGLSufaceView.getADRotation(mContext);
-            mGLSufaceView.setMirror(mMirrorPreview | mADRotation << 8);
+            mADRotation = mGLSurfaceView.getADRotation(mContext);
+            mGLSurfaceView.setMirror(mMirrorPreview | mADRotation << 8);
             if (mADRotation == 1 || mADRotation == 4) { //90,270
                 DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
 //				Log.d(TAG, "startPreview dm:" + dm);
                 int x = 0, y = 0, w = dm.widthPixels, h = dm.heightPixels;
                 x = Math.abs(dm.widthPixels - dm.heightPixels) / 2;
                 w = h = dm.widthPixels < dm.heightPixels ? dm.widthPixels : dm.heightPixels;
-                mPreviewing = mGLSufaceView.startPreview(x, y, w, h);
+                mPreviewing = mGLSurfaceView.startPreview(x, y, w, h);
             } else {
-                mPreviewing = mGLSufaceView.startPreview();
+                mPreviewing = mGLSurfaceView.startPreview();
             }
             if (!mPreviewing) {
                 ++mCamerFailTime;
                 if (mCamerFailTime < 20) {
                     Log.d(TAG, "reverse startPreview fial:" + mCamerFailTime);
                     if (!mPause) {
-                        mHandler.sendEmptyMessageDelayed(
-                                MSG_RESTART_CAMERA_FAIL, 200);
+                        mHandler.sendEmptyMessageDelayed(MSG_RESTART_CAMERA_FAIL, 200);
                     }
                 }
                 return;
@@ -721,8 +667,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                 lastHaveSignalTime = SystemClock.uptimeMillis();
             }
         } else {
-            if (mPause)
-                return;
+            if (mPause) return;
             // mAkKeypad.sendMSCCommand(AkKeypad.MSC_REVERSE_LOCK);
             // mAkKeypad.sendMSCCommand(AkKeypad.MSC_CAMERA);
 //		if (mSetSource) {
@@ -734,8 +679,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
 //		Log.d(TAG, "Reverse startPreview");
             try {
                 ensureCameraDevice();
-                if (mPreviewing)
-                    stopPreview();
+                if (mPreviewing) stopPreview();
                 setPreviewDisplay(mSurfaceHolder);
                 Camera.Parameters parameters = mCameraDevice.getParameters();
                 List<Size> sizes = parameters.getSupportedPreviewSizes();
@@ -800,7 +744,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
 
     private void closeCamera() {
         if (Util.isGLCamera()) {
-            mGLSufaceView.stoptPreview();
+            mGLSurfaceView.stoptPreview();
         }
         if (mCameraDevice != null) {
             Log.d(TAG, "1release");
@@ -880,8 +824,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
         if (check) {
             int s = isSignal();
             if (Util.isRK356X() || Util.isPX6() || Util.isPX5() || Util.isPX30()) {
-                if (s == 1)
-                    lastHaveSignalTime = SystemClock.uptimeMillis();
+                if (s == 1) lastHaveSignalTime = SystemClock.uptimeMillis();
             }
             if (s == mPreSignal) {
                 if (s != mSignal) {
@@ -949,8 +892,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     checkCamera0IfFacing = true;
                 }
             } catch (RuntimeException e) {
-                Log.w("ParkBrake", "camera_surfaceview 0"
-                        + " maybe doesn't exist");
+                Log.w("ParkBrake", "camera_surfaceview 0" + " maybe doesn't exist");
             }
         } else {
             ret = true;
@@ -1171,8 +1113,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                         RadarManager.start(mContext);
                         Handler handler = Canbox.getHandler(RadarManager.TAG);
                         if (null != handler) {
-                            handler.sendMessage(handler
-                                    .obtainMessage(Canbox.CANBOX_RADAR_BACK));
+                            handler.sendMessage(handler.obtainMessage(Canbox.CANBOX_RADAR_BACK));
                         }
                     }
                     break;
@@ -1228,11 +1169,9 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     break;
                 case Canbox.CANBOX_NISSIAN_REQUEST_INFO:
                     if (!mPause) {
-                        byte[] buf = new byte[]{(byte) 0x90, 0x02, (byte) 0x94,
-                                0x0};
+                        byte[] buf = new byte[]{(byte) 0x90, 0x02, (byte) 0x94, 0x0};
                         CarUtil.sendDataToCanbox(buf);
-                        mHandlerCanbox.sendEmptyMessageDelayed(
-                                Canbox.CANBOX_NISSIAN_REQUEST_INFO, 1000);
+                        mHandlerCanbox.sendEmptyMessageDelayed(Canbox.CANBOX_NISSIAN_REQUEST_INFO, 1000);
                     }
 
                 case Canbox.CANBOX_HY_UI_DATA:
@@ -1258,8 +1197,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     if (!mPause) {
                         byte[] buf = new byte[]{(byte) 0x90, 0x01, (byte) 0x50};
                         CarUtil.sendDataToCanbox(buf);
-                        mHandlerCanbox.sendEmptyMessageDelayed(
-                                Canbox.CANBOX_HY_REQUEST_INFO, 1000);
+                        mHandlerCanbox.sendEmptyMessageDelayed(Canbox.CANBOX_HY_REQUEST_INFO, 1000);
                     }
                     break;
                 default:
@@ -1272,16 +1210,14 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     private static final String SAVE_DATA = "com.my.carapp.SAVE_DATA";
 
     private void saveData(String s, int v) {
-        SharedPreferences.Editor sharedata = mContext.getSharedPreferences(
-                SAVE_DATA, 0).edit();
+        SharedPreferences.Editor sharedata = mContext.getSharedPreferences(SAVE_DATA, 0).edit();
         sharedata.putInt(s, v);
         sharedata.commit();
     }
 
     private int getData(String s) {
 
-        SharedPreferences sharedata = mContext.getSharedPreferences(SAVE_DATA,
-                0);
+        SharedPreferences sharedata = mContext.getSharedPreferences(SAVE_DATA, 0);
         return sharedata.getInt(s, 0);
     }
 
@@ -1293,16 +1229,12 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     public void initBackTrack() {
 
         try {
-            mStaticTrackExist = Settings.Global.getInt(
-                    mContext.getContentResolver(),
-                    SystemConfig.REVERSE_STATIC_TRACK);
+            mStaticTrackExist = Settings.Global.getInt(mContext.getContentResolver(), SystemConfig.REVERSE_STATIC_TRACK);
         } catch (SettingNotFoundException snfe) {
 
         }
         try {
-            mDyncTrackExist = Settings.Global.getInt(
-                    mContext.getContentResolver(),
-                    SystemConfig.REVERSE_DYNC_TRACK);
+            mDyncTrackExist = Settings.Global.getInt(mContext.getContentResolver(), SystemConfig.REVERSE_DYNC_TRACK);
         } catch (SettingNotFoundException snfe) {
 
         }
@@ -1310,8 +1242,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
         // int i = Settings.Global.getInt(mContext.getContentResolver(),
         // SystemConfig.GPS_AUTO_UPDATE_TIME);
 
-        mBackTrackView = (BackTrackView) mMainView
-                .findViewById(R.id.backtrack_view);
+        mBackTrackView = (BackTrackView) mMainView.findViewById(R.id.backtrack_view);
         // if (mBackTrackView != null) {
         // if (mDyncTrackExist == 0) {
         mBackTrackView.setVisibility(View.GONE);
@@ -1349,9 +1280,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     String action = intent.getAction();
 
                     if (action.equals(MyCmd.BROADCAST_CMD_FROM_CARUI_CAMERA)) {
-                        doCamName(
-                                intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA2),
-                                intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0));
+                        doCamName(intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA2), intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0));
                     }
 
                 }
@@ -1396,8 +1325,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
             if (Util.isRKSystem()) {
                 Util.setFileValue("/sys/class/ak/source/cam_ch", source);
             } else {
-                Util.setFileValue("/sys/class/misc/mst701/device/source",
-                        source);
+                Util.setFileValue("/sys/class/misc/mst701/device/source", source);
             }
 
             try {
@@ -1449,22 +1377,17 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     private void initNissianUI() {
         View v = mMainView.findViewById(R.id.layout_canbus_nissian);
         if (v != null) {
-            if (MachineConfig.VALUE_CANBOX_NISSAN2013.equals(CarUtil
-                    .getCanboxType())
-                    || MachineConfig.VALUE_CANBOX_NISSAN_RAISE.equals(CarUtil
-                    .getCanboxType())) {
+            if (MachineConfig.VALUE_CANBOX_NISSAN2013.equals(CarUtil.getCanboxType()) || MachineConfig.VALUE_CANBOX_NISSAN_RAISE.equals(CarUtil.getCanboxType())) {
                 v.setVisibility(View.VISIBLE);
 
-                mHandlerCanbox.sendEmptyMessageDelayed(
-                        Canbox.CANBOX_NISSIAN_REQUEST_INFO, 1);
+                mHandlerCanbox.sendEmptyMessageDelayed(Canbox.CANBOX_NISSIAN_REQUEST_INFO, 1);
 
                 mOnClickListener = new OnClickListener() {
 
                     @Override
                     public void onClick(View arg0) {
                         // TODO Auto-generated method stub
-                        byte[] buf = new byte[]{(byte) 0x83, 0x02,
-                                (byte) 0x41, 0x1};
+                        byte[] buf = new byte[]{(byte) 0x83, 0x02, (byte) 0x41, 0x1};
                         int id = arg0.getId();
                         if (id == R.id.btn_up) {
                             buf[2] = 0x48;
@@ -1498,10 +1421,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     }
                 };
 
-                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.btn_up,
-                        R.id.btn1, R.id.btn_left, R.id.btn_right, R.id.btn2,
-                        R.id.btn_down, R.id.canceal, R.id.start, R.id.back1,
-                        R.id.vertical1, R.id.lateral, R.id.imgpa, R.id.triangle};
+                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.btn_up, R.id.btn1, R.id.btn_left, R.id.btn_right, R.id.btn2, R.id.btn_down, R.id.canceal, R.id.start, R.id.back1, R.id.vertical1, R.id.lateral, R.id.imgpa, R.id.triangle};
 
                 for (int i : BUTTON_ON_CLICK_NISSAN) {
                     v = mMainView.findViewById(i);
@@ -1603,11 +1523,9 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
         setViewEnable(R.id.btn2, (data[1] & 0x8) == 0);
 
         if (data[2] != 0) {
-            ((ImageView) mMainView.findViewById(R.id.camera))
-                    .setImageResource(R.drawable.can37_bcamera);
+            ((ImageView) mMainView.findViewById(R.id.camera)).setImageResource(R.drawable.can37_bcamera);
         } else {
-            ((ImageView) mMainView.findViewById(R.id.camera))
-                    .setImageResource(R.drawable.can37_fcamera);
+            ((ImageView) mMainView.findViewById(R.id.camera)).setImageResource(R.drawable.can37_fcamera);
         }
 
         String s = "";
@@ -1703,8 +1621,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
         setViewVisible(R.id.can15_view_back, View.GONE);
         setViewVisible(R.id.can15_view_front, View.GONE);
         setViewVisible(R.id.full_view, View.GONE);
-        setViewVisible(R.id.can15_settings_view, mShowHYSetting ? View.VISIBLE
-                : View.GONE);
+        setViewVisible(R.id.can15_settings_view, mShowHYSetting ? View.VISIBLE : View.GONE);
 
         int t = ((data[0] & 0xc0) >> 6);
         int v = data[0] & 0xf;
@@ -1852,12 +1769,9 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     private void initHYUI() {
         View v = mMainView.findViewById(R.id.layout_canbus_hy);
         if (v != null) {
-            if (MachineConfig.VALUE_CANBOX_HY.equals(CarUtil.getCanboxType())
-                    || MachineConfig.VALUE_CANBOX_HY_RAISE.equals(CarUtil
-                    .getCanboxType())) {
+            if (MachineConfig.VALUE_CANBOX_HY.equals(CarUtil.getCanboxType()) || MachineConfig.VALUE_CANBOX_HY_RAISE.equals(CarUtil.getCanboxType())) {
                 byte[] buf = new byte[]{(byte) 0x90, 0x01, 0x50};
-                if (MachineConfig.VALUE_CANBOX_HY_RAISE.equals(CarUtil
-                        .getCanboxType())) {
+                if (MachineConfig.VALUE_CANBOX_HY_RAISE.equals(CarUtil.getCanboxType())) {
                     buf = new byte[]{0x06, (byte) 0x90, 0x40, 0};
                 }
 
@@ -1946,8 +1860,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                             showHYSetting(4);
                         }
                         if (buf[2] != 0) {
-                            if (MachineConfig.VALUE_CANBOX_HY_RAISE
-                                    .equals(CarUtil.getCanboxType())) {
+                            if (MachineConfig.VALUE_CANBOX_HY_RAISE.equals(CarUtil.getCanboxType())) {
                                 byte[] buf2 = null;
                                 switch (buf[2]) {
                                     case 1:
@@ -2003,24 +1916,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     }
                 };
 
-                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.can15_all_b,
-                        R.id.can15_back, R.id.can15_left_back,
-                        R.id.can15_right_back, R.id.settings_b,
-                        R.id.can15_all_f, R.id.can15_front,
-                        R.id.can15_left_front, R.id.can15_right_front,
-                        R.id.settings_f, R.id.can15_exit_settings,
-                        R.id.can15_guidelines, R.id.can15_warning,
-                        R.id.can15_frontview, R.id.can15_rearview,
-                        R.id.can15_front_all_settings,
-                        R.id.can15_front_only_settings,
-                        R.id.can15_front_left_settings,
-                        R.id.can15_front_right_settings,
-                        R.id.can15_back_all_settings,
-                        R.id.can15_back_only_settings,
-                        R.id.can15_back_left_settings,
-                        R.id.can15_back_right_settings,
-                        R.id.can15_guidelines_settings,
-                        R.id.can15_warning_settings,
+                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.can15_all_b, R.id.can15_back, R.id.can15_left_back, R.id.can15_right_back, R.id.settings_b, R.id.can15_all_f, R.id.can15_front, R.id.can15_left_front, R.id.can15_right_front, R.id.settings_f, R.id.can15_exit_settings, R.id.can15_guidelines, R.id.can15_warning, R.id.can15_frontview, R.id.can15_rearview, R.id.can15_front_all_settings, R.id.can15_front_only_settings, R.id.can15_front_left_settings, R.id.can15_front_right_settings, R.id.can15_back_all_settings, R.id.can15_back_only_settings, R.id.can15_back_left_settings, R.id.can15_back_right_settings, R.id.can15_guidelines_settings, R.id.can15_warning_settings,
 
                 };
 
@@ -2045,8 +1941,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
 
             if (CarUtil.getProIndex() == 52) { //for pro > v3
                 show = true;
-            } else if (MachineConfig.VALUE_CANBOX_HONDA_RAISE.equals(CarUtil
-                    .getCanboxType())) {
+            } else if (MachineConfig.VALUE_CANBOX_HONDA_RAISE.equals(CarUtil.getCanboxType())) {
                 if (CarUtil.getCarType() != 2) {
                     show = true;
                 }
@@ -2060,8 +1955,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     @Override
                     public void onClick(View arg0) {
                         // TODO Auto-generated method stub
-                        byte[] buf = new byte[]{(byte) 0xc6, 0x02,
-                                (byte) 0x40, 0x0};
+                        byte[] buf = new byte[]{(byte) 0xc6, 0x02, (byte) 0x40, 0x0};
                         int id = arg0.getId();
                         if (id == R.id.honda_cam_type1) {
                             buf[3] = 0;
@@ -2077,9 +1971,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     }
                 };
 
-                int[] BUTTON_ON_CLICK_NISSAN = new int[]{
-                        R.id.honda_cam_type1, R.id.honda_cam_type2,
-                        R.id.honda_cam_type3, R.id.honda_cam_type4,};
+                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.honda_cam_type1, R.id.honda_cam_type2, R.id.honda_cam_type3, R.id.honda_cam_type4,};
 
                 for (int i : BUTTON_ON_CLICK_NISSAN) {
                     v = mMainView.findViewById(i);
@@ -2103,12 +1995,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     }
 
     private void initDaciaUI() {
-        if (MachineConfig.VALUE_CANBOX_DACIA_SIMPLE.equals(CarUtil
-                .getCanboxType()) ||
-                36 == CarUtil
-                        .getProIndex()
-                || 147 == CarUtil
-                .getProIndex()) {
+        if (MachineConfig.VALUE_CANBOX_DACIA_SIMPLE.equals(CarUtil.getCanboxType()) || 36 == CarUtil.getProIndex() || 147 == CarUtil.getProIndex()) {
             if ((CarUtil.m360UI & 0xff00) != 0) {
                 showDaciaUI(CarUtil.m360UI & 0xff);
             }
@@ -2145,8 +2032,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     @Override
                     public void onClick(View arg0) {
                         // TODO Auto-generated method stub
-                        byte[] buf = new byte[]{(byte) 0xc6, 0x03,
-                                (byte) 0x4, 0x0, 0x0};
+                        byte[] buf = new byte[]{(byte) 0xc6, 0x03, (byte) 0x4, 0x0, 0x0};
                         int arg0Id = arg0.getId();
                         if (arg0Id == R.id.dacia_cam_type1) {
                             buf[3] = 1;
@@ -2183,9 +2069,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                     }
                 };
 
-                int[] BUTTON_ON_CLICK_NISSAN = new int[]{
-                        R.id.dacia_cam_type1, R.id.dacia_cam_type2,
-                        R.id.dacia_cam_type3, R.id.dacia_cam_type4,};
+                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.dacia_cam_type1, R.id.dacia_cam_type2, R.id.dacia_cam_type3, R.id.dacia_cam_type4,};
 
                 for (int i : BUTTON_ON_CLICK_NISSAN) {
                     v = mMainView.findViewById(i);
@@ -2227,8 +2111,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
                 @Override
                 public void onClick(View arg0) {
                     // TODO Auto-generated method stub
-                    byte[] buf = new byte[]{(byte) 0xc6, 0x02, (byte) 0x0,
-                            0x0};
+                    byte[] buf = new byte[]{(byte) 0xc6, 0x02, (byte) 0x0, 0x0};
                     if (arg0.getId() == R.id.mazda_raise_mode) {
                         buf[2] = (byte) 0xca;
                         mMazdaUI++;
@@ -2251,15 +2134,13 @@ public class ReverseUI extends UIBase implements View.OnClickListener,
     }
 
     private void initMazdaRaiseUI() {
-        if (MachineConfig.VALUE_CANBOX_MAZDA_RAISE.equals(CarUtil
-                .getCanboxType())) {
+        if (MachineConfig.VALUE_CANBOX_MAZDA_RAISE.equals(CarUtil.getCanboxType())) {
             if (mOnClickListener == null) {
                 mOnClickListener = new OnClickListener() {
                     @Override
                     public void onClick(View arg0) {
                         // TODO Auto-generated method stub
-                        byte[] buf = new byte[]{(byte) 0x87, 0x02, (byte) 0x1,
-                                0x1};
+                        byte[] buf = new byte[]{(byte) 0x87, 0x02, (byte) 0x1, 0x1};
                         CarUtil.sendDataToCanbox(buf);
                     }
                 };

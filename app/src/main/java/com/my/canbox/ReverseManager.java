@@ -1,50 +1,24 @@
 package com.my.canbox;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.List;
-
-import android.app.Activity;
 import android.app.Presentation;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
-import android.hardware.Camera;
-import android.hardware.Camera.Size;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
-import android.widget.AbsoluteLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.my.GlobalDef;
 import com.my.cartype.CarUtil;
 import com.my.cartype.simple.Nissan2013Simple;
 import com.my.manager.McuManager;
-import com.my.manager.OSProManager;
 import com.my.out.R;
 import com.common.util.AppConfig;
 import com.common.util.BroadcastUtil;
@@ -259,7 +233,7 @@ public class ReverseManager {
 			}
 			// mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
 			if (mUI == null) {
-				mUI = ReverseUI.getInstanse(context,
+				mUI = ReverseUI.getInstance(context,
 						mView.findViewById(R.id.screen1_main), 0);
 
 			}

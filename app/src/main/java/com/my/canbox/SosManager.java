@@ -117,7 +117,7 @@ public class SosManager {
 				break;
 			}
 
-			s = MachineConfig.getParamterPath() + s;
+			s = MachineConfig.getParameterPath() + s;
 			
 			Drawable d = Drawable.createFromPath(s);
 			if (d!=null){

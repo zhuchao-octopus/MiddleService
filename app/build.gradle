@@ -29,13 +29,12 @@ android {
 }
 
 dependencies {
+    implementation('com.zhuchao.android:libFBaseUtils:2.1@aar')
+    implementation('com.zhuchao.android:libJOSUtils:1.4:@aar')
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'
-    implementation files('libs/commonlib.jar')
-    implementation files('libs/classes.jar')
     implementation 'com.google.ar:core:1.42.0'
-    implementation files('libs/GLSufaceView.jar')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
