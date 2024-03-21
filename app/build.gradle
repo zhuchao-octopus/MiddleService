@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.my.out'
+    namespace 'com.zhuchao.android.car'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.my.out"
+        applicationId "com.zhuchao.android.car"
         minSdk 24
         targetSdk 34
         versionCode 1
@@ -22,9 +22,33 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    //aaptOptions {
+    //    additionalParameters '--extra-packages', 'com.android.zhuchao.car.R'
+    //}
+    lintOptions {
+        baseline file("lint-baseline.xml")
+    }
+
+    externalNativeBuild {
+        cmake {
+            path 'CMakeLists.txt'
+        }
+    }
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    android.applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            def date = new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08"))
+            if (variant.buildType.name == 'release') {
+                //outputFileName = "MyCarService_${date}.apk"
+                outputFileName = "MyCarService.apk"
+            }
+        }
     }
 }
 

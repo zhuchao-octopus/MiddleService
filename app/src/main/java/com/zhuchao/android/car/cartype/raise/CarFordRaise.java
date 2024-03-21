@@ -1,0 +1,1627 @@
+package com.zhuchao.android.car.cartype.raise;
+
+import java.util.Date;
+
+import com.zhuchao.android.car.GlobalDefinition;
+
+
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.Settings;
+import android.util.Log;
+
+import com.zhuchao.android.car.R;
+import com.common.util.AppConfig;
+import com.common.util.BroadcastUtil;
+import com.common.util.MyCmd;
+import com.common.util.ProtocolAk47;
+import com.common.util.SystemConfig;
+import com.common.util.Util;
+import com.zhuchao.android.car.canbox.AutoParkingMsgManager;
+import com.zhuchao.android.car.canbox.Canbox;
+import com.zhuchao.android.car.canbox.RadarManager;
+import com.zhuchao.android.car.canbox.WarningMsgManager;
+import com.zhuchao.android.car.cartype.CarUtil;
+
+public class CarFordRaise extends Canbox {
+
+    public CarFordRaise() {
+
+        buildCmdRepeatSendCarType(getCarTypeCmd());
+
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+        // updateCanboxSettings();
+
+        buildCmdEQ((byte) 0x62, (byte) 0x0, 6);
+
+        if (CarUtil.getKeyType() == 1) {
+            KEYS_WHEEL = KEYS_WHEEL_KUGA;
+        }
+    }
+
+    private byte[] getCarTypeCmd() {
+        byte[] cmd = null;
+        if (CarUtil.getCatelId() == 3) {
+            cmd = new byte[]{(byte) 0x91, 0x02, 0, 0};
+            switch (CarUtil.getModelId()) {
+                case 1:
+                case 2:
+                case 4:
+                case 15:
+                    cmd[2] = 1;
+                    break;
+                case 20:
+                case 14:
+                    cmd[2] = 2;
+                    break;
+                case 59:
+                    cmd[2] = 3;
+                    break;
+                case 21:
+                    cmd[2] = 4;
+                    break;
+                case 49:
+                    cmd[2] = 5;
+                    break;
+                case 30:
+                    cmd[2] = 6;
+                    break;
+                case 44:
+                    cmd[2] = 7;
+                    break;
+                case 25:
+                    cmd[2] = 8;
+                    break;
+                case 55:
+                    cmd[2] = 9;
+                    break;
+                default:
+                    return null;
+            }
+            cmd[3] = (byte) CarUtil.getCarTypeConfig();
+        }
+        return cmd;
+    }
+
+    private final static byte[][] KEYS_WHEEL_NORMAL = {
+
+            {0x13, MyCmd.Keycode.NAVIGATION}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x17, MyCmd.Keycode.KEYAMS_RPT},
+
+
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
+
+
+            {0x2e, MyCmd.Keycode.KEY_TURN_D}, {0x2f, MyCmd.Keycode.KEY_TURN_A},
+
+            {0x30, KEY_MEDIA}, {0x31, KEY_BACK}, {0x32, KEY_GPS},
+
+            {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER},
+
+            {0x48, KEY_PLAYPAUSE}, {0x49, MyCmd.Keycode.KEY_TURN_D}, {0x4a, MyCmd.Keycode.KEY_TURN_A}, {0x4b, KEY_PREVIOUSSONG}, {0x4c, KEY_NEXTSONG},
+
+
+            {0x50, MyCmd.Keycode.DARK},
+
+            {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG},
+
+            {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE}, {0x5b, MyCmd.Keycode.DARK},
+
+            {(byte) 0x5c, AK_KEYPAD_VOLUME_A}, {(byte) 0x5d, AK_KEYPAD_VOLUME_D}, {(byte) 0x5e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x5f, MyCmd.Keycode.KEY_TURN_D},
+
+            {0x66, MyCmd.Keycode.PLAY_PAUSE}, {0x67, MyCmd.Keycode.AUDIO}, {0x68, MyCmd.Keycode.SETUP},
+
+
+            {0x67, MyCmd.Keycode.AUDIO},
+
+            {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D}, {(byte) 0x70, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x71, MyCmd.Keycode.KEY_TURN_D},
+
+    };
+
+    private final static byte[][] KEYS_WHEEL_KUGA = {
+
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_GPS}, {0x2b, KEY_NUM_J},
+
+            {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_MUTE},
+
+            {0x48, KEY_PLAYPAUSE}, {0x49, MyCmd.Keycode.KEY_TURN_D}, {0x4a, MyCmd.Keycode.KEY_TURN_A}, {0x4c, KEY_PREVIOUSSONG}, {0x4b, KEY_NEXTSONG},
+
+            {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG},
+
+            {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE}, {0x5b, MyCmd.Keycode.DARK},
+
+
+            {0x6F, MyCmd.Keycode.AUDIO},
+            // { 0x5c, 0 },
+            // { 0x5d, 0 },
+            // { 0x5e, 0 },
+            // { 0x5f, 0 },
+
+            {(byte) 0x86, KEY_PLAYPAUSE}, {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D}, {(byte) 0xF2, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0xF3, MyCmd.Keycode.KEY_TURN_D},
+
+    };
+
+
+    private byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
+
+    private void parseWheelKey(byte[] data, int len) {
+        if (doKeyStudy(data[2], data[3])) {
+            return;
+        }
+        switch (data[2]) {
+            case 0x0:
+                doKey(0, 0);
+                break;
+            case 0x1:
+                doKey(AK_KEYPAD_VOLUME_A, data[3]); // vol+
+                break;
+            case 0x2:
+                doKey(AK_KEYPAD_VOLUME_D, data[3]);// vol-
+                break;
+            case 0x3:
+                doKey(MyCmd.Keycode.MULT_NEXT_AND_HANG, data[3]);
+                break;
+            case 0x4:
+                doKey(MyCmd.Keycode.MULT_PREV_AND_RECEIVE, data[3]);
+                break;
+            case 0x5:
+                doKey(KEY_MIC, data[3]);
+                break;
+            case 0x6:
+                doKey(MyCmd.Keycode.MULT_SPEECH_AND_BT, data[3]);// mute
+                break;
+            case 0x7:
+                doKey(KEY_MODE, data[3]);
+                break;
+            case 0xb:
+                doKey(MyCmd.Keycode.BT_DIAL, data[3]);// mute
+                break;
+            case 0xc:
+                doKey(MyCmd.Keycode.BT_HANG, data[3]);// mute
+                break;
+            case 0xe:
+                doKey(KEY_PREVIOUSSONG, data[3]);
+                break;
+            case 0xf:
+                doKey(KEY_NEXTSONG, data[3]);
+                break;
+            case 0x10:
+                doKey(MyCmd.Keycode.KEY_TURN_D, data[3]);
+                break;
+            case 0x11:
+                doKey(MyCmd.Keycode.KEY_TURN_A, data[3]);
+                break;
+            case 0x12:
+                doKey(KEY_PLAYPAUSE, data[3]);
+                break;
+            default:
+                byte key = 0;
+                for (int i = 0; i < KEYS_WHEEL.length; ++i) {
+                    if (KEYS_WHEEL[i][0] == data[2]) {
+                        key = KEYS_WHEEL[i][1];
+                        break;
+                    }
+                }
+
+
+                if (key != 0) {
+                    doKey(key, data[3]);
+                    if (data[2] == 0x60 || data[2] == 0x61 || data[2] == (byte) 0xf1 || data[2] == (byte) 0xf0) {
+                        Util.doSleep(1);
+                        doKey(0, 0);
+                    }
+                } else {
+                    if (data[3] == 0) {
+                        doKey(0, 0);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public int getACTemp(byte data, int unit) {
+        // TODO Auto-generated method stub
+        if ((data & 0xff) >= 0x7f) {
+            data = (byte) 0xff;
+        } else if ((data & 0xff) == 0xff) {
+            data = (byte) 0xfa;
+        } else if (data == 0) {
+            data = 0;
+        } else {
+            if (unit == 1) {
+                data = (byte) (((((float) (data & 0xff) / 2)) * 18 + 320) / 10);
+            }
+        }
+        return data;
+    }
+
+    byte[] airData = new byte[13];
+
+    private byte mOutDoorTempUnit;
+    private byte mOutDoorTemp = -41;
+
+    private void parseACInfo(byte[] data, int len) {
+        //		if (data[4] >= 0x7f) {
+        //			data[4] = (byte) 0xff;
+        //		} else if (data[4] >= 0x1f && data[4] <= 0x3B) {
+        //			data[4] = (byte) ((15.5f + (0.5f * (data[4] - 0x1f))) * 2);
+        //		} else {
+        //			data[4] = 0;
+        //		}
+        //
+        //		if (data[5] >= 0x7f) {
+        //			data[5] = (byte) 0xff;
+        //		} else if (data[5] >= 0x1f && data[5] <= 0x3B) {
+        //			data[5] = (byte) ((15.5f + (0.5f * (data[5] - 0x1f))) * 2);
+        //		} else {
+        //			data[5] = 0;
+        //		}
+
+        airData[5] = (byte) ((data[6] & 0x40) >> 6);
+
+
+        boolean outDoorTemp = false;
+        boolean airControl = false;
+
+        if (mOutDoorTempUnit != (byte) (data[6] & 0xff)) {
+            mOutDoorTempUnit = (byte) (data[6] & 0xff);
+            outDoorTemp = true;
+        }
+
+        if (mOutDoorTemp != data[7]) {
+            if (data[7] >= -40 && data[7] <= 86) {
+                outDoorTemp = true;
+                mOutDoorTemp = data[7];
+            }
+        }
+
+        if (outDoorTemp) {
+            // handler.sendMessage(handler.obtainMessage(CANBOX_OUT_DOOR_TEMP,
+            // airData[6], 0));
+            int t = airData[6];
+
+            updateOutDoorTemp(t);
+
+
+        }
+
+        data[6] &= ~0x40;
+        //		if (airData[0] != (byte) (data[2] & 0xff)
+        //				|| airData[1] != (byte) (data[3] & 0xff)
+        //				|| airData[2] != (byte) (data[4] & 0xff)
+        //				|| airData[3] != (byte) (data[5] & 0xff)
+        //				|| airData[4] != (byte) (data[6] & 0xff)) {
+
+        if (/*(data[2] & 0x80) != 0 && */((data[3] & 0x10) != 0)) {
+            airControl = true;
+        } else {
+
+        }
+
+        airData[0] = (byte) (data[2] & 0xff);
+        airData[1] = (byte) (data[3] & 0xff);
+        airData[2] = (byte) (data[4] & 0xff);
+        airData[3] = (byte) (data[5] & 0xff);
+        airData[4] = (byte) ((data[6] & 0x04) | ((data[6] & 0x10) >> 1));
+        airData[7] = (byte) (((data[6] & 0x20) << 0) /*|  ((data[6] & 0x80)>>4)*/);
+        //		}
+
+        airData[9] = (byte) ((data[6] & 0x80));
+        if (data[9] >= 1 && data[9] <= 9) {
+            airData[10] = (byte) ((data[9] & 0xff) + 0xf0);
+        } else {
+            airData[10] = (byte) 0xfa;
+        }
+        airData[11] = (byte) (((data[6] & 0x01) << 5) | ((data[6] & 0x02) << 5) | ((data[8] & 0xff)));
+
+        int t;
+        t = (data[10] & 0xf);
+        airData[8] = 0;
+        if (t >= 1 && t <= 3) {
+            airData[8] |= (t << 4);
+        } else if (t >= 4 && t <= 6) {
+
+            airData[4] |= ((t - 3) << 4);
+        }
+
+        t = ((data[10] & 0xf0) >> 4);
+        if (t >= 1 && t <= 3) {
+            airData[8] |= (t << 2);
+        } else if (t >= 4 && t <= 6) {
+            airData[4] |= (t - 3);
+        }
+
+        airData[12] = (byte) ((data[6] & 0x8) >> 3);
+
+        //		Handler handler = getHandler("CanService");
+        //		if (null != handler) {
+        //			if (airControl) {
+        //				handler.sendMessage(handler.obtainMessage(CANBOX_RETURN_AIR,
+        //						airData));
+        //			}
+        //		}
+        //	if (!airControl){
+        airData[5] |= 0x80;
+        //	}
+        super.parseACInfo(airData);
+    }
+
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+
+    public void updateOutDoorTemp(int temp) {
+
+        if (temp == CarUtil.INVALID_OUT_DOOR_TEMP) {
+            if (mTempOutDoor != CarUtil.INVALID_OUT_DOOR_TEMP) {
+                temp = mTempOutDoor;
+            } else {
+                return;
+            }
+        }
+        mTempOutDoor = temp;
+        int t = temp;
+        if (CarUtil.mTempUnit == 2) {
+            mOutDoorTempUnit |= 0x40;
+        } else if (CarUtil.mTempUnit == 1) {
+            mOutDoorTempUnit = 0;
+        }
+
+        String unit = mContext.getResources().getString(R.string.temp_unic_centigrade);
+        if ((mOutDoorTempUnit & 0x40) != 0) {
+            unit = mContext.getResources().getString(R.string.temp_unic_fahrenheit);
+            t = (t * 18 + 320) / 10;
+        }
+        GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
+    }
+
+
+    private byte getRadarData(byte i) {
+        byte data = 0;
+        if (i == 0x1) {
+            data = 1;
+        } else if (i >= 0x2 && i <= 0x3) {
+            data = 2;
+        } else if (i >= 0x4 && i <= 0x5) {
+            data = 3;
+        } else if (i >= 0x6 && i <= 0x7) {
+            data = 4;
+        } else if (i >= 0x8 && i <= 0x9) {
+            data = 5;
+        } else if (i >= 0xa && i <= 0xb) {
+            data = 6;
+        } else if (i >= 0xc && i <= 0xd) {
+            data = 7;
+        } else if (i >= 0xe && i <= 0xf) {
+            data = 8;
+        } else if (i >= 0x10 && i <= 0x11) {
+            data = 9;
+        } else if (i >= 0x12 && i <= 0x13) {
+            data = 10;
+        } else if (i >= 0x14 && i <= 0x15) {
+            data = 11;
+        } else if (i >= 0x16 && i <= 0x17) {
+            data = 13;
+        } else if (i >= 0x18 && i <= 0x19) {
+            data = 14;
+        } else if (i >= 0x1a && i <= 0x1b) {
+            data = 15;
+        } else if (i >= 0x1c && i <= 0x1f) {
+            data = 16;
+        }
+        return data;
+    }
+
+    @Override
+    public void parseCanboxData(byte[] data, int len) {
+        // TODO Auto-generated method stub
+        switch (data[0]) {
+            case 0x20: {
+                parseWheelKey(data, len);
+            }
+            break;
+            case 0x21: {
+                parseACInfo(data, len);
+
+                sendCanboxInfo("com.canboxsetting", data);
+            }
+            break;
+            case 0x22: // Radar back
+            {
+                byte radar;
+                boolean show = false;
+                radar = getRadarData(data[2]);
+                if (mRadar[0] != radar) {
+                    mRadar[0] = radar;
+                    show = true;
+                }
+                radar = getRadarData(data[3]);
+                if (mRadar[1] != radar) {
+                    mRadar[1] = radar;
+                    show = true;
+                }
+                radar = getRadarData(data[4]);
+                if (mRadar[2] != radar) {
+                    mRadar[2] = radar;
+                    show = true;
+                }
+                radar = getRadarData(data[5]);
+                if (mRadar[3] != radar) {
+                    mRadar[3] = radar;
+                    show = true;
+                }
+
+                // byteArrayCopy(mRadar, data, 0, 2, 4);
+                boolean zero = Util.isZero(mRadar);
+                if (!zero) {
+                    RadarManager.start(mContext);
+                    checkHideRadarEx(5000);
+                }
+                Handler handler = getHandler(RadarManager.TAG);
+                if (null != handler) {
+                    handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_BACK));
+                }
+            }
+            break;
+            case 0x23: // Radar front
+            {
+                // byteArrayCopy(mRadar, data, 4, 2, 4);
+                byte radar;
+                boolean show = false;
+                radar = getRadarData(data[2]);
+                if (mRadar[4] != radar) {
+                    mRadar[4] = radar;
+                    show = true;
+                }
+                radar = getRadarData(data[3]);
+                if (mRadar[5] != radar) {
+                    mRadar[5] = radar;
+                    show = true;
+                }
+                radar = getRadarData(data[4]);
+                if (mRadar[6] != radar) {
+                    mRadar[6] = radar;
+                    show = true;
+                }
+                radar = getRadarData(data[5]);
+                if (mRadar[7] != radar) {
+                    mRadar[7] = radar;
+                    show = true;
+                }
+
+                radar = getRadarData(data[7]);
+                if (mRadarFontEx[0] != radar) {
+                    mRadarFontEx[0] = radar;
+                    show = true;
+                }
+                radar = getRadarData(data[6]);
+                if (mRadarFontEx[1] != radar) {
+                    mRadarFontEx[1] = radar;
+                    show = true;
+                }
+
+                boolean zero = Util.isZero(mRadar);
+                if (!zero) {
+                    RadarManager.start(mContext);
+                    checkHideRadarEx(5000);
+                }
+                Handler handler = getHandler(RadarManager.TAG);
+                if (show && null != handler) {
+                    handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_FRONT));
+                }
+            }
+            break;
+            case 0x25: // Radar status
+            {
+
+                Handler handler = getHandler(RadarManager.TAG);
+                if (null != handler) {
+                    if ((data[2] & 0x8) == 0) {
+                        handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_BACK, 1, 0));
+                        for (int i = 0; i < 4; ++i) {
+                            mRadar[i] = 0;
+                        }
+                    }
+                    if ((data[2] & 0x4) == 0) {
+                        for (int i = 0; i < 4; ++i) {
+                            mRadar[4 + i] = 0;
+                        }
+
+                        mRadarFontEx[0] = 0;
+                        mRadarFontEx[1] = 0;
+                        handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_FRONT, 1, 0));
+                    }
+
+                }
+                if ((data[2] & 0xc) != 0) {
+
+                    boolean zero = Util.isZero(mRadar);
+                    if (!zero) {
+                        RadarManager.start(mContext);
+                        checkHideRadarEx(5000);
+                    }
+                } else {
+                    RadarManager.stop();
+                }
+            }
+            break;
+            //		case 0x26:
+            //		case 0x29: {
+            //			Handler handler = getHandler("Reverse");
+            //			if (null != handler) {
+            //				// Log.e("1", ""+(data[2] & 0xff));
+            //				// Log.e("2", ""+(data[3] & 0xff));
+            //				// Log.e("3", ""+((data[3] << 8) | (data[2] & 0xff)));
+            //				handler.sendMessage(handler.obtainMessage(CANBOX_STEER_ANGLE,
+            //						(0 - (int) ((data[2] & 0xff) | ((data[3]) << 8))) / 10,
+            //						0));
+            //			}
+            //		}
+            //
+            //			sendCanboxInfo("com.canboxsetting", data);
+            //			break;
+            case 0x30: {
+                byte[] version = new byte[16];
+                Util.byteArrayCopy(version, data, 0, 2, version.length);
+
+                mVersion = (new String(version));
+                // version
+                break;
+            }
+            case 0x24: {
+                int door = (data[2] & 0xf8);
+                door = (((door & 0x40) >> 6) | ((door & 0x80) >> 6) | ((door & 0x10) >> 2) | ((door & 0x20) >> 2) | ((door & 0x08) << 1));
+
+                if (mDoorStatus != door) {
+                    mDoorStatus = door;
+                    Handler handler = getHandler("CanService");
+                    if (null != handler) {
+                        handler.sendMessage(handler.obtainMessage(CANBOX_DOOR_STATUS, mDoorStatus, 0));
+
+                    }
+                }
+            }
+
+            sendCanboxInfo("com.canboxsetting", data);
+            break;
+            case 0x60: {
+                updateParkingMsg(data);
+            }
+            break;
+            case 0x2A: {
+                updateWaring(data);
+                return;
+            }
+            case 0x79: {
+                if (!"com.canboxsetting/com.focussync.MainActivity".equals(AppConfig.getTopActivity())) {
+                    if (data[2] >= 1 && data[2] <= 4) {
+                        try {
+                            Intent it = new Intent(Intent.ACTION_VIEW);
+                            it.setClassName("com.canboxsetting", "com.focussync.MainActivity");
+                            it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            it.putExtra("value", 1);
+                            mContext.startActivity(it);
+                        } catch (Exception e) {
+                            // Log.e(TAG, ""+e);
+                        }
+                    }
+                } else {
+                    sendCanboxInfo("com.canboxsetting", data);
+                }
+
+            }
+            break;
+
+            case 0x29: {
+                Handler handler = getHandler("Reverse");
+                if (null != handler) {
+                    short a = (short) ((data[3] & 0xff) | ((data[2] & 0xff) << 8));// bu
+                    // ma
+
+                    int angle = -((a * 3000) / 540);
+
+                    //				if (angle > -500 && angle < 500) {
+                    //					angle = 500;
+                    //				}
+                    // Log.e("1", ""+(data[2] & 0xff));
+                    // Log.e("2", ""+(data[3] & 0xff));
+                    // Log.e("3", ""+((data[3] << 8) | (data[2] & 0xff)));
+                    handler.sendMessage(handler.obtainMessage(CANBOX_STEER_ANGLE, angle, 100));
+                }
+            }
+            break;
+            case 0x56:
+                doSyncControl(data);
+                break;
+            case 0x63:
+            case 0x28:
+            case 0x65:
+            case 0x66:
+            case 0x67:
+            case 0x68:
+            case 0x61:
+                sendCanboxInfo("com.canboxsetting", data);
+                break;
+            case 0x62:
+                parseEQ(data);
+                sendCanboxInfo("com.canboxsetting", data);
+                break;
+            default:
+                sendCanboxInfo("com.canboxsetting", data);
+                break;
+        }
+    }
+
+    private int showWarningMsg = -1;
+
+    public void updateCanboxSettings() {
+
+        showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SystemConfig.SHOW_FOCUS_CAR_WARNING_MSG, 0);
+        if (showWarningMsg != 0) {
+            WarningMsgManager.stop();
+        }
+    }
+
+    private void updateWaring(byte[] data) {
+        if (showWarningMsg == -1) {
+            updateCanboxSettings();
+        }
+        if (showWarningMsg != 0) {
+            return;
+        }
+
+        int drawable = 0, drawable2 = 0;
+        int string = 0;
+        // data 0
+        if ((data[2] & 0x2) != 0) {
+            drawable = R.drawable.w6;
+            string = R.string.warn0_1;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[2] & 0x4) != 0) {
+            drawable = R.drawable.w5;
+            string = R.string.warn0_2;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[2] & 0x8) != 0) {
+            drawable = R.drawable.w5;
+            string = R.string.warn0_3;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[2] & 0x10) != 0) {
+            drawable = R.drawable.w9;
+            string = R.string.warn0_4;
+        } else if ((data[2] & 0x20) != 0) {
+            drawable = R.drawable.w22;
+            string = R.string.warn0_5;
+        } else if ((data[2] & 0x40) != 0) {
+            drawable = R.drawable.w23;
+            string = R.string.warn0_6;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[2] & 0x80) != 0) {
+            drawable = R.drawable.w17;
+            string = R.string.warn0_7;
+            drawable2 = R.drawable.w_yellow;
+        }
+
+        // data 1
+
+        else if ((data[3] & 0x1) != 0) {
+            drawable = R.drawable.w4;
+            string = R.string.warn1_0;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[3] & 0x2) != 0) {
+            drawable = R.drawable.w16;
+            string = R.string.warn1_1;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[3] & 0x4) != 0) {
+            drawable = R.drawable.w1;
+            string = R.string.warn1_2;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[3] & 0x8) != 0) {
+            drawable = R.drawable.w8;
+            string = R.string.warn1_3;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[3] & 0x10) != 0) {
+            drawable = R.drawable.w2;
+            string = R.string.warn1_4;
+        } else if ((data[3] & 0x20) != 0) {
+            drawable = R.drawable.w2;
+            string = R.string.warn1_5;
+        } else if ((data[3] & 0x40) != 0) {
+            drawable = R.drawable.w24;
+            string = R.string.warn1_6;
+            drawable2 = R.drawable.w_yellow;
+        }
+
+        // data 2
+
+        else if ((data[4] & 0x1) != 0) {
+            drawable = R.drawable.w13;
+            string = R.string.warn2_0;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[4] & 0x2) != 0) {
+            drawable = R.drawable.w21;
+            string = R.string.warn2_1;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[4] & 0x4) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn2_2;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[4] & 0x8) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn2_3;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[4] & 0x10) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn2_4;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[4] & 0x20) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn2_5;
+        } else if ((data[4] & 0x80) != 0) {
+            drawable = R.drawable.w27;
+            string = R.string.warn2_7;
+        }
+
+        // data 3
+
+        else if ((data[5] & 0x1) != 0) {
+            drawable = R.drawable.w26;
+            string = R.string.warn3_0;
+        } else if ((data[5] & 0x2) != 0) {
+            drawable = R.drawable.w21;
+            string = R.string.warn3_1;
+        } else if ((data[5] & 0x4) != 0) {
+            drawable = R.drawable.w13;
+            string = R.string.warn3_2;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[5] & 0x8) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn3_3;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[5] & 0x10) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn3_4;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[5] & 0x20) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn3_5;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[5] & 0x40) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn3_6;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[5] & 0x80) != 0) {
+            drawable = R.drawable.w18;
+            string = R.string.warn3_7;
+            drawable2 = R.drawable.w_red;
+        }
+
+        // data 4
+        else if ((data[6] & 0x1) != 0) {
+            drawable = R.drawable.w7;
+            string = R.string.warn4_0;
+        } else if ((data[6] & 0x2) != 0) {
+            drawable = R.drawable.w7;
+            string = R.string.warn4_1;
+        } else if ((data[6] & 0x4) != 0) {
+            drawable = R.drawable.w19;
+            string = R.string.warn4_2;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[6] & 0x8) != 0) {
+            drawable = R.drawable.w27;
+            string = R.string.warn4_3;
+        } else if ((data[6] & 0x10) != 0) {
+            drawable = R.drawable.w11;
+            string = R.string.warn4_4;
+        } else if ((data[6] & 0x20) != 0) {
+            drawable = R.drawable.w19;
+            string = R.string.warn4_5;
+        } else if ((data[6] & 0x40) != 0) {
+            // drawable = R.drawable.w7;
+            string = R.string.warn4_6;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[6] & 0x80) != 0) {
+            // drawable = R.drawable.w7;
+            string = R.string.warn4_7;
+            drawable2 = R.drawable.w_yellow;
+        }
+
+        // data 5
+        else if ((data[7] & 0x1) != 0) {
+            drawable = R.drawable.w27;
+            string = R.string.warn5_0;
+        } else if ((data[7] & 0x2) != 0) {
+            drawable = R.drawable.w19;
+            string = R.string.warn5_1;
+        } else if ((data[7] & 0x4) != 0) {
+            drawable = R.drawable.w25;
+            string = R.string.warn5_2;
+        } else if ((data[7] & 0x8) != 0) {
+            drawable = R.drawable.w24;
+            string = R.string.warn5_3;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[7] & 0x10) != 0) {
+            drawable = R.drawable.w24;
+            string = R.string.warn5_4;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[7] & 0x20) != 0) {
+            drawable = R.drawable.w19;
+            string = R.string.warn5_5;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[7] & 0x40) != 0) {
+            drawable = R.drawable.w19;
+            string = R.string.warn5_6;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[7] & 0x80) != 0) {
+            drawable = R.drawable.w12;
+            string = R.string.warn5_7;
+            drawable2 = R.drawable.w_yellow;
+        }
+
+        // data 6
+        else if ((data[8] & 0x1) != 0) {
+            string = R.string.warn6_0;
+        } else if ((data[8] & 0x2) != 0) {
+            drawable = R.drawable.w15;
+            string = R.string.warn6_1;
+        } else if ((data[8] & 0x4) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn6_2;
+        } else if ((data[8] & 0x8) != 0) {
+            drawable = R.drawable.w27;
+            string = R.string.warn6_3;
+        } else if ((data[8] & 0x10) != 0) {
+            string = R.string.warn6_4;
+        } else if ((data[8] & 0x20) != 0) {
+            drawable = R.drawable.w3;
+            string = R.string.warn6_5;
+        } else if ((data[8] & 0x40) != 0) {
+            drawable = R.drawable.w27;
+            string = R.string.warn6_6;
+            drawable2 = R.drawable.w_red;
+        } else if ((data[8] & 0x80) != 0) {
+            drawable = R.drawable.w20;
+            string = R.string.warn6_7;
+            drawable2 = R.drawable.w_red;
+        }
+
+        // data 7
+        else if ((data[9] & 0x1) != 0) {
+            drawable = R.drawable.w6;
+            string = R.string.warn7_0;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[9] & 0x2) != 0) {
+            drawable = R.drawable.w6;
+            drawable2 = R.drawable.w_yellow;
+            string = R.string.warn7_1;
+        } else if ((data[9] & 0x4) != 0) {
+            drawable = R.drawable.w6;
+            drawable2 = R.drawable.w_yellow;
+            string = R.string.warn7_2;
+        } else if ((data[9] & 0x8) != 0) {
+            drawable = R.drawable.w6;
+            drawable2 = R.drawable.w_yellow;
+            string = R.string.warn7_3;
+        } else if ((data[9] & 0x10) != 0) {
+            drawable = R.drawable.w11;
+            string = R.string.warn7_4;
+        } else if ((data[9] & 0x20) != 0) {
+            drawable = R.drawable.w11;
+            string = R.string.warn7_5;
+        } else if ((data[9] & 0x40) != 0) {
+            drawable = R.drawable.w11;
+            string = R.string.warn7_6;
+        } else if ((data[9] & 0x80) != 0) {
+            drawable = R.drawable.w11;
+            string = R.string.warn7_7;
+        }
+
+        // data 8
+        else if ((data[10] & 0x1) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn8_0;
+        } else if ((data[10] & 0x2) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn8_1;
+        } else if ((data[10] & 0x4) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn8_2;
+        } else if ((data[10] & 0x8) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn8_3;
+        } else if ((data[10] & 0x10) != 0) {
+            drawable = R.drawable.w10;
+            drawable2 = R.drawable.w_yellow;
+            string = R.string.warn8_4;
+        } else if ((data[10] & 0x20) != 0) {
+            drawable = R.drawable.w10;
+            drawable2 = R.drawable.w_yellow;
+            string = R.string.warn8_5;
+        } else if ((data[10] & 0x40) != 0) {
+            drawable = R.drawable.w16;
+            drawable2 = R.drawable.w_yellow;
+            string = R.string.warn8_6;
+        } else if ((data[10] & 0x80) != 0) {
+            drawable = R.drawable.w16;
+            drawable2 = R.drawable.w_yellow;
+            string = R.string.warn8_7;
+        }
+
+        // data 9
+        else if ((data[11] & 0x1) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn9_0;
+            drawable2 = R.drawable.w_yellow;
+        } else if ((data[11] & 0x2) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn9_1;
+        } else if ((data[11] & 0x4) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn9_2;
+        } else if ((data[11] & 0x8) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn9_3;
+            drawable2 = R.drawable.w_yellow;
+        }
+        // data 10
+        else if ((data[12] & 0x1) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn10_0;
+        }
+
+        // data 11
+        else if ((data[13] & 0x1) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn11_0;
+        } else if ((data[13] & 0x2) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn11_1;
+        }
+
+        // data 12
+        else if ((data[14] & 0x1) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn12_0;
+        } else if ((data[14] & 0x2) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn12_1;
+        }
+
+        // data 13
+        else if ((data[15] & 0x40) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn13_6;
+        } else if ((data[15] & 0x80) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn13_7;
+        }
+        // data 14
+        else if ((data[16] & 0x1) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn14_0;
+        }
+
+        // data 15
+        else if ((data[17] & 0x20) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn15_5;
+        } else if ((data[17] & 0x80) != 0) {
+            drawable = R.drawable.w10;
+            string = R.string.warn15_7;
+        }
+
+        if (string != 0) {
+            WarningMsgManager.start(mContext);
+            WarningMsgManager.updateView(mContext, drawable, drawable2, string);
+        } else {
+            WarningMsgManager.stop();
+        }
+    }
+
+    private void updateParkingMsg(byte[] data) {
+
+        int string = 0;
+        int string1 = 0;
+        int drawable1 = 0;
+        if ((data[2] & 0x1) == 0) {
+            AutoParkingMsgManager.stop();
+            return;
+        }
+        switch (data[3]) {
+            case 1:
+                break;
+            case 2:
+                string = R.string.park_info2;
+                string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 3:
+                string = R.string.park_info3;
+                string1 = R.string.prompt03;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 4:
+                string = R.string.park_info4;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 5:
+                string = R.string.park_info5;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_11;
+                break;
+            case 6:
+                string = R.string.park_info6;
+                string1 = R.string.prompt06;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 7:
+                string = R.string.park_info7;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_10;
+                break;
+            case 8:
+                string = R.string.park_info8;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_09;
+                break;
+            case 9:
+                string = R.string.park_info9;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_10;
+                break;
+            case 10:
+                string = R.string.park_info10;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_09;
+                break;
+            case 11:
+                string = R.string.park_info11;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_15;
+                break;
+            case 12:
+                string = R.string.park_info12;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_14;
+                break;
+            case 13:
+                string = R.string.park_info13;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_14;
+                break;
+
+            case 14:
+                string = R.string.park_info14;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_14;
+                break;
+            case 15:
+                string = R.string.park_info15;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_13;
+                break;
+            case 16:
+                string = R.string.park_info16;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_08;
+                break;
+            case 17:
+                string = R.string.park_info17;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_13;
+                break;
+            case 18:
+                string = R.string.park_info18;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_08;
+                break;
+            case 19:
+                string = R.string.park_info19;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_07;
+                break;
+            case 20:
+                string = R.string.park_info20;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_06;
+                break;
+            case 21:
+                string = R.string.park_info21;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_05;
+                break;
+            case 22:
+                string = R.string.park_info22;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_04;
+                break;
+            case 23:
+                string = R.string.park_info23;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_03;
+                break;
+            case 24:
+                string = R.string.park_info24;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_02;
+                break;
+            case 25:
+                string = R.string.park_info25;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_01;
+                break;
+            case 26:
+                string = R.string.park_info26;
+                // string1 = R.string.prompt02;
+                drawable1 = R.drawable.canbus62park_bg_14;
+                break;
+            case 27:
+                string = R.string.park_info27;
+                string1 = R.string.prompt1b;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 28:
+                string = R.string.park_info28;
+                string1 = R.string.prompt1c;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 29:
+                string = R.string.park_info29;
+                string1 = R.string.prompt1d;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 30:
+                string = R.string.park_info30;
+                string1 = R.string.prompt1e;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 31:
+                string = R.string.park_info31;
+                string1 = R.string.prompt1f;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 32:
+                string = R.string.park_info32;
+                string1 = R.string.prompt20;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 33:
+                string = R.string.park_info33;
+                string1 = R.string.prompt21;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 34:
+                string = R.string.park_info34;
+                string1 = R.string.prompt22;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+            case 35:
+                string = R.string.park_info35;
+                //			string1 = R.string.prompt20;
+                drawable1 = R.drawable.canbus62park_bg_05;
+                break;
+            case 36:
+                string = R.string.park_info36;
+                //			string1 = R.string.prompt20;
+                drawable1 = R.drawable.canbus62park_bg_04;
+                break;
+            case 37:
+                string = R.string.park_info37;
+                //			string1 = R.string.prompt20;
+                drawable1 = R.drawable.canbus62park_bg_01;
+                break;
+            case 38:
+                string = R.string.park_info38;
+                //			string1 = R.string.prompt20;
+                drawable1 = R.drawable.canbus62park_bg_12;
+                break;
+            case 39:
+                string = R.string.park_info39;
+                string1 = R.string.prompt1d;
+                drawable1 = R.drawable.canbus62park_bg_00;
+                break;
+
+        }
+        if (string != 0) {
+            AutoParkingMsgManager.start(mContext);
+            AutoParkingMsgManager.updateView(mContext, drawable1, string, string1);
+        } else {
+            AutoParkingMsgManager.stop();
+        }
+    }
+
+    private int mDoorStatus = 0;
+
+    public void setReverseRadaVol(byte param) {
+        byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
+        sendDataToCanbox(data, data.length);
+    }
+
+    public void setParkCarMode(byte param) {
+        byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x2, param};
+        sendDataToCanbox(data, data.length);
+    }
+
+    public void requestInfo(byte param) {
+        byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
+        sendDataToCanbox(data, data.length);
+    }
+
+    private int mSource = MyCmd.SOURCE_NONE;
+    private final int mBaud = 0;
+
+    public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
+
+        byte h = (byte) ((time / 3600));
+        byte min = (byte) ((time / 60) % 60);
+        byte sec = (byte) ((time) % 60);
+
+        switch (source) {
+            case MyCmd.SOURCE_DVD:
+                break;
+            case MyCmd.SOURCE_MUSIC:
+            case MyCmd.SOURCE_VIDEO:
+                ++play;
+                break;
+            case MyCmd.SOURCE_BT:
+                break;
+            default:
+                break;
+        }
+
+
+        byte[] data = new byte[]{(byte) 0xc0, 0x8, 2, (byte) ((play) & 0xFF), (byte) (((play) & 0xFF00) >> 8), (byte) (total & 0xFF), (byte) (((total) & 0xFF00) >> 8), h, min, sec};
+
+        sendDataToCanbox(data, data.length);
+    }
+
+
+    public void setMediaSrc(int source, byte type, byte[] b) {
+        //		setMediaSrc(0);
+        //		if (b[0] != 0x10) {
+        //			b[0] += 1;
+        //		}
+
+        ++b[3];
+
+        byte[] data = new byte[]{(byte) 0xc0, 0x5, 0x1, b[0], b[1], b[2], b[3]};
+        sendDataToCanbox(data, data.length);
+    }
+
+    public void setMediaSrc(int source) {
+        mSource = source;
+        byte s = 0;
+        switch (source) {
+            case MyCmd.SOURCE_RADIO:
+            case MyCmd.SOURCE_MUSIC:
+            case MyCmd.SOURCE_VIDEO:
+            case MyCmd.SOURCE_DVD:
+            case MyCmd.SOURCE_BT:
+                break;
+            default:
+                s = 0x07;
+                byte[] data2 = new byte[]{(byte) 0xc0, 0x1, s};
+                sendDataToCanbox(data2, data2.length);
+                break;
+        }
+
+        if (source != MyCmd.SOURCE_AUX) {
+            byte[] data = new byte[]{(byte) 0x83, 0x1, 0x01};
+            sendDataToCanbox(data, data.length);
+        }
+    }
+
+    private void doSyncControl(byte[] data) {
+        switch (data[2]) {
+            case 0x10:
+                doKey(KEY_DVD, 1);
+                doKey(KEY_DVD, 0);
+                break;
+            case 0x11:
+                if (mSource == MyCmd.SOURCE_DVD) {
+                    byte key = 0;
+                    switch (data[3]) {
+                        case 0x1:
+                            key = MyCmd.Keycode.PLAY;
+                            break;
+                        case 0x2:
+                            key = MyCmd.Keycode.PAUSE;
+                            break;
+                        case 0x3:
+                            key = MyCmd.Keycode.KEY_REPEAT;
+                            break;
+                        case 0x4:
+                            key = MyCmd.Keycode.KEY_SHUFFLE;
+                            break;
+                        case 0x5:
+                            key = MyCmd.Keycode.PREVIOUS;
+                            break;
+                        case 0x6:
+                            key = MyCmd.Keycode.NEXT;
+                            break;
+                    }
+
+                    if (key != 0) {
+                        doKey(key, 1);
+                        doKey(key, 0);
+                    }
+                }
+                break;
+            case 0x12: {
+
+                byte key = (byte) (data[3] % 10);
+
+                key += MyCmd.Keycode.NUMBER0;
+
+                doKey(key, 1);
+                doKey(key, 0);
+                break;
+            }
+            case 0x20: {
+                switch (data[3]) {
+                    case 0x0:
+                    case 0x1:
+                        if (mSource != MyCmd.SOURCE_RADIO || mBaud != 0) {
+                            doKey(KEY_FM, 1);
+                            doKey(KEY_FM, 0);
+                        }
+                        break;
+                    case 0x2:
+                    case 0x3:
+                        if (mSource != MyCmd.SOURCE_RADIO || mBaud == 0) {
+                            doKey(KEY_FM, 1);
+                            doKey(KEY_FM, 0);
+                        }
+                        break;
+                }
+
+                BroadcastUtil.sendToCarServiceMcuRadio(mContext, ProtocolAk47.SEND_RADIO_SUB_SET_CURRENT_FREQUENCY, data[5] & 0xff, data[4] & 0xff);
+                break;
+            }
+            case 0x22:
+                if (mBaud == 0) {
+                    BroadcastUtil.sendToCarServiceMcuRadio(mContext, ProtocolAk47.SEND_RADIO_SUB_RADIO_OPERATION, 0x3, data[3] - 1);
+                }
+                break;
+            case 0x23:
+                if (mBaud != 0) {
+
+                    BroadcastUtil.sendToCarServiceMcuRadio(mContext, ProtocolAk47.SEND_RADIO_SUB_RADIO_OPERATION, 0x3, data[3] - 1);
+                }
+        }
+
+    }
+
+    //	public void udpateLang() {
+    //		int lang = -1;
+    //		String locale = Locale.getDefault().getLanguage();
+    //		String country = Locale.getDefault().getCountry();
+    //		if (locale != null) {
+    //			if (locale.equals("en") && country.equals("US")) {
+    //				lang = 3;
+    //			} else if (locale.equals("en")) {
+    //				lang = 2;
+    //			} else if (locale.equals("de")) {
+    //				lang = 4;
+    //			} else if (locale.equals("it")) {
+    //				lang = 5;
+    //			}  else if (locale.equals("fr") && country.equals("US")) {
+    //				lang = 7;
+    //			}  else if (locale.equals("fr")) {
+    //				lang = 6;
+    //			}  else if (locale.equals("es")&& country.equals("US")) {
+    //				lang = 9;
+    //			}  else if (locale.equals("es")) {
+    //				lang = 8;
+    //			} else if (locale.equals("tr")) {
+    //				lang = 0xa;
+    //			} else if (locale.equals("ru")) {
+    //				lang = 0xb;
+    //			}else if (locale.equals("nl")) {
+    //				lang = 0xc;
+    //			}  else if (locale.equals("pl")) {
+    //				lang = 0xe;
+    //			}else if (locale.equals("sv")) {
+    //				lang = 0x12;
+    //			}else if (locale.equals("pt")&& country.equals("BR")) {
+    //				lang = 0x17;
+    //			}else if (locale.equals("pt")) {
+    //				lang = 0x16;
+    //			}else if (locale.equals("zh")&& country.equals("TW")) {
+    //				lang = 0x1c;
+    //			}else if (locale.equals("zh")) {
+    //				lang = 0x1b;
+    //			}
+    //		}
+    //		if (lang != -1) {
+    //			byte[] buf = { (byte) 0x87, 0x1, (byte) lang };
+    //			sendDataToCanbox(buf, buf.length);
+    //		}
+    //	}
+
+    public void startConnect() {
+        super.startConnect();
+        sendCarType2();
+        setAllLed(true);
+
+        byte[] data = new byte[]{(byte) 0x83, 0x1, 0x01};
+        sendDataToCanbox(data, data.length);
+    }
+
+    public void stopConnect() {
+        mHandler.removeMessages(SEND_CAR_TYPE);
+        super.stopConnect();
+    }
+
+    private final static int SEND_CAR_TYPE = 11;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SEND_CAR_TYPE) {
+                sendCarType2();
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    private void sendCarType2() {
+        mHandler.removeMessages(SEND_CAR_TYPE);
+        mHandler.sendEmptyMessageDelayed(SEND_CAR_TYPE, 1000);
+        int type = CarUtil.getCarType2();
+        if (type >= 1 && type <= 7) {
+            int level = CarUtil.getCarTypeConfig();
+            if (level == -1) {
+                level = 2;
+            }
+
+            byte[] data = new byte[]{(byte) 0x91, 0x2, (byte) type, (byte) level};
+            sendDataToCanbox(data, data.length);
+        }
+    }
+
+
+    public void setSongName(String s) {
+        sendId3((byte) 0x1, s);
+    }
+
+    public void setSongAritst(String s) {
+        sendId3((byte) 0x2, s);
+    }
+
+    //	public void setSongAlbum(String s) {
+    //		sendId3((byte)0x3, s);
+    //	}
+
+    public void sendId3(byte index, String num) {
+
+
+        try {
+            if (num == null) {
+                num = "";
+            }
+            byte[] n = getBytesUnicodeLittleEndian(num); //del 0xff 0xfe
+
+            int num_len = n.length;
+            if ((n[0] & 0xff) == 0xff && (n[1] & 0xff) == 0xfe) {
+                num_len -= 2;
+            }
+
+            int len = num_len + 7;
+            if (len > 0x27) {
+                len = 0x27;
+            }
+            byte[] data = new byte[len];
+
+            data[0] = (byte) 0xc1;
+            data[1] = (byte) (len - 2);
+            data[2] = index;
+            for (int i = 0; i < (len - 7); ++i) {
+                if (i % 2 == 0) {
+                    data[7 + i] = n[i + 3];
+                } else {
+                    data[7 + i] = n[i + 1];
+                }
+            }
+            sendDataToCanbox(data, data.length);
+        } catch (Exception e) {
+
+            Log.d("PSASimple", "sendId3" + e);
+        }
+    }
+
+
+    public void setVolume(int volume) {
+
+        //		byte[] data = new byte[] { (byte) 0xc2, 0x1, (byte) volume };
+        //		sendDataToCanbox(data, data.length);
+    }
+
+    public void updateTime() {
+        if (mContext == null) {
+            return;
+        }
+        Date curDate = new Date(System.currentTimeMillis());
+        byte h = (byte) curDate.getHours();
+
+        h = fixTimeHour(h);
+        String strTimeFormat = Settings.System.getString(mContext.getContentResolver(), android.provider.Settings.System.TIME_12_24);
+
+        if ("12".equals(strTimeFormat)) {
+            if (h > 12) {
+                h -= 12;
+            } else if (h == 0) {
+                h = 12;
+            }
+        }
+
+        byte m = (byte) curDate.getMinutes();
+        //		byte s = (byte) curDate.getSeconds();
+
+        byte y = (byte) (curDate.getYear() - 100);
+        byte mon = (byte) (curDate.getMonth() + 1);
+        byte d = (byte) curDate.getDate();
+
+        byte[] buf = new byte[]{(byte) 0x82, 0x06, y, mon, d, h, m, 0};
+        sendDataToCanbox(buf, buf.length);
+    }
+
+
+    private void setAllLed(boolean show) {
+        byte[] data = new byte[]{(byte) 0xc6, 0x2, (byte) 0xa2, (byte) (show ? 0x7 : 0)};
+        sendDataToCanbox(data, data.length);
+    }
+
+    public int getUpdateTime() {
+        return 60000;
+    }
+
+    public int doEQCmd(int cmd, int data) {
+        int ret = 0;
+        if (cmd == EQ_REQUEST_ALL_MAX) {
+            ret = (30 << 16) | (15 << 8) | 15;
+
+            byte[] buf = new byte[]{(byte) 0x90, 0x2, 0x51, 0};
+            sendDataToCanbox(buf, buf.length);
+        } else {
+            byte[] buf = new byte[]{(byte) 0xc3, 0x2, 0, (byte) data};
+            switch (cmd) {
+                case EQ_CMD_SET_HIGH:
+                    buf[2] = 0;
+                    break;
+                case EQ_CMD_SET_MIDDLE:
+                    buf[2] = 1;
+                    break;
+                case EQ_CMD_SET_LOW:
+                    buf[2] = 2;
+                    break;
+                case EQ_CMD_SET_ZONE_FR:
+                    buf[2] = 3;
+                    break;
+                case EQ_CMD_SET_ZONE_LR:
+                    buf[2] = 4;
+                    break;
+                case EQ_CMD_SET_VOLUME:
+                    buf = new byte[]{(byte) 0xc2, 0x1, (byte) data};
+                    break;
+                default:
+                    return 0;
+            }
+            //buf[3] = (byte) data ;
+            sendDataToCanbox(buf, buf.length);
+        }
+        return ret;
+    }
+
+    private void parseEQ(byte[] buf) {
+        if (mEQData == null) {
+            mEQData = new byte[6];
+        }
+        mEQData[0] = (byte) ((buf[2] & 0xf0) >> 4);
+        mEQData[1] = (byte) (buf[2] & 0xf);
+        mEQData[2] = (byte) ((buf[3] & 0xf0) >> 4);
+        mEQData[3] = (byte) (buf[3] & 0xf);
+        mEQData[4] = (byte) ((buf[4] & 0xf0) >> 4);
+        mEQData[5] = buf[6];
+        super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQData);
+    }
+}
