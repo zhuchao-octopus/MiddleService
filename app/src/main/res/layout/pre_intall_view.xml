@@ -5,12 +5,12 @@
     android:layout_gravity="center"
     android:background="#dd000000"
     android:paddingBottom="5px"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="10" >
+        android:layout_weight="10">
 
         <TextView
             android:id="@+id/install_apk_status"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1.5"
-        android:gravity="center" >
+        android:gravity="center">
 
         <Button
             android:id="@+id/install_quit"
@@ -43,7 +43,7 @@
             android:text="@string/quit"
             android:layout_height="match_parent"
             android:gravity="center" />
-        
+
         <TextView
             android:id="@+id/install_finish"
             android:layout_width="160px"

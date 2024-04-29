@@ -4,10 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-
-import com.zhuchao.android.car.R;
 import com.common.util.BroadcastUtil;
 import com.common.util.MyCmd;
+import com.zhuchao.android.car.R;
 
 public class ReverseActivity2 extends Activity {
 
@@ -20,8 +19,8 @@ public class ReverseActivity2 extends Activity {
         Log.d("aa", "onCreate");
         mRadioUI = ReverseUI.getInstance(this, findViewById(R.id.screen1_main), 0);
 
-		assert mRadioUI != null;
-		mRadioUI.onCreate();
+        assert mRadioUI != null;
+        mRadioUI.onCreate();
 
     }
 

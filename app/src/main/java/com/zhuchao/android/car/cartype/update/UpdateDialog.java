@@ -9,105 +9,105 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.CanService;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.manager.McuManager;
-import com.zhuchao.android.car.R;
 
 public class UpdateDialog extends Dialog {
 
-	TextView mTitle;
-	TextView mMessage;
-	McuManager mcu;
+    TextView mTitle;
+    TextView mMessage;
+    McuManager mcu;
 
-	public UpdateDialog(Context c) {
-		super(c);
-		startKeepAcc();
-		
-	}
+    public UpdateDialog(Context c) {
+        super(c);
+        startKeepAcc();
 
-	public void setTitle(String s) {
-		mTitle.setText(s);
-	}
+    }
 
-	public void setMsg(String s) {
-		mMessage.setText(s);
-	}
+    public void setTitle(String s) {
+        mTitle.setText(s);
+    }
 
-	private final View.OnClickListener mOnClickDialogCancel = new View.OnClickListener() {
-		public void onClick(View v) {
-			stoptKeepAcc();
-			dismiss();
-		}
-	};
-	
-	
-	
-	private final Handler mHandler = new Handler() {
-		public void handleMessage(Message msg) {
-			startKeepAcc();
-					
-			super.handleMessage(msg);
-		}
-	};
+    public void setMsg(String s) {
+        mMessage.setText(s);
+    }
 
-	private void startKeepAcc() {
-		mHandler.removeMessages(0);
-		mHandler.sendEmptyMessageDelayed(0, 2000);
-		if (mcu != null){
-			mcu.setKeepAcc(1);
-		}	
-		
-		
-	}
-
-	private void stoptKeepAcc() {
-		mHandler.removeMessages(0);
-		if (mcu != null) {
-			mcu.setKeepAcc(0);
-		}
-
-		if (mCanbox != null) {
-			CanService.mCanbox = mCanbox;
-			mCanbox = null;
-		}
-	}
+    private final View.OnClickListener mOnClickDialogCancel = new View.OnClickListener() {
+        public void onClick(View v) {
+            stoptKeepAcc();
+            dismiss();
+        }
+    };
 
 
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		CarUtil.mIsUpdating = true;
-		startKeepAcc();
-	}
-	
-	@Override
-	protected void onStop() {
-		// TODO Auto-generated method stub
-		super.onStop();
-		CarUtil.mIsUpdating = false;
-		stoptKeepAcc();
-	}
-	
-	private Canbox mCanbox;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.canbox_update_msg);
-		// ((TextView)
-		// findViewById(R.id.alertTitle)).setText(R.string.update_canbox);
-		mTitle = findViewById(R.id.alertTitle);
-		mMessage = findViewById(R.id.message);
-		findViewById(R.id.cancel).setOnClickListener(mOnClickDialogCancel);
-		getWindow().setType((WindowManager.LayoutParams.TYPE_SYSTEM_ERROR));
-		mcu = McuManager.getInstance();
-		
-		if (CanService.mCanbox != null){
-			mCanbox = CanService.mCanbox;
-			CanService.mCanbox = null;
-		}
-	}
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            startKeepAcc();
+
+            super.handleMessage(msg);
+        }
+    };
+
+    private void startKeepAcc() {
+        mHandler.removeMessages(0);
+        mHandler.sendEmptyMessageDelayed(0, 2000);
+        if (mcu != null) {
+            mcu.setKeepAcc(1);
+        }
+
+
+    }
+
+    private void stoptKeepAcc() {
+        mHandler.removeMessages(0);
+        if (mcu != null) {
+            mcu.setKeepAcc(0);
+        }
+
+        if (mCanbox != null) {
+            CanService.mCanbox = mCanbox;
+            mCanbox = null;
+        }
+    }
+
+
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        CarUtil.mIsUpdating = true;
+        startKeepAcc();
+    }
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        CarUtil.mIsUpdating = false;
+        stoptKeepAcc();
+    }
+
+    private Canbox mCanbox;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.canbox_update_msg);
+        // ((TextView)
+        // findViewById(R.id.alertTitle)).setText(R.string.update_canbox);
+        mTitle = findViewById(R.id.alertTitle);
+        mMessage = findViewById(R.id.message);
+        findViewById(R.id.cancel).setOnClickListener(mOnClickDialogCancel);
+        getWindow().setType((WindowManager.LayoutParams.TYPE_SYSTEM_ERROR));
+        mcu = McuManager.getInstance();
+
+        if (CanService.mCanbox != null) {
+            mCanbox = CanService.mCanbox;
+            CanService.mCanbox = null;
+        }
+    }
 }

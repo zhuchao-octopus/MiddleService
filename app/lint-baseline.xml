@@ -1,37 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <issues format="6" by="lint 8.2.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.2.2)" variant="fatal" version="8.2.2">
 
-    <issue
-        id="ExtraTranslation"
-        message="&quot;careful&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
+    <issue id="ExtraTranslation" message="&quot;careful&quot; is translated here but not found in default locale" errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-zh-rTW/strings.xml"
-            line="100"
-            column="13"/>
+        <location file="src/main/res/values-zh-rTW/strings.xml" line="100" column="13" />
     </issue>
 
-    <issue
-        id="ExtraTranslation"
-        message="&quot;careful&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
+    <issue id="ExtraTranslation" message="&quot;careful&quot; is translated here but not found in default locale" errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-zh-rHK/strings.xml"
-            line="101"
-            column="13"/>
+        <location file="src/main/res/values-zh-rHK/strings.xml" line="101" column="13" />
     </issue>
 
-    <issue
-        id="ExtraTranslation"
-        message="&quot;careful&quot; is translated here but not found in default locale"
-        errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
+    <issue id="ExtraTranslation" message="&quot;careful&quot; is translated here but not found in default locale" errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/values-zh-rCN/strings.xml"
-            line="194"
-            column="13"/>
+        <location file="src/main/res/values-zh-rCN/strings.xml" line="194" column="13" />
     </issue>
 
 </issues>

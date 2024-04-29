@@ -19,244 +19,239 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.zhuchao.android.car.manager.McuManager;
-
 import com.common.util.MyCmd;
 import com.common.util.ProtocolAk47;
 import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.manager.McuManager;
+
 public class VolumePanel extends Handler {
 
-	private static final String TAG = "VolumePanel";
-	// private final Toast mToast;
-	private final View mView;
-	private final ImageView mLargeStreamIcon;
-	private final SeekBar mLevel;
-	private final Context mContext;
-	private final TextView mMessage;
+    private static final String TAG = "VolumePanel";
+    // private final Toast mToast;
+    private final View mView;
+    private final ImageView mLargeStreamIcon;
+    private final SeekBar mLevel;
+    private final Context mContext;
+    private final TextView mMessage;
 
-	private final McuManager mMcuManager;
+    private final McuManager mMcuManager;
 
-	private final static int MSG_SHOW = 0;
-	private final static int MSG_HIDE = 1;
+    private final static int MSG_SHOW = 0;
+    private final static int MSG_HIDE = 1;
 
-	public static boolean mShown = false;
-	/** 开机第一次不要显示 */
-	private final boolean mFirstShown = true;
+    public static boolean mShown = false;
+    /**
+     * 开机第一次不要显示
+     */
+    private final boolean mFirstShown = true;
 
-	private static VolumePanel mThis;
+    private static VolumePanel mThis;
 
-	private WindowManager mWindowManager = null;
+    private WindowManager mWindowManager = null;
 
-	private final WindowManager.LayoutParams mVolumeLayoutParams;
-	private final static long DELAY_HIDE_TIME = 3000;
+    private final WindowManager.LayoutParams mVolumeLayoutParams;
+    private final static long DELAY_HIDE_TIME = 3000;
 
-	public static int mCurrentVolume = 10;
+    public static int mCurrentVolume = 10;
 
-	public VolumePanel(Context context) {
-		mContext = context;
+    public VolumePanel(Context context) {
+        mContext = context;
 
-		LayoutInflater inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = mView = inflater.inflate(R.layout.volume_layout, null);
-		
-		View v =  view
-				.findViewById(R.id.volume_back);
-		v.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				doHide();
-			}
-		});
-		
-		
-		mLargeStreamIcon = view
-				.findViewById(R.id.ringer_stream_icon);
-		mLargeStreamIcon.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mMcuManager.doKey(MyCmd.Keycode.MUTE);
-			}
-		});
-		mLevel = view.findViewById(R.id.level);
-		
-		mLevel.setOnKeyListener(new OnKeyListener() {
-			
-			@Override
-			public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
-				// TODO Auto-generated method stub
-				if(arg2.getKeyCode() == KeyEvent.KEYCODE_BACK
-						||arg2.getKeyCode() == KeyEvent.KEYCODE_ENTER){
-					doHide();
-					return true;
-				}
-				return false;
-			}
-		});
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = mView = inflater.inflate(R.layout.volume_layout, null);
 
-		mMessage = view.findViewById(R.id.vol_text);
-		mLevel.setMax(30);
+        View v = view.findViewById(R.id.volume_back);
+        v.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doHide();
+            }
+        });
 
-		mLevel.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-//				prepareHide();
-			}
+        mLargeStreamIcon = view.findViewById(R.id.ringer_stream_icon);
+        mLargeStreamIcon.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMcuManager.doKey(MyCmd.Keycode.MUTE);
+            }
+        });
+        mLevel = view.findViewById(R.id.level);
 
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-				// TODO Auto-generated method stub
-				prepareHide();
-			}
+        mLevel.setOnKeyListener(new OnKeyListener() {
 
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress,
-					boolean fromUser) {
-				if (fromUser) {
+            @Override
+            public boolean onKey(View arg0, int arg1, KeyEvent arg2) {
+                // TODO Auto-generated method stub
+                if (arg2.getKeyCode() == KeyEvent.KEYCODE_BACK || arg2.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    doHide();
+                    return true;
+                }
+                return false;
+            }
+        });
 
-					// 做过滤操作，不要调节过于灵敏，因为与mcu通信时差会导致快速拖动时，进度跳动
+        mMessage = view.findViewById(R.id.vol_text);
+        mLevel.setMax(30);
 
-					prepareHide();
+        mLevel.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
-					mMcuManager.setVolume(progress);
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+                //				prepareHide();
+            }
 
-				}
-			}
-		});
-		mWindowManager = (WindowManager) mContext
-				.getSystemService(Context.WINDOW_SERVICE);
-		mVolumeLayoutParams = new WindowManager.LayoutParams();
-		mVolumeLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-		mVolumeLayoutParams.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-		// mVolumeLayoutParams.flags |=
-		// WindowManager.LayoutParams.FLAG_FULLSCREEN |
-		// WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-		mVolumeLayoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
-		mVolumeLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-		mVolumeLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-		mVolumeLayoutParams.format = PixelFormat.RGBA_8888;
-		mMcuManager = McuManager.getInstance(null);
-		registerListener();
-	}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+                prepareHide();
+            }
 
-	public void handleMessage(Message msg) {
-		switch (msg.what) {
-		case MSG_SHOW:
-			show();
-			break;
-		case MSG_HIDE:
-			doHide();
-			break;
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
 
-		default:
-			break;
-		}
-	}
+                    // 做过滤操作，不要调节过于灵敏，因为与mcu通信时差会导致快速拖动时，进度跳动
 
-	private void prepareHide() {
-		removeMessages(MSG_HIDE);
-		sendEmptyMessageDelayed(MSG_HIDE, DELAY_HIDE_TIME);
-	}
+                    prepareHide();
 
-	private void show() {
-		doShow();
-		prepareHide();
-	}
+                    mMcuManager.setVolume(progress);
 
-	private void doShow() {
-//		if (mFirstShown) {
-//			mFirstShown = false;
-//			return;
-//		}
+                }
+            }
+        });
+        mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        mVolumeLayoutParams = new WindowManager.LayoutParams();
+        mVolumeLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        mVolumeLayoutParams.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        // mVolumeLayoutParams.flags |=
+        // WindowManager.LayoutParams.FLAG_FULLSCREEN |
+        // WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        mVolumeLayoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+        mVolumeLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        mVolumeLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        mVolumeLayoutParams.format = PixelFormat.RGBA_8888;
+        mMcuManager = McuManager.getInstance(null);
+        registerListener();
+    }
 
-		if (mCurrentVolume == 0) { // mute
-			mLargeStreamIcon.setImageResource(R.drawable.volume_off);
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+            case MSG_SHOW:
+                show();
+                break;
+            case MSG_HIDE:
+                doHide();
+                break;
 
-		} else {
-			mLargeStreamIcon.setImageResource(R.drawable.volume_icon);
+            default:
+                break;
+        }
+    }
 
-		}
+    private void prepareHide() {
+        removeMessages(MSG_HIDE);
+        sendEmptyMessageDelayed(MSG_HIDE, DELAY_HIDE_TIME);
+    }
 
-		mLevel.setProgress(mCurrentVolume);
-		mMessage.setText(String.valueOf(mCurrentVolume));
+    private void show() {
+        doShow();
+        prepareHide();
+    }
 
-		if (!mShown) {
-			mWindowManager.addView(mView, mVolumeLayoutParams);
-			mShown = true;
-		}
+    private void doShow() {
+        //		if (mFirstShown) {
+        //			mFirstShown = false;
+        //			return;
+        //		}
 
-	}
+        if (mCurrentVolume == 0) { // mute
+            mLargeStreamIcon.setImageResource(R.drawable.volume_off);
 
-	private void doHide() {
-		if (mShown) {
+        } else {
+            mLargeStreamIcon.setImageResource(R.drawable.volume_icon);
 
-			removeMessages(MSG_HIDE);
-			mWindowManager.removeView(mView);
-			mShown = false;
-		}
+        }
 
-	}
+        mLevel.setProgress(mCurrentVolume);
+        mMessage.setText(String.valueOf(mCurrentVolume));
 
-	private void doMcuData(byte[] buf) {
-		int ret = 0;
-		if (buf != null && buf.length > 2) {
-			if (buf[1] == ProtocolAk47.RECEVE_AUDIO_VOLUME_INFO) {
-				mCurrentVolume = buf[2];
-				boolean show = true;
-				if (buf.length > 4) {
-					if (buf[4] == 1) {
-						show = false;
-					}
-				}
-				if (show) {
-					show();
-				}
-			}
-		}
+        if (!mShown) {
+            mWindowManager.addView(mView, mVolumeLayoutParams);
+            mShown = true;
+        }
 
-	}
+    }
 
-	private BroadcastReceiver mReceiver = null;
+    private void doHide() {
+        if (mShown) {
 
-	public void registerListener() {
-		if (mReceiver == null) {
-			mReceiver = new BroadcastReceiver() {
-				@Override
-				public void onReceive(Context context, Intent intent) {
-					String action = intent.getAction();
-					//Log.d(TAG, action);
-					if (action.equals(MyCmd.BROADCAST_CAR_SERVICE_SEND)) {
+            removeMessages(MSG_HIDE);
+            mWindowManager.removeView(mView);
+            mShown = false;
+        }
 
-						int cmd = intent.getIntExtra(MyCmd.EXTRA_COMMON_CMD, 0);
+    }
 
-						if (cmd == MyCmd.Cmd.MCU_AUDIO_RECEIVE_DATA) {
-							byte[] buf = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_DATA);
-							doMcuData(buf);
-						}
+    private void doMcuData(byte[] buf) {
+        int ret = 0;
+        if (buf != null && buf.length > 2) {
+            if (buf[1] == ProtocolAk47.RECEVE_AUDIO_VOLUME_INFO) {
+                mCurrentVolume = buf[2];
+                boolean show = true;
+                if (buf.length > 4) {
+                    if (buf[4] == 1) {
+                        show = false;
+                    }
+                }
+                if (show) {
+                    show();
+                }
+            }
+        }
 
-					} else if (action.equals(MyCmd.BROADCAST_START_VOLUMESETTINGS)||
-							action.equals(MyCmd.BROADCAST_START_VOLUMESETTINGS_COMMON)) {
-						show();
+    }
 
-					}
+    private BroadcastReceiver mReceiver = null;
 
-				}
-			};
-			IntentFilter iFilter = new IntentFilter();
-			iFilter.addAction(MyCmd.BROADCAST_CAR_SERVICE_SEND);
+    public void registerListener() {
+        if (mReceiver == null) {
+            mReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String action = intent.getAction();
+                    //Log.d(TAG, action);
+                    if (action.equals(MyCmd.BROADCAST_CAR_SERVICE_SEND)) {
 
-			iFilter.addAction(MyCmd.BROADCAST_START_VOLUMESETTINGS);
-			iFilter.addAction(MyCmd.BROADCAST_START_VOLUMESETTINGS_COMMON);
-			mContext.registerReceiver(mReceiver, iFilter);
-		}
-	}
+                        int cmd = intent.getIntExtra(MyCmd.EXTRA_COMMON_CMD, 0);
 
-	public void unregisterListener() {
-		if (mReceiver != null) {
-			mContext.unregisterReceiver(mReceiver);
-			mReceiver = null;
-		}
+                        if (cmd == MyCmd.Cmd.MCU_AUDIO_RECEIVE_DATA) {
+                            byte[] buf = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_DATA);
+                            doMcuData(buf);
+                        }
 
-	}
+                    } else if (action.equals(MyCmd.BROADCAST_START_VOLUMESETTINGS) || action.equals(MyCmd.BROADCAST_START_VOLUMESETTINGS_COMMON)) {
+                        show();
+
+                    }
+
+                }
+            };
+            IntentFilter iFilter = new IntentFilter();
+            iFilter.addAction(MyCmd.BROADCAST_CAR_SERVICE_SEND);
+
+            iFilter.addAction(MyCmd.BROADCAST_START_VOLUMESETTINGS);
+            iFilter.addAction(MyCmd.BROADCAST_START_VOLUMESETTINGS_COMMON);
+            mContext.registerReceiver(mReceiver, iFilter);
+        }
+    }
+
+    public void unregisterListener() {
+        if (mReceiver != null) {
+            mContext.unregisterReceiver(mReceiver);
+            mReceiver = null;
+        }
+
+    }
 }

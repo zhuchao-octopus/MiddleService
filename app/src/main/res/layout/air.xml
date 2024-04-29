@@ -5,13 +5,13 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/panel_background"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="50px"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/ac"
@@ -152,11 +152,11 @@
         android:layout_width="fill_parent"
         android:layout_height="146px"
         android:gravity="center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="146px" >
+            android:layout_height="146px">
 
             <ImageView
                 android:id="@+id/wind_up1"
@@ -165,8 +165,7 @@
                 android:layout_gravity="left"
                 android:layout_marginLeft="60px"
                 android:layout_marginTop="5px"
-                android:src="@drawable/air_content_max" >
-            </ImageView>
+                android:src="@drawable/air_content_max"></ImageView>
 
             <ImageView
                 android:id="@+id/wind_auto1"
@@ -175,55 +174,50 @@
                 android:layout_gravity="left"
                 android:layout_marginLeft="60px"
                 android:layout_marginTop="5px"
-                android:src="@drawable/air_title_ce_auto_mid" >
-            </ImageView>
+                android:src="@drawable/air_title_ce_auto_mid"></ImageView>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/wind_down1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35px"
-                    android:src="@drawable/air_content_arrow_bottom" >
-                </ImageView>
+                    android:src="@drawable/air_content_arrow_bottom"></ImageView>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center" >
+                        android:layout_gravity="center">
 
                         <ImageView
                             android:id="@+id/air_perple"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/air_content_air_people" >
-                        </ImageView>
+                            android:src="@drawable/air_content_air_people"></ImageView>
 
                         <ImageView
                             android:id="@+id/wind_horizontal2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:src="@drawable/air_content_arrow_left" >
-                        </ImageView>
+                            android:src="@drawable/air_content_arrow_left"></ImageView>
 
                         <ImageView
                             android:id="@+id/wind_horizontal1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/air_content_arrow_right" >
-                        </ImageView>
+                            android:src="@drawable/air_content_arrow_right"></ImageView>
                     </FrameLayout>
                 </LinearLayout>
 
@@ -232,8 +226,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35px"
-                    android:src="@drawable/air_content_arrow_bottom" >
-                </ImageView>
+                    android:src="@drawable/air_content_arrow_bottom"></ImageView>
             </LinearLayout>
 
             <ImageView
@@ -243,8 +236,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="60px"
                 android:layout_marginTop="5px"
-                android:src="@drawable/air_content_max" >
-            </ImageView>
+                android:src="@drawable/air_content_max"></ImageView>
 
             <ImageView
                 android:id="@+id/wind_auto2"
@@ -253,8 +245,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="60px"
                 android:layout_marginTop="5px"
-                android:src="@drawable/air_title_ce_auto_mid" >
-            </ImageView>
+                android:src="@drawable/air_title_ce_auto_mid"></ImageView>
 
             <LinearLayout
                 android:id="@+id/air_action_seat"
@@ -263,27 +254,26 @@
                 android:layout_gravity="center"
                 android:background="@drawable/air_content_background"
                 android:orientation="vertical"
-                android:visibility="invisible" >
+                android:visibility="invisible">
 
                 <ImageView
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10px"
-                    android:src="@drawable/air_seat" >
-                </ImageView>
+                    android:src="@drawable/air_seat"></ImageView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10px"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/seat_heat_left_4"
@@ -292,8 +282,7 @@
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
                             android:src="@drawable/air_wind_heat"
-                            android:visibility="invisible" >
-                        </ImageView>
+                            android:visibility="invisible"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_heat_left_3"
@@ -301,8 +290,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind_heat" >
-                        </ImageView>
+                            android:src="@drawable/air_wind_heat"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_heat_left_2"
@@ -310,8 +298,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind_heat" >
-                        </ImageView>
+                            android:src="@drawable/air_wind_heat"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_heat_left_1"
@@ -319,15 +306,14 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind_heat" >
-                        </ImageView>
+                            android:src="@drawable/air_wind_heat"></ImageView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/seat_heat_right_1"
@@ -335,8 +321,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind_heat" >
-                        </ImageView>
+                            android:src="@drawable/air_wind_heat"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_heat_right_2"
@@ -344,8 +329,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind_heat" >
-                        </ImageView>
+                            android:src="@drawable/air_wind_heat"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_heat_right_3"
@@ -353,8 +337,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind_heat" >
-                        </ImageView>
+                            android:src="@drawable/air_wind_heat"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_heat_right_4"
@@ -363,8 +346,7 @@
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
                             android:src="@drawable/air_wind_heat"
-                            android:visibility="invisible" >
-                        </ImageView>
+                            android:visibility="invisible"></ImageView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -374,13 +356,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5px"
                     android:orientation="horizontal"
-                    android:visibility="invisible" >
+                    android:visibility="invisible">
 
                     <LinearLayout
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/seat_cold_left_4"
@@ -389,8 +371,7 @@
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
                             android:src="@drawable/air_wind"
-                            android:visibility="invisible" >
-                        </ImageView>
+                            android:visibility="invisible"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_cold_left_3"
@@ -398,8 +379,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind" >
-                        </ImageView>
+                            android:src="@drawable/air_wind"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_cold_left_2"
@@ -407,8 +387,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind" >
-                        </ImageView>
+                            android:src="@drawable/air_wind"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_cold_left_1"
@@ -416,15 +395,14 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind" >
-                        </ImageView>
+                            android:src="@drawable/air_wind"></ImageView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/seat_cold_right_1"
@@ -432,8 +410,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind" >
-                        </ImageView>
+                            android:src="@drawable/air_wind"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_cold_right_2"
@@ -441,8 +418,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind" >
-                        </ImageView>
+                            android:src="@drawable/air_wind"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_cold_right_3"
@@ -450,8 +426,7 @@
                             android:layout_height="12px"
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
-                            android:src="@drawable/air_wind" >
-                        </ImageView>
+                            android:src="@drawable/air_wind"></ImageView>
 
                         <ImageView
                             android:id="@+id/seat_cold_right_4"
@@ -460,8 +435,7 @@
                             android:layout_marginLeft="5px"
                             android:layout_weight="1"
                             android:src="@drawable/air_wind"
-                            android:visibility="invisible" >
-                        </ImageView>
+                            android:visibility="invisible"></ImageView>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -474,21 +448,19 @@
                 android:background="@drawable/air_content_background"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="invisible" >
+                android:visibility="invisible">
 
                 <ImageView
                     android:id="@+id/air_action_user"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/air_ac" >
-                </ImageView>
+                    android:src="@drawable/air_ac"></ImageView>
 
                 <ImageView
                     android:id="@+id/air_action_on"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:src="@drawable/air_on" >
-                </ImageView>
+                    android:src="@drawable/air_on"></ImageView>
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
@@ -504,7 +476,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="50px"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/left_temp"
@@ -519,63 +491,56 @@
             android:layout_width="409px"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageView1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/air_wind_small" >
-            </ImageView>
+                android:src="@drawable/air_wind_small"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/air_wind" >
-            </ImageView>
+                android:src="@drawable/air_wind"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/air_wind" >
-            </ImageView>
+                android:src="@drawable/air_wind"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_3"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/air_wind" >
-            </ImageView>
+                android:src="@drawable/air_wind"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_4"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/air_wind" >
-            </ImageView>
+                android:src="@drawable/air_wind"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_5"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/air_wind" >
-            </ImageView>
+                android:src="@drawable/air_wind"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_6"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/air_wind" >
-            </ImageView>
+                android:src="@drawable/air_wind"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_7"
@@ -583,8 +548,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_8"
@@ -592,8 +556,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_9"
@@ -601,8 +564,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_a"
@@ -610,8 +572,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_b"
@@ -619,8 +580,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_c"
@@ -628,8 +588,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_d"
@@ -637,8 +596,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_e"
@@ -646,8 +604,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@id/wind_rate_f"
@@ -655,16 +612,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@drawable/air_wind"
-                android:visibility="gone" >
-            </ImageView>
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/air_wind_large" >
-            </ImageView>
+                android:src="@drawable/air_wind_large"></ImageView>
         </LinearLayout>
 
         <TextView

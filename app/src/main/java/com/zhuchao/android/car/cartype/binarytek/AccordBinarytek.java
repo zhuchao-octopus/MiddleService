@@ -1,7 +1,5 @@
 package com.zhuchao.android.car.cartype.binarytek;
 
-import java.util.Date;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -10,14 +8,16 @@ import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.zhuchao.android.car.R;
 import com.common.util.AppConfig;
 import com.common.util.MyCmd;
 import com.common.util.Util;
 import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.RadarManager;
 import com.zhuchao.android.car.cartype.CarUtil;
+
+import java.util.Date;
 
 
 public class AccordBinarytek extends Canbox {
@@ -28,7 +28,9 @@ public class AccordBinarytek extends Canbox {
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
     }
 
-    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL}, {0xA, KEY_BT_HANG}, {0x17, KEY_HOME},
+    private final static byte[][] KEYS_WHEEL = {
+            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL},
+            {0xA, KEY_BT_HANG}, {0x17, KEY_HOME},
 
     };
 
@@ -55,7 +57,9 @@ public class AccordBinarytek extends Canbox {
         }
     }
 
-    private final static byte[][] KEYS_WHEEL2 = {{0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME}, {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
+    private final static byte[][] KEYS_WHEEL2 = {
+            {0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME},
+            {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
 
     };
 

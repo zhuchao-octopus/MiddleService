@@ -1,16 +1,5 @@
 package com.zhuchao.android.car.canbox;
 
-import java.util.Date;
-import java.util.Locale;
-
-import com.zhuchao.android.car.R;
-import com.common.util.AppConfig;
-import com.common.util.MyCmd;
-import com.zhuchao.android.car.GlobalDefinition;
-import com.zhuchao.android.car.cartype.CarUtil;
-import com.zhuchao.android.car.cartype.other.TestKLD;
-import com.zhuchao.android.car.manager.AutoIlluminManager;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,6 +17,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.common.util.AppConfig;
+import com.common.util.MyCmd;
+import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.car.cartype.other.TestKLD;
+import com.zhuchao.android.car.manager.AutoIlluminManager;
+
+import java.util.Date;
+import java.util.Locale;
 
 public class CanService {
     private static final String TAG = "CanService";

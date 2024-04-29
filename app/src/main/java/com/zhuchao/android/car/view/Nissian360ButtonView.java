@@ -1,46 +1,24 @@
 package com.zhuchao.android.car.view;
 
-import java.util.ArrayList;
-
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.Presentation;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.zhuchao.android.car.R;
-import com.common.util.AppConfig;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.Util;
-import com.common.util.UtilSystem;
 import com.zhuchao.android.car.canbox.Canbox;
-import com.zhuchao.android.car.canbox.ReverseManager;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.cartype.raise.NissanRaise;
 import com.zhuchao.android.car.cartype.simple.Nissan2013Simple;

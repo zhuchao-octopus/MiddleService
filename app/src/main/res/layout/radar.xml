@@ -2,17 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/screen1_radar"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="60px"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <com.my.canbox.RadarView1
                 android:id="@+id/reverse_left_image"
@@ -23,7 +23,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/radar_switch"
@@ -32,8 +32,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/button_click_back1"
                 android:onClick="onCickReverse"
-                android:src="@drawable/radar_icon" >
-            </ImageButton>
+                android:src="@drawable/radar_icon"></ImageButton>
         </RelativeLayout>
     </LinearLayout>
 

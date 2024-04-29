@@ -4,13 +4,13 @@
     android:layout_width="fill_parent"
     android:layout_height="280px"
     android:background="#cc222222"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0.0dip"
         android:layout_height="fill_parent"
         android:layout_weight="5.0"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <Space
             android:layout_width="fill_parent"
@@ -20,7 +20,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0.0dip"
             android:layout_weight="1.0"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/number1"
@@ -80,20 +80,20 @@
             android:layout_width="fill_parent"
             android:layout_height="0.0dip"
             android:layout_weight="3.0"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/number"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
                 android:layout_weight="6"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="0.0dip"
                     android:layout_weight="1.0"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/number11"
@@ -148,7 +148,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="0.0dip"
                     android:layout_weight="3.0"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <com.my.view.LedView
                         android:id="@+id/odyssey19"
@@ -185,12 +185,12 @@
             <LinearLayout
                 android:layout_width="0.0dip"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0" >
+                android:layout_weight="1.0">
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/number24_st"
@@ -232,7 +232,7 @@
         android:layout_width="0.0dip"
         android:layout_height="fill_parent"
         android:layout_weight="5.0"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <Space
             android:layout_width="fill_parent"
@@ -243,7 +243,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0.0dip"
             android:layout_weight="1.0"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/number7"
@@ -287,7 +287,7 @@
             android:layout_height="0.0dip"
             android:layout_weight="7.0"
             android:gravity="bottom"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <com.my.view.LedView
                 android:id="@+id/odyssey25"
@@ -324,7 +324,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <Space
                     android:layout_width="wrap_content"

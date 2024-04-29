@@ -1,321 +1,304 @@
 package com.zhuchao.android.car.cartype.hiworld;
 
+import com.common.util.MyCmd;
+import com.zhuchao.android.car.canbox.Canbox;
+
 import java.util.Locale;
 
-import com.common.util.MyCmd;
-import com.common.util.Util;
-import com.zhuchao.android.car.canbox.Canbox;
-import com.zhuchao.android.car.cartype.CarUtil;
+
+public class QiRuiJieTuHiworld extends Canbox {
+
+    public QiRuiJieTuHiworld() {
+        buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
+        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
+        //		buildCmdAngle((byte) 0x26, (byte) 0x0, 0x2198);
+        //		buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+        mIdAC = 0x31;
+
+        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
+        buildCmdKey((byte) 0x21, (byte) 2, KEYS_WHEEL2);
+
+        mIdKey3 = 0x021122;
+        MAP_KEYS3 = KEYS_WHEEL3;
+
+        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
+    }
+
+    public void startConnect() {
+
+    }
+
+    @Override
+    public void stopConnect() {
+
+    }
+
+    private final static byte[] IDS_TO_CANBOXSETTING = {
+            (byte) 0x87, (byte) 0xe8
+    };
+
+    private final static byte[][] KEYS_WHEEL = {
+            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
+            {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.MODLE},
+
+    };
+
+    private final static byte[][] KEYS_WHEEL2 = {
+            {0x1, MyCmd.Keycode.POWER}, {0x25, MyCmd.Keycode.NAVIGATION}, {0x2b, MyCmd.Keycode.HOME}, {0x37, MyCmd.Keycode.SETUP}, {0x43, MyCmd.Keycode.BT}, {0x45, MyCmd.Keycode.VOLUME_UP},
+            {0x46, MyCmd.Keycode.VOLUME_DOWN},
+    };
+    private final static byte[][] KEYS_WHEEL3 = {
+            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
+    };
+
+    private byte[] getCarTypeCmd() {
+        byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x17, 0x35};
+        //		switch(CarUtil.getModelId()){
+        //		}
+        return cmd;
+    }
+
+    @Override
+    public int getAngleValue(byte[] data) {
+
+        int angle = (short) ((data[2] & 0xff) | (((data[3] & 0xff)) << 8));
 
 
-public class QiRuiJieTuHiworld extends Canbox{
+        return angle;
 
-	public QiRuiJieTuHiworld(){
-		buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
-		buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
-//		buildCmdAngle((byte) 0x26, (byte) 0x0, 0x2198);
-//		buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
-		buildCmdVersion((byte) 0xf0, (byte) 0x0);		
-		mIdAC = 0x31;
-		
-		buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
-		buildCmdKey((byte) 0x21, (byte) 2,  KEYS_WHEEL2);
 
-		mIdKey3 = 0x021122;
-		MAP_KEYS3 = KEYS_WHEEL3;
-		
-		IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;		
-	}
-	public void startConnect() {
+    }
 
-	}
+    @Override
+    public int getACTemp(byte data) {
+        // TODO Auto-generated method stub
+        if ((data & 0xff) == 0xff) {
 
-	@Override
-	public void stopConnect() {
+        } else if ((data & 0xff) == 0xfe) {
+            data = 0;
+        } else {
+            //data =
+        }
+        return data;
+    }
 
-	}
-	private final static byte[] IDS_TO_CANBOXSETTING = { (byte) 0x87,
-			(byte) 0xe8 };
-	
-	private final static byte[][] KEYS_WHEEL = {
-		{ 0x1, MyCmd.Keycode.VOLUME_UP },
-		{ 0x2, MyCmd.Keycode.VOLUME_DOWN },
-		{ 0x3, MyCmd.Keycode.MUTE },
-		{ 0x4, MyCmd.Keycode.SPEECH },
-		{ 0x5, MyCmd.Keycode.BT_DIAL },
-		{ 0x6, MyCmd.Keycode.BT_HANG },
-		{ 0x9, MyCmd.Keycode.NEXT },
-		{ 0x8, MyCmd.Keycode.PREVIOUS },
-		{ 0xc, MyCmd.Keycode.MODLE },
+    public void parseACInfo(byte[] data) {
 
-	};
-	
-	private final static byte[][] KEYS_WHEEL2 = {
-		{ 0x1, MyCmd.Keycode.POWER },
-		{ 0x25, MyCmd.Keycode.NAVIGATION },
-		{ 0x2b, MyCmd.Keycode.HOME },
-		{ 0x37, MyCmd.Keycode.SETUP },
-		{ 0x43, MyCmd.Keycode.BT },
-		{ 0x45, MyCmd.Keycode.VOLUME_UP },
-		{ 0x46, MyCmd.Keycode.VOLUME_DOWN },
-		};
-	private final static byte[][] KEYS_WHEEL3 = {
-		{ 0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0 },
-		{ 0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0 },
-		{ 0x2, MyCmd.Keycode.ROLL_NEXT , 0},
-		{ 0x12, MyCmd.Keycode.ROLL_PREV , 0},
-	};
-	
-	private byte[] getCarTypeCmd() {
-		byte[] cmd = new byte[] { 0x2, (byte) 0x24, 0x17, 0x35 };
-//		switch(CarUtil.getModelId()){
-//		}
-		return cmd;
-	}
-	@Override
-	public int getAngleValue(byte[] data) {
 
-		int angle = (short) ((data[2] & 0xff) | (((data[3] & 0xff)) << 8));
+        byte[] airData = new byte[10];
 
-		
-		return angle;
-		
-		
-	}
-	@Override
-	public int getACTemp(byte data) {
-		// TODO Auto-generated method stub
-		if ((data&0xff) == 0xff){
+        airData[0] = (byte) ((data[2] & 0x08) | ((data[2] & 0x40) << 1) | ((data[3] & 0x44) >> 0) | ((data[3] & 0x10) << 1) | ((data[4] & 0x20) >> 5) | ((data[4] & 0x10) >> 3));
 
-		} else if ((data&0xff) == 0xfe){
-			data = 0;
-		} else {
-			//data = 
-		}
-		return data;
-	}
-	public void parseACInfo(byte[] data)
-	{
 
-		
-		byte[]	airData = new byte[10];
-		
-		airData[0] = (byte) ((data[2] & 0x08) 
-				| ((data[2] & 0x40) << 1)
-				| ((data[3] & 0x44) >> 0)
-				| ((data[3] & 0x10) << 1)
-				| ((data[4] & 0x20) >> 5)
-				| ((data[4] & 0x10) >> 3));				
-		
+        airData[4] = (byte) (((data[2] & 0x20) >> 3));
 
-		airData[4] = (byte) (((data[2] & 0x20) >> 3));	
-		
-		switch((data[6] & 0xff)){
-		case 1:
-			airData[9] = (byte) (0x1);
-			break;
-		case 3:
-			airData[1] = (byte) (0x20);
-			break;
-		case 5:
-			airData[1] = (byte) (0x60);
-			break;
-		case 6:
-			airData[1] = (byte) (0x40);
-			break;
-		case 0xc:
-			airData[1] = (byte) (0xa0);
-			break;
-		case 0xd:
-			airData[1] = (byte) (0xc0);
-			break;
-		case 0xe:
-			airData[1] = (byte) (0xe0);
-			break;
-		default:
-			airData[1] = 0;
-			break;
-		}
+        switch ((data[6] & 0xff)) {
+            case 1:
+                airData[9] = (byte) (0x1);
+                break;
+            case 3:
+                airData[1] = (byte) (0x20);
+                break;
+            case 5:
+                airData[1] = (byte) (0x60);
+                break;
+            case 6:
+                airData[1] = (byte) (0x40);
+                break;
+            case 0xc:
+                airData[1] = (byte) (0xa0);
+                break;
+            case 0xd:
+                airData[1] = (byte) (0xc0);
+                break;
+            case 0xe:
+                airData[1] = (byte) (0xe0);
+                break;
+            default:
+                airData[1] = 0;
+                break;
+        }
 
-		airData[1] |= (byte) (data[7] & 0x0f);
-		
+        airData[1] |= (byte) (data[7] & 0x0f);
 
-		airData[2] = data[8];
-		airData[3] = data[9];
 
-		airData[5] |= 0x80;
-		super.parseACInfo(airData);
-	}	
-	
-//	public void parseCanboxData(byte[] data, int len) {
-//		switch (data[0]) {
-//		case 0x22:
-//			if (data[3] == 0) {
-//				return;
-//			} else if (data[3] < 0) {
-//				data[3] = (byte) (-data[3]); 
-//				data[2] += 0x10;
-//			}
-//			parseWheelKey(mIdKey3, data, MAP_KEYS3);
-//			break;
-//		default:
-//			super.parseCanboxData(data, len);
-//		}	
-//	}
-	
-	public void setMediaMoreInfo(int source, int play, int total, int time,
-			int total_time) {
-//		byte type = 7;
-//		switch (source) {
-//		case MyCmd.SOURCE_MUSIC:
-//		case MyCmd.SOURCE_VIDEO:
-//			++play;
-//			type = 0xd;
-//			break;
-//		}
-//
-//		String s = String.format("%03d      %03d", play, total, Locale.ENGLISH);
-//		sendLcdInfo(type, s, false);
+        airData[2] = data[8];
+        airData[3] = data[9];
 
-		
-	}
-	public void setMediaSrc(int source, byte type, byte []b){
-		int freq = (b[1] & 0xff) | ((b[2] & 0xff) << 8);
-		if (source == MyCmd.SOURCE_RADIO) {
-			String s;
+        airData[5] |= 0x80;
+        super.parseACInfo(airData);
+    }
 
-			if (b[0] >= 0x10) { // am
+    //	public void parseCanboxData(byte[] data, int len) {
+    //		switch (data[0]) {
+    //		case 0x22:
+    //			if (data[3] == 0) {
+    //				return;
+    //			} else if (data[3] < 0) {
+    //				data[3] = (byte) (-data[3]);
+    //				data[2] += 0x10;
+    //			}
+    //			parseWheelKey(mIdKey3, data, MAP_KEYS3);
+    //			break;
+    //		default:
+    //			super.parseCanboxData(data, len);
+    //		}
+    //	}
 
-				if (freq < 1000) {
-					s = String.format("10 %d ", (freq), Locale.ENGLISH);
-				} else {
-					s = String.format("10 %d ", (freq), Locale.ENGLISH);
-				}
+    public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
+        //		byte type = 7;
+        //		switch (source) {
+        //		case MyCmd.SOURCE_MUSIC:
+        //		case MyCmd.SOURCE_VIDEO:
+        //			++play;
+        //			type = 0xd;
+        //			break;
+        //		}
+        //
+        //		String s = String.format("%03d      %03d", play, total, Locale.ENGLISH);
+        //		sendLcdInfo(type, s, false);
 
-				type = 4;
-			} else {
 
-				if (freq < 10000) {
-					s = String.format("00  %d.%dMHz", (freq) / 100, (freq) % 100, Locale.ENGLISH);
-				} else {
-					s = String.format("00 %d.%dMHz", (freq) / 100, (freq) % 100, Locale.ENGLISH);
-				}
-				type = 1;
-			}
+    }
 
-			sendLcdInfo(type, s, false);
-		}
-	}
+    public void setMediaSrc(int source, byte type, byte[] b) {
+        int freq = (b[1] & 0xff) | ((b[2] & 0xff) << 8);
+        if (source == MyCmd.SOURCE_RADIO) {
+            String s;
 
-	public void setMediaSrc(int source) {
-		byte s;
-		switch (source) {
-//		case MyCmd.SOURCE_RADIO:
-//			return;
-		case MyCmd.SOURCE_MUSIC:
-		case MyCmd.SOURCE_VIDEO:
-			s = 0xd;
-			break;
-		case MyCmd.SOURCE_BT:
-			s = (byte)0xa;
-			break;
-		case MyCmd.SOURCE_AUX:
-			s = (byte)0xc;
-			break;
-		case MyCmd.SOURCE_AV_OFF:
-			s = 0;
-		default:
-			return;
-		}
+            if (b[0] >= 0x10) { // am
 
-		sendLcdInfo(s, null, false);
-	}		
+                if (freq < 1000) {
+                    s = String.format("10 %d ", (freq), Locale.ENGLISH);
+                } else {
+                    s = String.format("10 %d ", (freq), Locale.ENGLISH);
+                }
 
-	public void sendLcdInfo(byte index, String num, boolean end) {
+                type = 4;
+            } else {
 
-		try {
-			if (num == null) {
-				num = "";
-			}
-			byte[] n = num.getBytes();
+                if (freq < 10000) {
+                    s = String.format("00  %d.%dMHz", (freq) / 100, (freq) % 100, Locale.ENGLISH);
+                } else {
+                    s = String.format("00 %d.%dMHz", (freq) / 100, (freq) % 100, Locale.ENGLISH);
+                }
+                type = 1;
+            }
 
-			int num_len = n.length;
+            sendLcdInfo(type, s, false);
+        }
+    }
 
-			if (num_len >= (12)) {
-				num_len = (12);
-			}
-			byte[] data;
+    public void setMediaSrc(int source) {
+        byte s;
+        switch (source) {
+            //		case MyCmd.SOURCE_RADIO:
+            //			return;
+            case MyCmd.SOURCE_MUSIC:
+            case MyCmd.SOURCE_VIDEO:
+                s = 0xd;
+                break;
+            case MyCmd.SOURCE_BT:
+                s = (byte) 0xa;
+                break;
+            case MyCmd.SOURCE_AUX:
+                s = (byte) 0xc;
+                break;
+            case MyCmd.SOURCE_AV_OFF:
+                s = 0;
+            default:
+                return;
+        }
 
-			int len = 12 + 3;
+        sendLcdInfo(s, null, false);
+    }
 
-			data = new byte[len];
+    public void sendLcdInfo(byte index, String num, boolean end) {
 
-			data[0] = (byte) (13);
-			data[1] = (byte) 0x91;
-			data[2] = index;
-			if (!end) {
-				System.arraycopy(n, 0, data, 3, num_len);
-			} else {
-				for (int i = 0; i < num_len; ++i) {
-					data[data.length - i - 1] = n[num_len - i - 1];
-				}
-			}
+        try {
+            if (num == null) {
+                num = "";
+            }
+            byte[] n = num.getBytes();
 
-			sendDataToCanbox(data, data.length);
-		} catch (Exception e) {
+            int num_len = n.length;
 
-		}
-	}
-	
+            if (num_len >= (12)) {
+                num_len = (12);
+            }
+            byte[] data;
 
-	public void sendId3(byte index, String num, int data_len, int reserve) {
+            int len = 12 + 3;
 
-		try {
-			if (num == null) {
-				num = " ";
-			}
+            data = new byte[len];
 
-			byte[] n = getBytesUnicodeLittleEndian(num); //del 0xff 0xfe
+            data[0] = (byte) (13);
+            data[1] = (byte) 0x91;
+            data[2] = index;
+            if (!end) {
+                System.arraycopy(n, 0, data, 3, num_len);
+            } else {
+                for (int i = 0; i < num_len; ++i) {
+                    data[data.length - i - 1] = n[num_len - i - 1];
+                }
+            }
 
-			int num_len = n.length;
-			if ((n[0] & 0xff) == 0xff && (n[1] & 0xff) == 0xfe) {
-				num_len -= 2;
-			}
+            sendDataToCanbox(data, data.length);
+        } catch (Exception e) {
 
-			if (num_len >= (data_len )) {
-				num_len = (data_len );
-			}
-			byte[] data;
+        }
+    }
 
-			int len = data_len + 2;
 
-			data = new byte[len];
+    public void sendId3(byte index, String num, int data_len, int reserve) {
 
-			data[0] = (byte) (data_len);
-			data[1] = index;
-			for (int i = 0; i < num_len; ++i) {
-				if (i % 2 == 0) {
-					data[2 + i] = n[i + 3];
-				} else {
-					data[2 + i] = n[i + 1];
-				}
-			}
+        try {
+            if (num == null) {
+                num = " ";
+            }
 
-			sendDataToCanbox(data, data.length);
-		} catch (Exception e) {
+            byte[] n = getBytesUnicodeLittleEndian(num); //del 0xff 0xfe
 
-		}
-	}
-	
-	public void setSongName(String s) {
-		sendId3((byte) 0x92, s, 0x20, 0);
-	}
+            int num_len = n.length;
+            if ((n[0] & 0xff) == 0xff && (n[1] & 0xff) == 0xfe) {
+                num_len -= 2;
+            }
 
-	public void setSongAlbum(String s) {
-		sendId3((byte) 0x93, s, 0x20, 0);
-	}
-	
-	public void sendDataToCanbox(byte[] data, int len) { // default is simple
-		super.sendDataToCanboxHiword1(data, len);
-	}
+            if (num_len >= (data_len)) {
+                num_len = (data_len);
+            }
+            byte[] data;
+
+            int len = data_len + 2;
+
+            data = new byte[len];
+
+            data[0] = (byte) (data_len);
+            data[1] = index;
+            for (int i = 0; i < num_len; ++i) {
+                if (i % 2 == 0) {
+                    data[2 + i] = n[i + 3];
+                } else {
+                    data[2 + i] = n[i + 1];
+                }
+            }
+
+            sendDataToCanbox(data, data.length);
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void setSongName(String s) {
+        sendId3((byte) 0x92, s, 0x20, 0);
+    }
+
+    public void setSongAlbum(String s) {
+        sendId3((byte) 0x93, s, 0x20, 0);
+    }
+
+    public void sendDataToCanbox(byte[] data, int len) { // default is simple
+        super.sendDataToCanboxHiword1(data, len);
+    }
 }

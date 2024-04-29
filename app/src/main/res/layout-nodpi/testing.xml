@@ -2,33 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_testing"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0px"
             android:layout_height="fill_parent"
             android:layout_weight="3"
             android:orientation="vertical"
-            android:paddingRight="5px" >
+            android:paddingRight="5px">
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="5px"
-                android:background="#ffffff" >
-            </View>
+                android:background="#ffffff"></View>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="10px"
-                android:paddingRight="10px" >
+                android:paddingRight="10px">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -36,34 +35,32 @@
                     android:layout_weight="1"
                     android:text="@string/test_signal"
                     android:textColor="#55a5f6"
-                    android:textSize="18px" >
-                </TextView>
+                    android:textSize="18px"></TextView>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_acc"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_acc"
@@ -72,23 +69,21 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_illumination"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_ill"
@@ -97,23 +92,21 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_swc"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_swc"
@@ -122,8 +115,7 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -132,20 +124,19 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_brake"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_brake"
@@ -154,15 +145,14 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
@@ -170,8 +160,7 @@
                             android:layout_weight="1"
                             android:singleLine="true"
                             android:text="@string/test_reverse_signal"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_reverse_signal"
@@ -180,23 +169,21 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_swc2"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_swc2"
@@ -205,8 +192,7 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -215,20 +201,19 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_ant"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_ant"
@@ -237,15 +222,14 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
@@ -253,8 +237,7 @@
                             android:layout_weight="1"
                             android:singleLine="true"
                             android:text="@string/test_fcamera_power"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_fcamera_power"
@@ -263,8 +246,7 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -273,8 +255,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="5px"
-                android:background="#ffffff" >
-            </View>
+                android:background="#ffffff"></View>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -282,7 +263,7 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:paddingLeft="10px"
-                android:paddingRight="10px" >
+                android:paddingRight="10px">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -290,15 +271,14 @@
                     android:layout_weight="1"
                     android:text="@string/test_video_output"
                     android:textColor="#55a5f6"
-                    android:textSize="18px" >
-                </TextView>
+                    android:textSize="18px"></TextView>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:visibility="gone"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -306,21 +286,20 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px" >
+                    android:paddingRight="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_rear_video"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_rear_video"
@@ -329,8 +308,7 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -340,8 +318,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px" >
-                </LinearLayout>
+                    android:paddingRight="10px"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -349,8 +326,7 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px" >
-                </LinearLayout>
+                    android:paddingRight="10px"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -358,16 +334,15 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px" >
-                </LinearLayout>
+                    android:paddingRight="10px"></LinearLayout>
             </LinearLayout>
 
-<!--             <View -->
-<!--                 android:layout_width="fill_parent" -->
-<!--                 android:layout_height="1px" -->
-<!--                 android:layout_marginTop="5px" -->
-<!--                 android:background="#ffffff" > -->
-<!--             </View> -->
+            <!--             <View -->
+            <!--                 android:layout_width="fill_parent" -->
+            <!--                 android:layout_height="1px" -->
+            <!--                 android:layout_marginTop="5px" -->
+            <!--                 android:background="#ffffff" > -->
+            <!--             </View> -->
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -375,7 +350,7 @@
                 android:orientation="vertical"
                 android:paddingLeft="10px"
                 android:visibility="gone"
-                android:paddingRight="10px" >
+                android:paddingRight="10px">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -383,15 +358,14 @@
                     android:layout_weight="1"
                     android:text="@string/test_video"
                     android:textColor="#55a5f6"
-                    android:textSize="18px" >
-                </TextView>
+                    android:textSize="18px"></TextView>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4px"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -400,20 +374,19 @@
                     android:orientation="vertical"
                     android:visibility="gone"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px" >
+                    android:paddingRight="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_auxin"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_auxin"
@@ -422,8 +395,7 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -433,20 +405,19 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px" >
+                    android:paddingRight="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_b_camera"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_reverse"
@@ -455,8 +426,7 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -465,20 +435,19 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_f_camera"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_f_camera"
@@ -487,8 +456,7 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -497,20 +465,19 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/button_text_dvd"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_dvd"
@@ -519,8 +486,7 @@
                             android:layout_weight="1"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -529,8 +495,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="5px"
-                android:background="#ffffff" >
-            </View>
+                android:background="#ffffff"></View>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -538,7 +503,7 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:paddingLeft="10px"
-                android:paddingRight="10px" >
+                android:paddingRight="10px">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -546,14 +511,13 @@
                     android:layout_weight="1"
                     android:text="@string/test_audio"
                     android:textColor="#55a5f6"
-                    android:textSize="18px" >
-                </TextView>
+                    android:textSize="18px"></TextView>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -561,21 +525,20 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="10px"
-                        android:visibility="gone"
-                    android:paddingRight="10px" >
+                    android:visibility="gone"
+                    android:paddingRight="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_auxin"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_auxin_audio"
@@ -584,12 +547,10 @@
                             android:layout_weight="1.5"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
 
-                
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -597,20 +558,19 @@
                     android:layout_weight="1"
                     android:visibility="gone"
                     android:orientation="vertical"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/test_arm"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_arm_audio"
@@ -619,8 +579,7 @@
                             android:layout_weight="1.5"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -629,21 +588,20 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:visibility="gone"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="0px"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/button_text_dvd"
-                            android:textColor="#ffffff" >
-                        </TextView>
+                            android:textColor="#ffffff"></TextView>
 
                         <TextView
                             android:id="@+id/result_dvd_audio"
@@ -652,8 +610,7 @@
                             android:layout_weight="1.5"
                             android:background="#ffffff"
                             android:orientation="vertical"
-                            android:textColor="#000000" >
-                        </TextView>
+                            android:textColor="#000000"></TextView>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -662,17 +619,16 @@
                 android:layout_width="fill_parent"
                 android:layout_height="78px"
                 android:layout_marginTop="5px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px" 
-                android:orientation="horizontal" >
+                android:paddingLeft="10px"
+                android:paddingRight="10px"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.21"
                     android:text="@string/test_radio"
-                    android:textColor="#ffffff" >
-                </TextView>
+                    android:textColor="#ffffff"></TextView>
 
                 <TextView
                     android:id="@+id/result_radio"
@@ -681,22 +637,20 @@
                     android:layout_weight="1.5"
                     android:background="#ffffff"
                     android:orientation="vertical"
-                    android:textColor="#000000" >
-                </TextView>
+                    android:textColor="#000000"></TextView>
             </LinearLayout>
 
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="5px"
-                android:background="#ffffff" >
-            </View>
+                android:background="#ffffff"></View>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5px"
-                android:orientation="horizontal" >
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -704,15 +658,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <TextView
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/button_text_bt"
-                        android:textColor="#ffffff" >
-                    </TextView>
+                        android:textColor="#ffffff"></TextView>
 
                     <TextView
                         android:id="@+id/result_bt"
@@ -721,8 +674,7 @@
                         android:layout_weight="1"
                         android:background="#ffffff"
                         android:orientation="vertical"
-                        android:textColor="#000000" >
-                    </TextView>
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -730,15 +682,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <TextView
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/test_gps"
-                        android:textColor="#ffffff" >
-                    </TextView>
+                        android:textColor="#ffffff"></TextView>
 
                     <TextView
                         android:id="@+id/result_gps"
@@ -747,8 +698,7 @@
                         android:layout_weight="6"
                         android:background="#ffffff"
                         android:orientation="vertical"
-                        android:textColor="#000000" >
-                    </TextView>
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
 
                 <LinearLayout
@@ -757,15 +707,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingLeft="10px" >
+                    android:paddingLeft="10px">
 
                     <TextView
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/test_wifi"
-                        android:textColor="#ffffff" >
-                    </TextView>
+                        android:textColor="#ffffff"></TextView>
 
                     <TextView
                         android:id="@+id/result_wifi"
@@ -774,8 +723,7 @@
                         android:layout_weight="1"
                         android:background="#ffffff"
                         android:orientation="vertical"
-                        android:textColor="#000000" >
-                    </TextView>
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
             </LinearLayout>
 
@@ -785,20 +733,19 @@
                 android:layout_marginTop="5px"
                 android:orientation="vertical"
                 android:paddingLeft="10px"
-                android:paddingRight="10px" >
+                android:paddingRight="10px">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/test_usb"
-                        android:textColor="#ffffff" >
-                    </TextView>
+                        android:textColor="#ffffff"></TextView>
 
                     <TextView
                         android:id="@+id/result_usb"
@@ -807,23 +754,21 @@
                         android:layout_weight="6"
                         android:background="#ffffff"
                         android:orientation="vertical"
-                        android:textColor="#000000" >
-                    </TextView>
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5px"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0px"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/test_sd"
-                        android:textColor="#ffffff" >
-                    </TextView>
+                        android:textColor="#ffffff"></TextView>
 
                     <TextView
                         android:id="@+id/result_sd"
@@ -832,8 +777,7 @@
                         android:layout_weight="6"
                         android:background="#ffffff"
                         android:orientation="vertical"
-                        android:textColor="#000000" >
-                    </TextView>
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

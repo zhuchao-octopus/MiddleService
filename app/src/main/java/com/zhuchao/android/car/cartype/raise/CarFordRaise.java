@@ -1,28 +1,26 @@
 package com.zhuchao.android.car.cartype.raise;
 
-import java.util.Date;
-
-import com.zhuchao.android.car.GlobalDefinition;
-
-
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.zhuchao.android.car.R;
 import com.common.util.AppConfig;
 import com.common.util.BroadcastUtil;
 import com.common.util.MyCmd;
 import com.common.util.ProtocolAk47;
 import com.common.util.SystemConfig;
 import com.common.util.Util;
+import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.AutoParkingMsgManager;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.RadarManager;
 import com.zhuchao.android.car.canbox.WarningMsgManager;
 import com.zhuchao.android.car.cartype.CarUtil;
+
+import java.util.Date;
 
 public class CarFordRaise extends Canbox {
 
@@ -91,7 +89,8 @@ public class CarFordRaise extends Canbox {
             {0x13, MyCmd.Keycode.NAVIGATION}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x17, MyCmd.Keycode.KEYAMS_RPT},
 
 
-            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8},
+            {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
 
 
             {0x2e, MyCmd.Keycode.KEY_TURN_D}, {0x2f, MyCmd.Keycode.KEY_TURN_A},
@@ -122,7 +121,8 @@ public class CarFordRaise extends Canbox {
 
     private final static byte[][] KEYS_WHEEL_KUGA = {
 
-            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_GPS}, {0x2b, KEY_NUM_J},
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8},
+            {0x29, KEY_NUM_9}, {0x2a, KEY_GPS}, {0x2b, KEY_NUM_J},
 
             {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_MUTE},
 

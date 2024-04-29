@@ -1,15 +1,5 @@
 package com.zhuchao.android.car.canbox;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,29 +19,37 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
+import android.view.View.OnTouchListener;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.zhuchao.android.car.GlobalDefinition;
-import com.zhuchao.android.car.cartype.CarUtil;
-
-
-import com.zhuchao.android.car.view.BackStaticView;
-import com.zhuchao.android.car.view.BackTrackView;
-import com.zhuchao.android.car.view.TrackParamterDialog;
-import com.zhuchao.android.car.R;
 import com.common.util.MachineConfig;
 import com.common.util.MyCmd;
 import com.common.util.SystemConfig;
 import com.common.util.Util;
 import com.rockchip.gl.GLSurfaceView;
+import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.car.view.BackStaticView;
+import com.zhuchao.android.car.view.BackTrackView;
+import com.zhuchao.android.car.view.TrackParamterDialog;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.util.List;
+
 public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHolder.Callback {
     private Canbox mCanBox;
 
@@ -441,12 +439,12 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
         switchToFrontCamera(mCameraIndex);
 
-//		mUpdateCameraTime = System.currentTimeMillis();
-//		mPreSignal = mSignal = -1;
-//		mSignalView.setVisibility(View.GONE);
-//		startCheckSignal(false);
-//		showBlackEx(true, 800);
-//		setCameraSource(mCameraIndex);
+        //		mUpdateCameraTime = System.currentTimeMillis();
+        //		mPreSignal = mSignal = -1;
+        //		mSignalView.setVisibility(View.GONE);
+        //		startCheckSignal(false);
+        //		showBlackEx(true, 800);
+        //		setCameraSource(mCameraIndex);
 
 
     }
@@ -641,7 +639,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             mGLSurfaceView.setMirror(mMirrorPreview | mADRotation << 8);
             if (mADRotation == 1 || mADRotation == 4) { //90,270
                 DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
-//				Log.d(TAG, "startPreview dm:" + dm);
+                //				Log.d(TAG, "startPreview dm:" + dm);
                 int x = 0, y = 0, w = dm.widthPixels, h = dm.heightPixels;
                 x = Math.abs(dm.widthPixels - dm.heightPixels) / 2;
                 w = h = dm.widthPixels < dm.heightPixels ? dm.widthPixels : dm.heightPixels;
@@ -666,13 +664,13 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             if (mPause) return;
             // mAkKeypad.sendMSCCommand(AkKeypad.MSC_REVERSE_LOCK);
             // mAkKeypad.sendMSCCommand(AkKeypad.MSC_CAMERA);
-//		if (mSetSource) {
-//			setValue(SOURCE_INDEX, MyCmd.SOURCE_REVERSE);
-//			setValue(CAMERA_INDEX, 2);
-//		}
-//		doSleep(50);
-//		mSetSource = true;
-//		Log.d(TAG, "Reverse startPreview");
+            //		if (mSetSource) {
+            //			setValue(SOURCE_INDEX, MyCmd.SOURCE_REVERSE);
+            //			setValue(CAMERA_INDEX, 2);
+            //		}
+            //		doSleep(50);
+            //		mSetSource = true;
+            //		Log.d(TAG, "Reverse startPreview");
             try {
                 ensureCameraDevice();
                 if (mPreviewing) stopPreview();
@@ -681,16 +679,16 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
                 List<Size> sizes = parameters.getSupportedPreviewSizes();
                 Size s = sizes.get(0);
                 parameters.setPreviewSize(s.width, s.height);
-//			parameters.setPictureSize(s.width, s.height);
+                //			parameters.setPictureSize(s.width, s.height);
                 if (Util.isRKSystem()) {
                     parameters.set("soc_camera_channel", MyCmd.CAMERA_SOURCE_REVERSE);
                 }
                 if (mMirrorPreview != 0) {
                     parameters.set("mirror-preview", "true");
                 }
-//			else {
-//				parameters.set("mirror-preview", "false");
-//			}
+                //			else {
+                //				parameters.set("mirror-preview", "false");
+                //			}
                 mCameraDevice.setParameters(parameters);
                 mCameraDevice.startPreview();
             } catch (Throwable ex) {
@@ -863,15 +861,15 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         // Log.d("allen", "startCheckSignal:"+time);
         mHandler.sendEmptyMessageDelayed(MSG_CHECK_SIGNAL, time);
 
-//		Log.d(TAG, "screen1_main: " + ((View)mMainView.findViewById(R.id.screen1_main)).getVisibility());
-//		Log.d(TAG, "camera_surfaceview: " + ((View)mMainView.findViewById(R.id.camera_surfaceview)).getVisibility());
-//		Log.d(TAG, "glsuface_main: " + ((View)mMainView.findViewById(R.id.glsuface_main)).getVisibility());
-//		Log.d(TAG, "no_signal: " + ((View)mMainView.findViewById(R.id.no_signal)).getVisibility());
-//		Log.d(TAG, "backstatic_view: " + ((View)mMainView.findViewById(R.id.backstatic_view)).getVisibility());
-//		Log.d(TAG, "backtrack_view: " + ((View)mMainView.findViewById(R.id.backtrack_view)).getVisibility());
-//		Log.d(TAG, "empty: " + ((View)mMainView.findViewById(R.id.empty)).getVisibility());
-//		Log.d(TAG, "only_black: " + ((View)mMainView.findViewById(R.id.only_black)).getVisibility());
-//		Log.d(TAG, "camera4" + ((View)mMainView.findViewById(R.id.camera4)).getVisibility());
+        //		Log.d(TAG, "screen1_main: " + ((View)mMainView.findViewById(R.id.screen1_main)).getVisibility());
+        //		Log.d(TAG, "camera_surfaceview: " + ((View)mMainView.findViewById(R.id.camera_surfaceview)).getVisibility());
+        //		Log.d(TAG, "glsuface_main: " + ((View)mMainView.findViewById(R.id.glsuface_main)).getVisibility());
+        //		Log.d(TAG, "no_signal: " + ((View)mMainView.findViewById(R.id.no_signal)).getVisibility());
+        //		Log.d(TAG, "backstatic_view: " + ((View)mMainView.findViewById(R.id.backstatic_view)).getVisibility());
+        //		Log.d(TAG, "backtrack_view: " + ((View)mMainView.findViewById(R.id.backtrack_view)).getVisibility());
+        //		Log.d(TAG, "empty: " + ((View)mMainView.findViewById(R.id.empty)).getVisibility());
+        //		Log.d(TAG, "only_black: " + ((View)mMainView.findViewById(R.id.only_black)).getVisibility());
+        //		Log.d(TAG, "camera4" + ((View)mMainView.findViewById(R.id.camera4)).getVisibility());
     }
 
     public static boolean checkCamera0IfFacing = false;
@@ -1337,8 +1335,8 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
     }
 
     public void switchToFrontCamera(int source) {
-//		int source = MyCmd.CAMERA_SOURCE_FRONT_CAMERA;
-//		showBlackEx(true, 300);
+        //		int source = MyCmd.CAMERA_SOURCE_FRONT_CAMERA;
+        //		showBlackEx(true, 300);
 
         Log.d(TAG, ">>switchToFrontCamera");
         stopCheckSignal();
@@ -1349,22 +1347,22 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         showBlackEx(true, 150);
         mHandler.removeMessages(MSG_SWITCH_CAMER_P90);
         mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_SWITCH_CAMER_P90, source, 0), 150);
-//		if (Util.isPX5()) {
-//			Util.setFileValue("/sys/class/ak/source/cam_ch", source);
-//		} else {
-//			Util.setFileValue("/sys/class/misc/mst701/device/source",
-//					source);
-//		}
-//		
-//		try {
-//			startPreview();
-//		} catch (Exception e) {
-//			return;
-//		}
-//		
-//		Log.d(TAG, "<<switchToFrontCamera");
-//
-//		mHandler.sendEmptyMessageDelayed(MSG_CHECK_SIGNAL, 100);
+        //		if (Util.isPX5()) {
+        //			Util.setFileValue("/sys/class/ak/source/cam_ch", source);
+        //		} else {
+        //			Util.setFileValue("/sys/class/misc/mst701/device/source",
+        //					source);
+        //		}
+        //
+        //		try {
+        //			startPreview();
+        //		} catch (Exception e) {
+        //			return;
+        //		}
+        //
+        //		Log.d(TAG, "<<switchToFrontCamera");
+        //
+        //		mHandler.sendEmptyMessageDelayed(MSG_CHECK_SIGNAL, 100);
 
         mCameraIndex = source;
         showCameraSwitchIcon();
@@ -1417,7 +1415,9 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
                     }
                 };
 
-                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.btn_up, R.id.btn1, R.id.btn_left, R.id.btn_right, R.id.btn2, R.id.btn_down, R.id.canceal, R.id.start, R.id.back1, R.id.vertical1, R.id.lateral, R.id.imgpa, R.id.triangle};
+                int[] BUTTON_ON_CLICK_NISSAN = new int[]{
+                        R.id.btn_up, R.id.btn1, R.id.btn_left, R.id.btn_right, R.id.btn2, R.id.btn_down, R.id.canceal, R.id.start, R.id.back1, R.id.vertical1, R.id.lateral, R.id.imgpa, R.id.triangle
+                };
 
                 for (int i : BUTTON_ON_CLICK_NISSAN) {
                     v = mMainView.findViewById(i);
@@ -1872,7 +1872,11 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
                     }
                 };
 
-                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.can15_all_b, R.id.can15_back, R.id.can15_left_back, R.id.can15_right_back, R.id.settings_b, R.id.can15_all_f, R.id.can15_front, R.id.can15_left_front, R.id.can15_right_front, R.id.settings_f, R.id.can15_exit_settings, R.id.can15_guidelines, R.id.can15_warning, R.id.can15_frontview, R.id.can15_rearview, R.id.can15_front_all_settings, R.id.can15_front_only_settings, R.id.can15_front_left_settings, R.id.can15_front_right_settings, R.id.can15_back_all_settings, R.id.can15_back_only_settings, R.id.can15_back_left_settings, R.id.can15_back_right_settings, R.id.can15_guidelines_settings, R.id.can15_warning_settings,
+                int[] BUTTON_ON_CLICK_NISSAN = new int[]{
+                        R.id.can15_all_b, R.id.can15_back, R.id.can15_left_back, R.id.can15_right_back, R.id.settings_b, R.id.can15_all_f, R.id.can15_front, R.id.can15_left_front,
+                        R.id.can15_right_front, R.id.settings_f, R.id.can15_exit_settings, R.id.can15_guidelines, R.id.can15_warning, R.id.can15_frontview, R.id.can15_rearview,
+                        R.id.can15_front_all_settings, R.id.can15_front_only_settings, R.id.can15_front_left_settings, R.id.can15_front_right_settings, R.id.can15_back_all_settings,
+                        R.id.can15_back_only_settings, R.id.can15_back_left_settings, R.id.can15_back_right_settings, R.id.can15_guidelines_settings, R.id.can15_warning_settings,
 
                 };
 

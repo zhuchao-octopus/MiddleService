@@ -24,16 +24,16 @@
     <string name="f_camera">F-Camera</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
-    
-    
-    <string name="debug_clear">Clear</string>    
+
+
+    <string name="debug_clear">Clear</string>
     <string name="debug_pause">Pause</string>
     <string name="debug_start">Start</string>
     <string name="debug_switch">Switch</string>
     <string name="debug_export">Export</string>
     <string name="debug_quit">Quit</string>
 
-    
+
     <string name="disconnect_video">No Signal!</string>
     <string name="warn0_1">Transmission ouertemper ature Stop safely</string>
     <string name="warn0_2">Transmission malfunction Seruice now</string>
@@ -122,7 +122,7 @@
 
     <string name="warning_driving">"This Application is disabled for your safety!Please park the car for using it."</string>
 
- <string name="park_info0" />
+    <string name="park_info0" />
     <string name="park_info1" />
     <string name="park_info2">From the right of the search parking position</string>
     <string name="park_info3">From the right of the search parking position</string>
@@ -204,7 +204,7 @@
  careful 
  Please hang R range, slow retreat"</string>
     <string name="park_info39">From the right of the search parking position</string>
-    
+
     <string name="prompt02">"Deceleration to continue 
  Active Parking Assist"</string>
     <string name="prompt03">Slow down</string>
@@ -224,13 +224,13 @@
  Active Parking Assist has been canceled"</string>
     <string name="prompt22">"Because the ABS system events, 
  active parking assist is canceled"</string>
- 
-        <string name="cam1">Cam1</string>
+
+    <string name="cam1">Cam1</string>
     <string name="cam2">Cam2</string>
     <string name="cam3">Cam3</string>
     <string name="cam4">Cam4</string>
-    
-    
+
+
     <string name="update_touch_config">Find Touch file %s, do you want to update?</string>
     <string name="update_system">Find System file %s, do you want to update?</string>
     <string name="update_canbox">Find Canbox update file %s, do you want to update?</string>
@@ -238,17 +238,17 @@
     <string name="update_canbox_noused">CAN盒不可升级</string>
     <string name="update_canbox_fail">升级失败 </string>
     <string name="update_canbox_success">升级成功 </string>
-    
-    
+
+
     <string name="text_add">+</string>
     <string name="text_minu">-</string>
-<!--   auto  test -->
-        <string name="start">Start</string>
-        <string name="stop">Stop</string>
-        <string name="quit">Quit</string>
-        <string name="installing">Installing</string>
-        <string name="set">Setting</string>
-        <string name="log_button">Log</string>
+    <!--   auto  test -->
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="quit">Quit</string>
+    <string name="installing">Installing</string>
+    <string name="set">Setting</string>
+    <string name="log_button">Log</string>
     <string name="testing">testing</string>
     <string name="successed">OK</string>
     <string name="fail">NG</string>
@@ -256,15 +256,14 @@
     <string name="finish">Finish!</string>
     <string name="auto_test">AutoTest</string>
     <string name="time_out">TimeOut</string>
-    
-        
-    
-    <string name="test_usb">USB</string>    
+
+
+    <string name="test_usb">USB</string>
     <string name="test_sd">SD</string>
     <string name="test_gps">GPS</string>
     <string name="test_wifi">WIFI</string>
-    
-    
+
+
     <string name="test_acc">ACC</string>
     <string name="test_brake">手刹</string>
     <string name="test_illumination">小灯</string>
@@ -274,76 +273,75 @@
     <string name="test_swc2">方控线2</string>
     <string name="test_rear_video">Rear</string>
     <string name="test_reverse_signal">倒车信号</string>
-    
+
     <string name="test_signal">Signal</string>
     <string name="test_video">Video input</string>
     <string name="test_video_output">Video output</string>
     <string name="test_audio">Audio output</string>
-    
-    
+
+
     <string name="test_arm">Arm</string>
-    
+
     <string name="test_f_camera">前摄像头</string>
     <string name="test_b_camera">倒车摄像头</string>
-    
+
     <string name="test_radio">收音 </string>
-    
+
     <string name="test_auxin">AUX视频</string>
-<!--   auto  test -->
-<!--         <string name="start">Start</string> -->
-<!--         <string name="stop">Stop</string> -->
-<!--         <string name="quit">Quit</string> -->
-<!--         <string name="set">Setting</string> -->
-<!--         <string name="log_button">Log</string> -->
-<!--     <string name="testing">testing</string> -->
-<!--     <string name="successed">OK</string> -->
-<!--     <string name="fail">NG</string> -->
-<!--     <string name="log">Log:</string> -->
-<!--     <string name="finish">Finish!</string> -->
-<!--     <string name="auto_test">AutoTest</string> -->
-<!--     <string name="time_out">TimeOut</string> -->
-    
-        
-    
-<!--     <string name="test_usb">USB</string>     -->
-<!--     <string name="test_sd">SD CARD</string> -->
-<!--     <string name="test_gps">GPS</string> -->
-<!--     <string name="test_wifi">WIFI</string> -->
-    
-    
-<!--     <string name="test_acc">ACC</string> -->
-<!--     <string name="test_brake">Brake</string> -->
-<!--     <string name="test_illumination">ill</string> -->
-<!--     <string name="test_fcamera_power">F-Cam Power</string> -->
-<!--     <string name="test_ant">ANT</string> -->
-<!--     <string name="test_swc">SWC1</string> -->
-<!--     <string name="test_swc2">SWC2</string> -->
-<!--     <string name="test_rear_video">Rear</string> -->
-<!--     <string name="test_reverse_signal">Reverse Signal</string> -->
-    
-<!--     <string name="test_signal">Signal</string> -->
-<!--     <string name="test_video">Video input</string> -->
-<!--     <string name="test_video_output">Video output</string> -->
-<!--     <string name="test_audio">Audio output</string> -->
-    
-    
-<!--     <string name="test_arm">Arm</string> -->
-    
-<!--     <string name="test_f_camera">F-Camera</string> -->
-<!--     <string name="test_b_camera">Reverse</string> -->
-    
-    
-    <string name="test_read">read</string>   
-    <string name="test_write">write</string>   
-    <string name="test_usb_not_found">not found!</string>   
-     
-        <string name="eq_text_classic">Classic</string>
+    <!--   auto  test -->
+    <!--         <string name="start">Start</string> -->
+    <!--         <string name="stop">Stop</string> -->
+    <!--         <string name="quit">Quit</string> -->
+    <!--         <string name="set">Setting</string> -->
+    <!--         <string name="log_button">Log</string> -->
+    <!--     <string name="testing">testing</string> -->
+    <!--     <string name="successed">OK</string> -->
+    <!--     <string name="fail">NG</string> -->
+    <!--     <string name="log">Log:</string> -->
+    <!--     <string name="finish">Finish!</string> -->
+    <!--     <string name="auto_test">AutoTest</string> -->
+    <!--     <string name="time_out">TimeOut</string> -->
+
+
+    <!--     <string name="test_usb">USB</string>     -->
+    <!--     <string name="test_sd">SD CARD</string> -->
+    <!--     <string name="test_gps">GPS</string> -->
+    <!--     <string name="test_wifi">WIFI</string> -->
+
+
+    <!--     <string name="test_acc">ACC</string> -->
+    <!--     <string name="test_brake">Brake</string> -->
+    <!--     <string name="test_illumination">ill</string> -->
+    <!--     <string name="test_fcamera_power">F-Cam Power</string> -->
+    <!--     <string name="test_ant">ANT</string> -->
+    <!--     <string name="test_swc">SWC1</string> -->
+    <!--     <string name="test_swc2">SWC2</string> -->
+    <!--     <string name="test_rear_video">Rear</string> -->
+    <!--     <string name="test_reverse_signal">Reverse Signal</string> -->
+
+    <!--     <string name="test_signal">Signal</string> -->
+    <!--     <string name="test_video">Video input</string> -->
+    <!--     <string name="test_video_output">Video output</string> -->
+    <!--     <string name="test_audio">Audio output</string> -->
+
+
+    <!--     <string name="test_arm">Arm</string> -->
+
+    <!--     <string name="test_f_camera">F-Camera</string> -->
+    <!--     <string name="test_b_camera">Reverse</string> -->
+
+
+    <string name="test_read">read</string>
+    <string name="test_write">write</string>
+    <string name="test_usb_not_found">not found!</string>
+
+    <string name="eq_text_classic">Classic</string>
     <string name="eq_text_pop">Pop</string>
     <string name="eq_text_rock">Rock</string>
     <string name="eq_text_jazz">Jazz</string>
     <string name="eq_text_user">User</string>
     <string name="eq_text_normal">Normal</string>
-    
+
 
     <string name="can37info_01">Ensure it is safe before manoeuvring</string>
     <string name="can37info_02">Park assist not available</string>
@@ -384,11 +382,11 @@
     <string name="can37info_4d">Drive forward with care</string>
     <string name="can37info_4e">Drive backward with care</string>
     <string name="can37info_4f">Check obstocle</string>
-    
-    
+
+
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
-    
+
     <string name="can15_guidelines">Display guidelines</string>
     <string name="can15_warning">F/R Proximity warnings</string>
     <string name="can15_frontview">Front view mode</string>
@@ -400,10 +398,10 @@
     <string name="can15_back_only">Rear only</string>
     <string name="can15_back_left">Rear+rear left</string>
     <string name="can15_back_right">Rear+rear right</string>
-    
+
     <string name="reverse_mask">""</string>
-    
-    
+
+
     <string name="reset">Reset</string>
     <string name="camera_heigt">camera height</string>
     <string name="left_right">left right</string>
@@ -411,11 +409,11 @@
     <string name="width">width</string>
     <string name="add">+</string>
     <string name="minus">-</string>
-    
+
     <string name="notify_for_safe">Attention!Please drive safely!</string>
     <string name="clear_all">Clear all</string>
     <string name="saft_belt">seat belt</string>
-    
+
     <string name="left_front">left front</string>
     <string name="left_rear">left rear</string>
     <string name="right_front">right front</string>
@@ -427,5 +425,5 @@
     <string name="is" formatted="false">"%s is %s"</string>
     <string name="open">open</string>
     <string name="close">close</string>
-    
+
 </resources>

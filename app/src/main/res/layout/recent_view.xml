@@ -4,7 +4,7 @@
     android:layout_height="300.0px"
     android:layout_gravity="center_horizontal"
     android:ignoreGravity="@+id/icon"
-    android:minHeight="256.0px" >
+    android:minHeight="256.0px">
 
     <View
         android:layout_width="match_parent"

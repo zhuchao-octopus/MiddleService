@@ -8,7 +8,7 @@
     android:paddingBottom="15px"
     android:paddingLeft="10px"
     android:paddingRight="10px"
-    android:paddingTop="5px" >
+    android:paddingTop="5px">
 
     <TextView
         android:layout_width="fill_parent"

@@ -16,17 +16,16 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import com.zhuchao.android.car.GlobalDefinition;
-import com.zhuchao.android.car.cartype.CarUtil;
-import com.zhuchao.android.car.cartype.simple.Nissan2013Simple;
-import com.zhuchao.android.car.manager.McuManager;
-
-import com.zhuchao.android.car.R;
 import com.common.util.AppConfig;
 import com.common.util.BroadcastUtil;
 import com.common.util.MachineConfig;
 import com.common.util.MyCmd;
 import com.common.util.Util;
+import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.car.cartype.simple.Nissan2013Simple;
+import com.zhuchao.android.car.manager.McuManager;
 
 import java.util.Objects;
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="28px"
     android:minHeight="28px"
-    android:paddingLeft="2px" >
+    android:paddingLeft="2px">
 
     <TextView
         android:id="@+id/list_text"

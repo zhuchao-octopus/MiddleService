@@ -7,13 +7,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 
-import com.zhuchao.android.car.GlobalDefinition;
-import com.zhuchao.android.car.cartype.CarUtil;
-
-import com.zhuchao.android.car.R;
 import com.common.util.MachineConfig;
+import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.cartype.CarUtil;
 
 public class RadarUI extends UIBase {
     private Canbox mCanBox;
@@ -91,7 +89,7 @@ public class RadarUI extends UIBase {
 
 
         if (GlobalDefinition.mSystemUI != null && GlobalDefinition.mSystemUI.equals(MachineConfig.VALUE_SYSTEM_UI_KLD7_1992)) {
-            Drawable d = mContext.getResources().getDrawable(R.drawable.reverse_left_pickup,null);
+            Drawable d = mContext.getResources().getDrawable(R.drawable.reverse_left_pickup, null);
             if (d != null) {
                 mImageViewCarLeft.setImageDrawable(d);
             }

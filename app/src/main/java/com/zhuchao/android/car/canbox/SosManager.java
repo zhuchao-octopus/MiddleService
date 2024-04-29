@@ -1,7 +1,5 @@
 package com.zhuchao.android.car.canbox;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
@@ -12,10 +10,11 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 
+import com.common.util.MachineConfig;
+import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.manager.McuManager;
 
-import com.zhuchao.android.car.R;
-import com.common.util.MachineConfig;
+import java.util.Locale;
 
 public class SosManager {
 

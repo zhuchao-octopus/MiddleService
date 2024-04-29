@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:focusable="false"
-    android:orientation="horizontal" >
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/volume_back"
-    android:focusable="false"
+        android:focusable="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -17,21 +17,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20px"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="442px"
             android:layout_height="wrap_content"
-        	android:background="@drawable/volume_background"
+            android:background="@drawable/volume_background"
             android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/ringer_stream_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="5px"
-    android:focusable="false"
+                android:focusable="false"
                 android:src="@drawable/volume_icon" />
 
             <SeekBar

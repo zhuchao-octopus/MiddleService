@@ -1,8 +1,14 @@
 package com.zhuchao.android.car;
 
-import java.io.File;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+import android.os.UserHandle;
+import android.util.Log;
 
-import com.zhuchao.android.car.hardware.BackTrack;
 import com.common.util.AppConfig;
 import com.common.util.MachineConfig;
 import com.common.util.MyCmd;
@@ -10,16 +16,10 @@ import com.common.util.SystemConfig;
 import com.common.util.Util;
 import com.common.util.UtilSystem;
 import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.car.hardware.BackTrack;
 import com.zhuchao.android.car.manager.McuManager;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
-import android.util.Log;
-import android.os.UserHandle;
+import java.io.File;
 
 public class GlobalDefinition {
 
@@ -205,7 +205,7 @@ public class GlobalDefinition {
                 // | PowerManager.SCREEN_DIM_WAKE_LOCK
                 // | PowerManager.ON_AFTER_RELEASE, TAG);
                 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, TAG);
-                mWakeLock.acquire(10*60*1000L /*10 minutes*/);
+                mWakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
             }
         }
     }
@@ -222,7 +222,7 @@ public class GlobalDefinition {
         if (mContext != null) {
             PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
             WakeLock mWakeLockOne = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, TAG);
-            mWakeLockOne.acquire(10*60*1000L /*10 minutes*/);
+            mWakeLockOne.acquire(10 * 60 * 1000L /*10 minutes*/);
             mWakeLockOne.release();
         }
     }

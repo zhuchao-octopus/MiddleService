@@ -3,7 +3,7 @@
     android:id="@+id/layout_canbus_subaru_simple"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:visibility="gone" >
+    android:visibility="gone">
 
     <RelativeLayout
         android:layout_width="140px"
@@ -13,15 +13,15 @@
         android:layout_marginBottom="20px"
         android:layout_marginRight="30px"
         android:background="@drawable/subaru_mid"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <View
             android:id="@+id/subaru_left"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:background="@drawable/subaru_left" />
-        
-        
+
+
         <View
             android:id="@+id/subaru_right"
             android:layout_width="fill_parent"

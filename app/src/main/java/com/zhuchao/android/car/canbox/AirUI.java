@@ -1,51 +1,13 @@
 package com.zhuchao.android.car.canbox;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.List;
-
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.hardware.Camera;
-import android.hardware.Camera.Size;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.provider.Settings;
-import android.provider.Settings.SettingNotFoundException;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AbsoluteLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.zhuchao.android.car.cartype.CarUtil;
-import com.zhuchao.android.car.manager.McuManager;
-import com.zhuchao.android.car.manager.OSProManager;
-
-import com.zhuchao.android.car.view.BackTrackView;
-import com.zhuchao.android.car.R;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
 import com.common.util.Util;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.cartype.CarUtil;
 
 public class AirUI extends UIBase implements View.OnClickListener {
     private Canbox mCanBox;
@@ -69,7 +31,11 @@ public class AirUI extends UIBase implements View.OnClickListener {
         super(context, view, index);
     }
 
-    private static final int[] BUTTON_ON_CLICK = new int[]{R.id.wind_add, R.id.wind_add2, R.id.wind_minus, R.id.wind_minus2, R.id.left_temp_add, R.id.left_temp_minus, R.id.right_temp_add, R.id.right_temp_minus, R.id.left_temp_add2, R.id.left_temp_minus2, R.id.right_temp_add2, R.id.right_temp_minus2, R.id.wind_mode_add, R.id.wind_mode_minus, R.id.air_control_ac, R.id.air_control_auto, R.id.air_control_dual, R.id.air_control_rear, R.id.air_control_max, R.id.air_title_ce_inner_loop, R.id.air_control_ce_rear, R.id.air_control_power,};
+    private static final int[] BUTTON_ON_CLICK = new int[]{
+            R.id.wind_add, R.id.wind_add2, R.id.wind_minus, R.id.wind_minus2, R.id.left_temp_add, R.id.left_temp_minus, R.id.right_temp_add, R.id.right_temp_minus, R.id.left_temp_add2,
+            R.id.left_temp_minus2, R.id.right_temp_add2, R.id.right_temp_minus2, R.id.wind_mode_add, R.id.wind_mode_minus, R.id.air_control_ac, R.id.air_control_auto, R.id.air_control_dual,
+            R.id.air_control_rear, R.id.air_control_max, R.id.air_title_ce_inner_loop, R.id.air_control_ce_rear, R.id.air_control_power,
+    };
 
     public void onCreate() {
 

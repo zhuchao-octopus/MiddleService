@@ -3,14 +3,14 @@
     android:id="@+id/layout_canbus_mazda_raise"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:visibility="gone" >
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginBottom="20px"
         android:layout_marginRight="20px"
-        android:gravity="bottom" >
+        android:gravity="bottom">
 
         <View
             android:layout_width="1.0px"

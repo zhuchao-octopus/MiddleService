@@ -3,27 +3,27 @@
     android:id="@+id/layout_canbus_hy"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:visibility="gone" >
+    android:visibility="gone">
 
     <LinearLayout
         android:id="@+id/can15_btn_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="bottom"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="1.0px"
             android:layout_height="200.0px"
             android:layout_weight="6.0"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/can15_view_back"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:gravity="bottom"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <View
                     android:layout_width="1.0px"
@@ -96,7 +96,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:gravity="bottom"
-                android:visibility="gone" >
+                android:visibility="gone">
 
                 <View
                     android:layout_width="1.0px"
@@ -178,7 +178,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -187,13 +187,13 @@
             android:background="@android:color/black"
             android:orientation="horizontal"
             android:paddingTop="50.0px"
-            android:visibility="visible" >
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="1.0px"
                 android:layout_height="fill_parent"
                 android:layout_weight="1.0"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/can15_guidelines"
@@ -263,7 +263,7 @@
                 android:layout_height="fill_parent"
                 android:layout_weight="1.0"
                 android:orientation="vertical"
-                android:paddingLeft="20.0px" >
+                android:paddingLeft="20.0px">
 
                 <RadioButton
                     android:id="@+id/can15_guidelines_settings"
@@ -288,7 +288,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:orientation="vertical"
-                    android:visibility="gone" >
+                    android:visibility="gone">
 
                     <RadioButton
                         android:id="@+id/can15_front_all_settings"
@@ -348,7 +348,7 @@
                     android:id="@+id/can15_back_settings"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:orientation="vertical" >
+                    android:orientation="vertical">
 
                     <RadioButton
                         android:id="@+id/can15_back_all_settings"

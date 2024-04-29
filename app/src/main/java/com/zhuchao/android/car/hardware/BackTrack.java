@@ -1,10 +1,7 @@
 package com.zhuchao.android.car.hardware;
 
-import com.common.util.MachineConfig;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.util.Log;
 
 // move C to java, by allen
@@ -670,7 +667,10 @@ public class BackTrack {
     public static int SAWTOOTH_STEP2 = 2800;
     public static int SAWTOOTH_STEP3 = 5800;
 
-    private final int[] sawtooth_steps = new int[]{SAWTOOTH_STEP1 - SAWTOOTH_INTERVERL, SAWTOOTH_STEP1, SAWTOOTH_STEP1 + SAWTOOTH_INTERVERL, SAWTOOTH_STEP2 - SAWTOOTH_INTERVERL2, SAWTOOTH_STEP2, SAWTOOTH_STEP2 + SAWTOOTH_INTERVERL2, SAWTOOTH_STEP3};
+    private final int[] sawtooth_steps = new int[]{
+            SAWTOOTH_STEP1 - SAWTOOTH_INTERVERL, SAWTOOTH_STEP1, SAWTOOTH_STEP1 + SAWTOOTH_INTERVERL, SAWTOOTH_STEP2 - SAWTOOTH_INTERVERL2, SAWTOOTH_STEP2, SAWTOOTH_STEP2 + SAWTOOTH_INTERVERL2,
+            SAWTOOTH_STEP3
+    };
     public int[] sawtooth_l_point = new int[SAWTOOTH_NUM];
     public int[] sawtooth_r_point = new int[SAWTOOTH_NUM];
     private final double[] sawtooth_tan = new double[SAWTOOTH_NUM];

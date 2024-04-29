@@ -1,12 +1,10 @@
 package com.zhuchao.android.car.hardware;
 
-import com.zhuchao.android.car.debug.DebugMessage;
-import com.common.util.Util;
-import com.zhuchao.android.fbase.MMLog;
-
 import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
+
+import com.common.util.Util;
+import com.zhuchao.android.car.debug.DebugMessage;
+import com.zhuchao.android.fbase.MMLog;
 
 public class Mcu {
     static {
@@ -87,9 +85,9 @@ public class Mcu {
     }
 
     public int sendKernelCmd(byte[] param2) {
-        // byte[] param = new byte[param2.length+1];
-        // Util.byteArrayCopy(param, param2, 0, 0, param2.length);
-        // param[param2.length] = checkSum(param2, param2.length);
+        /// byte[] param = new byte[param2.length+1];
+        /// Util.byteArrayCopy(param, param2, 0, 0, param2.length);
+        /// param[param2.length] = checkSum(param2, param2.length);
         MMLog.d(TAG, "sendKernelCmd:" + Util.byteArrayToHex(param2));
         return nativeSendCommand(READ_KERNEL_PRO, param2.length, param2);
     }
@@ -104,8 +102,8 @@ public class Mcu {
     }
 
     private void kernelCallback(byte[] param, int len) {
-        // mHandlerKernel.sendMessage(mHandlerKernel.obtainMessage(0, param));
-        //		Log.d(TAG, "kernelCallback");
+        /// mHandlerKernel.sendMessage(mHandlerKernel.obtainMessage(0, param));
+        ///		Log.d(TAG, "kernelCallback");
         if (mOsHandler != null && len > 2) {
             mOsHandler.sendMessage(mHandler.obtainMessage(MSG_RECEIVE_OS_DATA, param));
         }

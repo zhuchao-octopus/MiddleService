@@ -6,7 +6,7 @@
     android:gravity="center"
     android:scaleX="0.7"
     android:scaleY="0.7"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/door_car"
@@ -15,17 +15,17 @@
         android:layout_centerInParent="true"
         android:src="@drawable/car" />
 
-        <ImageView
+    <ImageView
         android:id="@+id/door_car_pickup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:src="@drawable/car_pickup" />
-        
+
     <LinearLayout
         android:layout_width="380px"
         android:layout_height="400px"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <View
             android:id="@+id/door_status_6"
@@ -41,7 +41,7 @@
             android:layout_height="66px"
             android:layout_marginTop="15px"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <View
                 android:id="@+id/door_status_1"
@@ -63,7 +63,7 @@
             android:layout_width="fill_parent"
             android:layout_height="66px"
             android:gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <View
                 android:id="@+id/door_status_3"
@@ -92,21 +92,21 @@
     </LinearLayout>
 
     <View
-            android:id="@+id/door_status_7"
-            android:layout_width="83px"
-            android:layout_height="35px"
-            android:layout_marginTop="180px"
-            android:background="@drawable/car_door_top_wind"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone" />
-    
-     <View
-            android:id="@+id/door_status_8"
-            android:layout_width="83px"
-            android:layout_height="70px"
-            android:layout_marginTop="180px"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/car_door_top_wind_full"
-            android:visibility="gone" />
-     
+        android:id="@+id/door_status_7"
+        android:layout_width="83px"
+        android:layout_height="35px"
+        android:layout_marginTop="180px"
+        android:background="@drawable/car_door_top_wind"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/door_status_8"
+        android:layout_width="83px"
+        android:layout_height="70px"
+        android:layout_marginTop="180px"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/car_door_top_wind_full"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -1,52 +1,18 @@
 package com.zhuchao.android.car.canbox;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.List;
-
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
-import android.hardware.Camera;
-import android.hardware.Camera.Size;
 import android.hardware.display.DisplayManager;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
-import android.view.DisplayInfo;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
-import android.widget.AbsoluteLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.zhuchao.android.car.cartype.CarUtil;
-import com.zhuchao.android.car.manager.OSProManager;
 
 import com.zhuchao.android.car.R;
-import com.common.util.AppConfig;
-import com.common.util.BroadcastUtil;
-import com.common.util.MyCmd;
+import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.car.manager.OSProManager;
 
 public class RadarManager {
     public final static String TAG = "RadarManager";

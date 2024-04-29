@@ -3,7 +3,7 @@
     android:id="@+id/screen1_radar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.my.canbox.RadarView1
         android:id="@+id/reverse_left_image"
@@ -18,7 +18,6 @@
         android:layout_height="84px"
         android:onClick="onCickReverse"
         android:background="@drawable/radar_icon"
-        android:tag="ak_paramter=100,50" >
-    </ImageButton>
+        android:tag="ak_paramter=100,50"></ImageButton>
 
 </LinearLayout>

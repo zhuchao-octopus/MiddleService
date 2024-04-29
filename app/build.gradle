@@ -22,10 +22,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    
+    buildFeatures {
+        aidl = true
+    }
 
     //aaptOptions {
     //    additionalParameters '--extra-packages', 'com.android.zhuchao.car.R'
     //}
+
     lintOptions {
         baseline file("lint-baseline.xml")
     }
@@ -35,7 +40,7 @@ android {
             path 'CMakeLists.txt'
         }
     }
-    
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -55,6 +60,7 @@ android {
 dependencies {
     implementation('com.zhuchao.android:libFBaseUtils:2.1@aar')
     implementation('com.zhuchao.android:libJOSUtils:1.4:@aar')
+    implementation('com.zhuchao.android:libSessionUtils:2.8:@aar')
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'

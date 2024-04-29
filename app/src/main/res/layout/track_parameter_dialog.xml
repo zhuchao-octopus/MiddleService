@@ -3,18 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="600px"
         android:layout_height="280px"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0px"
@@ -55,7 +55,7 @@
             android:layout_weight="1"
             android:visibility="gone"
             android:layout_marginTop="2px"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0px"
@@ -92,7 +92,7 @@
             android:layout_height="0px"
             android:layout_marginTop="2px"
             android:layout_weight="1"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0px"
@@ -132,7 +132,7 @@
             android:layout_height="0px"
             android:layout_weight="1"
             android:layout_marginTop="2px"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0px"
@@ -171,7 +171,7 @@
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/cancel"
@@ -179,8 +179,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:text="@android:string/cancel" >
-            </Button>
+                android:text="@android:string/cancel"></Button>
 
             <Button
                 android:id="@+id/reset"
@@ -188,8 +187,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:text="reset" >
-            </Button>
+                android:text="reset"></Button>
 
             <Button
                 android:id="@+id/ok"
@@ -197,8 +195,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:text="@android:string/ok" >
-            </Button>
+                android:text="@android:string/ok"></Button>
         </LinearLayout>
     </LinearLayout>
 

@@ -28,8 +28,8 @@
     <string name="cancel">"Cancelar"</string>
     <string name="back">"Atrás"</string>
 
-    
-        <string name="left_front">Frente izquierdo</string>
+
+    <string name="left_front">Frente izquierdo</string>
     <string name="left_rear">parte trasera izquierda</string>
     <string name="right_front">frente derecho</string>
     <string name="right_rear">parte trasera derecha</string>
@@ -40,6 +40,6 @@
     <string name="is" formatted="false">"%s Sí. %s"</string>
     <string name="open">abrir</string>
     <string name="close">cerrado</string>
-    
+
 
 </resources>

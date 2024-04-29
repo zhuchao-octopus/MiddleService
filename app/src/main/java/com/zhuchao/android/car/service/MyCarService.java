@@ -1,28 +1,6 @@
 package com.zhuchao.android.car.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.Objects;
-
-import com.android.internal.app.LocalePicker;
-import com.zhuchao.android.car.R;
-import com.common.util.AppConfig;
-import com.common.util.BroadcastUtil;
-import com.common.util.MyCmd;
-import com.common.util.Kernel;
-import com.common.util.MachineConfig;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
-import com.common.util.UtilSystem;
-import com.common.util.UtilSystem.StorageInfo;
-import com.zhuchao.android.car.autotest.AutoTest;
-import com.zhuchao.android.car.debug.DebugMessage;
+import static android.provider.Settings.Secure.TTS_DEFAULT_SYNTH;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -32,7 +10,6 @@ import android.app.AlertDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -55,9 +32,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
-import android.os.SystemClock;
-import android.os.SystemProperties;
 import android.os.PowerManager.WakeLock;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.util.Log;
@@ -68,7 +44,22 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+
+import com.common.util.AppConfig;
+import com.common.util.BroadcastUtil;
+import com.common.util.Kernel;
+import com.common.util.MachineConfig;
+import com.common.util.MyCmd;
+import com.common.util.SystemConfig;
+import com.common.util.Util;
+import com.common.util.UtilSystem;
+import com.common.util.UtilSystem.StorageInfo;
+import com.rockchip.car.recorder.utils.SystemProperties;
 import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.autotest.AutoTest;
 import com.zhuchao.android.car.canbox.AirManager;
 import com.zhuchao.android.car.canbox.CanService;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -76,21 +67,24 @@ import com.zhuchao.android.car.canbox.DoorStatusPanel;
 import com.zhuchao.android.car.canbox.OBDView;
 import com.zhuchao.android.car.canbox.ReverseManager;
 import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.car.debug.DebugMessage;
 import com.zhuchao.android.car.manager.AutoIlluminManager;
 import com.zhuchao.android.car.manager.McuManager;
 import com.zhuchao.android.car.manager.OSProManager;
 import com.zhuchao.android.car.manager.key.JoyKey;
-
 import com.zhuchao.android.car.ui.BacklightPanel;
 import com.zhuchao.android.car.ui.PreInstallPanel;
 import com.zhuchao.android.car.ui.VolumePanel;
 import com.zhuchao.android.car.view.RecentView;
 import com.zhuchao.android.fbase.MMLog;
 
-import static android.provider.Settings.Secure.TTS_DEFAULT_SYNTH;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class MyCarService extends Service {
 
@@ -103,32 +97,20 @@ public class MyCarService extends Service {
     private static final int MSG_UPDATE_TOUCH_CONFIG = 3;
     private static final int MSG_UPDATE_SAVE_TIME = 8;
     private static final int MSG_SAVE_TIME = 9;
-
     private static final int MSG_WATCH_DOG_ = 10; // mcu
     private static final int MSG_WATCH_DOG_TIME = 1000;
-
     private static final int MSG_WATCH_DOG_SYSTEM = 11;// system
-
     private static final int MSG_GPS_TIME = 12;
     private static final int MSG_FIX_GPU_BUG = 13;
     private static final int MSG_UPDATE_SETTINGS = 15;
-
     private static final int MSG_SET_IOSCHED_CFQ = 14;
     private static final int MSG_INIT_OTHER = 18;
-
     private static final int MSG_SET_LOWMEMORY_KILLER = 19;
-
     private static final int MSG_CP_NO_SIGNAL = 20;
-
     private static final int MSG_REPEAT_INIT_SUDING_ILL = 21;
-
     private static final int MSG_REPEAT_GPS_SETTINGS = 16;
-
-
     private static final String UPDATE_FILE = "ak48_update_guide.txt";
-
     private static final String UPDATE_FILE_HOLDER = "ak47_update_hold.txt";
-
     int mDelSdUpdate = 2;
 
     public static MyCarService mThis;
@@ -204,12 +186,11 @@ public class MyCarService extends Service {
         }
     };
 
-
     @Override
     public void onCreate() {
         GlobalDefinition.mSystemBootStartTime = SystemClock.uptimeMillis();
         super.onCreate();
-        MMLog.d(TAG,TAG+" onCreate()");
+        MMLog.d(TAG, TAG + " onCreate()");
         updateTimeForAndroidP();
         mThis = this;
 
@@ -232,7 +213,6 @@ public class MyCarService extends Service {
         initUIService();
 
         mHandler.sendEmptyMessageDelayed(MSG_INIT_OTHER, 2000);
-
         mHandler.sendEmptyMessageDelayed(MSG_GPS_TIME, 2000);
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SETTINGS, 2000);
         if (Util.isRKSystem()) {
@@ -248,10 +228,11 @@ public class MyCarService extends Service {
         if (Util.isNexellSystem60()) {
             mHandler.sendEmptyMessageDelayed(MSG_SET_IOSCHED_CFQ, 15000);
         }
-        // mHandler.sendEmptyMessageDelayed(MSG_UPDATE_RADIO, 3000);
-        //doAutoTest(); //test
-        //DebugMessage.start(this);
-        //doUpdateCanbox();
+        ///mHandler.sendEmptyMessageDelayed(MSG_UPDATE_RADIO, 3000);
+        ///doAutoTest(); //test
+        ///DebugMessage.start(this);
+        ///doUpdateCanbox();
+        MMLog.d(TAG,TAG+" onCreate!");
     }
 
     @Override
@@ -261,14 +242,14 @@ public class MyCarService extends Service {
 
     @Override
     public void onDestroy() {
-        MMLog.d(TAG,TAG+" onDestroy()");
+        MMLog.d(TAG, TAG + " onDestroy()");
         unregisterListener();
         //unregisterMountListener();
         super.onDestroy();
-
     }
 
     private PreInstallPanel mPreInstallPanel;
+
     private void installPreInstallApp() {
         if (mPreInstallPanel == null) {
             mPreInstallPanel = new PreInstallPanel(mThis);
@@ -285,6 +266,7 @@ public class MyCarService extends Service {
             f.delete();
         }
     }
+
     private void deleteINANDUpdateFile() {
         // Log.e(TAG, "deleteINANDUpdateFile:" + mDelSdUpdate);
         if (mDelSdUpdate <= 0) {
@@ -295,13 +277,12 @@ public class MyCarService extends Service {
             deleteINANDUpdateFile(MyCmd.PATH_SDCARD1);
             deleteINANDUpdateFile(MyCmd.PATH_SDCARD2);
         }
+
         if (Util.isNexellSystem()) {
             delFile(MyCmd.PATH_SDCARD_ + UPDATE_FILE);
-
             mDelSdUpdate--;
             mHandler.sendEmptyMessageDelayed(MSG_DELETE_UPDATE_FILE, 3000);
         }
-
     }
 
     private void deleteINANDUpdateFile(String path) {
@@ -319,7 +300,6 @@ public class MyCarService extends Service {
 
     private static final String OTG = "/sys/class/ak/source/otg_id";
     private static final String OTG_60 = "/sys/devices/platform/dwc_otg/otg_mode";
-
     private static final String SYSTEM_VERSION = "/system/";
 
     private boolean isFirstBoot() {
@@ -375,10 +355,10 @@ public class MyCarService extends Service {
             String[] ss = value.split(":");
             if (ss.length > 1) {
                 Locale l = new Locale(ss[0], ss[1]);
-                try {
-                    LocalePicker.updateLocale(l);
-                } catch (Exception ignored) {
-                }
+                //try {
+                //    LocalePicker.updateLocale(l);
+                //} catch (Exception ignored) {
+                //}
             }
         }
 
@@ -509,7 +489,6 @@ public class MyCarService extends Service {
         }
 
         value = MachineConfig.getPropertyReadOnly(SystemConfig.KEY_REVERSE_VOLUME);
-
         if (value != null) {
             try {
                 int mix = Integer.parseInt(value);
@@ -519,7 +498,6 @@ public class MyCarService extends Service {
         }
 
         value = MachineConfig.getPropertyReadOnly(SystemConfig.KEY_NAVI_MIX_SOUND);
-
         if (value != null) {
             try {
                 int mix = Integer.parseInt(value);
@@ -572,8 +550,10 @@ public class MyCarService extends Service {
 
     private static final String MCU_REVERSE_VOLUME = "/sys/class/ak/source/reverse_volume";
     private static final String MCU_NAVI_MIX_NODE = "/sys/class/ak/source/navi_mix";
-
-    private final static String[] MACHINE_CONFIG_DEFAULT = {MachineConfig.KEY_LED_TYPE, MachineConfig.KEY_PANEL_KEY_DEF_CONFIG, MachineConfig.KEY_SWC_KEY_DEF_CONFIG, MachineConfig.KEY_FACTORY_AUDIO_GAIN, MachineConfig.KEY_TPMS_TYPE, MachineConfig.KEY_RDS, MachineConfig.KEY_TOUCH3_IDENTIFY};
+    private final static String[] MACHINE_CONFIG_DEFAULT = {
+            MachineConfig.KEY_LED_TYPE, MachineConfig.KEY_PANEL_KEY_DEF_CONFIG, MachineConfig.KEY_SWC_KEY_DEF_CONFIG, MachineConfig.KEY_FACTORY_AUDIO_GAIN, MachineConfig.KEY_TPMS_TYPE,
+            MachineConfig.KEY_RDS, MachineConfig.KEY_TOUCH3_IDENTIFY
+    };
 
     private void initMcuBootSetting() {
         int index = SystemConfig.getIntProperty2(this, SystemConfig.KEY_REVERSE_VOLUME);
@@ -592,7 +572,6 @@ public class MyCarService extends Service {
         }
     }
 
-
     public void loadGain(boolean mIsFactory) {
         String value = null;
         if (mIsFactory) value = MachineConfig.getProperty(MachineConfig.KEY_FACTORY_AUDIO_GAIN);
@@ -608,35 +587,27 @@ public class MyCarService extends Service {
                 int gain_tv;
 
                 String[] item = value.split(",");
-
                 gain_host = Integer.parseInt(item[0]);
-
                 gain_radio = Integer.parseInt(item[1]);
-
                 gain_dvd = Integer.parseInt(item[2]);
-
                 gain_bt = Integer.parseInt(item[3]);
-
                 gain_auxin = Integer.parseInt(item[4]);
-
                 gain_tv = Integer.parseInt(item[5]);
-
                 byte[] data = new byte[]{(byte) (mIsFactory ? 0x1 : 0x2), (byte) gain_host, (byte) gain_radio, (byte) gain_dvd, (byte) gain_bt, (byte) gain_auxin, (byte) gain_tv};
-
                 doAudioGain(data);
             }
-
         } catch (Exception ignored) {
         }
     }
 
     private final static String MIC_CTL = "/sys/class/ak/source/mic_ctrl";
+
     private void setMicType() {
         int value = SystemConfig.getIntProperty2(this, SystemConfig.KEY_MIC_TYPE);
         if (value == 0 || value == 1) {
             Util.setFileValue(MIC_CTL, value);
         }
-        MMLog.d(TAG, "setMicType "+MIC_CTL + " " + value);
+        MMLog.d(TAG, "setMicType " + MIC_CTL + " " + value);
     }
 
     private void initOther() {
@@ -863,23 +834,19 @@ public class MyCarService extends Service {
     }
 
     private void initBT() {
-
-        // setHardWarePower(true);
-        //
-        // mHandler.postDelayed(new Runnable() {
-        // @Override
-        // public void run() {
-        // try {
-        // Intent it = new Intent(Intent.ACTION_RUN);
-        // it.setClassName("com.android.car.bt", "com.android.car.bt.ATBluetoothService");
-        // startService(it);
-        // } catch (Exception e) {
-        //
-        // }
-        // }
-        // }, 500);
-
-        // mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SAVE_TIME, 1);
+        /// setHardWarePower(true);
+        /// mHandler.postDelayed(new Runnable() {
+        /// @Override
+        /// public void run() {
+        /// try {
+        /// Intent it = new Intent(Intent.ACTION_RUN);
+        /// it.setClassName("com.android.car.bt", "com.android.car.bt.ATBluetoothService");
+        /// startService(it);
+        /// } catch (Exception e) {
+        /// }
+        /// }
+        /// }, 500);
+        /// mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SAVE_TIME, 1);
     }
 
     private McuManager mMcuManager;
@@ -894,20 +861,20 @@ public class MyCarService extends Service {
 
     private void initVolume() {
         AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        // int a = mAudioManager.getStreamVolume(10);
-        // int b = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        /// int a = mAudioManager.getStreamVolume(10);
+        /// int b = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 11, 11);
-
         try {
             mAudioManager.setStreamVolume(10, 11, 11);
         } catch (Exception ignored) {
         }
     }
 
-    // private static final String THIRD_APP_SOUND_FIRST_PATH =
-    // "/sys/class/ak/source/arm_sound_switch";
+    /// private static final String THIRD_APP_SOUND_FIRST_PATH =
+    /// "/sys/class/ak/source/arm_sound_switch";
     private void updateAccPowerOffDelay(String s) {
-        if (s == null) {
+        if (s == null)
+        {
             s = SystemConfig.getProperty(this, MachineConfig.KEY_ACC_DELAY_OFF);
             if (s == null) {
                 s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_ACC_DELAY_OFF);
@@ -966,10 +933,8 @@ public class MyCarService extends Service {
     }
 
     private static final String ACC_DELAY_POWEROFF = "/sys/class/ak/source/acc_delay_poweroff";
-
     private static final String PACKAGE_TTS = "com.svox.pico";
     private static final String PACKAGE_IGO = "com.nng.igo";
-
     private static final String[] CARPLAY_APK = {"com.suding.speedplay", "com.zjinnova.zlink"};
 
     public static void initGpsSettings() {
@@ -1447,18 +1412,14 @@ public class MyCarService extends Service {
     }
 
     private JoyKey mJoyKey;
-
     private WindowManager mWindowManager;
     private WindowManager.LayoutParams mLayoutParams;
     private View mEmptyView;
     private boolean mShowGpuBug = false;
     private static final String IGO_PATH = "com.navngo.igo.javaclient/com.navngo.igo.javaclient.MainActivity";
     private static final String IGO_PACKAGE = "com.navngo.igo.javaclient";
-
     private boolean mShowGpuBugOnce = false;
-
     //private String mPreTopActivity;
-
     private final static String ZLINK_BROAST = "com.zjinnova.zlink";
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -1483,7 +1444,6 @@ public class MyCarService extends Service {
     }
 
     private final BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
-
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -1790,6 +1750,7 @@ public class MyCarService extends Service {
         Log.d(TAG, "sendRudderToSuding:" + GlobalDefinition.mRudder);
         sendBroadcast(it);
     }
+
     private boolean mTopCarletter = false;
     private boolean mCarletterConnect = false;
     private WakeLock mWakeLock;
@@ -1806,7 +1767,6 @@ public class MyCarService extends Service {
     }
 
     private boolean mFirstRun = true;
-
     private void unregisterListener() {
         if (mEventReceiver != null) {
             unregisterReceiver(mEventReceiver);
@@ -1853,7 +1813,7 @@ public class MyCarService extends Service {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String title = String.format(getResources().getString(R.string.update_touch_config), configPath);
         builder.setTitle(title);
-        builder.setPositiveButton(com.android.internal.R.string.ok, new DialogInterface.OnClickListener() {
+ /*       builder.setPositiveButton(com.android.internal.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 FileReader fr = null;
                 boolean ok = false;
@@ -1877,7 +1837,7 @@ public class MyCarService extends Service {
         });
 
         builder.setNegativeButton(com.android.internal.R.string.cancel, null);
-
+*/
         final AlertDialog dialog = builder.create();
         // 在dialog show前添加此代码，表示该dialog属于系统dialog。
         Objects.requireNonNull(dialog.getWindow()).setType((WindowManager.LayoutParams.TYPE_SYSTEM_ALERT));
@@ -1886,7 +1846,6 @@ public class MyCarService extends Service {
     }
 
     private static List<ResolveInfo> apps;
-
     public static void updatePackageList() {
         if (mThis != null) {
 
@@ -1901,9 +1860,7 @@ public class MyCarService extends Service {
     }
 
     private static int mInitGpsSettingTime = 10;
-
     private static boolean mIsTestMemory = false;
-
     private static void checkTestMemory() {
         if (apps != null) {
             for (ResolveInfo rv : apps) {
@@ -1966,7 +1923,6 @@ public class MyCarService extends Service {
 
     private final static int LOCK_KEY_TIME = 900;
     private long mStartPlayTime = 0;
-
     private void lockKey() {
         Log.d(TAG, "lockKey!");
         mStartPlayTime = System.currentTimeMillis();
@@ -1981,7 +1937,6 @@ public class MyCarService extends Service {
     }
 
     private MediaRouter mMediaRouter = null;
-
     private void initMediaRouter() {
         mMediaRouter = (MediaRouter) getSystemService(Context.MEDIA_ROUTER_SERVICE);
         mMediaRouter.addCallback(MediaRouter.ROUTE_TYPE_LIVE_VIDEO, mMediaRouterCallback);
@@ -2006,7 +1961,6 @@ public class MyCarService extends Service {
 
     private int mSaveDriveSwitch = 0;
     private final ArrayList<String> mPackageSet = new ArrayList<String>();
-
     Toast mToastSaveDrive;
 
     private void initToastSaveDrive() {
@@ -2019,7 +1973,6 @@ public class MyCarService extends Service {
             mToastSaveDrive.setDuration(Toast.LENGTH_LONG);
             mToastSaveDrive.setView(v);
         }
-
     }
 
     private boolean doSaveDriver(String s) {
@@ -2102,7 +2055,6 @@ public class MyCarService extends Service {
 
     public static AlertDialog mDialogUpdateCanbox;
     private String file = null;
-
     private void doUpdateCanbox(String manufacturer) {
         List<StorageInfo> ls = UtilSystem.listAllStorage(this);
         File f = null;
@@ -2124,15 +2076,13 @@ public class MyCarService extends Service {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String title = String.format(getResources().getString(R.string.update_canbox), update);
             builder.setTitle(title);
-            builder.setPositiveButton(com.android.internal.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
+            /// builder.setPositiveButton(com.android.internal.R.string.ok, new DialogInterface.OnClickListener() {
+            ///     public void onClick(DialogInterface dialog, int whichButton) {
+            ///         CarUtil.updateCanbox(file, mThis, manufacturer);
+            ///     }
+            /// });
 
-                    CarUtil.updateCanbox(file, mThis, manufacturer);
-
-                }
-            });
-
-            builder.setNegativeButton(com.android.internal.R.string.cancel, null);
+            //builder.setNegativeButton(com.android.internal.R.string.cancel, null);
 
             mDialogUpdateCanbox = builder.create();
             // 在dialog show前添加此代码，表示该dialog属于系统dialog。
@@ -2143,13 +2093,9 @@ public class MyCarService extends Service {
             Toast.makeText(this, "file not found", Toast.LENGTH_LONG).show();
         }
     }
-
     private LocationListener mGpsBrakeLocationListener = null;
-
     private void initGPSSpeedInfo() {
-
         Log.d(TAG, "isNeedGPSSpeed:" + isNeedGPSSpeed() + ":" + GlobalDefinition.mSettingGPSBrake);
-
         if (GlobalDefinition.mSettingGPSBrake == 0) {
             GlobalDefinition.mPreGPSBrake = 0;
             Util.setFileValue("/sys/class/ak/source/brake_status", GlobalDefinition.mPreGPSBrake);
@@ -2160,7 +2106,7 @@ public class MyCarService extends Service {
 
                 mGpsBrakeLocationListener = new LocationListener() {
 
-                    public void onLocationChanged(Location location) {
+                    public void onLocationChanged(@NonNull Location location) {
                         GlobalDefinition.mGPSSpeed = (location.getSpeed() * 3.6f);
 
                         if (GlobalDefinition.mSettingRadarFrontCamera == 1) {
@@ -2200,11 +2146,11 @@ public class MyCarService extends Service {
                     public void onStatusChanged(String provider, int status, Bundle extras) {
                     }
 
-                    public void onProviderEnabled(String provider) {
+                    public void onProviderEnabled(@NonNull String provider) {
 
                     }
 
-                    public void onProviderDisabled(String provider) {
+                    public void onProviderDisabled(@NonNull String provider) {
                     }
 
                 };
@@ -2235,7 +2181,6 @@ public class MyCarService extends Service {
     private boolean isNeedGPSSpeed() {
         return GlobalDefinition.mSettingDoorVoice == 1 || GlobalDefinition.mSettingRadarFrontCamera == 1 || GlobalDefinition.mSettingGPSBrake > 0;
     }
-
     public void testGPSSpeed(int speed) {
         if (mGpsBrakeLocationListener != null) {
             Location location = new Location(LocationManager.GPS_PROVIDER);

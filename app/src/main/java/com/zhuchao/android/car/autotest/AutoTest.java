@@ -1,24 +1,5 @@
 package com.zhuchao.android.car.autotest;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
-
-import com.zhuchao.android.car.R;
-import com.common.util.BroadcastUtil;
-import com.common.util.Kernel;
-import com.common.util.MyCmd;
-import com.common.util.Util;
-import com.common.util.UtilSystem;
-import com.common.util.UtilSystem.StorageInfo;
-import com.zhuchao.android.car.GlobalDefinition;
-import com.zhuchao.android.car.autotest.McuTest;
-import com.zhuchao.android.car.manager.McuManager;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -41,6 +22,24 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
+
+import com.common.util.BroadcastUtil;
+import com.common.util.Kernel;
+import com.common.util.MyCmd;
+import com.common.util.Util;
+import com.common.util.UtilSystem;
+import com.common.util.UtilSystem.StorageInfo;
+import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.manager.McuManager;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
 
 public class AutoTest {
     private final static String TAG = "AutoTest";
@@ -92,7 +91,8 @@ public class AutoTest {
             //			new TestNode(R.string.button_text_aux, MyCmd.SOURCE_AUX, 3000,
             //					R.id.result_auxin),
 
-            new TestNode(R.string.test_b_camera, MyCmd.SOURCE_REVERSE, 3000, R.id.result_reverse), new TestNode(R.string.button_text_dvd, MyCmd.SOURCE_DVD, 3000, R.id.result_dvd), new TestNode(R.string.button_text_radio, MyCmd.SOURCE_RADIO, 18000, R.id.result_radio),
+            new TestNode(R.string.test_b_camera, MyCmd.SOURCE_REVERSE, 3000, R.id.result_reverse), new TestNode(R.string.button_text_dvd, MyCmd.SOURCE_DVD, 3000, R.id.result_dvd),
+            new TestNode(R.string.button_text_radio, MyCmd.SOURCE_RADIO, 18000, R.id.result_radio),
             //			new TestNode(R.string.test_arm, MyCmd.SOURCE_MX51, NODE_TIMEOUT2,
             //					R.id.result_arm_audio),
             //

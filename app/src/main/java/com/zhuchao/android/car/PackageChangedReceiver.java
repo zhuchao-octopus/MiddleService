@@ -1,7 +1,5 @@
 package com.zhuchao.android.car;
 
-import java.io.File;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +9,8 @@ import android.util.Log;
 
 import com.common.util.Util;
 import com.zhuchao.android.car.service.MyCarService;
+
+import java.io.File;
 
 public class PackageChangedReceiver extends BroadcastReceiver {
 

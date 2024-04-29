@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:sharedUserId="android.uid.system"
     android:sharedUserMaxSdkVersion="32"
     tools:targetApi="tiramisu">
-
 
     <uses-permission
         android:name="android.permission.INTERACT_ACROSS_USERS"
@@ -17,7 +15,6 @@
     <uses-permission
         android:name="android.permission.SET_TIME_ZONE"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.ACCESS_FINE_LOCATION"
@@ -39,7 +36,6 @@
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission
         android:name="android.permission.SET_TIME"
         tools:ignore="ProtectedPermissions" />
@@ -55,37 +51,20 @@
     <uses-permission
         android:name="android.permission.CONTROL_DISPLAY_BRIGHTNESS"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
 
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
 
-    <protected-broadcast android:name="com.zhuchao.android.car.BROADCAST_RETURN_TOUCH_STUDY" />
-    <protected-broadcast android:name="com.zhuchao.android.car.BROADCAST_RETURN_JOY_STUDY" />
-    <protected-broadcast android:name="com.zhuchao.android.car.BROADCAST_RETURN_CANKEY_STUDY" />
-    <protected-broadcast android:name="com.zhuchao.android.car.BROADCAST_CMD_TO_CARUI_CAMERA" />
-
-    <protected-broadcast android:name="com.zhuchao.android.car.canbox.BROADCAST_SEND_FROM_CAN" />
-    <protected-broadcast android:name="com.zhuchao.android.car.service.BROADCAST_START_BACKLIGHTSETTINGS" />
-    <protected-broadcast android:name="com.zhuchao.android.car.service.BROADCAST_CAR_SERVICE_SEND" />
-    <protected-broadcast android:name="com.zhuchao.android.car.service.BROADCAST_CAR_SERVICE_SEND_com.android.systemui" />
-    <protected-broadcast android:name="com.zhuchao.android.car.power.REAL_POWER_OFF" />
-    <protected-broadcast android:name="com.zhuchao.android.car.power.OFF" />
-    <protected-broadcast android:name="com.zhuchao.android.car.power.ON" />
-    <protected-broadcast android:name="com.zhuchao.android.car.BROADCAST_ACC_DELAY_POWER_OFF" />
-    <protected-broadcast android:name="com.zhuchao.android.car.BROADCAST_ACC_DELAY_POWER_ON" />
-
     <application
+        android:name=".service.SApplication"
         android:directBootAware="true"
         android:persistent="true">
-
         <activity
             android:name="com.zhuchao.android.car.out.OutApp"
             android:exported="true"
@@ -94,20 +73,18 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.out.SERVICE" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <!--                 <category android:name="android.intent.category.LAUNCHER" /> -->
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
-
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <action android:name="com.my.car.service.BROADCAST_START_BACKLIGHTSETTINGS_SYSTEM_UI" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="com.zhuchao.android.car.canbox.ReverseActivity"
+            android:name=".canbox.ReverseActivity"
             android:exported="true"
             android:label="@string/f_camera"
             android:launchMode="singleTask"
@@ -115,49 +92,21 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!--<category android:name="android.intent.category.LAUNCHER" /> -->
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.my.calibration.Calibration"
-            android:exported="true"
-            android:launchMode="singleInstance"
-            android:theme="@android:style/Theme.Holo.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
                 <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name="com.zhuchao.android.car.GlobalBroadcastReceiver"
+        <service
+            android:name="com.zhuchao.android.car.service.MMCarService"
+            android:persistent="true"
+            android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+                <action android:name="com.zhuchao.android.car.action.MMCarService" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </receiver>
+        </service>
 
-        <receiver
-            android:name="com.zhuchao.android.car.PackageChangedReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_CHANGED" />
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-                <data android:scheme="package"></data>
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.camera.VideoRecordService"
-            android:exported="true" />
-        <service
-            android:name="com.zhuchao.android.car.service.MyCarService"
-            android:exported="true" />
     </application>
 
 </manifest>

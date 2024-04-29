@@ -1,8 +1,6 @@
 package com.zhuchao.android.car.cartype;
 
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -22,6 +20,8 @@ import com.zhuchao.android.car.cartype.update.UpdateRaise;
 import com.zhuchao.android.car.cartype.update.UpdateSimple;
 import com.zhuchao.android.car.manager.McuManager;
 import com.zhuchao.android.fbase.MMLog;
+
+import java.io.File;
 
 public class CarUtil {
 

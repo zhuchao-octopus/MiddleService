@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:tag="5"
-    android:background="@color/vehicle_camera_colorkey" >
+    android:background="@color/vehicle_camera_colorkey">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="1" >
+        android:layout_weight="1">
 
         <SurfaceView
             android:id="@+id/camera_surfaceview"
@@ -30,7 +30,7 @@
             android:background="#000000"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/no_signal_image"
@@ -53,7 +53,6 @@
                 android:text="@string/disconnect_video"
                 android:textSize="28px" />
         </LinearLayout>
-       
 
 
         <RelativeLayout
@@ -61,7 +60,7 @@
             android:layout_height="670px"
             android:paddingLeft="156px"
             android:layout_centerInParent="true"
-            android:paddingTop="100px" >
+            android:paddingTop="100px">
 
             <com.car.view.BackStaticView
                 android:scaleX="1.25"
@@ -79,24 +78,24 @@
                 android:layout_height="match_parent"
                 android:visibility="gone" />
         </RelativeLayout>
-<!--         hardware camera fix the black bug. so no need this -->
-         <View
+        <!--         hardware camera fix the black bug. so no need this -->
+        <View
             android:id="@+id/empty"
             android:layout_width="0px"
             android:layout_height="match_parent"
             android:background="#000000" />
-         
-          <View
+
+        <View
             android:id="@+id/only_black"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#000001" />
-         
-<!--         <include -->
-<!--             layout="@layout/radar" -->
-<!--             android:visibility="gone" /> -->
-        
+
+        <!--         <include -->
+        <!--             layout="@layout/radar" -->
+        <!--             android:visibility="gone" /> -->
+
         <LinearLayout
             android:id="@+id/camera4"
             android:layout_alignParentRight="true"
@@ -105,9 +104,9 @@
             android:layout_marginTop="60px"
             android:paddingRight="8px"
             android:visibility="visible"
-            android:orientation="horizontal" >
-            
-            <TextView 
+            android:orientation="horizontal">
+
+            <TextView
                 android:focusable="false"
                 android:id="@+id/cam1"
                 style="@style/FrontCameraButton"
@@ -130,11 +129,11 @@
                 android:id="@+id/cam4"
                 style="@style/FrontCameraButton"
                 android:text="@string/cam4" />
-                    
+
         </LinearLayout>
-        
-        
-        <include layout="@layout/canbus_all"/>
+
+
+        <include layout="@layout/canbus_all" />
     </RelativeLayout>
 
 </LinearLayout>

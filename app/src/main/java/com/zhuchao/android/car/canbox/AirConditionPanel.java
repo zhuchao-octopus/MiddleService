@@ -1,7 +1,5 @@
 package com.zhuchao.android.car.canbox;
 
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -14,13 +12,15 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.zhuchao.android.car.R;
 import com.common.util.AppConfig;
 import com.common.util.MyCmd;
 import com.common.util.Util;
 import com.common.util.UtilSystem;
 import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
+
+import java.util.Locale;
 
 
 public class AirConditionPanel extends Handler {

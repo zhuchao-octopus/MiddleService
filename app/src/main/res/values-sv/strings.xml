@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!--     <string name="eq_text_user">وضع المستخدم</string> -->
-<!--     <string name="eq_text_rock">صخرة</string> -->
-<!--     <string name="eq_text_pop">شعبي</string> -->
-<!--     <string name="eq_text_jazz">الجاز</string> -->
-<!--     <string name="eq_text_classic">كلاسيكي</string> -->
-<!--     <string name="eq_text_normal">طبيعي</string> -->
-        <string name="on">ON</string>
+    <!--     <string name="eq_text_user">وضع المستخدم</string> -->
+    <!--     <string name="eq_text_rock">صخرة</string> -->
+    <!--     <string name="eq_text_pop">شعبي</string> -->
+    <!--     <string name="eq_text_jazz">الجاز</string> -->
+    <!--     <string name="eq_text_classic">كلاسيكي</string> -->
+    <!--     <string name="eq_text_normal">طبيعي</string> -->
+    <string name="on">ON</string>
     <string name="off">OFF</string>
 </resources>

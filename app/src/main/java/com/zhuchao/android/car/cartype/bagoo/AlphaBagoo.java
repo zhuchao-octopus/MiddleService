@@ -3,10 +3,10 @@ package com.zhuchao.android.car.cartype.bagoo;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 
-import com.zhuchao.android.car.R;
 import com.common.util.MyCmd;
 import com.common.util.Util;
 import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 
@@ -18,7 +18,8 @@ public class AlphaBagoo extends Canbox {
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
     }
 
-    private final static byte[][] KEYS_WHEEL = {{0x2, AK_KEYPAD_VOLUME_A}, {0x3, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x5, KEY_PREVIOUSSONG}, {0x13, KEY_NEXTSONG}, {0x12, KEY_PREVIOUSSONG}, {0x1, KEY_MUTE},
+    private final static byte[][] KEYS_WHEEL = {
+            {0x2, AK_KEYPAD_VOLUME_A}, {0x3, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x5, KEY_PREVIOUSSONG}, {0x13, KEY_NEXTSONG}, {0x12, KEY_PREVIOUSSONG}, {0x1, KEY_MUTE},
 
             {0x11, KEY_SOURCE}, {0x15, KEY_MIC}, {0x14, KEY_BT},
 

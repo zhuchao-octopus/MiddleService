@@ -1,51 +1,34 @@
 package com.zhuchao.android.car.ui;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-
-import android.content.BroadcastReceiver;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.app.PendingIntent;
-//import android.content.pm.IPackageInstallObserver;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
 import android.content.pm.PackageInstaller.SessionCallback;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.zhuchao.android.car.manager.McuManager;
-
-import com.zhuchao.android.car.R;
-import com.common.util.BroadcastUtil;
 import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.ProtocolAk47;
 import com.common.util.Util;
+import com.zhuchao.android.car.R;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class PreInstallPanel extends Handler {
 
@@ -190,13 +173,13 @@ public class PreInstallPanel extends Handler {
 
     public void updateStatus(String name, int status) {
 
-//		for (int i = 0; i < mAPK.size(); ++i) {
-//			APKStatus apk = mAPK.get(i);
-//		//	Log.d(TAG, name+ ":updateStatus:" + apk.mPackageName);
-//			if (name.equals(apk.mPackageName)) {
-//				apk.mIndex = status;
-//			}
-//		}
+        //		for (int i = 0; i < mAPK.size(); ++i) {
+        //			APKStatus apk = mAPK.get(i);
+        //		//	Log.d(TAG, name+ ":updateStatus:" + apk.mPackageName);
+        //			if (name.equals(apk.mPackageName)) {
+        //				apk.mIndex = status;
+        //			}
+        //		}
 
         if (mInstallIndex < mAPK.size()) {
             APKStatus apk = mAPK.get(mInstallIndex);
@@ -227,13 +210,13 @@ public class PreInstallPanel extends Handler {
             s += "\n";
         }
 
-//		if (installFinish) { // finish
-//			sendEmptyMessageDelayed(MSG_HIDE, 3000);
-//			mView.findViewById(R.id.install_quit).setVisibility(View.VISIBLE);
-//		} else {
+        //		if (installFinish) { // finish
+        //			sendEmptyMessageDelayed(MSG_HIDE, 3000);
+        //			mView.findViewById(R.id.install_quit).setVisibility(View.VISIBLE);
+        //		} else {
         mTextView.setText(s);
 
-//		}
+        //		}
     }
 
     private final static String PRE_APP_PATH = "/mnt/paramter/apk/";
@@ -268,7 +251,7 @@ public class PreInstallPanel extends Handler {
         for (; i < PRE_APP.length; ++i) {
             String s = PRE_APP[i];
             addInstallApk(PRE_APP_PATH + s + ".apk");
-//			silentInstall(PRE_APP_PATH + s + ".apk");
+            //			silentInstall(PRE_APP_PATH + s + ".apk");
         }
 
         if (mAPK.size() > 0) {
@@ -371,9 +354,9 @@ public class PreInstallPanel extends Handler {
         if (mDefaultKeyboard != null) {
             if (mDefaultKeyboard.contains(packageName)) {
                 Log.i(TAG, "update=" + mDefaultKeyboard);
-//				InputMethodManager mImm = (InputMethodManager) mContext
-//						.getSystemService(Context.INPUT_METHOD_SERVICE);
-//				mImm.setInputMethod(null, mDefaultKeyboard);
+                //				InputMethodManager mImm = (InputMethodManager) mContext
+                //						.getSystemService(Context.INPUT_METHOD_SERVICE);
+                //				mImm.setInputMethod(null, mDefaultKeyboard);
                 Log.i(TAG, "## set ENABLED_INPUT_METHODS & DEFAULT_INPUT_METHOD to " + mDefaultKeyboard);
                 try {
                     android.provider.Settings.Secure.putString(mContext.getContentResolver(), android.provider.Settings.Secure.ENABLED_INPUT_METHODS, mDefaultKeyboard);
@@ -443,7 +426,7 @@ public class PreInstallPanel extends Handler {
             session.commit(broadCastTest.getIntentSender());
             session.close();
         } catch (Exception e) {
-//				ex.printStackTrace();
+            //				ex.printStackTrace();
             Log.e(TAG, e.getMessage());
         }
     }

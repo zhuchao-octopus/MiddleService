@@ -105,48 +105,17 @@ public class ChangChengRaise_OuDi extends Canbox {
     private final static byte[] IDS_TO_CANBOXSETTING = {0x35, 0x23, 0x28, 0x29, 0x31, 0x34, 0x36, 0x38, 0x39, 0x3f, 0x37};
 
     private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A},
-            {0x2, AK_KEYPAD_VOLUME_D},
-            {0x6, MyCmd.Keycode.MUTE},
-            {0x7, KEY_SOURCE},
-            {0x9, MyCmd.Keycode.BT_DIAL},
-            {0xa, MyCmd.Keycode.BT_HANG},
-            {0xC, KEY_NEXTSONG},
-            {0xB, KEY_PREVIOUSSONG},
-            {0xD, MyCmd.Keycode.SPEECH},
-            {0xE, MyCmd.Keycode.MUTE},
+            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x6, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xC, KEY_NEXTSONG},
+            {0xB, KEY_PREVIOUSSONG}, {0xD, MyCmd.Keycode.SPEECH}, {0xE, MyCmd.Keycode.MUTE},
     };
 
     private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER},
-            {0x7, MyCmd.Keycode.RADIO},
-            {0x9, MyCmd.Keycode.MUTE},
-            {0x21, MyCmd.Keycode.VOLUME_UP},
-            {0x22, MyCmd.Keycode.VOLUME_DOWN},
-            {0x29, MyCmd.Keycode.KEY_SEEK_PREV},
-            {0x30, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x31, MyCmd.Keycode.MODLE},
-            {0x32, MyCmd.Keycode.HOME},
-            {0x33, MyCmd.Keycode.BT_DIAL},
-            {0x34, MyCmd.Keycode.BT_HANG},
-            {0x35, MyCmd.Keycode.SETUP},
-            {0x36, MyCmd.Keycode.NAVIGATION},
-            {0x37, MyCmd.Keycode.CANBOX_AC_WIND_UP},
-            {0x38, MyCmd.Keycode.CANBOX_AC_WIND_DOWN},
-            {0x39, MyCmd.Keycode.CANBOX_OPEN_AC_VIEW},
-            {0x3a, MyCmd.Keycode.BACK},
-            {0x3b, MyCmd.Keycode.KEY_REPEAT},
-            {0x3c, MyCmd.Keycode.EQ},
-            {0x40, MyCmd.Keycode.PREVIOUS},
-            {0x41, MyCmd.Keycode.NEXT},
-            {0x42, MyCmd.Keycode.PREVIOUS},
-            {0x43, MyCmd.Keycode.NEXT},
-            {0x44, MyCmd.Keycode.PLAY_PAUSE},
-            {0x45, MyCmd.Keycode.PREVIOUS},
-            {0x46, MyCmd.Keycode.NEXT},
-            {0x47, MyCmd.Keycode.PREVIOUS},
-            {0x48, MyCmd.Keycode.NEXT},
-//		{ 0x49, MyCmd.Keycode.SETUP },
+            {0x1, MyCmd.Keycode.POWER}, {0x7, MyCmd.Keycode.RADIO}, {0x9, MyCmd.Keycode.MUTE}, {0x21, MyCmd.Keycode.VOLUME_UP}, {0x22, MyCmd.Keycode.VOLUME_DOWN}, {0x29, MyCmd.Keycode.KEY_SEEK_PREV},
+            {0x30, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x31, MyCmd.Keycode.MODLE}, {0x32, MyCmd.Keycode.HOME}, {0x33, MyCmd.Keycode.BT_DIAL}, {0x34, MyCmd.Keycode.BT_HANG}, {0x35, MyCmd.Keycode.SETUP},
+            {0x36, MyCmd.Keycode.NAVIGATION}, {0x37, MyCmd.Keycode.CANBOX_AC_WIND_UP}, {0x38, MyCmd.Keycode.CANBOX_AC_WIND_DOWN}, {0x39, MyCmd.Keycode.CANBOX_OPEN_AC_VIEW}, {0x3a, MyCmd.Keycode.BACK},
+            {0x3b, MyCmd.Keycode.KEY_REPEAT}, {0x3c, MyCmd.Keycode.EQ}, {0x40, MyCmd.Keycode.PREVIOUS}, {0x41, MyCmd.Keycode.NEXT}, {0x42, MyCmd.Keycode.PREVIOUS}, {0x43, MyCmd.Keycode.NEXT},
+            {0x44, MyCmd.Keycode.PLAY_PAUSE}, {0x45, MyCmd.Keycode.PREVIOUS}, {0x46, MyCmd.Keycode.NEXT}, {0x47, MyCmd.Keycode.PREVIOUS}, {0x48, MyCmd.Keycode.NEXT},
+            //		{ 0x49, MyCmd.Keycode.SETUP },
     };
 
 
@@ -250,12 +219,12 @@ public class ChangChengRaise_OuDi extends Canbox {
         }
         return t;
     }
-//	private int getACStyle() {
-//		if (CarUtil.getModelId() == 10) {
-//			return false;
-//		}
-//		return true;
-//	}
+    //	private int getACStyle() {
+    //		if (CarUtil.getModelId() == 10) {
+    //			return false;
+    //		}
+    //		return true;
+    //	}
 
     private int getACTempPriv(byte data) {//
         if ((data & 0xff) >= 0x70 && (data & 0xff) <= 0x90) {
@@ -319,13 +288,13 @@ public class ChangChengRaise_OuDi extends Canbox {
         byte[] data;
 
         if (MyCmd.SOURCE_DVD != source) {
-            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF),
-                    (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF),
-                    (byte) ((play >> 8) & 0xFF), min, sec};
+            data = new byte[]{
+                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
+            };
         } else {
-            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF),
-                    (byte) ((play) & 0xFF), (byte) (total & 0xFF),
-                    (byte) ((0) & 0xFF), min, sec};
+            data = new byte[]{
+                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
+            };
         }
         sendDataToCanbox(data, data.length);
     }

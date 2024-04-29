@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <include layout="@layout/canbus_nissian" />
 
     <include layout="@layout/canbus_hy" />
+
     <include layout="@layout/honda_da_raise" />
 
     <include layout="@layout/camera_settings" />
+
     <include layout="@layout/dacia_360" />
+
     <include layout="@layout/canbus_subaru_simple" />
+
     <include layout="@layout/canbus_mazda_raise" />
+
     <include layout="@layout/canbus_vw" />
 </RelativeLayout>

@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.zhuchao.android.car.hardware.BackTrack;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.hardware.BackTrack;
 
 
 public class TrackParamterDialog extends Dialog {

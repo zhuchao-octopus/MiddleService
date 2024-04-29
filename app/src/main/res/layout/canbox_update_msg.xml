@@ -6,7 +6,7 @@
     android:paddingBottom="3dip"
     android:paddingEnd="1dip"
     android:paddingStart="3dip"
-    android:paddingTop="9dip" >
+    android:paddingTop="9dip">
 
     <TextView
         android:id="@+id/alertTitle"

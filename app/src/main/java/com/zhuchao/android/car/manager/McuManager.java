@@ -1,44 +1,5 @@
 package com.zhuchao.android.car.manager;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-
-import com.zhuchao.android.car.GlobalDefinition;
-import com.zhuchao.android.car.canbox.CanService;
-import com.zhuchao.android.car.canbox.Canbox;
-import com.zhuchao.android.car.canbox.OBDView;
-import com.zhuchao.android.car.canbox.ReverseManager;
-import com.zhuchao.android.car.canbox.ReverseUI;
-import com.zhuchao.android.car.cartype.CarUtil;
-
-import com.zhuchao.android.car.service.MyCarService;
-import com.zhuchao.android.car.ui.BacklightPanel;
-import com.zhuchao.android.car.ui.VolumePanel;
-import com.zhuchao.android.car.view.Nissian360ButtonView;
-import com.zhuchao.android.car.autotest.AutoTest;
-import com.zhuchao.android.car.hardware.Mcu;
-
-import com.common.util.AppConfig;
-import com.common.util.BroadcastUtil;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.Kernel;
-import com.common.util.ProtocolAk47;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
-import com.common.util.UtilCarKey;
-import com.common.util.UtilSystem;
-import com.zhuchao.android.car.R;
-import com.zhuchao.android.fbase.MMLog;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
@@ -71,6 +32,43 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.common.util.AppConfig;
+import com.common.util.BroadcastUtil;
+import com.common.util.Kernel;
+import com.common.util.MachineConfig;
+import com.common.util.MyCmd;
+import com.common.util.ProtocolAk47;
+import com.common.util.SystemConfig;
+import com.common.util.Util;
+import com.common.util.UtilCarKey;
+import com.common.util.UtilSystem;
+import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.autotest.AutoTest;
+import com.zhuchao.android.car.canbox.CanService;
+import com.zhuchao.android.car.canbox.Canbox;
+import com.zhuchao.android.car.canbox.OBDView;
+import com.zhuchao.android.car.canbox.ReverseManager;
+import com.zhuchao.android.car.canbox.ReverseUI;
+import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.car.hardware.Mcu;
+import com.zhuchao.android.car.service.MyCarService;
+import com.zhuchao.android.car.ui.BacklightPanel;
+import com.zhuchao.android.car.ui.VolumePanel;
+import com.zhuchao.android.car.view.Nissian360ButtonView;
+import com.zhuchao.android.fbase.MMLog;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class McuManager {
     private final static String TAG = "McuManager";
@@ -112,13 +110,12 @@ public class McuManager {
         if (MachineConfig.VALUE_ON.equals(s)) {
             mBtMusicInBTapk = true;
         }
+
         mSystemStartTime = SystemClock.uptimeMillis();
-
         updateSmallLcd(mAppSource, null);
-
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SYSTEMUI_STATUS_BAR_VISIBLE); //for carsh....
-        // GlobalDef.makeSureDVDExist(false);
-        // setMcuSceen0(0);
+        /// GlobalDef.makeSureDVDExist(false);
+        /// setMcuSceen0(0);
         doLockPowerKey(true);
         registerReceiver();
 
@@ -591,7 +588,9 @@ public class McuManager {
         if (subId != 0xd) {
             mMcu.sendCmd(ProtocolAk47.generateProtocol1(ProtocolAk47.TYPE_AUDIO_SEND, (byte) subId, (byte) param1));
         } else {
-            byte[] protocol = new byte[]{ProtocolAk47.TYPE_AUDIO_SEND, (byte) subId, (byte) ((param1 & 0xff) << 0), (byte) ((param1 & 0xff00) >> 8), (byte) ((param1 & 0xff0000) >> 16), (byte) ((param1 & 0xff000000) >> 24)};
+            byte[] protocol = new byte[]{
+                    ProtocolAk47.TYPE_AUDIO_SEND, (byte) subId, (byte) ((param1 & 0xff) << 0), (byte) ((param1 & 0xff00) >> 8), (byte) ((param1 & 0xff0000) >> 16), (byte) ((param1 & 0xff000000) >> 24)
+            };
             mMcu.sendCmd(protocol);
         }
     }
@@ -1465,8 +1464,10 @@ public class McuManager {
         return mAppSource == MyCmd.SOURCE_RADIO || mAppSource == MyCmd.SOURCE_DVD || mAppSource == MyCmd.SOURCE_AUX || mAppSource == MyCmd.SOURCE_DTV || mAppSource == MyCmd.SOURCE_DTV_CVBS || mAppSource == MyCmd.SOURCE_BT_MUSIC || mAppSource == MyCmd.SOURCE_MUSIC || mAppSource == MyCmd.SOURCE_VIDEO || mAppSource == MyCmd.SOURCE_DVR || mAppSource == MyCmd.SOURCE_DAB || mAppSource == MyCmd.SOURCE_USBDVD;
     }
 
-    private final static String[] USE_JOY_APPLICATION = {"com.car.ui", "com.android.car.bt",
-            /*"net.easyconn", "com.android.launcher"*/};
+    private final static String[] USE_JOY_APPLICATION = {
+            "com.car.ui", "com.android.car.bt",
+            /*"net.easyconn", "com.android.launcher"*/
+    };
 
     private boolean isJoyApplicationTop() {
         if (Util.isRKSystem()) {
@@ -2129,8 +2130,8 @@ public class McuManager {
             if (ui) {
                 if (mPowerOffDialog == null) {
                     mPowerOffDialog = new ProgressDialog(mContext);
-                    mPowerOffDialog.setTitle(mContext.getText(com.android.internal.R.string.power_off));
-                    mPowerOffDialog.setMessage(mContext.getText(com.android.internal.R.string.shutdown_progress));
+                    //mPowerOffDialog.setTitle(mContext.getText(com.android.internal.R.string.power_off));
+                    //mPowerOffDialog.setMessage(mContext.getText(com.android.internal.R.string.shutdown_progress));
                     mPowerOffDialog.setIndeterminate(true);
                     mPowerOffDialog.setCancelable(false);
                     mPowerOffDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);

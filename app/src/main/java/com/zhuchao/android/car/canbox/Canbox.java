@@ -1,23 +1,6 @@
 package com.zhuchao.android.car.canbox;
 
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import com.zhuchao.android.car.hardware.Mcu;
-import com.zhuchao.android.car.R;
-import com.common.util.AppConfig;
-import com.common.util.BroadcastUtil;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.ProtocolAk47;
-import com.common.util.Util;
-import com.zhuchao.android.car.GlobalDefinition;
-import com.zhuchao.android.car.cartype.CarUtil;
-import com.zhuchao.android.car.manager.McuManager;
+import static com.common.util.MachineConfig.VENDOR_DIR;
 
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
@@ -25,8 +8,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+
+import com.common.util.AppConfig;
+import com.common.util.BroadcastUtil;
+import com.common.util.MachineConfig;
+import com.common.util.MyCmd;
+import com.common.util.ProtocolAk47;
+import com.common.util.Util;
+import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.R;
+import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.car.hardware.Mcu;
+import com.zhuchao.android.car.manager.McuManager;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class Canbox {
     static {
@@ -68,8 +71,7 @@ public class Canbox {
                     data[4] = (byte) (Integer.parseInt(mcuConfig.substring(4, 6), 16));
                     data[5] = (byte) (Integer.parseInt(mcuConfig.substring(6, 8), 16));
                     sendCmd(CANBOX_WRITE_MCU_DATA, 0, data);
-                } catch (Exception e) {
-
+                } catch (Exception ignored) {
                 }
             }
         }
@@ -994,7 +996,7 @@ mVolumeMax = ((data & 0xff0000) >> 16);
     private final static int REPEAT_SEND_LCD = 1;
     private final static int REPEAT_SEND_CAR_TYPE = 100;
     private final static int REPEAT_SEND_ROLL_KEY = 101;
-    private final Handler mHandlerRadar = new Handler() {
+    private final Handler mHandlerRadar = new Handler(Looper.myLooper()) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HIDE_RADAR:
@@ -1137,7 +1139,7 @@ mVolumeMax = ((data & 0xff0000) >> 16);
         return 0;
     }
 
-    private final static String SYSTEM_CONFIG = MyCmd.VENDOR_DIR + ".canbox_key_mapping_";
+    private final static String SYSTEM_CONFIG = VENDOR_DIR + ".canbox_key_mapping_";
     private ArrayList<Integer> mMapKey = null;
     private ArrayList<Integer> mMapKeyStudy = null;
 
@@ -2042,7 +2044,10 @@ Bit0
         }
     }
 
-    private final static byte[][] ROLL_KEYS = {{MyCmd.Keycode.SMART_CW, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.SMART_CCW, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.ROLL_NEXT, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.ROLL_PREV, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.VOLUME_ROLL_UP, MyCmd.Keycode.VOLUME_UP}, {MyCmd.Keycode.VOLUME_ROLL_DOWN, MyCmd.Keycode.VOLUME_DOWN},};
+    private final static byte[][] ROLL_KEYS = {
+            {MyCmd.Keycode.SMART_CW, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.SMART_CCW, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.ROLL_NEXT, MyCmd.Keycode.NEXT},
+            {MyCmd.Keycode.ROLL_PREV, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.VOLUME_ROLL_UP, MyCmd.Keycode.VOLUME_UP}, {MyCmd.Keycode.VOLUME_ROLL_DOWN, MyCmd.Keycode.VOLUME_DOWN},
+    };
 
     private void doKeyRoll(int key, int step) {
         mHandlerRadar.removeMessages(REPEAT_SEND_ROLL_KEY);

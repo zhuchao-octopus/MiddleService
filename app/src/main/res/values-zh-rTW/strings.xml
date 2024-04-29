@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="calibrattion_text">请准确点击屏幕上的十字架进行校准</string>
     <string name="button_text_navi">导航</string>
     <string name="button_text_bt">藍牙</string>
     <string name="button_text_radio">收音</string>
-<!--     <string name="button_text_dvd">碟片</string> -->
+    <!--     <string name="button_text_dvd">碟片</string> -->
     <string name="button_text_music">音乐</string>
     <string name="button_text_video">视频</string>
     <string name="button_text_bt_music">蓝牙音乐</string>
     <string name="key_not_support">设备不支持此按键!</string>
     <string name="shut_down">正在關機!</string>
 
-    
+
     <string name="f_camera">前攝像頭</string>
-    
+
     <string name="park_info0" />
     <string name="park_info1" />
     <string name="park_info2">從右側搜索泊車位置</string>
