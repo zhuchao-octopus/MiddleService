@@ -18,31 +18,34 @@ import com.zhuchao.android.session.Cabinet;
 
 import java.util.Objects;
 
-public class MMCarService extends Service {
-    private static final String TAG = "MMCarService";
-    public static MMCarService mThis;
-    private final CarBinderProxy mCarBinderProxy = new CarBinderProxy();
-    public MMCarService() {
+public class CanboxService extends Service {
+    private static final String TAG = "CanboxService";
+    public static CanboxService mThis;
+    private final IBinderProxy mCarIBinderProxy = new IBinderProxy();
+    public CanboxService() {
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         mThis = this;
-        MMLog.d(TAG, "MMCarService onCreate! " + TAppProcessUtils.getCurrentProcessNameAndId(this));
+        MMLog.d(TAG, TAG+" onCreate! " + TAppProcessUtils.getCurrentProcessNameAndId(this));
         Cabinet.getEventBus().registerEventObserver(this);
         registerUserEventReceiver();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = null;
+        if (intent != null) action = intent.getAction();
+        ///MMLog.d(TAG, TAG + " onStartCommand action=" + action);
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         Cabinet.getEventBus().unRegisterEventObserver(this);
-        unregisterUserBroadcastListener();
+        unregisterUserEventBroadcastListener();
         super.onDestroy();
         MMLog.d(TAG, TAG + " onDestroy!");
     }
@@ -52,21 +55,20 @@ public class MMCarService extends Service {
         /// TODO: Return the communication channel to the service.
         ///throw new UnsupportedOperationException("Not yet implemented");
         ///MMLog.d(TAG,intent.toString());
-        return mCarBinderProxy;
+        return mCarIBinderProxy;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     //
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void registerUserEventReceiver() {
-        IntentFilter iFilter = new IntentFilter();
-        iFilter.addAction(MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_HELLO);
-        iFilter.addAction(MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_CAR_SERVICE);
-        iFilter.addAction(MessageEvent.MESSAGE_EVENT_MACHINE_ACTION_CONFIG_UPDATE);
-        iFilter.addAction(MessageEvent.MESSAGE_EVENT_LINK_Z);
-        iFilter.addAction(MessageEvent.MESSAGE_EVENT_LINK_CARLETTER);
-
-        registerReceiver(mUserEventReceiver, iFilter);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_HELLO);
+        intentFilter.addAction(MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_CAR_SERVICE);
+        intentFilter.addAction(MessageEvent.MESSAGE_EVENT_MACHINE_ACTION_CONFIG_UPDATE);
+        intentFilter.addAction(MessageEvent.MESSAGE_EVENT_LINK_Z);
+        intentFilter.addAction(MessageEvent.MESSAGE_EVENT_LINK_CARLETTER);
+        registerReceiver(mUserEventReceiver, intentFilter);
     }
 
     private final BroadcastReceiver mUserEventReceiver = new BroadcastReceiver() {
@@ -84,7 +86,7 @@ public class MMCarService extends Service {
         }
     };
 
-    private void unregisterUserBroadcastListener() {
+    private void unregisterUserEventBroadcastListener() {
         try {
             unregisterReceiver(mUserEventReceiver);
         } finally {
@@ -96,7 +98,7 @@ public class MMCarService extends Service {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     @TCourierSubscribe(threadMode = MethodThreadMode.threadMode.BACKGROUND)
     public boolean onTCourierSubscribeEvent(EventCourierInterface courierInterface) {
-        MMLog.d(TAG,courierInterface.toString());
+        ///MMLog.d(TAG,courierInterface.toStr());
         switch (courierInterface.getId()) {
             case MessageEvent.MESSAGE_EVENT_USB_MOUNTED:
             case MessageEvent.MESSAGE_EVENT_USB_VIDEO:

@@ -56,15 +56,21 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <permission android:name="com.octopus.android.action.OCTOPUS.PERMISSION"/>
 
     <application
         android:name=".service.SApplication"
         android:directBootAware="true"
-        android:persistent="true">
+        android:persistent="true"
+        tools:replace="android:name">
         <activity
             android:name="com.zhuchao.android.car.out.OutApp"
             android:exported="true"
@@ -97,16 +103,28 @@
         </activity>
 
         <service
-            android:name="com.zhuchao.android.car.service.MMCarService"
+            android:name="com.zhuchao.android.car.service.CanboxService"
             android:persistent="true"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
             <intent-filter>
-                <action android:name="com.zhuchao.android.car.action.MMCarService" />
+                <action android:name="com.zhuchao.android.car.action.CANBOX_SERVICE" android:exported="true"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
 
+        <service
+            android:name="com.zhuchao.android.car.service.MultimService"
+            android:persistent="true"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
+            <intent-filter>
+                <action android:name="com.zhuchao.android.car.action.MULTIMEDIA_SERVICE" android:exported="true"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

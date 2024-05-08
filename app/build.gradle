@@ -35,32 +35,34 @@ android {
         baseline file("lint-baseline.xml")
     }
 
-    externalNativeBuild {
-        cmake {
-            path 'CMakeLists.txt'
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+    ///compileOptions {
+        ///sourceCompatibility JavaVersion.VERSION_1_8
+        ///targetCompatibility JavaVersion.VERSION_1_8
+    ///}
 
     android.applicationVariants.configureEach { variant ->
         variant.outputs.configureEach {
             def date = new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+08"))
             if (variant.buildType.name == 'release') {
                 //outputFileName = "MyCarService_${date}.apk"
-                outputFileName = "MyCarService.apk"
+                outputFileName = "MService.apk"
             }
         }
     }
 }
 
 dependencies {
-    implementation('com.zhuchao.android:libFBaseUtils:2.1@aar')
-    implementation('com.zhuchao.android:libJOSUtils:1.4:@aar')
-    implementation('com.zhuchao.android:libSessionUtils:2.8:@aar')
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    ///implementation('com.zhuchao.android:libDecodeCore:1.5@aar')//播放器的核心解码库
+    implementation('com.zhuchao.android:libFBaseUtils:2.1@aar')//框架基础类
+    implementation('com.zhuchao.android:libGPersistUtils:1.1@aar')//数据存储
+    implementation('com.zhuchao.android:libINetUtils:2.1@aar')//网络访问
+    implementation('com.zhuchao.android:libJOSUtils:1.4:@aar')//平台接口
+    //implementation('com.zhuchao.android:libOpenComputerVision:1.0@aar')//计算机视觉
+    //implementation('com.zhuchao.android:libOpenDetection:1.0@aar')//人脸识别
+    implementation('com.zhuchao.android:libMediaUtils:1.9@aar')//媒体库
+    implementation('com.zhuchao.android:libPlayerUtils:3.0@aar')//播放器
+    implementation('com.zhuchao.android:libSessionUtils:2.9@aar')//杂项
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'

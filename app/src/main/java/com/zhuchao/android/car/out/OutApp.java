@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.common.util.MyCmd;
-import com.zhuchao.android.car.service.MMCarService;
+import com.zhuchao.android.car.service.CanboxService;
 import com.zhuchao.android.car.service.MyCarService;
 import com.zhuchao.android.fbase.MMLog;
 
@@ -20,7 +19,7 @@ public class OutApp extends Activity {
         }
         //if (MMCarService.mThis == null)
         {
-            Intent it = new Intent(this, MMCarService.class);
+            Intent it = new Intent(this, CanboxService.class);
             startService(it);
         }
         ///else {
