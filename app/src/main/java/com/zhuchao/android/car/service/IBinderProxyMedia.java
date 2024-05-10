@@ -24,7 +24,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     private int mRemoteCallbackCount = 0;
 
     @Override
-    public void registerListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) throws RemoteException {
+    public void registerListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) {
         mListenerList.register(iMyCarAidlInterfaceListener);
         ///int num = mListenerList.beginBroadcast();
         ///mListenerList.finishBroadcast();
@@ -33,14 +33,14 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
         ThreadUtils.runThread(new Runnable() {
             @Override
             public void run() {
-                PEventCourier pEventCourier1 = new PEventCourier(this.getClass(),MessageEvent.MESSAGE_EVENT_MEDIA_LIBRARY);
+                PEventCourier pEventCourier1 = new PEventCourier(this.getClass(), MessageEvent.MESSAGE_EVENT_MEDIA_LIBRARY);
                 notifyNewMessage(pEventCourier1);//通知AIDL远程客户端
             }
         });
     }
 
     @Override
-    public void unregisterListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) throws RemoteException {
+    public void unregisterListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) {
         mListenerList.unregister(iMyCarAidlInterfaceListener);
         mRemoteCallbackCount--;
         ///int num = mListenerList.beginBroadcast();
@@ -96,7 +96,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
 
     @Override
     public List<PMovie> getMediaList(int MsgID) {//获取媒体库媒体信息
-        List<Movie> movies = null;
+        List<Movie> movies = new ArrayList<>();
         List<PMovie> pMovies = new ArrayList<>();
         if (Cabinet.getPlayManager().getMediaManager() != null) {
             switch (MsgID) {
@@ -126,7 +126,8 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     private List<PMovie> transformToPMovie(List<Movie> list) {
         List<PMovie> pMovies = new ArrayList<>();
         for (Movie movie : list) {
-            pMovies.add(new PMovie(movie));
+            if (movie != null) pMovies.add(new PMovie(movie));
+            else MMLog.log(TAG, "Movie object is null!");
         }
         return pMovies;
     }

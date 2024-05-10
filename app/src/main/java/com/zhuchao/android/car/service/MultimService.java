@@ -582,7 +582,6 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                     }
                 }
                 break;
-
         }
         return true;
     }
