@@ -33,7 +33,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
         ThreadUtils.runThread(new Runnable() {
             @Override
             public void run() {
-                PEventCourier pEventCourier1 = new PEventCourier(this.getClass(), MessageEvent.MESSAGE_EVENT_MEDIA_LIBRARY);
+                PEventCourier pEventCourier1 = new PEventCourier(this.getClass(), MessageEvent.MESSAGE_EVENT_OCTOPUS_AIDL_START_REGISTER);
                 notifyNewMessage(pEventCourier1);//通知AIDL远程客户端
             }
         });
@@ -92,6 +92,11 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     @Override
     public void startPlay(String fileName) {
         Cabinet.getPlayManager().startPlay(fileName);
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return Cabinet.getPlayManager().isPlaying();
     }
 
     @Override

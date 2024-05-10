@@ -442,7 +442,7 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                 mediaItems.add(createMediaItem(metadata));
             }
         } else if (tPlayManager != null) {
-            VideoList videoList1 = tPlayManager.getAllMusic();
+            VideoList videoList1 = tPlayManager.getAllMedia();
             for (HashMap.Entry<String, Object> m : videoList1.getMap().entrySet()) {
                 OMedia oMedia = (OMedia) m.getValue();
                 MediaMetadata metadata = new MediaMetadata.Builder().putString(MediaMetadata.METADATA_KEY_MEDIA_ID, oMedia.getPathName()).putString(MediaMetadata.METADATA_KEY_TITLE, oMedia.getName()).putString(MediaMetadata.METADATA_KEY_ARTIST, oMedia.getMovie().getArtist()).putLong(MediaMetadata.METADATA_KEY_DURATION, oMedia.getMovie().getDuration()).build();
@@ -455,7 +455,9 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
     private static MediaBrowser.MediaItem createMediaItem(MediaMetadata metadata) {
         return new MediaBrowser.MediaItem(metadata.getDescription(), MediaBrowser.MediaItem.FLAG_PLAYABLE);
     }
-    private PlayerStatusInfo playerStatusInfo =null;
+
+    private PlayerStatusInfo playerStatusInfo = null;
+
     @Override
     public void onEventPlayerStatus(PlayerStatusInfo playerStatusInfo) {
         switch (playerStatusInfo.getEventType()) {
@@ -585,7 +587,8 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
         }
         return true;
     }
-   ///ADIL 跨进程通信
+
+    ///ADIL 跨进程通信
     @TCourierSubscribe(threadMode = MethodThreadMode.threadMode.BACKGROUND)
     public boolean onTCourierSubscribeEventAidl(PEventCourier pEventCourier) {
         ///MMLog.d(TAG, pEventCourier.toStr());
