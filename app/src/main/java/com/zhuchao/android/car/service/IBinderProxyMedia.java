@@ -55,6 +55,16 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     }
 
     @Override
+    public void setMagic(int magic) {
+        Cabinet.getPlayManager().setMagicNumber(magic);
+    }
+
+    @Override
+    public void setTime(long time) {
+        Cabinet.getPlayManager().setTime(time);
+    }
+
+    @Override
     public void pausePlay() {
         if (Cabinet.getPlayManager().isPlaying()) Cabinet.getPlayManager().playPause();
     }
@@ -97,6 +107,11 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     @Override
     public boolean isPlaying() {
         return Cabinet.getPlayManager().isPlaying();
+    }
+
+    @Override
+    public int getPlayerStatus() {
+        return Cabinet.getPlayManager().getPlayerStatus();
     }
 
     @Override
