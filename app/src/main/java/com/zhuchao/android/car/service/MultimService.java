@@ -85,9 +85,8 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
         tPlayManager = TPlayManager.getInstance();
-        tPlayManager.updateMusicsToPlayList();
-        tPlayManager.callback(this);
-        tPlayManager.updateMediaLibrary();
+        tPlayManager.registerStatusListener(this);
+        tPlayManager.initialMediaLibrary();///初始化媒体资源库
         ///tPlayManager.printAllEventListener();
         ///BlueToothManager.getBlueToothStatus();
         registerUserEventReceiver();

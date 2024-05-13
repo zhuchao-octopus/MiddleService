@@ -121,22 +121,40 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
         if (Cabinet.getPlayManager().getMediaManager() != null) {
             switch (MsgID) {
                 case MessageEvent.MESSAGE_EVENT_LOCAL_VIDEO:
-                    movies = Cabinet.getPlayManager().getMediaManager().getLocalVideoSession().getVideoList().toList();
+                    if (Cabinet.getPlayManager().getLocalMediaVideos().getCount() > 0)
+                        movies = Cabinet.getPlayManager().getLocalMediaVideos().toList();
+                    else
+                        movies = Cabinet.getPlayManager().getMediaManager().getLocalVideoSession().getVideoList().toList();
                     return transformToPMovie(movies);
                 case MessageEvent.MESSAGE_EVENT_USB_VIDEO:
-                    movies = Cabinet.getPlayManager().getMediaManager().getUSBVideoSession().getVideoList().toList();
-                    return transformToPMovie(movies);
+                    if (Cabinet.getPlayManager().getLocalUSBMediaVideos().getCount() > 0)
+                        movies = Cabinet.getPlayManager().getLocalUSBMediaVideos().toList();
+                    else
+                        movies = Cabinet.getPlayManager().getMediaManager().getUSBVideoSession().getVideoList().toList();
+                    return transformToPMovie(movies);//复制数据到AIDL空间
                 case MessageEvent.MESSAGE_EVENT_SD_VIDEO:
-                    movies = Cabinet.getPlayManager().getMediaManager().getSDVideoSession().getVideoList().toList();
+                    if (Cabinet.getPlayManager().getLocalSDMediaVideos().getCount() > 0)
+                        movies = Cabinet.getPlayManager().getLocalSDMediaVideos().toList();
+                    else
+                        movies = Cabinet.getPlayManager().getMediaManager().getSDVideoSession().getVideoList().toList();
                     return transformToPMovie(movies);
                 case MessageEvent.MESSAGE_EVENT_LOCAL_AUDIO:
-                    movies = Cabinet.getPlayManager().getMediaManager().getLocalAudioSession().getVideoList().toList();
+                    if (Cabinet.getPlayManager().getLocalMediaAudios().getCount() > 0)
+                        movies = Cabinet.getPlayManager().getLocalMediaAudios().toList();
+                    else
+                        movies = Cabinet.getPlayManager().getMediaManager().getLocalAudioSession().getVideoList().toList();
                     return transformToPMovie(movies);
                 case MessageEvent.MESSAGE_EVENT_USB_AUDIO:
-                    movies = Cabinet.getPlayManager().getMediaManager().getUSBAudioSession().getVideoList().toList();
+                    if (Cabinet.getPlayManager().getLocalUSBMediaAudios().getCount() > 0)
+                        movies = Cabinet.getPlayManager().getLocalUSBMediaAudios().toList();
+                    else
+                        movies = Cabinet.getPlayManager().getMediaManager().getUSBAudioSession().getVideoList().toList();
                     return transformToPMovie(movies);
                 case MessageEvent.MESSAGE_EVENT_SD_AUDIO:
-                    movies = Cabinet.getPlayManager().getMediaManager().getSDAudioSession().getVideoList().toList();
+                    if (Cabinet.getPlayManager().getLocalSDMediaAudios().getCount() > 0)
+                        movies = Cabinet.getPlayManager().getLocalSDMediaAudios().toList();
+                    else
+                        movies = Cabinet.getPlayManager().getMediaManager().getSDAudioSession().getVideoList().toList();
                     return transformToPMovie(movies);
             }
         }
