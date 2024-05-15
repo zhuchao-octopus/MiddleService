@@ -1055,7 +1055,6 @@ public class MyCarService extends Service {
             } catch (Exception ignored) {
             }
         }
-
     }
 
     private void setLowMemoryKiller() {

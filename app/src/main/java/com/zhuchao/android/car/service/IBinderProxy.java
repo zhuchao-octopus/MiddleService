@@ -62,20 +62,4 @@ public class IBinderProxy extends IMyAidlInterface.Stub {
         }
     }
 
-    public void notifyPlayerStatus(PlayerStatusInfo playerStatusInfo) {
-        try {
-            int num = mListenerList.beginBroadcast();
-            for (int i = 0; i < num; ++i) {
-                IMyAidlInterfaceListener listener = mListenerList.getBroadcastItem(i);
-                if (playerStatusInfo.getObj() != null) {
-                    OMedia oMedia = (OMedia) playerStatusInfo.getObj();
-                    listener.onMessageMusice(playerStatusInfo.getEventType(), playerStatusInfo.getEventType(), playerStatusInfo.getTimeChanged(), playerStatusInfo.getLength(), oMedia.getPathName());
-                }
-            }
-        } catch (RemoteException e) {
-            MMLog.d(TAG, String.valueOf(e));
-        } finally {
-            mListenerList.finishBroadcast();
-        }
-    }
 }

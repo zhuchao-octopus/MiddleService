@@ -198,7 +198,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
                 IMyAidlInterfaceListener listener = mListenerList.getBroadcastItem(i);
                 if (playerStatusInfo.getObj() != null) {
                     OMedia oMedia = (OMedia) playerStatusInfo.getObj();
-                    listener.onMessageMusice(playerStatusInfo.getEventType(), playerStatusInfo.getEventType(), playerStatusInfo.getTimeChanged(), playerStatusInfo.getLength(), oMedia.getPathName());
+                    listener.onMessageMusic(playerStatusInfo.getEventType(), playerStatusInfo.getEventType(), playerStatusInfo.getTimeChanged(), playerStatusInfo.getLength(),new PMovie(oMedia.getMovie()));
                 }
             }
         } catch (RemoteException e) {
