@@ -122,39 +122,39 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
             switch (MsgID) {
                 case MessageEvent.MESSAGE_EVENT_LOCAL_VIDEO:
                     if (Cabinet.getPlayManager().getLocalMediaVideos().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalMediaVideos().toList();
+                        movies = Cabinet.getPlayManager().getLocalMediaVideos().toMovieList();
                     else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalVideoSession().getVideoList().toList();
+                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalVideoSession().getVideoList().toMovieList();
                     return transformToPMovie(movies);
                 case MessageEvent.MESSAGE_EVENT_USB_VIDEO:
                     if (Cabinet.getPlayManager().getLocalUSBMediaVideos().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalUSBMediaVideos().toList();
+                        movies = Cabinet.getPlayManager().getLocalUSBMediaVideos().toMovieList();
                     else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBVideoSession().getVideoList().toList();
+                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBVideoSession().getVideoList().toMovieList();
                     return transformToPMovie(movies);//复制数据到AIDL空间
                 case MessageEvent.MESSAGE_EVENT_SD_VIDEO:
                     if (Cabinet.getPlayManager().getLocalSDMediaVideos().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalSDMediaVideos().toList();
+                        movies = Cabinet.getPlayManager().getLocalSDMediaVideos().toMovieList();
                     else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDVideoSession().getVideoList().toList();
+                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDVideoSession().getVideoList().toMovieList();
                     return transformToPMovie(movies);
                 case MessageEvent.MESSAGE_EVENT_LOCAL_AUDIO:
                     if (Cabinet.getPlayManager().getLocalMediaAudios().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalMediaAudios().toList();
+                        movies = Cabinet.getPlayManager().getLocalMediaAudios().toMovieList();
                     else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalAudioSession().getVideoList().toList();
+                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalAudioSession().getVideoList().toMovieList();
                     return transformToPMovie(movies);
                 case MessageEvent.MESSAGE_EVENT_USB_AUDIO:
                     if (Cabinet.getPlayManager().getLocalUSBMediaAudios().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalUSBMediaAudios().toList();
+                        movies = Cabinet.getPlayManager().getLocalUSBMediaAudios().toMovieList();
                     else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBAudioSession().getVideoList().toList();
+                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBAudioSession().getVideoList().toMovieList();
                     return transformToPMovie(movies);
                 case MessageEvent.MESSAGE_EVENT_SD_AUDIO:
                     if (Cabinet.getPlayManager().getLocalSDMediaAudios().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalSDMediaAudios().toList();
+                        movies = Cabinet.getPlayManager().getLocalSDMediaAudios().toMovieList();
                     else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDAudioSession().getVideoList().toList();
+                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDAudioSession().getVideoList().toMovieList();
                     return transformToPMovie(movies);
             }
         }
