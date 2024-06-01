@@ -125,6 +125,19 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
+
+        <service
+            android:name="com.zhuchao.android.car.service.RecordService"
+            android:persistent="true"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
+            <intent-filter>
+                <action android:name="com.zhuchao.android.car.action.RecordService" android:exported="true"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
