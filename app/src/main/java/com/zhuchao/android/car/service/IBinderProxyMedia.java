@@ -17,18 +17,25 @@ import com.zhuchao.android.video.OMedia;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     private static final String TAG = "IBinderProxyMedia";
     private final RemoteCallbackList<IMyAidlInterfaceListener> mListenerList = new RemoteCallbackList<>();
     private int mRemoteCallbackCount = 0;
-
+    private final ReentrantLock reentrantLock = new ReentrantLock(); // ReentrantLock 对象
     @Override
     public void registerListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) {
-        mListenerList.register(iMyCarAidlInterfaceListener);
-        ///int num = mListenerList.beginBroadcast();
-        ///mListenerList.finishBroadcast();
-        mRemoteCallbackCount++;
+
+        try {
+            mListenerList.register(iMyCarAidlInterfaceListener);
+            ///int num = mListenerList.beginBroadcast();
+            ///mListenerList.finishBroadcast();
+            mRemoteCallbackCount++;
+        } catch (Exception e) {
+            ///throw new RuntimeException(e);
+            MMLog.e(TAG, String.valueOf(e));
+        }
         ///MMLog.d(TAG, "mListenerList.size=" + num);
         ThreadUtils.runThread(new Runnable() {
             @Override
@@ -41,8 +48,10 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
 
     @Override
     public void unregisterListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) {
-        mListenerList.unregister(iMyCarAidlInterfaceListener);
-        mRemoteCallbackCount--;
+        if(iMyCarAidlInterfaceListener != null) {
+            mListenerList.unregister(iMyCarAidlInterfaceListener);
+            mRemoteCallbackCount--;
+        }
         ///int num = mListenerList.beginBroadcast();
         ///mListenerList.finishBroadcast();
         ///MMLog.d(TAG, "mListenerList.size=" + num);
@@ -118,46 +127,53 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     public List<PMovie> getMediaList(int MsgID) {//获取媒体库媒体信息
         List<Movie> movies = new ArrayList<>();
         List<PMovie> pMovies = new ArrayList<>();
-        if (Cabinet.getPlayManager().getMediaLibraryManager() != null) {
-            switch (MsgID) {
-                case MessageEvent.MESSAGE_EVENT_LOCAL_VIDEO:
-                    if (Cabinet.getPlayManager().getLocalMediaVideos().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalMediaVideos().toMovieList();
-                    else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalVideoSession().getVideoList().toMovieList();
-                    return transformToPMovie(movies);
-                case MessageEvent.MESSAGE_EVENT_USB_VIDEO:
-                    if (Cabinet.getPlayManager().getLocalUSBMediaVideos().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalUSBMediaVideos().toMovieList();
-                    else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBVideoSession().getVideoList().toMovieList();
-                    return transformToPMovie(movies);//复制数据到AIDL空间
-                case MessageEvent.MESSAGE_EVENT_SD_VIDEO:
-                    if (Cabinet.getPlayManager().getLocalSDMediaVideos().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalSDMediaVideos().toMovieList();
-                    else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDVideoSession().getVideoList().toMovieList();
-                    return transformToPMovie(movies);
-                case MessageEvent.MESSAGE_EVENT_LOCAL_AUDIO:
-                    if (Cabinet.getPlayManager().getLocalMediaAudios().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalMediaAudios().toMovieList();
-                    else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalAudioSession().getVideoList().toMovieList();
-                    return transformToPMovie(movies);
-                case MessageEvent.MESSAGE_EVENT_USB_AUDIO:
-                    if (Cabinet.getPlayManager().getLocalUSBMediaAudios().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalUSBMediaAudios().toMovieList();
-                    else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBAudioSession().getVideoList().toMovieList();
-                    return transformToPMovie(movies);
-                case MessageEvent.MESSAGE_EVENT_SD_AUDIO:
-                    if (Cabinet.getPlayManager().getLocalSDMediaAudios().getCount() > 0)
-                        movies = Cabinet.getPlayManager().getLocalSDMediaAudios().toMovieList();
-                    else
-                        movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDAudioSession().getVideoList().toMovieList();
-                    return transformToPMovie(movies);
+
+        try {
+            if (Cabinet.getPlayManager().getMediaLibraryManager() != null) {
+                switch (MsgID) {
+                    case MessageEvent.MESSAGE_EVENT_LOCAL_VIDEO:
+                        if (Cabinet.getPlayManager().getLocalMediaVideos().getCount() > 0)
+                            movies = Cabinet.getPlayManager().getLocalMediaVideos().toMovieList();
+                        else
+                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalVideoSession().getVideoList().toMovieList();
+                        return transformToPMovie(movies);
+                    case MessageEvent.MESSAGE_EVENT_USB_VIDEO:
+                        if (Cabinet.getPlayManager().getLocalUSBMediaVideos().getCount() > 0)
+                            movies = Cabinet.getPlayManager().getLocalUSBMediaVideos().toMovieList();
+                        else
+                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBVideoSession().getVideoList().toMovieList();
+                        return transformToPMovie(movies);//复制数据到AIDL空间
+                    case MessageEvent.MESSAGE_EVENT_SD_VIDEO:
+                        if (Cabinet.getPlayManager().getLocalSDMediaVideos().getCount() > 0)
+                            movies = Cabinet.getPlayManager().getLocalSDMediaVideos().toMovieList();
+                        else
+                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDVideoSession().getVideoList().toMovieList();
+                        return transformToPMovie(movies);
+                    case MessageEvent.MESSAGE_EVENT_LOCAL_AUDIO:
+                        if (Cabinet.getPlayManager().getLocalMediaAudios().getCount() > 0)
+                            movies = Cabinet.getPlayManager().getLocalMediaAudios().toMovieList();
+                        else
+                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalAudioSession().getVideoList().toMovieList();
+                        return transformToPMovie(movies);
+                    case MessageEvent.MESSAGE_EVENT_USB_AUDIO:
+                        if (Cabinet.getPlayManager().getLocalUSBMediaAudios().getCount() > 0)
+                            movies = Cabinet.getPlayManager().getLocalUSBMediaAudios().toMovieList();
+                        else
+                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBAudioSession().getVideoList().toMovieList();
+                        return transformToPMovie(movies);
+                    case MessageEvent.MESSAGE_EVENT_SD_AUDIO:
+                        if (Cabinet.getPlayManager().getLocalSDMediaAudios().getCount() > 0)
+                            movies = Cabinet.getPlayManager().getLocalSDMediaAudios().toMovieList();
+                        else
+                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDAudioSession().getVideoList().toMovieList();
+                        return transformToPMovie(movies);
+                }
             }
+        } catch (Exception e) {
+            ///throw new RuntimeException(e);
+            MMLog.e(TAG, String.valueOf(e));
         }
+
         return pMovies;
     }
 
@@ -177,6 +193,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     }
 
     public void notifyNewMessage(PEventCourier pEventCourier) {
+        reentrantLock.lock();
         try {
             int num = mListenerList.beginBroadcast();
             for (int i = 0; i < num; ++i) {
@@ -188,10 +205,12 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
             }
         } finally {
             mListenerList.finishBroadcast();
+            reentrantLock.unlock();
         }
     }
 
     public void notifyPlayerStatus(PlayerStatusInfo playerStatusInfo) {
+        reentrantLock.lock();
         try {
             int num = mListenerList.beginBroadcast();
             for (int i = 0; i < num; ++i) {
@@ -205,6 +224,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
             MMLog.d(TAG, String.valueOf(e));
         } finally {
             mListenerList.finishBroadcast();
+            reentrantLock.unlock();
         }
     }
 }
