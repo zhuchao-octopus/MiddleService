@@ -5,18 +5,24 @@ import android.util.Log;
 import com.common.util.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.io.FileInputStream;
+import java.util.Arrays;
 
 public class UpdateHiWorld extends Canbox {
+    private final String TAG = "UpdateHiWorld";
+
+    private byte[] buf;
+    private int mPackageTotalNum = 0;
+    private int mPackageSendNum = 0;
+    private final static int PACKAGE_LEN = 136;
+    public int mType = 0;
+    UpdateDialog mUpdateDialog;
 
     public UpdateHiWorld() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        // sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x02, 0x2, 0x0,
-        // 0x3, 0x2 });
-
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        /// sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x02, 0x2, 0x0,0x3, 0x2 });
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x10, 0x1});
     }
 
@@ -53,8 +59,6 @@ public class UpdateHiWorld extends Canbox {
         Util.doSleep(50);
     }
 
-    UpdateDialog mUpdateDialog;
-
     @Override
     public void startConnect() {
         // TODO Auto-generated method stub
@@ -62,54 +66,41 @@ public class UpdateHiWorld extends Canbox {
         mUpdateDialog = new UpdateDialog(mContext);
         mUpdateDialog.show();
         Util.doSleep(200);
-
+        MMLog.d(TAG, "startConnect() to update");
         startUpdate();
-        // byte[] data = new byte[] { 0x2, (byte) 0xe0, 0x0, 0x0 };
-        // sendDataToCanbox(data, data.length);
-        // Util.doSleep(50);
-        // data = new byte[] { 0x2, (byte) 0xe1, 0x0, 0x0};
-        // sendDataToCanbox(data, data.length);
-        // Util.doSleep(50);
-        // data = new byte[] { 0x2, (byte) 0xe0, 0x0, 0x0};
-        // sendDataToCanbox2(data, data.length);
-        // Util.doSleep(50);
-        // data = new byte[] { 0x2, (byte) 0xe1, 0x0, 0x0};
-        // sendDataToCanbox2(data, data.length);
-
-        mSendLen = -1;
-        // startUpdate();
+        /// byte[] data = new byte[] { 0x2, (byte) 0xe0, 0x0, 0x0 };
+        /// sendDataToCanbox(data, data.length);
+        /// Util.doSleep(50);
+        /// data = new byte[] { 0x2, (byte) 0xe1, 0x0, 0x0};
+        /// sendDataToCanbox(data, data.length);
+        /// Util.doSleep(50);
+        /// data = new byte[] { 0x2, (byte) 0xe0, 0x0, 0x0};
+        /// sendDataToCanbox2(data, data.length);
+        /// Util.doSleep(50);
+        /// data = new byte[] { 0x2, (byte) 0xe1, 0x0, 0x0};
+        /// sendDataToCanbox2(data, data.length);
+        int mSendLen = -1;
+        /// startUpdate();
     }
 
-    private byte[] buf;
-    private int mSendLen = -1;
-    private int mPackageTotalNum = 0;
-    private int mPackageSendNum = 0;
-    private final static int PACKAGE_LEN = 136;
-    public int mType = 0;
-
     private void startUpdate() {
-        if (CarUtil.mUpdatFile != null) {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(CarUtil.mUpdatFile);
-
+        if (CarUtil.mUpdateFile != null) {
+            try (FileInputStream fis = new FileInputStream(CarUtil.mUpdateFile)) {
                 buf = new byte[fis.available()];
-
-                Log.d("ffk", "!!!:" + buf.length + ":" + (buf.length % PACKAGE_LEN));
+                MMLog.d(TAG, "buf.length=" + buf.length + " mPackageTotalNum=" + (buf.length % PACKAGE_LEN));
                 int n = fis.read(buf);
                 mPackageTotalNum = (buf.length / PACKAGE_LEN) + ((buf.length % PACKAGE_LEN) == 0 ? 0 : 1);
                 if (mPackageTotalNum > 962) {
-                    // mToast = Toast.makeText(mContext,
-                    // "fail !!!!!!!  file too big.", Toast.LENGTH_LONG);
-                    // mToast.show();
-
+                    /// mToast = Toast.makeText(mContext,
+                    /// "fail !!!!!!!  file too big.", Toast.LENGTH_LONG);
+                    /// mToast.show();
                     mUpdateDialog.setMsg("fail !!!!!!!  file too big");
                     return;
                 }
-                Log.d("ccfk", "startUpdate:" + mPackageTotalNum);
-                // sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x10,
-                // 0x1 });
-                // Util.doSleep(50);
+                MMLog.d(TAG, "startUpdate... mPackageTotalNum=" + mPackageTotalNum);
+                /// sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x10,
+                /// 0x1 });
+                /// Util.doSleep(50);
                 byte[] data = new byte[]{0x2, (byte) 0xe0, 0x0, 0x0};
                 if (mType == 0) {
                     sendDataToCanbox(data, data.length);
@@ -138,27 +129,17 @@ public class UpdateHiWorld extends Canbox {
                 // // // mToast.setDuration(99900000);
                 // // }
                 // continuUpdate();
-            } catch (Exception ce) {
-
-            } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (Exception ce) {
-
-                    }
-                }
+            } catch (Exception ignored) {
             }
-
         }
     }
 
     // Toast mToast;
     byte[] data = new byte[PACKAGE_LEN + 1];
 
-    private void continuUpdate() {
+    private void continueUpdate() {
         try {
-            Log.d("ddk", mPackageSendNum + "continuUpdate:" + mPackageTotalNum);
+            ///MMLog.d(TAG, mPackageSendNum + "continueUpdate mPackageTotalNum=" + mPackageTotalNum);
 
             if (mPackageTotalNum <= mPackageSendNum) {
                 return;
@@ -169,12 +150,14 @@ public class UpdateHiWorld extends Canbox {
                 data[i + 1] = buf[buf_len];
             }
 
+            MMLog.d(TAG, "continueUpdate" +mPackageSendNum +"/"+ mPackageTotalNum);
             // sendDataToCanbox(data, data.length);
             sendCmd(CANBOX_WRITE_COMMON_DATA, 0, data);
             ++mPackageSendNum;
 
             int p = 0;
             p = mPackageSendNum * 100 / mPackageTotalNum;
+
             // if (mToast != null) {
             // mToast.cancel();
             // }
@@ -186,7 +169,7 @@ public class UpdateHiWorld extends Canbox {
 
             // Log.e("abc", mSendLen + ":" + buf.length + ":" + p);
         } catch (Exception e) {
-            Log.e("abc", "continuUpdate!!!!!!!!!!err:");
+            MMLog.e(TAG, "MMLog!!!!!!!!!!err:" + e);
         }
 
     }
@@ -201,22 +184,22 @@ public class UpdateHiWorld extends Canbox {
     public void parseCanboxData(byte[] data, int len) {
         // TODO Auto-generated method stub
 
-        Log.d("abcd", updateTag + "is finish!!!!!!" + mPackageSendNum);
+        MMLog.d(TAG, updateTag + " is finish!!!!!!" + mPackageSendNum + "," + Arrays.toString(data));
         if (updateTag == -1 || mUpdateDialog == null || !mUpdateDialog.isShowing()) {
             return;
         }
-        // Log.d("ccfk1",
-        // mUpdateDialog.isShowing()+"parseCanboxData:" +
-        // Util.byte2HexStr(data));
+        /// Log.d("ccfk1",
+        /// mUpdateDialog.isShowing()+"parseCanboxData:" +
+        /// Util.byte2HexStr(data));
         switch (data[2]) {
             case 0x55:// U 升级准备 85
-                Log.d("ccfk", "parseCanboxData!!!!!!!!!!!!!!: 0x55");
+                MMLog.d(TAG, "parseCanboxData!!!!!!!!!!!!!!: 0x55");
                 byte[] send = new byte[]{0x4, 0x19, (byte) 0x78, 0x02, 0x17};
                 sendCmd(CANBOX_WRITE_COMMON_DATA, 0, send);
                 mPackageSendNum = 0;
                 break;
             case 0x52:// R 升级出错
-                Log.d("ccfk", "error!!!");
+                MMLog.d(TAG, "error!!!");
                 mPackageSendNum = mPackageTotalNum;
                 // if (mToast != null) {
                 // mToast.cancel();
@@ -234,12 +217,12 @@ public class UpdateHiWorld extends Canbox {
                 // Util.doSleep(5000);
                 break;
             case 0x53:// S 下一帧 83
-                continuUpdate();
+                continueUpdate();
                 break;
             case 0x45:// E 升级结束 69
-                Log.d("abcd", (mPackageTotalNum) + "is finish!!!!!!" + mPackageSendNum);
+                MMLog.d(TAG, (mPackageTotalNum) + "is finish!!!!!!" + mPackageSendNum);
                 if (mPackageSendNum == (mPackageTotalNum)) { // finish
-                    Log.d("abcd", "finish!!!!!!");
+                    MMLog.d(TAG, "finish!!!!!!");
                     updateTag = -1;
                     mUpdateDialog.setMsg("update file sucess");
                 }

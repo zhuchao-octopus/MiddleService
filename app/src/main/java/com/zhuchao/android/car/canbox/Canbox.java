@@ -23,6 +23,7 @@ import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.hardware.Mcu;
 import com.zhuchao.android.car.manager.McuManager;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -32,61 +33,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class Canbox {
-    static {
-        // System.loadLibrary("Canbox");
-    }
-
-    public Canbox() {
-
-        String mCanboxType = MachineConfig.getPropertyOnce(MachineConfig.KEY_CAN_BOX);
-        if (mCanboxType == null) {
-            mCanboxType = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_CAN_BOX);
-        }
-
-        if (mCanboxType != null) {
-            String[] ss = mCanboxType.split(",");
-            String mcuBaud = null;
-            String mcuConfig = null;
-
-            for (int i = 1; i < ss.length; ++i) {
-                if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_MCU_BAUD)) {
-                    mcuBaud = ss[i].substring(1);
-                } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_MCU_CONFIG)) {
-                    mcuConfig = ss[i].substring(1);
-                }
-            }
-
-            if (mcuBaud != null && mcuConfig != null) {
-                try {
-
-                    byte[] data = new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0};
-                    data[2] = (byte) (Integer.parseInt(mcuBaud.substring(0, 2), 16));
-                    data[3] = (byte) (Integer.parseInt(mcuBaud.substring(2, 4), 16));
-                    data[4] = (byte) (Integer.parseInt(mcuBaud.substring(4, 6), 16));
-                    data[5] = (byte) (Integer.parseInt(mcuBaud.substring(6, 8), 16));
-                    sendCmd(CANBOX_WRITE_MCU_DATA, 0, data);
-                    data[1] = 0x2;
-                    data[2] = (byte) (Integer.parseInt(mcuConfig.substring(0, 2), 16));
-                    data[3] = (byte) (Integer.parseInt(mcuConfig.substring(2, 4), 16));
-                    data[4] = (byte) (Integer.parseInt(mcuConfig.substring(4, 6), 16));
-                    data[5] = (byte) (Integer.parseInt(mcuConfig.substring(6, 8), 16));
-                    sendCmd(CANBOX_WRITE_MCU_DATA, 0, data);
-                } catch (Exception ignored) {
-                }
-            }
-        }
-        startRepeatSendLcdMsg(false);
-    }
-
-    public Context mContext;
-
-    public void setContext(Context c) {
-        mContext = c;
-        registerListener();
-    }
 
     public final static String TAG = "Canbox";
-
+    public Context mContext;
     public String mVersion;
     public String mVersionEx;
 
@@ -170,12 +119,9 @@ public class Canbox {
     public final static int KEY_MODE = MyCmd.Keycode.MODLE; // MODE
     public final static int KEY_POWER_OFF = MyCmd.Keycode.POWER_OFF; // Power
     // off
-
     public final static int KEY_PLAYPAUSE = MyCmd.Keycode.PLAY_PAUSE;//
-
     public final static int KEY_CH_UP = MyCmd.Keycode.CH_UP;//
     public final static int KEY_CH_DOWN = MyCmd.Keycode.CH_DOWN; //
-
     public final static int KEY_SEEK_NEXT = MyCmd.Keycode.KEY_SEEK_NEXT;//
     public final static int KEY_SEEK_PREV = MyCmd.Keycode.KEY_SEEK_PREV; //
 
@@ -230,11 +176,8 @@ public class Canbox {
     /*
      * new eq set
      */
-    // //
-
     public final static int CMD_GROUP_EQ = 0x100;
     public final static int CMD_GROUP_AC = 0x200;
-
 
     public final static int AC_CMD_REQUEST_INFO = 1;
     // sub cmd <= 0xff
@@ -249,14 +192,65 @@ public class Canbox {
     public final static int EQ_CMD_SET_ALL_DATA = 0xf0;
     public final static int EQ_REQUEST_ALL_MAX = 0xff;
 
-    /*
-     *
-EQ_REQUEST_ALL_MAX
+    static {
+        // System.loadLibrary("Canbox");
+    }
 
-mEQMax = (data & 0xff);
-mZoneMax = ((data & 0xff00) >> 8);
-mVolumeMax = ((data & 0xff0000) >> 16);
-*/
+    public Canbox() {
+
+        String mCanboxType = MachineConfig.getPropertyOnce(MachineConfig.KEY_CAN_BOX);
+        if (mCanboxType == null) {
+            mCanboxType = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_CAN_BOX);
+        }
+
+        if (mCanboxType != null) {
+            String[] ss = mCanboxType.split(",");
+            String mcuBaud = null;
+            String mcuConfig = null;
+
+            for (int i = 1; i < ss.length; ++i) {
+                if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_MCU_BAUD)) {
+                    mcuBaud = ss[i].substring(1);
+                } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_MCU_CONFIG)) {
+                    mcuConfig = ss[i].substring(1);
+                }
+            }
+
+            if (mcuBaud != null && mcuConfig != null) {
+                try {
+
+                    byte[] data = new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0};
+                    data[2] = (byte) (Integer.parseInt(mcuBaud.substring(0, 2), 16));
+                    data[3] = (byte) (Integer.parseInt(mcuBaud.substring(2, 4), 16));
+                    data[4] = (byte) (Integer.parseInt(mcuBaud.substring(4, 6), 16));
+                    data[5] = (byte) (Integer.parseInt(mcuBaud.substring(6, 8), 16));
+                    sendCmd(CANBOX_WRITE_MCU_DATA, 0, data);
+                    data[1] = 0x2;
+                    data[2] = (byte) (Integer.parseInt(mcuConfig.substring(0, 2), 16));
+                    data[3] = (byte) (Integer.parseInt(mcuConfig.substring(2, 4), 16));
+                    data[4] = (byte) (Integer.parseInt(mcuConfig.substring(4, 6), 16));
+                    data[5] = (byte) (Integer.parseInt(mcuConfig.substring(6, 8), 16));
+                    sendCmd(CANBOX_WRITE_MCU_DATA, 0, data);
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        startRepeatSendLcdMsg(false);
+    }
+
+
+    public void setContext(Context c) {
+        mContext = c;
+        registerListener();
+    }
+
+    /*
+    EQ_REQUEST_ALL_MAX
+    mEQMax = (data & 0xff);
+    mZoneMax = ((data & 0xff00) >> 8);
+    mVolumeMax = ((data & 0xff0000) >> 16);
+    */
+
     public int doCmd(int cmd, int data) {
         int ret = 0;
         switch (cmd & 0xff00) {
@@ -423,7 +417,7 @@ mVolumeMax = ((data & 0xff0000) >> 16);
         requestVersion();
         updateTime();
         //requestDriveData(1);// test
-        Log.d(TAG, "startConnect()");
+        MMLog.d(TAG, "startConnect()");
     }
 
     public void stopConnect() {// default is simple box
@@ -2044,10 +2038,7 @@ Bit0
         }
     }
 
-    private final static byte[][] ROLL_KEYS = {
-            {MyCmd.Keycode.SMART_CW, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.SMART_CCW, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.ROLL_NEXT, MyCmd.Keycode.NEXT},
-            {MyCmd.Keycode.ROLL_PREV, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.VOLUME_ROLL_UP, MyCmd.Keycode.VOLUME_UP}, {MyCmd.Keycode.VOLUME_ROLL_DOWN, MyCmd.Keycode.VOLUME_DOWN},
-    };
+    private final static byte[][] ROLL_KEYS = {{MyCmd.Keycode.SMART_CW, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.SMART_CCW, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.ROLL_NEXT, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.ROLL_PREV, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.VOLUME_ROLL_UP, MyCmd.Keycode.VOLUME_UP}, {MyCmd.Keycode.VOLUME_ROLL_DOWN, MyCmd.Keycode.VOLUME_DOWN},};
 
     private void doKeyRoll(int key, int step) {
         mHandlerRadar.removeMessages(REPEAT_SEND_ROLL_KEY);

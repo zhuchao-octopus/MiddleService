@@ -12,7 +12,7 @@ public class OutApp extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MMLog.d("OutApp","OutApp.onCreate!");
+        MMLog.d("OutApp", "OutApp.onCreate!");
         if (MyCarService.mThis == null) {
             Intent it = new Intent(this, MyCarService.class);
             startService(it);

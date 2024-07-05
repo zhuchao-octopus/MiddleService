@@ -24,6 +24,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     private final RemoteCallbackList<IMyAidlInterfaceListener> mListenerList = new RemoteCallbackList<>();
     private int mRemoteCallbackCount = 0;
     private final ReentrantLock reentrantLock = new ReentrantLock(); // ReentrantLock 对象
+
     @Override
     public void registerListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) {
 
@@ -48,7 +49,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
 
     @Override
     public void unregisterListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) {
-        if(iMyCarAidlInterfaceListener != null) {
+        if (iMyCarAidlInterfaceListener != null) {
             mListenerList.unregister(iMyCarAidlInterfaceListener);
             mRemoteCallbackCount--;
         }
@@ -217,7 +218,7 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
                 IMyAidlInterfaceListener listener = mListenerList.getBroadcastItem(i);
                 if (playerStatusInfo.getObj() != null) {
                     OMedia oMedia = (OMedia) playerStatusInfo.getObj();
-                    listener.onMessageMusic(playerStatusInfo.getEventType(), playerStatusInfo.getEventType(), playerStatusInfo.getTimeChanged(), playerStatusInfo.getLength(),new PMovie(oMedia.getMovie()));
+                    listener.onMessageMusic(playerStatusInfo.getEventType(), playerStatusInfo.getEventType(), playerStatusInfo.getTimeChanged(), playerStatusInfo.getLength(), new PMovie(oMedia.getMovie()));
                 }
             }
         } catch (RemoteException e) {

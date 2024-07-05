@@ -28,6 +28,7 @@ import com.zhuchao.android.car.aidl.IRecordVideoService;
 import com.zhuchao.android.fbase.MMLog;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RecordService extends Service {
     private static final String TAG = "RecordVideoService";
@@ -166,7 +167,7 @@ public class RecordService extends Service {
         }
     }
 
-    private final Handler mHandler = new Handler(Looper.myLooper()) {
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         @Override
         public void handleMessage(Message msg) {
             int what = msg.what;

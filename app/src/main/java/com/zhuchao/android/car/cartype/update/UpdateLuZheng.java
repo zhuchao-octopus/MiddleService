@@ -50,10 +50,10 @@ public class UpdateLuZheng extends Canbox {
     private final static int PACKAGE_LEN = 128;
 
     private void startUpdate() {
-        if (CarUtil.mUpdatFile != null) {
+        if (CarUtil.mUpdateFile != null) {
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream(CarUtil.mUpdatFile);
+                fis = new FileInputStream(CarUtil.mUpdateFile);
 
                 buf = new byte[fis.available()];
 

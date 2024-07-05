@@ -58,13 +58,14 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <permission android:name="com.octopus.android.action.OCTOPUS.PERMISSION"/>
+    <permission android:name="com.octopus.android.action.OCTOPUS.PERMISSION" />
 
     <application
         android:name=".service.SApplication"
@@ -80,6 +81,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.out.SERVICE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
@@ -109,7 +111,9 @@
             android:exported="true"
             android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
             <intent-filter>
-                <action android:name="com.zhuchao.android.car.action.CANBOX_SERVICE" android:exported="true"/>
+                <action
+                    android:name="com.zhuchao.android.car.action.CANBOX_SERVICE"
+                    android:exported="true" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
@@ -121,19 +125,23 @@
             android:exported="true"
             android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
             <intent-filter>
-                <action android:name="com.zhuchao.android.car.action.MULTIMEDIA_SERVICE" android:exported="true"/>
+                <action
+                    android:name="com.zhuchao.android.car.action.MULTIMEDIA_SERVICE"
+                    android:exported="true" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
 
         <service
-            android:name="com.zhuchao.android.car.service.RecordService"
+            android:name="com.zhuchao.android.car.service.MyCarService"
             android:persistent="true"
             android:enabled="true"
             android:exported="true"
             android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
             <intent-filter>
-                <action android:name="com.zhuchao.android.car.action.RecordService" android:exported="true"/>
+                <action
+                    android:name="com.zhuchao.android.car.action.MyCarService"
+                    android:exported="true" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>

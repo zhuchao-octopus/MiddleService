@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -53,10 +54,11 @@ import com.common.util.Kernel;
 import com.common.util.MachineConfig;
 import com.common.util.MyCmd;
 import com.common.util.SystemConfig;
+import com.common.util.SystemProperties;
 import com.common.util.Util;
 import com.common.util.UtilSystem;
 import com.common.util.UtilSystem.StorageInfo;
-import com.rockchip.car.recorder.utils.SystemProperties;
+
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.autotest.AutoTest;
@@ -232,7 +234,7 @@ public class MyCarService extends Service {
         ///doAutoTest(); //test
         ///DebugMessage.start(this);
         ///doUpdateCanbox();
-        MMLog.d(TAG,TAG+" onCreate!");
+        MMLog.d(TAG, TAG + " onCreate!");
     }
 
     @Override
@@ -873,8 +875,7 @@ public class MyCarService extends Service {
     /// private static final String THIRD_APP_SOUND_FIRST_PATH =
     /// "/sys/class/ak/source/arm_sound_switch";
     private void updateAccPowerOffDelay(String s) {
-        if (s == null)
-        {
+        if (s == null) {
             s = SystemConfig.getProperty(this, MachineConfig.KEY_ACC_DELAY_OFF);
             if (s == null) {
                 s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_ACC_DELAY_OFF);
@@ -953,8 +954,8 @@ public class MyCarService extends Service {
         }
         //
         String packageName = SystemConfig.getProperty(mThis, MachineConfig.KEY_GPS_PACKAGE);
-
-        if (packageName == null) {
+        if (packageName == null)
+        {
             String s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_DEFAULT_GPS);
             if (s != null) {
                 String[] ss = s.split("/");
@@ -1203,16 +1204,13 @@ public class MyCarService extends Service {
 
     private void doReceiveAppsCmd(Intent intent) {
         int cmd = intent.getIntExtra(MyCmd.EXTRA_COMMON_CMD, 0);
-        int data = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
-        MMLog.d(TAG, "doReceiveAppsCmd:" + cmd + ":" + data);
+        MMLog.d(TAG, "doReceiveAppsCmd:" + cmd + ":getExtras=" + Objects.requireNonNull(intent.getExtras()).toString());
         switch (cmd) {
             case MyCmd.Cmd.SET_SOURCE:
                 mMcuManager.setSource(intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0));
                 break;
             case MyCmd.Cmd.SET_SCREEN1_SOURCE:
-
                 GlobalDefinition.setScreen1Source(intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, MyCmd.SOURCE_NONE));
-
                 break;
             case MyCmd.Cmd.QUERY_CURRENT_SOURCE:
                 mMcuManager.queryCurrentSource(intent.getIntExtra(MyCmd.EXTRA_COMMON_ID, 0));
@@ -1227,6 +1225,7 @@ public class MyCarService extends Service {
                 RecentView.toggle(mThis);
                 break;
             case MyCmd.Cmd.BT_PHONE_STATUS:
+                int data = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                 mMcuManager.setBtPhoneStatus(data);
                 break;
             case MyCmd.Cmd.BT_PHONE_CALLLOG_LIST: {
@@ -1241,24 +1240,29 @@ public class MyCarService extends Service {
 
             case MyCmd.Cmd.CANBOX_RQUEST_DRIVE_DATA: {
                 Canbox box = CarUtil.getCanboxInstance();
+                int data0 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                 if (box != null) {
-                    box.requestDriveData(data);
+                    box.requestDriveData(data0);
                 }
             }
             break;
             case MyCmd.Cmd.CANBOX_PHONE_STATUS:
-                mMcuManager.setCanboxPhoneStatus(data);
+                int data1 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setCanboxPhoneStatus(data1);
                 break;
             case MyCmd.Cmd.BT_SEND_HFP_STATUS: {
                 Intent it = new Intent(MyCmd.BROADCAST_CAR_SERVICE_SEND_SYSTEM_UI);
+                int data2 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+
                 it.putExtra(MyCmd.EXTRA_COMMON_CMD, MyCmd.Cmd.BT_BATTERY_SIGNAL);
-                it.putExtra(MyCmd.EXTRA_COMMON_DATA, data);
+                it.putExtra(MyCmd.EXTRA_COMMON_DATA, data2);
                 it.setPackage("com.android.systemui");
                 sendBroadcast(it);
             }
             break;
             case MyCmd.Cmd.SET_SPECTRUM_SCREEN_SAVE:
-                mMcuManager.updateDSPScreenSaver(data);
+                int data3 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.updateDSPScreenSaver(data3);
                 break;
             case MyCmd.Cmd.SET_AUDIO_GAIN: {
                 byte[] gain = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_OBJECT);
@@ -1268,12 +1272,14 @@ public class MyCarService extends Service {
             }
             break;
             case MyCmd.Cmd.SET_AUDIO_SPECTRUM: {
-                mMcuManager.setSpectrumSwitch((byte) data);
+                int data4 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setSpectrumSwitch((byte) data4);
             }
             break;
 
             case MyCmd.Cmd.SET_OBD_SCREEN_SAVE: {
-                OBDView.updateScreenSave(this, data);
+                int data5 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                OBDView.updateScreenSave(this, data5);
             }
             break;
             case MyCmd.Cmd.MCU_RADIO_SEND_CMD:
@@ -1305,88 +1311,99 @@ public class MyCarService extends Service {
             }
             break;
             case MyCmd.Cmd.MCU_SET_VOLUME:
-                if (data >= 0) {
-                    mMcuManager.setVolume(data);
-                } else if (data == -1) {
+                int data6 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                if (data6 >= 0) {
+                    mMcuManager.setVolume(data6);
+                } else if (data6 == -1) {
                     mMcuManager.setVoulumeIncrease(true);
-                } else if (data == -2) {
+                } else if (data6 == -2) {
                     mMcuManager.setVoulumeIncrease(false);
-                } else if (data == -3) {
+                } else if (data6 == -3) {
                     mMcuManager.setVoulumeMute(1);
-                } else if (data == -4) {
+                } else if (data6 == -4) {
                     mMcuManager.setVoulumeMute(0);
                 }
                 break;
             case MyCmd.Cmd.MCU_SET_VOLTAGE_PROTECT:
-                mMcuManager.setVoltageProtect((byte) data);
+                int data7 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setVoltageProtect((byte) data7);
                 break;
             case MyCmd.Cmd.MCU_QUERY_VOLTAGE_PROTECT:
                 mMcuManager.setVoltageProtect(0x1100);
                 break;
             case MyCmd.Cmd.MCU_SET_LIGHT_DECTECT:
-                mMcuManager.setLightDectect((byte) data);
+                int data8 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setLightDectect((byte) data8);
                 break;
             case MyCmd.Cmd.MCU_QUERY_LIGHT_DECTECT:
                 mMcuManager.setLightDectect((byte) 0xff);
                 break;
             case MyCmd.Cmd.APP_REQUEST_SEND_KEY:
-                // Log.d("dd", "" + data);
-                if (!JoyKey.isJoyKey(data)) {
-                    mMcuManager.doKey(data);
-                } else {
-
+                int data9 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                if (!JoyKey.isJoyKey(data9)) {
+                    mMcuManager.doKey(data9);
+                }
+                else
+                {
                     boolean down = intent.getBooleanExtra(MyCmd.EXTRA_COMMON_DATA2, true);
-
+                    int data10 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                     if (mJoyKey == null) {
                         mJoyKey = new JoyKey(this);
                     }
-
-                    data = mJoyKey.doKey(data, down);
-                    Log.d("dd", down + "22:" + data);
-                    if (data != 0) {
-                        mMcuManager.doKey(data);
+                    data10 = mJoyKey.doKey(data10, down);
+                    MMLog.d(TAG, down + "22:" + data10);
+                    if (data10 != 0) {
+                        mMcuManager.doKey(data10);
                     }
                 }
                 break;
             case MyCmd.Cmd.SET_SCREEN0_SOURCE:
-                mMcuManager.setScreen0(data);
+                int data11 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setScreen0(data11);
                 break;
             case MyCmd.Cmd.SHOW_AIR_CONTROL:
+                int data12 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                 AirManager.startAll(this);
-                if (data == 0) {
+                if (data12 == 0) {
                 } else {
-                    AirManager.sendAirFunchtion(data);
+                    AirManager.sendAirFunchtion(data12);
                 }
                 break;
             case MyCmd.Cmd.REQUEST_CANBOX_VERSION:
-                showCanboxVersion(data);
+                int data13 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                showCanboxVersion(data13);
                 break;
             case MyCmd.Cmd.SEND_CANBOX_DATA:
                 byte[] buf = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_DATA);
                 CarUtil.sendDataToCanbox(buf);
                 break;
             case MyCmd.Cmd.SET_DTV_CMD:
-                mMcuManager.setTV(data);
+                int data14 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setTV(data14);
                 break;
             case MyCmd.Cmd.SET_FRONT_CAMERA_POWER:
-                mMcuManager.setFrontCamerPower((byte) data, 0x1);
+                int data15 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setFrontCamerPower((byte) data15, 0x1);
                 break;
             case MyCmd.Cmd.UPDATE_CANBOX:
                 doUpdateCanbox(intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA));
                 break;
             case MyCmd.Cmd.SEND_UPDATE_CANBOX_SET: {
                 Canbox box = CarUtil.getCanboxInstance();
+                int data16 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                 if (box != null) {
-                    box.udpateSet(data);
+                    box.udpateSet(data16);
                 }
             }
             break;
             case MyCmd.Cmd.SET_DTV_CMD_EX:
                 // int data2 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA2, 0);
-                mMcuManager.setTVEx(data);
+                int data17 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setTVEx(data17);
                 break;
             case MyCmd.Cmd.SET_VCOM:
-                mMcuManager.setVCOM(((data & 0xff00) >> 8), (data & 0xff));
+                int data18 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                mMcuManager.setVCOM(((data18 & 0xff00) >> 8), (data18 & 0xff));
                 break;
             case MyCmd.Cmd.AUTO_TEST_SHOW_UI:
                 doAutoTest();
@@ -1395,16 +1412,18 @@ public class MyCarService extends Service {
                 DebugMessage.start(mThis);
                 break;
             case MyCmd.Cmd.AUTO_TEST_RESULT:
+                int data19 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                 if (mAutoTest != null) {
                     int data2 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA2, 0);
-                    mAutoTest.testResult(data, data2);
+                    mAutoTest.testResult(data19, data2);
                 }
                 break;
             case MyCmd.Cmd.CANBOX_VOICE_CONTROL:
                 Canbox box = CarUtil.getCanboxInstance();
+                int data20 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                 if (box != null) {
-                    Log.d(TAG, "CANBOX_VOICE_CONTROL:" + Integer.toHexString(data).toUpperCase());
-                    box.udpateVoiceControl(data);
+                    MMLog.d(TAG, "CANBOX_VOICE_CONTROL:" + Integer.toHexString(data20).toUpperCase());
+                    box.udpateVoiceControl(data20);
                 }
                 break;
         }
@@ -1425,7 +1444,6 @@ public class MyCarService extends Service {
     private void registerEventReceiver() {
         IntentFilter iFilter = new IntentFilter();
         iFilter.addAction(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE);
-
         iFilter.addAction(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_ID);
         iFilter.addAction(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_UI);
         iFilter.addAction(MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI);
@@ -1446,7 +1464,7 @@ public class MyCarService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            MMLog.d(TAG, "onReceive:" + action);
+            MMLog.d(TAG, "mEventReceiver.onReceive:" + action);
             switch (Objects.requireNonNull(action)) {
                 case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE:
                 case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_ID:
@@ -1766,6 +1784,7 @@ public class MyCarService extends Service {
     }
 
     private boolean mFirstRun = true;
+
     private void unregisterListener() {
         if (mEventReceiver != null) {
             unregisterReceiver(mEventReceiver);
@@ -1845,6 +1864,7 @@ public class MyCarService extends Service {
     }
 
     private static List<ResolveInfo> apps;
+
     public static void updatePackageList() {
         if (mThis != null) {
 
@@ -1860,6 +1880,7 @@ public class MyCarService extends Service {
 
     private static int mInitGpsSettingTime = 10;
     private static boolean mIsTestMemory = false;
+
     private static void checkTestMemory() {
         if (apps != null) {
             for (ResolveInfo rv : apps) {
@@ -1922,6 +1943,7 @@ public class MyCarService extends Service {
 
     private final static int LOCK_KEY_TIME = 900;
     private long mStartPlayTime = 0;
+
     private void lockKey() {
         Log.d(TAG, "lockKey!");
         mStartPlayTime = System.currentTimeMillis();
@@ -1936,6 +1958,7 @@ public class MyCarService extends Service {
     }
 
     private MediaRouter mMediaRouter = null;
+
     private void initMediaRouter() {
         mMediaRouter = (MediaRouter) getSystemService(Context.MEDIA_ROUTER_SERVICE);
         mMediaRouter.addCallback(MediaRouter.ROUTE_TYPE_LIVE_VIDEO, mMediaRouterCallback);
@@ -2054,6 +2077,7 @@ public class MyCarService extends Service {
 
     public static AlertDialog mDialogUpdateCanbox;
     private String file = null;
+
     private void doUpdateCanbox(String manufacturer) {
         List<StorageInfo> ls = UtilSystem.listAllStorage(this);
         File f = null;
@@ -2075,13 +2099,13 @@ public class MyCarService extends Service {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String title = String.format(getResources().getString(R.string.update_canbox), update);
             builder.setTitle(title);
-            /// builder.setPositiveButton(com.android.internal.R.string.ok, new DialogInterface.OnClickListener() {
-            ///     public void onClick(DialogInterface dialog, int whichButton) {
-            ///         CarUtil.updateCanbox(file, mThis, manufacturer);
-            ///     }
-            /// });
+             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                 public void onClick(DialogInterface dialog, int whichButton) {
+                     CarUtil.updateCanbox(file, mThis, manufacturer);
+                 }
+             });
 
-            //builder.setNegativeButton(com.android.internal.R.string.cancel, null);
+            builder.setNegativeButton("Cancel", null);
 
             mDialogUpdateCanbox = builder.create();
             // 在dialog show前添加此代码，表示该dialog属于系统dialog。
@@ -2092,7 +2116,9 @@ public class MyCarService extends Service {
             Toast.makeText(this, "file not found", Toast.LENGTH_LONG).show();
         }
     }
+
     private LocationListener mGpsBrakeLocationListener = null;
+
     private void initGPSSpeedInfo() {
         Log.d(TAG, "isNeedGPSSpeed:" + isNeedGPSSpeed() + ":" + GlobalDefinition.mSettingGPSBrake);
         if (GlobalDefinition.mSettingGPSBrake == 0) {
@@ -2180,6 +2206,7 @@ public class MyCarService extends Service {
     private boolean isNeedGPSSpeed() {
         return GlobalDefinition.mSettingDoorVoice == 1 || GlobalDefinition.mSettingRadarFrontCamera == 1 || GlobalDefinition.mSettingGPSBrake > 0;
     }
+
     public void testGPSSpeed(int speed) {
         if (mGpsBrakeLocationListener != null) {
             Location location = new Location(LocationManager.GPS_PROVIDER);

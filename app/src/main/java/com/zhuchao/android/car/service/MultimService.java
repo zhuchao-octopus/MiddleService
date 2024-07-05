@@ -536,7 +536,8 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                 case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PLAY:
                     if (tPlayManager != null) {
                         String musicName = intent.getStringExtra("file-name");
-                        if (!FileUtils.EmptyString(musicName) && FileUtils.existFile(musicName)) tPlayManager.startPlay(musicName);
+                        if (!FileUtils.EmptyString(musicName) && FileUtils.existFile(musicName))
+                            tPlayManager.startPlay(musicName);
                         else tPlayManager.autoPlay();
                     }
                     break;
@@ -578,7 +579,8 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                 if (tPlayManager != null && subName != null) {
                     if (tPlayManager.getPlayingMedia() != null) {
                         if (tPlayManager.getPlayingMedia().getPathName() != null) {
-                            if (tPlayManager.isPlaying() && tPlayManager.getPlayingMedia().getPathName().contains(subName)) tPlayManager.stopIdle();
+                            if (tPlayManager.isPlaying() && tPlayManager.getPlayingMedia().getPathName().contains(subName))
+                                tPlayManager.stopIdle();
                         }
                     }
                 }
@@ -624,7 +626,8 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                 break;
 
             case MessageEvent.MESSAGE_EVENT_OCTOPUS_PLAYING_STATUS:
-                if (this.playerStatusInfo != null) mIBinderProxyMedia.notifyPlayerStatus(this.playerStatusInfo);
+                if (this.playerStatusInfo != null)
+                    mIBinderProxyMedia.notifyPlayerStatus(this.playerStatusInfo);
                 break;
         }
         return true;

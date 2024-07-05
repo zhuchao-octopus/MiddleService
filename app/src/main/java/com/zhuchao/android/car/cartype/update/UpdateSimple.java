@@ -48,10 +48,10 @@ public class UpdateSimple extends Canbox {
     }
 
     private void startUpdate() {
-        if (CarUtil.mUpdatFile != null) {
+        if (CarUtil.mUpdateFile != null) {
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream(CarUtil.mUpdatFile);
+                fis = new FileInputStream(CarUtil.mUpdateFile);
 
                 buf = new byte[fis.available()];
 

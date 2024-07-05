@@ -19,9 +19,10 @@ import com.zhuchao.android.session.Cabinet;
 import java.util.Objects;
 
 public class CanboxService extends Service {
-    private static final String TAG = "CanboxService";
+    private static final String TAG = "Can-boxService";
     public static CanboxService mThis;
     private final IBinderProxy mCarIBinderProxy = new IBinderProxy();
+
     public CanboxService() {
     }
 
@@ -29,7 +30,7 @@ public class CanboxService extends Service {
     public void onCreate() {
         super.onCreate();
         mThis = this;
-        MMLog.d(TAG, TAG+" onCreate! " + TAppProcessUtils.getCurrentProcessNameAndId(this));
+        MMLog.d(TAG, TAG + " onCreate! " + TAppProcessUtils.getCurrentProcessNameAndId(this));
         Cabinet.getEventBus().registerEventObserver(this);
         registerUserEventReceiver();
     }
@@ -74,7 +75,7 @@ public class CanboxService extends Service {
     private final BroadcastReceiver mUserEventReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            MMLog.d(TAG,"mUserEventReceiver action="+intent.getAction()+ " "+TAppProcessUtils.getCurrentProcessNameAndId(context));
+            MMLog.d(TAG, "mUserEventReceiver action=" + intent.getAction() + " " + TAppProcessUtils.getCurrentProcessNameAndId(context));
             switch (Objects.requireNonNull(intent.getAction())) {
 
                 case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_CAR_SERVICE:

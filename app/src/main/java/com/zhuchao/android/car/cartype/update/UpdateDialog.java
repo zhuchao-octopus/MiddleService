@@ -4,16 +4,21 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.CanService;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.manager.McuManager;
+
+import java.util.Objects;
 
 public class UpdateDialog extends Dialog {
 
@@ -37,16 +42,14 @@ public class UpdateDialog extends Dialog {
 
     private final View.OnClickListener mOnClickDialogCancel = new View.OnClickListener() {
         public void onClick(View v) {
-            stoptKeepAcc();
+            stopKeepAcc();
             dismiss();
         }
     };
 
-
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        public void handleMessage(@NonNull Message msg) {
             startKeepAcc();
-
             super.handleMessage(msg);
         }
     };
@@ -61,7 +64,7 @@ public class UpdateDialog extends Dialog {
 
     }
 
-    private void stoptKeepAcc() {
+    private void stopKeepAcc() {
         mHandler.removeMessages(0);
         if (mcu != null) {
             mcu.setKeepAcc(0);
@@ -87,7 +90,7 @@ public class UpdateDialog extends Dialog {
         // TODO Auto-generated method stub
         super.onStop();
         CarUtil.mIsUpdating = false;
-        stoptKeepAcc();
+        stopKeepAcc();
     }
 
     private Canbox mCanbox;

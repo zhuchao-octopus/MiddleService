@@ -19,6 +19,8 @@ import android.view.WindowManager.LayoutParams;
 import com.common.util.MachineConfig;
 import com.zhuchao.android.car.R;
 
+import java.util.Objects;
+
 public class AirManager {
 
     private static WindowManager mWindowManager;
@@ -92,7 +94,7 @@ public class AirManager {
     }
 
     private static final int HIDE = 0;
-    private static final Handler mHandler = new Handler(Looper.myLooper()) {
+    private static final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             if (msg.what == HIDE) {
                 stop();

@@ -24,9 +24,10 @@ import com.common.util.BroadcastUtil;
 import com.common.util.MachineConfig;
 import com.common.util.MyCmd;
 import com.common.util.SystemConfig;
+import com.common.util.SystemProperties;
 import com.common.util.Util;
 import com.common.util.shell.ShellUtils;
-import com.rockchip.car.recorder.utils.SystemProperties;
+
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.hardware.Mcu;

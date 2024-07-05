@@ -47,65 +47,17 @@ public class CarUtil {
     public static int mSettingCanboxBrake = 0;
     public static int mPreCanboxBrake = 0;
 
-    public static void initCanboxBrake() {
-        int v = MachineConfig.getPropertyInt(MachineConfig.KEY_CAN_BOX_PG_SWITCH);
-        Log.d(TAG, "initCanboxBrake:" + v);
-        mSettingCanboxBrake = (v & CarUtil.SWITCH_CANBOX_BRAKE);
-        mPreCanboxBrake = 0;
-    }
-
-    public static void updateCanboxBrake(int brake) {
-        if (mSettingCanboxBrake != 0) {
-            McuManager mMcuManager = McuManager.getInstance();
-            if (mMcuManager != null) {
-                Log.d(TAG, "updateCanboxBrake:" + " brake " + brake + ":" + mPreCanboxBrake + "mBrakeSwitch:" + mMcuManager.mBrakeSwitch);
-                if (mMcuManager.mBrakeSwitch == 0) {
-                    return;
-                }
-                if (mPreCanboxBrake != brake) {
-                    mPreCanboxBrake = brake;
-
-                    if (brake == 0) {
-                        if (mMcuManager != null && mMcuManager.mBrake == 1) {
-                            brake = 1;
-                        }
-                    }
-
-                    Util.setFileValue("/sys/class/ak/source/brake_status", mPreCanboxBrake);
-
-                    if (GlobalDefinition.getContext() != null) {
-                        BroadcastUtil.sendByCarService(GlobalDefinition.getContext(), MyCmd.Cmd.MCU_BRAK_CAR_STATUS, brake);
-                    }
-
-                    mMcuManager.setBrakeProp();
-                }
-            }
-        }
-    }
-
-    public static void updateTempUnit(int i) {
-        mTempUnit = i;
-        if (mCarUtil != null && mCarUtil.mCanbox != null) {
-            mCarUtil.mCanbox.updateOutDoorTemp(INVALID_OUT_DOOR_TEMP);
-        }
-    }
+    private static String mCanboxType = null;
+    private static final int TIME_CANBOX_UPDATE_TIME = 60000;
 
     public final static String PG = "/dev/ptyCan";
 
-    private void initPGBin() {
-        File f = new File(PG);
-        if (f.exists()) {
-            Util.setFileValue(PG, "RESET");
-        }
-    }
-
     private CarUtil() {
         clear();
-
         mCanboxType = getCanboxSetting();
-        initCanboxBrake();
-
         MMLog.d(TAG, "mCanboxType:" + mCanboxType + ",mProIndex:" + mProIndex);
+
+        initCanboxBrake();
         mCanbox = CanboxToPro.getPro(mCanboxType, mProVersion, mProIndex);
 
         if (mCanbox != null) {
@@ -113,7 +65,7 @@ public class CarUtil {
             mCanbox.setContext(GlobalDefinition.getContext());
             mCanbox.startConnect();
         } else {
-            Log.d(TAG, "mCanbox == null!!!!!!!!!!!");
+            MMLog.d(TAG, "mCanbox == null!!!!!!!!!!!");
         }
 
         initPGBin();
@@ -129,9 +81,63 @@ public class CarUtil {
         return mCarUtil;
     }
 
-    private static String mCanboxType = null;
+    public static Canbox getCanboxInstance() {
+        if (mCarUtil != null) {
+            return mCarUtil.mCanbox;
+        }
+        return null;
+    }
 
-    private static final int TIME_CANBOX_UPDATE_TIME = 60000;
+
+    public static void initCanboxBrake() {
+        int v = MachineConfig.getPropertyInt(MachineConfig.KEY_CAN_BOX_PG_SWITCH);
+        Log.d(TAG, "initCanboxBrake:" + v);
+        mSettingCanboxBrake = (v & CarUtil.SWITCH_CANBOX_BRAKE);
+        mPreCanboxBrake = 0;
+    }
+
+    public static void updateCanboxBrake(int brake) {
+        if (mSettingCanboxBrake != 0) {
+            McuManager mMcuManager = McuManager.getInstance();
+            if (mMcuManager != null) {
+                MMLog.d(TAG, "updateCanboxBrake:" + " brake " + brake + ":" + mPreCanboxBrake + "mBrakeSwitch:" + mMcuManager.mBrakeSwitch);
+                if (mMcuManager.mBrakeSwitch == 0) {
+                    return;
+                }
+                if (mPreCanboxBrake != brake) {
+                    mPreCanboxBrake = brake;
+
+                    if (brake == 0) {
+                        if (mMcuManager.mBrake == 1) {
+                            brake = 1;
+                        }
+                    }
+
+                    Util.setFileValue("/sys/class/ak/source/brake_status", mPreCanboxBrake);
+
+                    if (GlobalDefinition.getContext() != null) {
+                        BroadcastUtil.sendByCarService(GlobalDefinition.getContext(), MyCmd.Cmd.MCU_BRAK_CAR_STATUS, brake);
+                    }
+                    mMcuManager.setBrakeProp();
+                }
+            }
+        }
+    }
+
+    public static void updateTempUnit(int i) {
+        mTempUnit = i;
+        if (mCarUtil != null && mCarUtil.mCanbox != null) {
+            mCarUtil.mCanbox.updateOutDoorTemp(INVALID_OUT_DOOR_TEMP);
+        }
+    }
+
+
+    private void initPGBin() {
+        File f = new File(PG);
+        if (f.exists()) {
+            Util.setFileValue(PG, "RESET");
+        }
+    }
 
     public static int isNeedSendTime() {
         if (mCanboxType != null) {
@@ -298,15 +304,8 @@ public class CarUtil {
             // }
             // }
         } catch (Exception e) {
-            Log.d("CarUtil", "canboxParser err" + e);
+            MMLog.d("CarUtil", "canboxParser err" + e);
         }
-    }
-
-    public static Canbox getCanboxInstance() {
-        if (mCarUtil != null) {
-            return mCarUtil.mCanbox;
-        }
-        return null;
     }
 
     private void clear() {
@@ -447,38 +446,38 @@ public class CarUtil {
                 mUpdateTime = -2;
                 for (int i = 1; i < ss.length; ++i) {
                     if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_AIR_CONDITION)) {
-                        mAirCondition = Integer.valueOf(ss[i].substring(1));
+                        mAirCondition = Integer.parseInt(ss[i].substring(1));
                         if (isHideOurDoorTemp()) {
                             GlobalDefinition.sendByCarServiceToSystemUI(GlobalDefinition.getContext(), "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, "");
                         }
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_KEY_TYPE)) {
-                        mKeyType = Integer.valueOf(ss[i].substring(1));
+                        mKeyType = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_CHANGE_KEY)) {
-                        mChangeKey = Integer.valueOf(ss[i].substring(1));
+                        mChangeKey = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_FRONT_DOOR)) {
-                        mFrontDoor = Integer.valueOf(ss[i].substring(1));
+                        mFrontDoor = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_REAR_DOOR)) {
-                        mBackDoor = Integer.valueOf(ss[i].substring(1));
+                        mBackDoor = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_CAR_TYPE)) {
-                        mCarType = Integer.valueOf(ss[i].substring(1));
+                        mCarType = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_CAR_TYPE2)) {
-                        mCarType2 = Integer.valueOf(ss[i].substring(1));
+                        mCarType2 = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_EQ)) {
-                        mCarEQ = Integer.valueOf(ss[i].substring(1));
+                        mCarEQ = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_OTHER)) {
-                        mOtherSettings = Integer.valueOf(ss[i].substring(1));
+                        mOtherSettings = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_PROTOCAL_VERSION)) {
-                        mProVersion = Integer.valueOf(ss[i].substring(1));
+                        mProVersion = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_PROTOCAL_INDEX)) {
-                        mProIndex = Integer.valueOf(ss[i].substring(1));
+                        mProIndex = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_UPDATE_TIME)) {
                         mUpdateTime = 0;
-                        mUpdateTime = Integer.valueOf(ss[i].substring(1));
+                        mUpdateTime = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_CAR_CONFIG)) {
-                        mCarTypeConfig = Integer.valueOf(ss[i].substring(1));
+                        mCarTypeConfig = Integer.parseInt(ss[i].substring(1));
                     } else if (ss[i].startsWith(MachineConfig.KEY_SUB_CANBOX_ID)) {
                         String mProId = ss[i].substring(1);
-                        if (mProId != null && mProId.length() >= 4) {
+                        if (mProId.length() >= 4) {
                             int start = 0;
                             int end = 0;
                             if (mProId.charAt(1) == '0' && mProId.charAt(2) == '0') {
@@ -488,34 +487,37 @@ public class CarUtil {
                             } else if (mProId.charAt(2) == '0') {
                                 end = 2;
                             }
-                            mManaId = Integer.valueOf(mProId.substring(start, end));
+                            mManaId = Integer.parseInt(mProId.substring(start, end));
                             start = end + 1;
 
                             if (mProId.contains("-")) {
                                 String[] sss = mProId.substring(start).split("-");
-                                mModelId = Integer.valueOf(sss[1]);
-                                mCateId = Integer.valueOf(sss[0]);
-                            } else {
-                                if ((mProId.length() - start) == 2) {
-                                    mModelId = Integer.valueOf(mProId.substring(start + 1, start + 2));
-                                    mCateId = Integer.valueOf(mProId.substring(start, start + 1));
-                                } else if ((mProId.length() - start) == 4) {
-                                    mModelId = Integer.valueOf(mProId.substring(start + 2, start + 4));
-                                    mCateId = Integer.valueOf(mProId.substring(start, start + 2));
-                                } else if ((mProId.length() - start) == 3) {
-                                    mModelId = Integer.valueOf(mProId.substring(start + 2, start + 3));
-                                    mCateId = Integer.valueOf(mProId.substring(start, start + 2));
+                                mModelId = Integer.parseInt(sss[1]);
+                                mCateId = Integer.parseInt(sss[0]);
+                            }
+                            else
+                            {
+                                switch (mProId.length() - start) {
+                                    case 2:
+                                        mModelId = Integer.parseInt(mProId.substring(start + 1, start + 2));
+                                        mCateId = Integer.parseInt(mProId.substring(start, start + 1));
+                                        break;
+                                    case 4:
+                                        mModelId = Integer.parseInt(mProId.substring(start + 2, start + 4));
+                                        mCateId = Integer.parseInt(mProId.substring(start, start + 2));
+                                        break;
+                                    case 3:
+                                        mModelId = Integer.parseInt(mProId.substring(start + 2, start + 3));
+                                        mCateId = Integer.parseInt(mProId.substring(start, start + 2));
+                                        break;
                                 }
                             }
-
-                            Log.d("abcd", ":" + mModelId);
-
+                            MMLog.d(TAG, ":" + mModelId);
                         }
                     }
 
                 }
-            } catch (Exception e) {
-
+            } catch (Exception ignored) {
             }
 
             String appShow = MachineConfig.getPropertyOnce(MachineConfig.KEY_CAN_BOX_SHOW_APP);
@@ -563,7 +565,7 @@ public class CarUtil {
         return false;
     }
 
-    public static String mUpdatFile;
+    public static String mUpdateFile;
 
     public static void updateCanbox(String f, Context c, String canType) {
         if (mCarUtil != null) {
@@ -574,7 +576,8 @@ public class CarUtil {
                 Toast.makeText(c, "no canbox manufacturer update fail!", Toast.LENGTH_LONG).show();
                 return;
             }
-            mUpdatFile = f;
+            mUpdateFile = f;
+            MMLog.d(TAG, canType + " start UpdateCanbox:" + mUpdateFile);
             if (canType.contains("haozheng")) {
                 mCarUtil.mCanbox = new UpdateLuZheng();
             } else if (canType.contains("hiworld")) {
@@ -596,14 +599,12 @@ public class CarUtil {
 
     public static boolean isShowAC() {
         return mIsShowAC;
-        //		return false;
     }
 
     private static boolean mIsShowEQ = false;
 
     public static boolean isShowEQ() {
         return mIsShowEQ;
-        //		return false;
     }
 
     public static boolean isFocusSync3Reverse() {

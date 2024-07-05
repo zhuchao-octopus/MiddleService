@@ -14,7 +14,8 @@ android {
         versionName "1.0"
         ndk {
             //noinspection ChromeOsAbiSupport,ChromeOsAbiSupport
-            abiFilters  "armeabi-v7a", "arm64-v8a" /*, "armeabi", "armabi-v7a", "x86_64", "mips", "mips64"*/
+            abiFilters "armeabi-v7a", "arm64-v8a"
+            /*, "armeabi", "armabi-v7a", "x86_64", "mips", "mips64"*/
         }
         ///testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -25,7 +26,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    
+
     buildFeatures {
         aidl = true
     }
@@ -39,8 +40,8 @@ android {
     }
 
     ///compileOptions {
-        ///sourceCompatibility JavaVersion.VERSION_1_8
-        ///targetCompatibility JavaVersion.VERSION_1_8
+    ///sourceCompatibility JavaVersion.VERSION_1_8
+    ///targetCompatibility JavaVersion.VERSION_1_8
     ///}
     packagingOptions {
         pickFirst 'lib/x86/libc++_shared.so'
@@ -86,9 +87,5 @@ dependencies {
     implementation('com.zhuchao.android:libOpenDetection:1.0@aar')//人脸检测识别
     implementation('com.zhuchao.android:libOpenLargeModelDeepLearning:1.0@aar')//大模型与深度学习
     implementation('com.zhuchao.android:libSessionUtils:2.9@aar')//会话管理、杂项
-
-
-
-
 
 }

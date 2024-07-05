@@ -133,7 +133,7 @@ public class ReverseManager {
                         mUI.onPause();
                         mUI.onDestroy();
                         mLastStopTime = SystemClock.uptimeMillis();
-                        BroadcastUtil.sendByCarService(mContext, Util.isRKSystem() ? null : AppConfig.PACKAGE_CAR_UI, MyCmd.Cmd.REVERSE_STATUS, 0);
+                        BroadcastUtil.sendByCarService(mContext, Util.isRKSystem() ? null : AppConfig.getCarAPPPackage(mContext), MyCmd.Cmd.REVERSE_STATUS, 0);
 
                         mHandler.removeMessages(REMOVE_UI);
                         int delay;

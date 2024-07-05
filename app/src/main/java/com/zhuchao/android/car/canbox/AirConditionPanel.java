@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class AirConditionPanel extends Handler {
@@ -156,15 +158,12 @@ Bit1~0 后区左座椅 00:不显示 01~11:1~3级温度
 
 data[14]
 后座右边温度。 同前面左右温度8
-
 	 */
-
     //	private Toast mToast = null;
-
 
     WindowManager mWindowManager;
     WindowManager.LayoutParams mLayoutParams;
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 if (airConditionView != null) {
@@ -178,8 +177,8 @@ data[14]
     };
 
     public void postChanged(int type, Object obj) {
-        //		if (hasMessages(type))
-        //			return;
+        ///		if (hasMessages(type))
+        ///			return;
         obtainMessage(type, obj).sendToTarget();
     }
 

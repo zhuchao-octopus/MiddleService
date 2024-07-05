@@ -371,7 +371,7 @@ public class McuManager {
                             }
                             BroadcastUtil.sendByCarService(mContext, AppConfig.PACKAGE_EQ, MyCmd.Cmd.MCU_AUDIO_RECEIVE_DATA, param);
 
-                            BroadcastUtil.sendByCarService(mContext, AppConfig.PACKAGE_CAR_UI, MyCmd.Cmd.MCU_AUDIO_RECEIVE_DATA, param);
+                            BroadcastUtil.sendByCarService(mContext, AppConfig.getCarAPPPackage(mContext), MyCmd.Cmd.MCU_AUDIO_RECEIVE_DATA, param);
 
                             saveEQIndepend(param[2]);
                             if (CarUtil.mIsNeedSendEQ) {
@@ -413,7 +413,7 @@ public class McuManager {
                             break;
 
                     }
-                    BroadcastUtil.sendByCarService(mContext, AppConfig.PACKAGE_CAR_UI, MyCmd.Cmd.MCU_DVD_RECEIVE_DATA, param);
+                    BroadcastUtil.sendByCarService(mContext, AppConfig.getCarAPPPackage(mContext), MyCmd.Cmd.MCU_DVD_RECEIVE_DATA, param);
                     break;
                 case ProtocolAk47.TYPE_SETTINGS_RECEIVE:
                     if (param[1] == 0x11) {
@@ -583,7 +583,6 @@ public class McuManager {
         mMcu.sendCmd(ProtocolAk47.generateProtocol1(ProtocolAk47.TYPE_RDS_SEND, (byte) subId, (byte) param1));
     }
 
-    // eq
     public void setAudio(int subId, int param1) {
         if (subId != 0xd) {
             mMcu.sendCmd(ProtocolAk47.generateProtocol1(ProtocolAk47.TYPE_AUDIO_SEND, (byte) subId, (byte) param1));
@@ -1071,6 +1070,7 @@ public class McuManager {
                 GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SYSTEMUI_LONG_PRESS_RECENT);
                 break;
             case MyCmd.Keycode.KEY_SPEED:
+            case MyCmd.Keycode.SPEED_UP:
                 GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SYSTEMUI_SPEED_UP);
                 break;
             case MyCmd.Keycode.KEY_CHECK:
@@ -1143,24 +1143,24 @@ public class McuManager {
             case MyCmd.Keycode.KEY_AM: {
                 try {
                     Intent it = new Intent(Intent.ACTION_VIEW);
-                    it.setClassName(AppConfig.PACKAGE_CAR_UI, "com.android.car.radio.RadioActivity");
+                    it.setClassName(AppConfig.getCarAPPPackage(mContext), "com.android.car.radio.RadioActivity");
                     it.putExtra("amfm", (byte) 3);
                     it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(it);
                 } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
+                    Log.e(TAG, Objects.requireNonNull(e.getMessage()));
                 }
             }
             break;
             case MyCmd.Keycode.KEY_FM: {
                 try {
                     Intent it = new Intent(Intent.ACTION_VIEW);
-                    it.setClassName(AppConfig.PACKAGE_CAR_UI, "com.android.car.radio.RadioActivity");
+                    it.setClassName(AppConfig.getCarAPPPackage(mContext), "com.android.car.radio.RadioActivity");
                     it.putExtra("amfm", (byte) 0);
                     it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(it);
                 } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
+                    Log.e(TAG, Objects.requireNonNull(e.getMessage()));
                 }
             }
             break;
@@ -1312,9 +1312,6 @@ public class McuManager {
                 CarUtil.sendDataToCanbox(new byte[]{(byte) 0xcc, 0x1, 0x1});
             }
             break;
-            case MyCmd.Keycode.SPEED_UP:
-                GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SYSTEMUI_SPEED_UP);
-                break;
             case MyCmd.Keycode.NISSIAN_360:
                 Nissian360ButtonView.send360Key();
                 break;
@@ -2327,7 +2324,7 @@ public class McuManager {
         byte key = 0;
 
         // readTinyRam();
-        String pacageName = AppConfig.PACKAGE_CAR_UI;
+        String pacageName = AppConfig.getCarAPPPackage(mContext);
 
         String name = null;
         mLockKey = 0;

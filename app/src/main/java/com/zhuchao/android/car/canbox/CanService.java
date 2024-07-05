@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,6 +29,7 @@ import com.zhuchao.android.car.manager.AutoIlluminManager;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 public class CanService {
     private static final String TAG = "CanService";
@@ -76,7 +78,7 @@ public class CanService {
 
     }
 
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Canbox.CANBOX_RETURN_AIR:
@@ -421,10 +423,7 @@ public class CanService {
                         }
                     } else if (action.equals(MyCmd.BROADCAST_SEND_TO_CAN) || action.equals(MyCmd.BROADCAST_SEND_TO_CAN_FROM_BT)) {
                         if (mCanbox != null) {
-
                             byte[] buf = intent.getByteArrayExtra("buf");
-
-                            //							Log.d("can", buf.toString() + "");
                             if (buf != null) {
                                 mCanbox.sendDataToCanbox(buf, buf.length);
                             } else {
@@ -434,7 +433,6 @@ public class CanService {
                                     mCanbox.doCmd(cmd, data);
                                 }
                             }
-
                         }
                     } else if (MyCmd.BROADCAST_CMD_FROM_MUSIC.equals(action)) {
                         if (mCanbox != null || (GlobalDefinition.mMediaInfoToastBackground != 0)) {
@@ -477,10 +475,7 @@ public class CanService {
                         if (mCanbox != null) {
                             int key = intent.getIntExtra("KEY_TYPE", 0);
                             if (key == 10001) {
-                                //								int icon = intent.getIntExtra("ICON", 0);
                                 int direction = intent.getIntExtra("CAR_DIRECTION", 0);
-                                //								Log.d("ffck", icon + "::" + direction);
-                                //								mCanbox.updateCompass(direction);
                             }
                         }
                     }

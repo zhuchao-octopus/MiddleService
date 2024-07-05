@@ -71,7 +71,6 @@ public class PreInstallPanel extends Handler {
         mVolumeLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         mVolumeLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         mVolumeLayoutParams.format = PixelFormat.RGBA_8888;
-
         mTextView = mView.findViewById(R.id.install_apk_status);
 
         View v = mView.findViewById(R.id.install_quit);
@@ -84,11 +83,10 @@ public class PreInstallPanel extends Handler {
         });
 
         mDefaultKeyboard = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_KEYBOARD);
-
         mPackageInstaller = mContext.getPackageManager().getPackageInstaller();
         try {
             mPackageInstaller.unregisterSessionCallback(mSessionCallback);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         mPackageInstaller.registerSessionCallback(mSessionCallback);
     }
@@ -117,21 +115,17 @@ public class PreInstallPanel extends Handler {
     }
 
     private void doShow() {
-
         if (!mShown) {
             mWindowManager.addView(mView, mVolumeLayoutParams);
             mShown = true;
         }
-
     }
 
     private void doHide() {
         if (mShown) {
-
             removeMessages(MSG_HIDE);
             mWindowManager.removeView(mView);
             mShown = false;
-
             Util.sudoExecNoCheck("sync");
         }
 

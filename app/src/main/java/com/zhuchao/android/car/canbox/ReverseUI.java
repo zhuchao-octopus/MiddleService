@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
+
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -32,8 +33,9 @@ import com.common.util.MachineConfig;
 import com.common.util.MyCmd;
 import com.common.util.SystemConfig;
 import com.common.util.Util;
-import com.rockchip.gl.GLSurfaceView;
+
 import com.zhuchao.android.car.GlobalDefinition;
+import com.zhuchao.android.car.MyGLSurfaceView;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.view.BackStaticView;
@@ -241,12 +243,12 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             FrameLayout v = mMainView.findViewById(R.id.glsuface_main);
             if (com.common.util.Util.isAndroidP() || com.common.util.Util.isAndroidQ() || com.common.util.Util.isAndroidR()) {
                 v.setVisibility(View.GONE);
-                mGLSurfaceView = new GLSurfaceView(mContext, mMainView.findViewById(R.id.screen1_main));
+                mGLSurfaceView = new MyGLSurfaceView(mContext, mMainView.findViewById(R.id.screen1_main));
 				/*if (Util.isPX6()) {
 					((LinearLayout)mMainView.findViewById(R.id.screen1_main)).setBackgroundColor(Color.TRANSPARENT);
 				}*/
             } else {
-                mGLSurfaceView = new GLSurfaceView(mContext, v);
+                mGLSurfaceView = new MyGLSurfaceView(mContext, v);
             }
             mSurfaceView.setVisibility(View.GONE);
             mFirstCheckSignalFast = 15;
@@ -275,7 +277,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         }
     }
 
-    private GLSurfaceView mGLSurfaceView;
+    private MyGLSurfaceView mGLSurfaceView;
 
     private void init4Camera() {
         initPresentationUI();
@@ -295,7 +297,8 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
         Log.d(TAG, "mCameraType=" + mCameraType);
 
-        if (MachineConfig.VALUE_CANBOX_ZHONGXING_OD.equals(CarUtil.getCanboxType())) mCameraType = MachineConfig.VAULE_CAMERA4;
+        if (MachineConfig.VALUE_CANBOX_ZHONGXING_OD.equals(CarUtil.getCanboxType()))
+            mCameraType = MachineConfig.VAULE_CAMERA4;
 
         if (mCameraType == MachineConfig.VAULE_CAMERA_FRONT) {
 

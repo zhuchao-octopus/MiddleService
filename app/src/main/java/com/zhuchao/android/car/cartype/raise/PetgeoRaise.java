@@ -58,10 +58,14 @@ public class PetgeoRaise extends Canbox {
             case 40:
                 cmd[2] = 4;
                 break;
+            case 0x50:
+                cmd[2] = 0x50;
+                break;
             default:
                 cmd[2] = 3;
                 break;
         }
+
         switch (CarUtil.getCarTypeConfig()) {
             case 0:
                 cmd[3] = 1;

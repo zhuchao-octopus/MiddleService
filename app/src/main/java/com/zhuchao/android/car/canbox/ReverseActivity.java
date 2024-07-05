@@ -25,7 +25,7 @@ public class ReverseActivity extends Activity {
         mRadioUI.onCreate();
         mThis = this;
         OSProManager.mHandlerReverse = mHandler;
-        MMLog.d("ReverseActivity","ReverseActivity.onCreate!");
+        MMLog.d("ReverseActivity", "ReverseActivity.onCreate!");
     }
 
     private static final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
