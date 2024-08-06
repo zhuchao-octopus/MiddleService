@@ -371,7 +371,7 @@ public class McuManager {
                             }
                             BroadcastUtil.sendByCarService(mContext, AppConfig.PACKAGE_EQ, MyCmd.Cmd.MCU_AUDIO_RECEIVE_DATA, param);
 
-                            BroadcastUtil.sendByCarService(mContext, AppConfig.getCarAPPPackage(mContext), MyCmd.Cmd.MCU_AUDIO_RECEIVE_DATA, param);
+                            BroadcastUtil.sendByCarService(mContext, AppConfig.getCarAppPackageName(mContext), MyCmd.Cmd.MCU_AUDIO_RECEIVE_DATA, param);
 
                             saveEQIndepend(param[2]);
                             if (CarUtil.mIsNeedSendEQ) {
@@ -413,7 +413,7 @@ public class McuManager {
                             break;
 
                     }
-                    BroadcastUtil.sendByCarService(mContext, AppConfig.getCarAPPPackage(mContext), MyCmd.Cmd.MCU_DVD_RECEIVE_DATA, param);
+                    BroadcastUtil.sendByCarService(mContext, AppConfig.getCarAppPackageName(mContext), MyCmd.Cmd.MCU_DVD_RECEIVE_DATA, param);
                     break;
                 case ProtocolAk47.TYPE_SETTINGS_RECEIVE:
                     if (param[1] == 0x11) {
@@ -587,9 +587,7 @@ public class McuManager {
         if (subId != 0xd) {
             mMcu.sendCmd(ProtocolAk47.generateProtocol1(ProtocolAk47.TYPE_AUDIO_SEND, (byte) subId, (byte) param1));
         } else {
-            byte[] protocol = new byte[]{
-                    ProtocolAk47.TYPE_AUDIO_SEND, (byte) subId, (byte) ((param1 & 0xff) << 0), (byte) ((param1 & 0xff00) >> 8), (byte) ((param1 & 0xff0000) >> 16), (byte) ((param1 & 0xff000000) >> 24)
-            };
+            byte[] protocol = new byte[]{ProtocolAk47.TYPE_AUDIO_SEND, (byte) subId, (byte) ((param1 & 0xff) << 0), (byte) ((param1 & 0xff00) >> 8), (byte) ((param1 & 0xff0000) >> 16), (byte) ((param1 & 0xff000000) >> 24)};
             mMcu.sendCmd(protocol);
         }
     }
@@ -950,7 +948,6 @@ public class McuManager {
         }
 
         key = doKeyType(key);
-
         key = dealMultiKey(key);
 
         //	Log.d(TAG, ">>doKey:" + key);
@@ -961,9 +958,7 @@ public class McuManager {
 
             if (MyCmd.Keycode.IXB_360_DISPLAY != key) {
                 if (mBtPhoneStatus == MyCmd.PhoneStatus.PHONE_ON && (key == MyCmd.Keycode.BT || key == MyCmd.Keycode.BT_DIAL || key == MyCmd.Keycode.BT_HANG || key == MyCmd.Keycode.VOLUME_DOWN || key == MyCmd.Keycode.VOLUME_UP)) {
-
                 } else {
-
                     //	Log.d(TAG, "doKey: lock by" + key);
                     return -1;
                 }
@@ -1090,7 +1085,7 @@ public class McuManager {
                     it.putExtra("switch", 1);
                     mContext.startActivity(it);
                 } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
+                    Log.e(TAG, String.valueOf(e));
                 }
 
                 break;
@@ -1143,7 +1138,7 @@ public class McuManager {
             case MyCmd.Keycode.KEY_AM: {
                 try {
                     Intent it = new Intent(Intent.ACTION_VIEW);
-                    it.setClassName(AppConfig.getCarAPPPackage(mContext), "com.android.car.radio.RadioActivity");
+                    it.setClassName(AppConfig.getCarAppPackageName(mContext), "com.android.car.radio.RadioActivity");
                     it.putExtra("amfm", (byte) 3);
                     it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(it);
@@ -1155,7 +1150,7 @@ public class McuManager {
             case MyCmd.Keycode.KEY_FM: {
                 try {
                     Intent it = new Intent(Intent.ACTION_VIEW);
-                    it.setClassName(AppConfig.getCarAPPPackage(mContext), "com.android.car.radio.RadioActivity");
+                    it.setClassName(AppConfig.getCarAppPackageName(mContext), "com.android.car.radio.RadioActivity");
                     it.putExtra("amfm", (byte) 0);
                     it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(it);
@@ -1461,10 +1456,8 @@ public class McuManager {
         return mAppSource == MyCmd.SOURCE_RADIO || mAppSource == MyCmd.SOURCE_DVD || mAppSource == MyCmd.SOURCE_AUX || mAppSource == MyCmd.SOURCE_DTV || mAppSource == MyCmd.SOURCE_DTV_CVBS || mAppSource == MyCmd.SOURCE_BT_MUSIC || mAppSource == MyCmd.SOURCE_MUSIC || mAppSource == MyCmd.SOURCE_VIDEO || mAppSource == MyCmd.SOURCE_DVR || mAppSource == MyCmd.SOURCE_DAB || mAppSource == MyCmd.SOURCE_USBDVD;
     }
 
-    private final static String[] USE_JOY_APPLICATION = {
-            "com.car.ui", "com.android.car.bt",
-            /*"net.easyconn", "com.android.launcher"*/
-    };
+    private final static String[] USE_JOY_APPLICATION = {"com.car.ui", "com.android.car.bt",
+            /*"net.easyconn", "com.android.launcher"*/};
 
     private boolean isJoyApplicationTop() {
         if (Util.isRKSystem()) {
@@ -2324,7 +2317,7 @@ public class McuManager {
         byte key = 0;
 
         // readTinyRam();
-        String pacageName = AppConfig.getCarAPPPackage(mContext);
+        String pacageName = AppConfig.getCarAppPackageName(mContext);
 
         String name = null;
         mLockKey = 0;

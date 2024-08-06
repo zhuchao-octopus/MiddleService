@@ -196,7 +196,7 @@ public class OSProManager {
                 // }
             }
 
-            BroadcastUtil.sendByCarService(mContext, Util.isRKSystem() ? null : AppConfig.getCarAPPPackage(mContext), MyCmd.Cmd.REVERSE_STATUS, status);
+            BroadcastUtil.sendByCarService(mContext, Util.isRKSystem() ? null : AppConfig.getCarAppPackageName(mContext), MyCmd.Cmd.REVERSE_STATUS, status);
 
             mMcuManager.setCameraSource(MyCmd.SOURCE_REVERSE);
             mMcuManager.lockKey(McuManager.LOCK_KEY_ALL);
@@ -336,10 +336,9 @@ public class OSProManager {
                     ReverseManager.stop();
                     break;
                 case MSG_NOTIFY_APP_REVERSE_STOP:
-                    BroadcastUtil.sendByCarService(mContext, Util.isRKSystem() ? null : AppConfig.getCarAPPPackage(mContext), MyCmd.Cmd.REVERSE_STATUS, msg.arg1);
+                    BroadcastUtil.sendByCarService(mContext, Util.isRKSystem() ? null : AppConfig.getCarAppPackageName(mContext), MyCmd.Cmd.REVERSE_STATUS, msg.arg1);
                     break;
                 case MSG_NOTIFY_APP_READY:
-
                     appReady();
                     break;
                 case MSG_RECOVER_REVERSE_OPEN_APP:
