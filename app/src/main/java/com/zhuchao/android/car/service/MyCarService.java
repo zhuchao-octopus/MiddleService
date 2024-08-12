@@ -1464,7 +1464,10 @@ public class MyCarService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            MMLog.d(TAG, "mEventReceiver.onReceive:" + action);
+            MMLog.d(TAG, "mEventReceiver.onReceive action=" + action);
+            if(intent.getExtras() != null)
+                MMLog.d(TAG, "mEventReceiver.onReceive getExtras=" + intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD));
+
             switch (Objects.requireNonNull(action)) {
                 case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE:
                 case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_ID:

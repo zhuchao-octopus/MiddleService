@@ -270,6 +270,7 @@ import com.zhuchao.android.car.cartype.simple.RamFIATSimple;
 import com.zhuchao.android.car.cartype.simple.RenaultMeganeFluenceSimple;
 import com.zhuchao.android.car.cartype.simple.SubaruSimple;
 import com.zhuchao.android.car.cartype.simple.VWGolfSimple;
+import com.zhuchao.android.car.cartype.slim.SlimKeyCF006;
 import com.zhuchao.android.car.cartype.td.MitsubishiTD;
 import com.zhuchao.android.car.cartype.td.ToyotaTD;
 import com.zhuchao.android.car.cartype.union.BMWE90X1Union;
@@ -390,7 +391,7 @@ public class CanboxToPro {
                     index--;
                     mCanbox = (Canbox) mAllCanbox[index].newInstance();
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
 
@@ -542,12 +543,17 @@ public class CanboxToPro {
                     mCanbox = new GMOD();
                 } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA_RAISE)) {
                     mCanbox = new MazdaRaise();
-
                 } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOYOTA_LOW)) {
                     mCanbox = new CarToyota2013Low();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ZHONGXING_OD)) {
+                }
+                else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ZHONGXING_OD)) {
                     mCanbox = new ZHONGXINGOD();
-                } else {
+                }
+                else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_SLIMKEY2)) {
+                    mCanbox = new SlimKeyCF006();
+                }
+
+                else {
                     mCanboxType = null;
                     mCanbox = new CarNone();
                     mCanbox = null;
@@ -566,9 +572,10 @@ public class CanboxToPro {
     public final static int getReturnMsgType(String mCanboxType, int version, int index) {
         int type = 0;
 
-        if (version >= 3) {
-
-            if (index > 0 && index <= mAllCanbox.length) {
+        if (version >= 3)
+        {
+            if (index > 0 && index <= mAllCanbox.length)
+            {
                 for (int i = 0; i < RETURN_TYPE.length; ++i) {
                     String[] ss = RETURN_TYPE[i].split(",");
                     for (String s : ss) {
@@ -576,14 +583,13 @@ public class CanboxToPro {
                             return i + 1;
                         }
                     }
-                    //					if ((index == RETURN_TYPE[i][0])) {
-                    //						return RETURN_TYPE[i][1];
-                    //					}
+                    ///if ((index == RETURN_TYPE[i][0])) {
+                    ///	return RETURN_TYPE[i][1];
+                    ///}
                 }
             }
 
         } else if (mCanboxType != null) {
-
             if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_OPEL) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_BESTURN_X80)) {
                 type = 1;
             }

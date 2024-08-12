@@ -2265,8 +2265,13 @@ Bit0
         if ((data[0] & 0x80) == 0) {
             msg = CANBOX_HIDE_AIR;
         }
+        else
+        {
+            msg = CANBOX_RETURN_AIR;
+        }
 
-        if (!Arrays.equals(mAirData, data)) {
+        if (!Arrays.equals(mAirData, data))
+        {
             Util.byteArrayCopy(mAirData, data, 0, 0, data.length);
             msg = CANBOX_RETURN_AIR;
         }
@@ -2473,12 +2478,12 @@ Bit0
         int ac_mask = (mask & 0xff);
         int shift = ac_mask - bit;
 
-        airData[ac_index] &= ~(0x1 << ac_mask);
+        airData[ac_index] &= (byte) ~(0x1 << ac_mask);
         if (shift > 0) {
-            airData[ac_index] |= ((buf[index] & (0x1 << bit)) << shift);
+            airData[ac_index] |= (byte) ((buf[index] & (0x1 << bit)) << shift);
         } else {
             shift = -shift;
-            airData[ac_index] |= ((buf[index] & (0x1 << bit)) >> shift);
+            airData[ac_index] |= (byte) ((buf[index] & (0x1 << bit)) >> shift);
         }
 
     }

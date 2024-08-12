@@ -19,6 +19,7 @@ import com.zhuchao.android.car.cartype.update.UpdateLuZheng;
 import com.zhuchao.android.car.cartype.update.UpdateRaise;
 import com.zhuchao.android.car.cartype.update.UpdateSimple;
 import com.zhuchao.android.car.manager.McuManager;
+import com.zhuchao.android.fbase.ByteUtils;
 import com.zhuchao.android.fbase.MMLog;
 
 import java.io.File;
@@ -55,17 +56,16 @@ public class CarUtil {
     private CarUtil() {
         clear();
         mCanboxType = getCanboxSetting();
-        MMLog.d(TAG, "mCanboxType:" + mCanboxType + ",mProIndex:" + mProIndex);
-
         initCanboxBrake();
-        mCanbox = CanboxToPro.getPro(mCanboxType, mProVersion, mProIndex);
 
+        MMLog.d(TAG, "mCanboxType=" + mCanboxType + ",mProVersion=" + mProVersion + ",mProIndex=" + mProIndex);
+        mCanbox = CanboxToPro.getPro(mCanboxType, mProVersion, mProIndex);
         if (mCanbox != null) {
             mIsUpdating = false;
             mCanbox.setContext(GlobalDefinition.getContext());
             mCanbox.startConnect();
         } else {
-            MMLog.d(TAG, "mCanbox == null!!!!!!!!!!!");
+            MMLog.d(TAG, "mCanbox == null !!!!!!!!!!!");
         }
 
         initPGBin();
@@ -88,10 +88,9 @@ public class CarUtil {
         return null;
     }
 
-
     public static void initCanboxBrake() {
         int v = MachineConfig.getPropertyInt(MachineConfig.KEY_CAN_BOX_PG_SWITCH);
-        Log.d(TAG, "initCanboxBrake:" + v);
+        MMLog.d(TAG, "initCanboxBrake:" + v);
         mSettingCanboxBrake = (v & CarUtil.SWITCH_CANBOX_BRAKE);
         mPreCanboxBrake = 0;
     }
@@ -154,7 +153,6 @@ public class CarUtil {
 
             if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_HY) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_RAM_FIAT) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_NISSAN2013) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_NISSAN_RAISE) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_PORSCHE_UNION) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_FORD_EXPLORER_SIMPLE) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_HONDA_DA_SIMPLE) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_NISSAN_BINARYTEK) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_JEEP_SIMPLE) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOUAREG_HIWORLD) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_HAFER_H2) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_FORD_RAISE) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_SMART_HAOZHENG) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_JEEP_XINBAS) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_OUSHANG_RAISE) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_FIAT_EGEA_RAISE) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_ZHONGXING_OD) || mCanboxType.equals(MachineConfig.VALUE_CANBOX_HY_RAISE)) {
                 return TIME_CANBOX_UPDATE_TIME;
-
             } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ACCORD_BINARYTEK)) {
                 return 20000;
             } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_VW_MQB_RAISE)) {
@@ -239,57 +237,54 @@ public class CarUtil {
     public static boolean mIsUpdating = false;
 
     public void canboxParser(byte[] data, int len) {
-        try {
+        ///try {
+        if (mCanbox != null) {
+            int type = mCanbox.getReturnType();
+            if (type == -1) {
+                type = CanboxToPro.getReturnMsgType(mCanboxType, mProVersion, mProIndex);
+            }
+            ///MMLog.d(TAG,"type:"+type+","+ ByteUtils.BuffToHexStr(data));
 
-            if (mCanbox != null) {
-                int type = mCanbox.getReturnType();
+            if (type == 0xff) {    //hiworld is update
+                mCanbox.parseCanboxData(data, len);
+            } else if (type == 1) {
+                len -= 3;
+                byte[] d = new byte[len];
+                mCanbox.byteArrayCopy(d, data, 0, 2, len);
+                mCanbox.parseCanboxData(d, len);
+            } else if (type == 2) {
+                len -= 4;
+                byte[] d = new byte[len];
+                mCanbox.byteArrayCopy(d, data, 0, 4, len);
+                byte change = d[0];
+                d[0] = d[1];
+                d[1] = change;
+                mCanbox.parseCanboxData(d, len);
+            } else if (type == 3) {
+                mCanbox.parseCanboxData(data, len);
+            } else if (type == 4) {
+                len -= 3;
+                byte[] d = new byte[len];
+                mCanbox.byteArrayCopy(d, data, 0, 3, len);
+                byte change = d[0];
+                d[0] = d[1];
+                d[1] = change;
+                mCanbox.parseCanboxData(d, len);
+            } else {
+                len -= 3;
+                byte[] d = new byte[len];
+                mCanbox.byteArrayCopy(d, data, 0, 3, len);
+                mCanbox.parseCanboxData(d, len);
+            }
 
-                if (type == -1) {
-                    type = CanboxToPro.getReturnMsgType(mCanboxType, mProVersion, mProIndex);
-                }
-
-                if (type == 0xff) {    //hiworld is update
-
-                    mCanbox.parseCanboxData(data, len);
-
-                } else if (type == 1) {
-                    len -= 3;
-                    byte[] d = new byte[len];
-                    mCanbox.byteArrayCopy(d, data, 0, 2, len);
-                    mCanbox.parseCanboxData(d, len);
-                } else if (type == 2) {
-                    len -= 4;
-                    byte[] d = new byte[len];
-                    mCanbox.byteArrayCopy(d, data, 0, 4, len);
-                    byte change = d[0];
-                    d[0] = d[1];
-                    d[1] = change;
-                    mCanbox.parseCanboxData(d, len);
-                } else if (type == 3) {
-
-                    mCanbox.parseCanboxData(data, len);
-
-                } else if (type == 4) {
-                    len -= 3;
-                    byte[] d = new byte[len];
-                    mCanbox.byteArrayCopy(d, data, 0, 3, len);
-                    byte change = d[0];
-                    d[0] = d[1];
-                    d[1] = change;
-                    mCanbox.parseCanboxData(d, len);
-                } else {
-                    len -= 3;
-                    byte[] d = new byte[len];
-                    mCanbox.byteArrayCopy(d, data, 0, 3, len);
-                    mCanbox.parseCanboxData(d, len);
-                }
-
-                if ((GlobalDefinition.getContext() != null) && isDataDistribution()) {
-                    Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
-                    i.putExtra("buf", data);
-                    GlobalDefinition.getContext().sendBroadcast(i);
-                }
-            } else if (false) {
+            if ((GlobalDefinition.getContext() != null) && isDataDistribution()) {
+                Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
+                i.putExtra("buf", data);
+                GlobalDefinition.getContext().sendBroadcast(i);
+            }
+        }
+            /*
+            else if (false) {
                 //no used now
                 if (((data[0] & 0xff) == 0x2e) && ((data[1] & 0xff) == 0x78) && ((data[2] & 0xff) == 0x3) && ((data[3] & 0xff) == 0x1) && ((data[4] & 0xff) == 0xec) && ((data[5] & 0xff) == 0x1) && ((data[6] & 0xff) == 0x96)) {
                     Log.d(TAG, "in auto test");
@@ -297,15 +292,15 @@ public class CarUtil {
                     CanService.updateCanboxEx();
 
                 }
-            }
-            // else if (mUpdatFile != null) {
-            // if (mCanbox != null) {
-            // mCanbox.parseCanboxData(data, len);
-            // }
-            // }
-        } catch (Exception e) {
-            MMLog.d("CarUtil", "canboxParser err" + e);
-        }
+            }*/
+        /// else if (mUpdatFile != null) {
+        /// if (mCanbox != null) {
+        /// mCanbox.parseCanboxData(data, len);
+        /// }
+        /// }
+        ///} catch (Exception e) {
+        ///    MMLog.e("CarUtil", "canboxParser err" + e);
+        ///}
     }
 
     private void clear() {
@@ -494,9 +489,7 @@ public class CarUtil {
                                 String[] sss = mProId.substring(start).split("-");
                                 mModelId = Integer.parseInt(sss[1]);
                                 mCateId = Integer.parseInt(sss[0]);
-                            }
-                            else
-                            {
+                            } else {
                                 switch (mProId.length() - start) {
                                     case 2:
                                         mModelId = Integer.parseInt(mProId.substring(start + 1, start + 2));

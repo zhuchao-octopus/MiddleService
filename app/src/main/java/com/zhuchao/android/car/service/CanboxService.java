@@ -77,7 +77,6 @@ public class CanboxService extends Service {
         public void onReceive(Context context, Intent intent) {
             MMLog.d(TAG, "mUserEventReceiver action=" + intent.getAction() + " " + TAppProcessUtils.getCurrentProcessNameAndId(context));
             switch (Objects.requireNonNull(intent.getAction())) {
-
                 case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_CAR_SERVICE:
                 case MessageEvent.MESSAGE_EVENT_LINK_Z:
                 case MessageEvent.MESSAGE_EVENT_LINK_CARLETTER:

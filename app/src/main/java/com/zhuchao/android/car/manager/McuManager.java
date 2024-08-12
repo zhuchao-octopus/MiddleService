@@ -57,6 +57,7 @@ import com.zhuchao.android.car.service.MyCarService;
 import com.zhuchao.android.car.ui.BacklightPanel;
 import com.zhuchao.android.car.ui.VolumePanel;
 import com.zhuchao.android.car.view.Nissian360ButtonView;
+import com.zhuchao.android.fbase.ByteUtils;
 import com.zhuchao.android.fbase.MMLog;
 
 import java.io.DataInputStream;
@@ -135,8 +136,11 @@ public class McuManager {
     public byte mBrakeSwitch = 0;
 
     private void doMcuData(byte[] param) {
-        //if (!DebugMessage.updateText(param, true)) {
-        //}
+        ///if (!DebugMessage.updateText(param, true)) {
+        ///}
+        if(param[0] != ProtocolAk47.TYPE_RDS_RECEIVE)
+           MMLog.i(TAG, "DoMcuData:" + ByteUtils.BuffToHexStr(param));//Util.byteArrayToHex(param) +","+
+
         if (GlobalDefinition.getTestingEx()) {
             Canbox canbox = CarUtil.getCanboxInstance();
             if (canbox != null) {
@@ -147,7 +151,6 @@ public class McuManager {
             }
         }
 
-        MMLog.i(TAG, "doMcuData:" + Util.byteArrayToHex(param));
         if (mRealPowerOff) {
             MMLog.d(TAG, "mRealPowerOff:" + true);
             return;
@@ -991,9 +994,9 @@ public class McuManager {
                 doKeyMute();
                 break;
             case MyCmd.Keycode.VOLUME_DOWN:
-                //			mContext.sendBroadcast(new Intent(
-                //					MyCmd.BROADCAST_ACC_DELAY_POWER_OFF));
-                //			MyService.testGPSSpeedp(10);
+                //mContext.sendBroadcast(new Intent(
+                //MyCmd.BROADCAST_ACC_DELAY_POWER_OFF));
+                //MyService.testGPSSpeedp(10);
                 setVoulumeIncrease(false);
                 break;
             case MyCmd.Keycode.VOLUME_UP:
@@ -1046,7 +1049,7 @@ public class McuManager {
                     it.putExtra(MyCmd.EXTRA_COMMON_ID, 1);
                     mContext.startActivity(it);
                 } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
+                    Log.e(TAG, String.valueOf(e));
                 }
                 break;
             case MyCmd.Keycode.KEY_CAR_SETTING:
@@ -1322,9 +1325,9 @@ public class McuManager {
             case MyCmd.Keycode.CANBOX_OPEN_AC_VIEW:
                 toggleAC(1);
                 break;
-            //		case MyCmd.Keycode.CANBOX_AC_OFF:
-            //			toggleAC(2);
-            //			break;
+            /// case MyCmd.Keycode.CANBOX_AC_OFF:
+            ///  	toggleAC(2);
+            ///		break;
             default:
                 ret = key;
                 break;
@@ -1390,7 +1393,7 @@ public class McuManager {
             try {
                 mContext.startActivity(it);
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG, String.valueOf(e));
             }
 
         }
@@ -1740,7 +1743,7 @@ public class McuManager {
     private final static int MSG_UPDATE_8600_LCD = 10;
     private final static int MSG_UPDATE_8600_LCD_TIME = 11;
 
-    private final Handler mHandleModeKey = new Handler(Looper.myLooper()) {
+    private final Handler mHandleModeKey = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         @Override
         public void handleMessage(Message msg) {
             MMLog.d(TAG, "mHandleModeKey:" + msg.what);
@@ -1813,7 +1816,7 @@ public class McuManager {
     private void doKeyMode() {
         initModeKeyToast(false);
 
-        if (mListModeKey.size() > 0) {
+        if (!mListModeKey.isEmpty()) {
             mModeIndex = (mModeIndex + 1) % mListModeKey.size();
             int nTextId = mListModeKey.get(mModeIndex).text;
             if (mToastModeKey != null) {

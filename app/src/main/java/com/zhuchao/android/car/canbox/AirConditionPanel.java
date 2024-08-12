@@ -1,5 +1,6 @@
 package com.zhuchao.android.car.canbox;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -20,6 +21,7 @@ import com.common.util.UtilSystem;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -37,127 +39,115 @@ public class AirConditionPanel extends Handler {
     //	public static final int MESSAGE_AIR_HIDE = 0x03;
 
     private final byte[] mAirData = new byte[15];
+    private final byte[] mAirDataBackup = new byte[15];
 	/* 参考欣朴大众协议v2.61.002,考虑兼容性，不完全一致
-	 * data[0]
-	 * 
-	 *  
-Bit7: 空调开关指示
-Bit6: A/C指示
-Bit5: 内外循环指示  0:外循环
-Bit4 AUTO 大风灯指示
-Bit3:AUTO 小风灯指示
-Bit2: DUAL 指示
-Bit 1:  前窗除雾  MAX FRONT灯指示
-Bit 0: REAR灯指示 后窗 加热?
+	 data[0]
+        Bit7: 空调开关指示
+        Bit6: A/C指示
+        Bit5: 内外循环指示  0:外循环
+        Bit4 AUTO 大风灯指示
+        Bit3:AUTO 小风灯指示
+        Bit2: DUAL 指示
+        Bit 1:  前窗除雾  MAX FRONT灯指示
+        Bit 0: REAR灯指示 后窗 加热?
 
-data[1] 0:OFF 1:ON
+     data[1] 0:OFF 1:ON
+        Bit7	向上送风指示
+        Bit6	水平送风指示
+        Bit5	向下送风指示
+        Bit4	空调显示请求
+        Bit3~Bit0
+        风速	0x0~07	风速等级 指示 0-7级
 
-Bit7	向上送风指示	
-Bit6	水平送风指示	
-Bit5	向下送风指示	
-Bit4	空调显示请求
-Bit3~Bit0
-风速	0x0~07	风速等级 指示 0-7级
+     data[2] 左边设定温度
+        0x00: LO
+        0xff: HI
+        0xfa: hide
+        0xfb: no update
+        0xf0~0xf9: show step
+        0x01~0xef: 温度, 0.5 步进
 
-data[2] 左边设定温度
-          
-0x00: LO
-0xff: HI
-0xfa: hide
-0xfb: no update
-0xf0~0xf9: show step
-0x01~0xef: 温度, 0.5 步进
+     data[3] 右边设定温度
+        0x00: LO
+        0xff: HI
+        0xfa: hide
+        0x01~0xff: 温度
 
-data[3] 右边设定温度
+     data[4] 座椅加热
+        Bit7 1==AQS内循环 0==非
+        Bit5~4 左座椅 00:不显示 01~11:1~3级温度
+        Bit3 rear lock 1==LOCK 0==非
+        Bit2 1==AC MAX 0==非
+        Bit1~0 右座椅 00:不显示 01~11:1~3级温度
 
-0x00: LO
-0xff: HI
-0xfa: hide
-0x01~0xff: 温度
+     data[5] bit0: 0-> C 1-> F 温度单位
+        b102,105,106,107,87,108,113,115,116,117,121,123",  "ids": [it1: 1: hide left temp
+        bit2: 1: hide right temp
+        bit3: 1: 分开左右吹风模式
+        bit4: 前窗加热
+        bit5: 空气质量
 
-data[4] 座椅加热
-Bit7 1==AQS内循环 0==非
-Bit5~4 左座椅 00:不显示 01~11:1~3级温度
-Bit3 rear lock 1==LOCK 0==非
-Bit2 1==AC MAX 0==非
-Bit1~0 右座椅 00:不显示 01~11:1~3级温度
-
-
-
-
-data[5] bit0: 0-> C 1-> F 温度单位
-		b102,105,106,107,87,108,113,115,116,117,121,123",
-        "ids": [it1: 1: hide left temp
-		bit2: 1: hide right temp
-		bit3: 1: 分开左右吹风模式
-		bit4: 前窗加热
-		bit5: 空气质量
-		
-		
-		bit7: 0：空调数据有变化就会弹出空调界面。
-			  1：强制参考空调开关位，如果此位设为1,空调开关(data[0]bit8)是关的话，不主动弹出空调界面。威驰协议一般都需要设置此位。
+        bit7: 0：空调数据有变化就会弹出空调界面。
+              1：强制参考空调开关位，如果此位设为1,空调开关(data[0]bit8)是关的话，不主动弹出空调界面。威驰协议一般都需要设置此位。
 
 
 
-data[6]
+      data[6]
+        同 data[1]，右边座椅吹风。  有些车分左右吹风。
 
-同 data[1]，右边座椅吹风。  有些车分左右吹风。
+      data[7]
+        Bit 0: eco
+        Bit 1~2:  0:off 1:soft 2:fast  3:Normal                       ( 0:soft 1:off 2:fast (bagoo GM) )
+        Bit3 AUTO REAR SWITCH
+        Bit4 AUTO 超大风灯指示
+        Bit5 前窗除雾 （有些车有前窗除雾 MAX FRONT灯指示，又另外有一个前窗除雾）
+        Bit6 0：手动空调, 1:自动空调
+        Bit7 sync 指示
 
-data[7]
+      data[8]
+        Bit7 rest 指示
+        Bit6 temp show level 指示
+        Bit5~4 左座椅 00:不显示 01~11:1~3级冷风
+        Bit3~2 右座椅 00:不显示 01~11:1~3级冷风
+        Bit1 左座椅 >3级冷风高位
+        Bit0 右座椅 >3级冷风高位
 
-Bit 0: eco
-Bit 1~2:  0:off 1:soft 2:fast  3:Normal                       ( 0:soft 1:off 2:fast (bagoo GM) )
-Bit3 AUTO REAR SWITCH
-Bit4 AUTO 超大风灯指示
-Bit5 前窗除雾 （有些车有前窗除雾 MAX FRONT灯指示，又另外有一个前窗除雾）
-Bit6 0：手动空调, 1:自动空调 
-Bit7 sync 指示
+      data[9]
+        Bit7 后座空调开关
+        Bit6 左座椅 >3级加热高位
+        Bit5 负离子 或者 森林
+        Bit4 SWING吹风(出风口摆动) 或者  上出风口
+        Bit3 花粉
+        Bit2 右座椅 >3级加热高位
 
-data[8] 
-Bit7 rest 指示
-Bit6 temp show level 指示
-Bit5~4 左座椅 00:不显示 01~11:1~3级冷风
-Bit3~2 右座椅 00:不显示 01~11:1~3级冷风
-Bit1 左座椅 >3级冷风高位
-Bit0 右座椅 >3级冷风高位
+        Bit1 后座Ac Auto开头
+        Bit0 Auto 吹风模式
 
-data[9]
-Bit7 后座空调开关
-Bit6 左座椅 >3级加热高位
-Bit5 负离子 或者 森林
-Bit4 SWING吹风(出风口摆动) 或者  上出风口
-Bit3 花粉
-Bit2 右座椅 >3级加热高位
+      data[10]
+        后座温度。 同前面左右温度8
 
-Bit1 后座Ac Auto开头
-Bit0 Auto 吹风模式
+      data[11] 0:OFF 1:ON 后座风速及模式
+        Bit7	向上送风指示
+        Bit6	水平送风指示
+        Bit5	向下送风指示
+        Bit4	后排AUTO状态 吹风模式
+        Bit3~Bit0
+        风速	0x0~07	风速等级 指示 0-7级
 
-data[10]
-后座温度。 同前面左右温度8
+      data[12] 一些特殊车型的特殊信息
+        Bit2~Bit0
+        0~3 方向盘加热级别
+        Bit4~Bit3
+        风量等级 0:低 1：中 2：高
+        Bit5 自动风量 Auto
+        Bit6 前窗除冰
 
-data[11] 0:OFF 1:ON 后座风速及模式
+      data[13] 一些特殊车型的特殊信息
+        Bit3~2 后区右座椅 00:不显示 01~11:1~3级温度
+        Bit1~0 后区左座椅 00:不显示 01~11:1~3级温度
 
-Bit7	向上送风指示	
-Bit6	水平送风指示	
-Bit5	向下送风指示	
-Bit4	后排AUTO状态 吹风模式
-Bit3~Bit0
-风速	0x0~07	风速等级 指示 0-7级
-
-data[12] 一些特殊车型的特殊信息
-Bit2~Bit0
-0~3 方向盘加热级别
-Bit4~Bit3
-风量等级 0:低 1：中 2：高
-Bit5 自动风量 Auto
-Bit6 前窗除冰
-
-data[13] 一些特殊车型的特殊信息
-Bit3~2 后区右座椅 00:不显示 01~11:1~3级温度
-Bit1~0 后区左座椅 00:不显示 01~11:1~3级温度
-
-data[14]
-后座右边温度。 同前面左右温度8
+      data[14]
+        后座右边温度。 同前面左右温度8
 	 */
     //	private Toast mToast = null;
 
@@ -201,8 +191,6 @@ data[14]
         return false;
     }
 
-    private final byte[] mAirDataBackup = new byte[15];
-
     private boolean isBufEqual(byte[] b1, byte[] b2, int len) {
         for (int i = 0; i < len; ++i) {
             if (b1[i] != b2[i]) {
@@ -213,20 +201,22 @@ data[14]
     }
 
     public void handleMessage(Message msg) {
+        MMLog.d(TAG, "AirConditionPanel.handleMessage " + msg.toString()+","+CarUtil.isShowAC());
         switch (msg.what) {
             case MESSAGE_AIR_CONDITION:
                 byte[] airData = (byte[]) msg.obj;
+                boolean off = false;
 
-                boolean mAirDataBackupEmpty = Util.isZero(mAirDataBackup);
+                ///boolean mAirDataBackupEmpty = Util.isZero(mAirDataBackup);
                 boolean dataEqual = isBufEqual(mAirDataBackup, airData, airData.length);
+
                 if (!dataEqual) {
                     Util.byteArrayCopy(mAirDataBackup, airData, 0, 0, airData.length);
                 }
 
-                boolean off = false;
-                if ((airData[0] & 0x80) == 0) {
-                    //				off = true;
-
+                if ((airData[0] & 0x80) == 0)
+                {
+                    //off = true;
                     if ((airData[5] & 0x80) != 0) {
                         off = true;
                     } else if ((mAirData[0] & 0x80) != 0) {
@@ -234,10 +224,10 @@ data[14]
                     }
                 }
 
-                //			Log.d("ffcc", ""+mAirDataBackupEmpty);
-                if (mAirDataBackupEmpty) {
-                    off = true;
-                }
+                ///Log.d("ffcc", ""+mAirDataBackupEmpty);
+                ///if (mAirDataBackupEmpty) {
+                ///off = true;
+                ///}
 
                 mAirData[0] = airData[0];
                 mAirData[1] = airData[1];
@@ -286,8 +276,8 @@ data[14]
                     //return;
                 }
 
-
-                if (CarUtil.isShowAC()) {
+                if (CarUtil.isShowAC())
+                {
                     if (!"com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity())) {
                         if (!off && !dataEqual && !CarUtil.isHideAirCondition()) {
                             UtilSystem.doRunActivity(mContext, "com.canboxsetting", "com.canboxsetting.CanAirControlActivity");
@@ -299,55 +289,61 @@ data[14]
                             sendMessageDelayed(obtainMessage(MESSAGE_AIR_TO_ACCONTROL_APK, msg.obj), 1200);
                         }
                     } else {
-
                         removeMessages(MESSAGE_AIR_TO_ACCONTROL_APK);
                         sendMessage(obtainMessage(MESSAGE_AIR_TO_ACCONTROL_APK, msg.obj));
                         sendMessageDelayed(obtainMessage(MESSAGE_AIR_TO_ACCONTROL_APK, msg.obj), 500);
                     }
                     return;
-                } else {
+                }
+                else
+                {
                     if ("com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity())) {
                         sendMessage(obtainMessage(MESSAGE_AIR_TO_ACCONTROL_APK, msg.obj));
                         return;
                     }
                 }
 
-                if (off) {
+                ///MMLog.d(TAG, "AirConditionPanel.handleMessage " + msg.toString()+",off="+off);
+                if (off)
+                {
                     if (airConditionView.getParent() != null) {
                         mWindowManager.removeView(airConditionView);
                     }
-                    mAirData[0] &= ~0x80;
+                    mAirData[0] &= (byte) ~0x80;
                     return;
                 }
 
                 if (CarUtil.isHideAirCondition() || msg.arg2 == 1) {
-                    //				mToast.cancel();
+                    //MMLog.d(TAG, "AirConditionPanel.handleMessage "+CarUtil.isHideAirCondition()+","+msg.arg2);
                     if (airConditionView.getParent() != null) {
                         mWindowManager.removeView(airConditionView);
                     }
                     return;
                 }
 
-
-                if (!isExtShow()) {
-                    //				View airConditionView = mToast.getView();
-                    setAirCondtionTitle(airConditionView);
-                    setAirCondtionWind(airConditionView);
+                if (!isExtShow())
+                {
+                    //View airConditionView = mToast.getView();
+                    setAirConditionTitle(airConditionView);
+                    setAirConditionWind(airConditionView);
                     if (mAirData[2] != (byte) 0xfb) {
-                        setAirCondtionTemperature(airConditionView);
+                        setAirConditionTemperature(airConditionView);
                     }
 
-                    setAirCondtionAction(airConditionView);
-                    //				mToast.setView(airConditionView);
-                    //				mToast.show();
-                    if (!dataEqual && !off) {
+                    setAirConditionAction(airConditionView);
+                    //mToast.setView(airConditionView);
+                    //mToast.show();
+                    ///if (!dataEqual)
+                    {
                         mHandler.removeMessages(0);
                         mHandler.sendEmptyMessageDelayed(0, 3000);
                         if (airConditionView != null && airConditionView.getParent() == null) {
                             mWindowManager.addView(airConditionView, mLayoutParams);
                         }
                     }
-                } else {
+                }
+                else
+                {
                     AirManager.start(mContext, mAirData);
                 }
 
@@ -380,6 +376,7 @@ data[14]
     private final Context mContext;
     View airConditionView = null;
 
+    @SuppressLint("InflateParams")
     public AirConditionPanel(Context context) {
         //    	Log.e(TAG,"AirConditionPanel");
         mContext = context;
@@ -392,10 +389,9 @@ data[14]
 
         mLayoutParams = new WindowManager.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCH_MODAL | LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.RGBA_8888);
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-
     }
 
-    void setAirCondtionTitle(View view) {
+    void setAirConditionTitle(View view) {
         if ((mAirData[0] & 0x40) != 0) {//ac
             view.findViewById(R.id.ac).setVisibility(View.VISIBLE);
         } else {
@@ -442,7 +438,6 @@ data[14]
             }
         }
 
-
         if ((mAirData[7] & 0x01) != 0) {
             view.findViewById(R.id.eco).setVisibility(View.VISIBLE);
         } else {
@@ -469,8 +464,9 @@ data[14]
         if ((mAirData[7] & 0x06) == 0) {
             view.findViewById(R.id.fast).setVisibility(View.GONE);
             view.findViewById(R.id.soft).setVisibility(View.GONE);
-        } else {
-
+        }
+        else
+        {
             if ((mAirData[7] & 0x06) == 0x4) {
                 view.findViewById(R.id.fast).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.soft).setVisibility(View.GONE);
@@ -507,7 +503,7 @@ data[14]
         }
     }
 
-    void setAirCondtionWind(View view) {
+    void setAirConditionWind(View view) {
         if ((mAirData[1] & 0x80) != 0) {
             view.findViewById(R.id.wind_up1).setVisibility(View.VISIBLE);
             //    		view.findViewById(R.id.wind_up2).setVisibility(View.VISIBLE);
@@ -592,6 +588,7 @@ data[14]
         //		}
     }
 
+    @SuppressLint("DefaultLocale")
     String getOurDoorTemperature(View view, double temperature) {
         String temp = null;
 
@@ -641,7 +638,8 @@ data[14]
 
     private int outDoorTemp = 0xff;
 
-    void setAirCondtionTemperature(View view) {
+    @SuppressLint("SetTextI18n")
+    void setAirConditionTemperature(View view) {
         int leftTemp = mAirData[2] & 0xff;
         int rightTemp = mAirData[3] & 0xff;
 
@@ -816,7 +814,7 @@ data[14]
     private int mSeatCold = 0;
     private boolean mSeatColdExit = false;
 
-    void setAirCondtionAction(View view) {
+    void setAirConditionAction(View view) {
         //    	((ImageView)view.findViewById(R.id.air_action_user)).setVisibility(View.VISIBLE);
         //		switch(mAction){
         //			case Canbox.ACTION_AC:

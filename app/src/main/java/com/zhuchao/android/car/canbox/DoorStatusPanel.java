@@ -1,8 +1,10 @@
 package com.zhuchao.android.car.canbox;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.tts.TextSpeaker;
+
+import java.util.Objects;
 
 public class DoorStatusPanel extends Handler {
     /**
@@ -199,8 +203,8 @@ public class DoorStatusPanel extends Handler {
             }
 
             mWarningTime = 0;
-            //				mToast.setView(mainView);
-            //				mToast.show();
+            ///mToast.setView(mainView);
+            ///mToast.show();
             if (mDoorStatus != msg.arg1) {
                 mDoorStatus = msg.arg1;
                 mHandler.removeMessages(0);
@@ -216,10 +220,11 @@ public class DoorStatusPanel extends Handler {
     View airConditionView = null;
     private final Context mContext;
 
+    @SuppressLint("InflateParams")
     public DoorStatusPanel(Context context) {
         mThis = this;
         mContext = context;
-        //	mToast = new Toast(context); // Toast.makeText(context,"",
+        // mToast = new Toast(context); // Toast.makeText(context,"",
         // Toast.LENGTH_SHORT);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         airConditionView = inflater.inflate(R.layout.door_status, null);
@@ -295,7 +300,7 @@ public class DoorStatusPanel extends Handler {
     }
 
     public static int mDoorStatus = 0;
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:

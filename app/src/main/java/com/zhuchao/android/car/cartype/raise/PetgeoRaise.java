@@ -30,11 +30,9 @@ public class PetgeoRaise extends Canbox {
     }
 
     public void startConnect() {// default is simple box
-
-        updateTime();
-
-        Util.doSleep(20);
         byte[] buf = new byte[]{0x4, (byte) 0x8f, 0x38};
+        updateTime();
+        Util.doSleep(20);
         sendDataToCanbox(buf, buf.length);
         Util.doSleep(20);
         buf[2] = (byte) 0x7f;
@@ -313,7 +311,7 @@ public class PetgeoRaise extends Canbox {
             }
             break;
             case 0x21: {
-                //			sendCanboxInfo("com.canboxsetting", data);
+                //sendCanboxInfo("com.canboxsetting", data);
                 parseACInfo(data, len);
             }
             break;

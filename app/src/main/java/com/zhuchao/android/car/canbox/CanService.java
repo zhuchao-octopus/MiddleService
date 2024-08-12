@@ -135,17 +135,17 @@ public class CanService {
     // }
 
     public void onCreate() {
-
         mThis = this;
 
         if (mAirConditionPanel == null) {
             mAirConditionPanel = new AirConditionPanel(mContext);
         }
+
         if (mDoorStatusPanel == null) {
             mDoorStatusPanel = new DoorStatusPanel(mContext);
         }
-        Canbox.addHandler("CanService", mHandler);
 
+        Canbox.addHandler("CanService", mHandler);
         updateCanbox();
         mHandlerMediaInfoToCanbox.sendEmptyMessageDelayed(0, 1000);
     }
@@ -220,7 +220,7 @@ public class CanService {
     }
 
     private int mMediaPlayTime = 0;
-    private final Handler mHandlerMediaInfoToCanbox = new Handler() {
+    private final Handler mHandlerMediaInfoToCanbox = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -246,6 +246,7 @@ public class CanService {
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void registerListener() {
         if (mReceiver == null) {
             mReceiver = new BroadcastReceiver() {
@@ -537,7 +538,7 @@ public class CanService {
         // doUpdateGpsTime();
     }
 
-    public class MyLocationListener implements LocationListener {
+    public static class MyLocationListener implements LocationListener {
         public void onLocationChanged(Location location) {
             float bearing = location.getBearing();
             double altitude = location.getAltitude();

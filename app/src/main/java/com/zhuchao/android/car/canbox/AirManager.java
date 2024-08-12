@@ -85,7 +85,6 @@ public class AirManager {
                 @Override
                 public void onClick(View arg0) {
                     // TODO Auto-generated method stub
-
                     stop();
                 }
             });
