@@ -552,10 +552,7 @@ public class MyCarService extends Service {
 
     private static final String MCU_REVERSE_VOLUME = "/sys/class/ak/source/reverse_volume";
     private static final String MCU_NAVI_MIX_NODE = "/sys/class/ak/source/navi_mix";
-    private final static String[] MACHINE_CONFIG_DEFAULT = {
-            MachineConfig.KEY_LED_TYPE, MachineConfig.KEY_PANEL_KEY_DEF_CONFIG, MachineConfig.KEY_SWC_KEY_DEF_CONFIG, MachineConfig.KEY_FACTORY_AUDIO_GAIN, MachineConfig.KEY_TPMS_TYPE,
-            MachineConfig.KEY_RDS, MachineConfig.KEY_TOUCH3_IDENTIFY
-    };
+    private final static String[] MACHINE_CONFIG_DEFAULT = {MachineConfig.KEY_LED_TYPE, MachineConfig.KEY_PANEL_KEY_DEF_CONFIG, MachineConfig.KEY_SWC_KEY_DEF_CONFIG, MachineConfig.KEY_FACTORY_AUDIO_GAIN, MachineConfig.KEY_TPMS_TYPE, MachineConfig.KEY_RDS, MachineConfig.KEY_TOUCH3_IDENTIFY};
 
     private void initMcuBootSetting() {
         int index = SystemConfig.getIntProperty2(this, SystemConfig.KEY_REVERSE_VOLUME);
@@ -855,7 +852,7 @@ public class MyCarService extends Service {
 
     private void initMcu() {
         mMcuManager = McuManager.getInstance(this);
-        OSProManager mOsManager = OSProManager.getInstanse(this);
+        OSProManager mOsManager = OSProManager.getInstance(this);
         // mMcuManager.setVoulume(5);// test
         // mMcuManager.setSource(7);// test
         AutoIlluminManager mAutoIlluminManager = AutoIlluminManager.getInstanse(this);
@@ -954,8 +951,7 @@ public class MyCarService extends Service {
         }
         //
         String packageName = SystemConfig.getProperty(mThis, MachineConfig.KEY_GPS_PACKAGE);
-        if (packageName == null)
-        {
+        if (packageName == null) {
             String s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_DEFAULT_GPS);
             if (s != null) {
                 String[] ss = s.split("/");
@@ -1342,9 +1338,7 @@ public class MyCarService extends Service {
                 int data9 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                 if (!JoyKey.isJoyKey(data9)) {
                     mMcuManager.doKey(data9);
-                }
-                else
-                {
+                } else {
                     boolean down = intent.getBooleanExtra(MyCmd.EXTRA_COMMON_DATA2, true);
                     int data10 = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
                     if (mJoyKey == null) {
@@ -1465,8 +1459,7 @@ public class MyCarService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             MMLog.d(TAG, "mEventReceiver.onReceive action=" + action);
-            if(intent.getExtras() != null)
-                MMLog.d(TAG, "mEventReceiver.onReceive getExtras=" + intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD));
+            if (intent.getExtras() != null) MMLog.d(TAG, "mEventReceiver.onReceive getExtras=" + intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD));
 
             switch (Objects.requireNonNull(action)) {
                 case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE:
@@ -2102,11 +2095,11 @@ public class MyCarService extends Service {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String title = String.format(getResources().getString(R.string.update_canbox), update);
             builder.setTitle(title);
-             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                 public void onClick(DialogInterface dialog, int whichButton) {
-                     CarUtil.updateCanbox(file, mThis, manufacturer);
-                 }
-             });
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    CarUtil.updateCanbox(file, mThis, manufacturer);
+                }
+            });
 
             builder.setNegativeButton("Cancel", null);
 

@@ -1,5 +1,6 @@
 package com.zhuchao.android.car.manager;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import com.zhuchao.android.car.canbox.ReverseManager;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.hardware.Mcu;
 import com.zhuchao.android.car.manager.key.TouchKeyEvent;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,15 +33,13 @@ import java.util.Objects;
 
 public class OSProManager {
     private final static String TAG = "OSProManager";
-
     private Mcu mMcu;
-
     private Context mContext;
-
+    @SuppressLint("StaticFieldLeak")
     private static OSProManager mThis;
     private McuManager mMcuManager;
 
-    public static OSProManager getInstanse(Context c) {
+    public static OSProManager getInstance(Context c) {
         if (mThis == null) {
             mThis = new OSProManager();
             mThis.init(c);
@@ -162,8 +162,7 @@ public class OSProManager {
                 try {
                     byte[] param = new byte[]{0x1, 0x10, 0x1, (byte) status};
                     canbox.parseVersion(0, param);
-                } catch (Exception e) {
-
+                } catch (Exception ignored) {
                 }
             }
         }
@@ -324,10 +323,11 @@ public class OSProManager {
     private final Handler mOsHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         @Override
         public void handleMessage(Message msg) {
+            MMLog.d(TAG,msg.toString());
             switch (msg.what) {
                 case Mcu.MSG_RECEIVE_OS_DATA:
-                    byte[] potocol = (byte[]) msg.obj;
-                    doOsData(potocol);
+                    byte[] protocol = (byte[]) msg.obj;
+                    doOsData(protocol);
                     break;
                 case MSG_RESET_BACKLIGHT:
                     mMcuManager.resetBacklightStatus(0);

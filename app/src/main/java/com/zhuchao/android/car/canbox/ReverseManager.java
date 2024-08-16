@@ -1,5 +1,6 @@
 package com.zhuchao.android.car.canbox;
 
+import android.annotation.SuppressLint;
 import android.app.Presentation;
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -33,15 +34,17 @@ public class ReverseManager {
 
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams mLayoutParams;
+    @SuppressLint("StaticFieldLeak")
     private static View mView;
 
+    @SuppressLint("StaticFieldLeak")
     private static View mEmptyView;
     public static boolean isShow = false;
-
     private static Presentation mPresentation = null;
-
+    @SuppressLint("StaticFieldLeak")
     private static ReverseUI mUI;
     public static boolean mShowScreen1 = false;
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
     public static void reinit(Context context) {
@@ -51,14 +54,12 @@ public class ReverseManager {
         init(context);
     }
 
+    @SuppressLint("InflateParams")
     private static void init(Context context) {
         mContext = context;
         if (mView == null) {
-
             mView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.back, null);
-
             mEmptyView = mView.findViewById(R.id.empty);
-
             mLayoutParams = new WindowManager.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_FULLSCREEN, PixelFormat.RGBA_8888);
             if (Util.isRK356X() || Util.isPX6() || Util.isPX30() || (Util.isPX5() && (Util.isAndroidQ() || Util.isAndroidR()))) {
                 mLayoutParams.setTitle("AK_RFV240658f4");
@@ -248,7 +249,6 @@ public class ReverseManager {
                 new_name.show360Button();
             }
             CarUtil.notifyReverse(1);
-
         }
     }
 

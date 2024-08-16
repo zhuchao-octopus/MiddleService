@@ -3,9 +3,9 @@
     android:id="@+id/screen1_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/vehicle_camera_colorkey"
     android:orientation="vertical"
-    android:tag="0"
-    android:background="@color/vehicle_camera_colorkey">
+    android:tag="0">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,9 +27,9 @@
             android:id="@+id/no_signal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#000000"
             android:gravity="center"
             android:orientation="vertical"
-            android:background="#000000"
             android:visibility="gone">
 
             <ImageView
@@ -64,13 +64,13 @@
                 android:layout_height="400px"
                 android:layout_marginTop="20px">
 
-                <com.car.view.BackStaticView
+                <com.zhuchao.android.car.view.BackStaticView
                     android:id="@+id/backstatic_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone" />
 
-                <com.car.view.BackTrackView
+                <com.zhuchao.android.car.view.BackTrackView
                     android:id="@+id/backtrack_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

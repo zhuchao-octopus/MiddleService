@@ -67,6 +67,35 @@
 
     <permission android:name="com.octopus.android.action.OCTOPUS.PERMISSION" />
 
+    <uses-permission
+        android:name="android.permission.INSTALL_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.DELETE_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.CLEAR_APP_CACHE"
+        tools:ignore="ProtectedPermissions" />
+
+    <uses-permission
+        android:name="android.permission.REBOOT"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.SET_TIME"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
     <application
         android:name=".service.SApplication"
         android:directBootAware="true"
@@ -106,10 +135,10 @@
 
         <service
             android:name="com.zhuchao.android.car.service.CanboxService"
-            android:persistent="true"
             android:enabled="true"
             android:exported="true"
-            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION"
+            android:persistent="true">
             <intent-filter>
                 <action
                     android:name="com.zhuchao.android.car.action.CANBOX_SERVICE"
@@ -120,10 +149,10 @@
 
         <service
             android:name="com.zhuchao.android.car.service.MultimService"
-            android:persistent="true"
             android:enabled="true"
             android:exported="true"
-            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION"
+            android:persistent="true">
             <intent-filter>
                 <action
                     android:name="com.zhuchao.android.car.action.MULTIMEDIA_SERVICE"
@@ -134,10 +163,10 @@
 
         <service
             android:name="com.zhuchao.android.car.service.MyCarService"
-            android:persistent="true"
             android:enabled="true"
             android:exported="true"
-            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION"
+            android:persistent="true">
             <intent-filter>
                 <action
                     android:name="com.zhuchao.android.car.action.MyCarService"
@@ -146,6 +175,19 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name="com.zhuchao.android.car.service.NoticeCenter"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION"
+            android:persistent="true">
+            <intent-filter>
+                <action
+                    android:name="com.zhuchao.android.car.action.NoticeCenter"
+                    android:exported="true" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

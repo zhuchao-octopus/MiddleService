@@ -62,7 +62,7 @@
             android:layout_centerInParent="true"
             android:paddingTop="100px">
 
-            <com.car.view.BackStaticView
+            <com.zhuchao.android.car.view.BackStaticView
                 android:scaleX="1.25"
                 android:scaleY="1.2"
                 android:id="@+id/backstatic_view"
@@ -70,7 +70,7 @@
                 android:layout_height="match_parent"
                 android:visibility="gone" />
 
-            <com.car.view.BackTrackView
+            <com.zhuchao.android.car.view.BackTrackView
                 android:scaleX="1.25"
                 android:scaleY="1.2"
                 android:id="@+id/backtrack_view"
