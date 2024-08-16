@@ -61,13 +61,13 @@
             android:layout_centerInParent="true"
             android:layout_marginTop="80px">
 
-            <com.car.view.BackStaticView
+            <com.zhuchao.android.car.view.BackStaticView
                 android:id="@+id/backstatic_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
 
-            <com.car.view.BackTrackView
+            <com.zhuchao.android.car.view.BackTrackView
                 android:id="@+id/backtrack_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
