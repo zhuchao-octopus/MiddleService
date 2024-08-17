@@ -134,52 +134,35 @@ public class SlimKeyCF006 extends Canbox {
             airData[0] = (byte) (airData[0] | (0x20));
         else airData[0] = (byte) (airData[0] & (0xDF));
 
-        if (data[4] == 0x03) //内外循环
-            airData[0] = (byte) (airData[0] & (0xDF));
-        else airData[0] = (byte) (airData[0] | (0x20));
-
-        if (data[4] == 0x04) //后除霜器开
-            airData[0] = (byte) (airData[0] & (0xFE));
-        if (data[4] == 0x05) //后除霜器关
-            airData[0] = (byte) (airData[0] | (0x01));
-
-        if ((data[4] == 0x04) && (data[3] == 0x01)) //前除雾
-            airData[7] = (byte) (airData[7] | (0x20));
-        else airData[7] = (byte) (airData[7] & (0xDF));
-
-        if ((data[4] == 0x03) && (data[3] == 0x01)) //上送风
-        {
-            airData[1] = (byte) (airData[1] | (0x80));
-            airData[6] = (byte) (airData[6] | (0x80));
+//        super.parseACInfo(airData);
+        boolean isAirActivity = "com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity());
+        if (isAirActivity) {
+            Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
+            i.putExtra("buf", data);
+            i.putExtra("bufStr", ByteUtils.BuffToHexStr(data));
+            i.putExtra(MyCmd.EXTRA_COMMON_CMD, "ac");
+            mContext.sendBroadcast(i);
         } else {
-            airData[1] = (byte) (airData[1] & (0x7F));
-            airData[6] = (byte) (airData[6] & (0x7F));
+            ///Intent it = new Intent(Intent.ACTION_VIEW);
+            ///it.setClassName("com.canboxsetting", "com.canboxsetting.CanAirControlActivity");
+            ///it.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+            ///mContext.startActivity(it);
+            super.parseACInfo(airData);
+            getHandler("CanService").postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if ("com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity())) {
+                        Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
+                        i.putExtra("buf", data);
+                        i.putExtra("bufStr", ByteUtils.BuffToHexStr(data));
+                        i.putExtra(MyCmd.EXTRA_COMMON_CMD, "ac");
+                        mContext.sendBroadcast(i);
+                    }
+                }
+            },300);
         }
+        MMLog.d(TAG,"sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
 
-        if ((data[4] == 0x02) && (data[3] == 0x01)) //下送风
-        {
-            airData[1] = (byte) (airData[1] | (0x20));
-            airData[6] = (byte) (airData[6] | (0x20));
-        } else {
-            airData[1] = (byte) (airData[1] & (0xDF));
-            airData[6] = (byte) (airData[6] & (0xDF));
-        }
-
-        if (((data[4] == 0x01) || (data[4] == 0x00)) && (data[3] == 0x01)) //水平送风
-        {
-            airData[1] = (byte) (airData[1] | (0x40));
-            airData[6] = (byte) (airData[6] | (0x40));
-        } else {
-            airData[1] = (byte) (airData[1] & (0xBF));
-            airData[6] = (byte) (airData[6] & (0xBF));
-        }
-
-        if ((data[3] == 0x02)) //
-        {
-
-        }
-
-        super.parseACInfo(airData);
     }
 
     public void updateOutDoorTemp(int temp) {

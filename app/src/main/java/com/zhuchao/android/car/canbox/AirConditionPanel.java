@@ -279,7 +279,7 @@ public class AirConditionPanel extends Handler {
                 if (CarUtil.isShowAC())
                 {
                     if (!"com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity())) {
-                        if (!off && !dataEqual && !CarUtil.isHideAirCondition()) {
+                        if (!off /*&& !dataEqual*/ && !CarUtil.isHideAirCondition()) {
                             UtilSystem.doRunActivity(mContext, "com.canboxsetting", "com.canboxsetting.CanAirControlActivity");
 
                             removeMessages(MESSAGE_AIR_TO_ACCONTROL_APK);
