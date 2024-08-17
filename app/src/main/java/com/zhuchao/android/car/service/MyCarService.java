@@ -1459,7 +1459,7 @@ public class MyCarService extends Service {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             MMLog.d(TAG, "mEventReceiver.onReceive action=" + action);
-            if (intent.getExtras() != null) MMLog.d(TAG, "mEventReceiver.onReceive getExtras=" + intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD));
+            ///if (intent.getExtras() != null) MMLog.d(TAG, "mEventReceiver.onReceive getExtras=" + intent.getExtras().toString());
 
             switch (Objects.requireNonNull(action)) {
                 case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE:
@@ -1619,7 +1619,7 @@ public class MyCarService extends Service {
                             }
                         }
                     } catch (Exception e) {
-                        MMLog.d(TAG, "err mWakeLock! " + e);
+                        MMLog.d(TAG, "error mWakeLock! " + e);
                     }
 
                     GlobalDefinition.sendByCarServiceToSystemUI(mThis, "com.android.systemui", MyCmd.Cmd.SHOW_CUR_APP_NAME);
@@ -1721,7 +1721,6 @@ public class MyCarService extends Service {
         if (mShowGpuBugOnce) return;
         if (IGO_PATH.equals(s)) {
             if (mEmptyView == null) {
-
                 mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
                 mLayoutParams = new WindowManager.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN, PixelFormat.RGBA_8888);
                 mEmptyView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.gpu_bug_for_igo, null);
@@ -1827,7 +1826,8 @@ public class MyCarService extends Service {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String title = String.format(getResources().getString(R.string.update_touch_config), configPath);
         builder.setTitle(title);
- /*       builder.setPositiveButton(com.android.internal.R.string.ok, new DialogInterface.OnClickListener() {
+        /*
+        builder.setPositiveButton(com.android.internal.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 FileReader fr = null;
                 boolean ok = false;
@@ -1849,9 +1849,9 @@ public class MyCarService extends Service {
                 }
             }
         });
-
         builder.setNegativeButton(com.android.internal.R.string.cancel, null);
-*/
+        */
+
         final AlertDialog dialog = builder.create();
         // 在dialog show前添加此代码，表示该dialog属于系统dialog。
         Objects.requireNonNull(dialog.getWindow()).setType((WindowManager.LayoutParams.TYPE_SYSTEM_ALERT));
