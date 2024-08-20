@@ -76,10 +76,7 @@ public class CarUtil {
     }
 
     public static Canbox getCanboxInstance() {
-        if (mCarUtil != null) {
-            return mCarUtil.mCanbox;
-        }
-        return null;
+        return mCarUtil.mCanbox;
     }
 
     public static void initCanboxBrake() {

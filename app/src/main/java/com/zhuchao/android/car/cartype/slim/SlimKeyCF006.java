@@ -134,7 +134,7 @@ public class SlimKeyCF006 extends Canbox {
             airData[0] = (byte) (airData[0] | (0x20));
         else airData[0] = (byte) (airData[0] & (0xDF));
 
-//        super.parseACInfo(airData);
+        //        super.parseACInfo(airData);
         boolean isAirActivity = "com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity());
         if (isAirActivity) {
             Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
@@ -159,10 +159,9 @@ public class SlimKeyCF006 extends Canbox {
                         mContext.sendBroadcast(i);
                     }
                 }
-            },300);
+            }, 300);
         }
-        MMLog.d(TAG,"sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
-
+        //MMLog.d(TAG, "sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
     }
 
     public void updateOutDoorTemp(int temp) {
@@ -185,7 +184,6 @@ public class SlimKeyCF006 extends Canbox {
         }
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
     }
-
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -272,9 +270,15 @@ public class SlimKeyCF006 extends Canbox {
         boolean show = false;
         Handler handler = null;
 
-        MMLog.d(TAG, "parseCanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
-        if (data[3] < 0x06) {
-            parseACInfo(data);
+        MMLog.d(TAG, "CanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
+
+        //if (data[3] < 0x06) {
+            //parseACInfo(data);
+        //}
+        //else if (data[3] == 0x07)
+        {
+            //byte[] datas = new byte[]{(byte) 0x90, 0x4, 0x71, 0, 0, 0};
+            sendDataToCanbox(data, data.length-1);
         }
     }
 

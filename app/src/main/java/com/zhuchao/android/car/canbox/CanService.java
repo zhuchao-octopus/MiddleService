@@ -307,9 +307,7 @@ public class CanService {
                                 }
                             }
 
-                            if (s != null) {
-                                GlobalDefinition.updateLcd(fm | MyCmd.SOURCE_RADIO, s);
-                            }
+                            GlobalDefinition.updateLcd(fm | MyCmd.SOURCE_RADIO, s);
                         }
 
                         if (GlobalDefinition.mMediaInfoToastBackground != 0) {
@@ -405,13 +403,9 @@ public class CanService {
                             int status = intent.getIntExtra("status", 0);
                             String num = intent.getStringExtra("num");
                             String name = intent.getStringExtra("name");
-                            // Log.e("", status+":"+num);
-                            if (num == null) {
-                                num = "  ";
-                            }
+                            if (num == null) num = "  ";
                             CarUtil.getCanboxInstance().setPhone(status, num);
                             CarUtil.getCanboxInstance().setPhoneEx(status, num, name);
-
                         }
                     } else if (action.equals(MyCmd.BROADCAST_SEND_TO_CAN) || action.equals(MyCmd.BROADCAST_SEND_TO_CAN_FROM_BT)) {
                         if (mCanbox != null) {
