@@ -136,6 +136,8 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
     @Override
     public void onCreate() {
         super.onCreate();
+//        MMLog.setLogOnOff(false);
+        //MMLog.d(TAG, "onCreate()");//2 second call
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //创建NotificationChannel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

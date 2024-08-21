@@ -38,74 +38,13 @@ public class SlimKeyCF006 extends Canbox {
     byte[] airData = new byte[10];
     private byte mOutDoorTempUnit;
 
-    private void parseWheelKey(byte[] data, int len) {
-        if (doKeyStudy(data[2], data[3])) {
-            return;
-        }
-
-        switch (data[2]) {
-            case 0x0:
-                doKey(0, 0);
-                break;
-            case 0x1:
-                doKey(AK_KEYPAD_VOLUME_A, data[3]); // vol+
-                break;
-            case 0x2:
-                doKey(AK_KEYPAD_VOLUME_D, data[3]);// vol-
-                break;
-            case 0x3:
-                doKey(MyCmd.Keycode.MULT_NEXT_AND_HANG, data[3]);
-                break;
-            case 0x4:
-                doKey(MyCmd.Keycode.MULT_PREV_AND_RECEIVE, data[3]);
-                break;
-            case 0x5:
-            case 0x09:
-            case 0x0A:
-                doKey(KEY_BT, data[3]);
-                break;
-            case 0x6:
-                doKey(AK_KEYPAD_MUTE_FAKE, data[3]);// mute
-                break;
-            case 0x7:
-                doKey(KEY_MODE, data[3]);
-                break;
-            case 0xe:
-                doKey(KEY_PREVIOUSSONG, data[3]);
-                break;
-            case 0xf:
-                doKey(KEY_NEXTSONG, data[3]);
-                break;
-            case 0x10:
-                doKey(MyCmd.Keycode.KEY_TURN_D, data[3]);
-                break;
-            case 0x11:
-                doKey(MyCmd.Keycode.KEY_TURN_A, data[3]);
-                break;
-            case 0x12:
-                doKey(KEY_PLAYPAUSE, data[3]);
-                break;
-            default:
-                byte key = 0;
-                for (byte[] bytes : KEYS_WHEEL) {
-                    if (bytes[0] == data[2]) {
-                        key = bytes[1];
-                        break;
-                    }
-                }
-
-                if (key != 0) {
-                    doKey(key, data[3]);
-                    if (data[2] == 0x60 || data[2] == 0x61 || data[2] == (byte) 0xf1 || data[2] == (byte) 0xf0) {
-                        Util.doSleep(1);
-                        doKey(0, 0);
-                    }
-                } else {
-                    if (data[3] == 0) {
-                        doKey(0, 0);
-                    }
-                }
-                break;
+    protected void parseWheelKey(byte[] data, int len) {
+        MMLog.d(TAG, "parseWheelKey: data = " + ByteUtils.BuffToHexStr(data));
+        if (data != null && data.length == 6) {
+            Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
+            i.putExtra("buf", data);
+            i.putExtra(MyCmd.EXTRA_COMMON_CMD, "settings");
+            mContext.sendBroadcast(i);
         }
     }
 
@@ -135,7 +74,7 @@ public class SlimKeyCF006 extends Canbox {
             airData[0] = (byte) (airData[0] | (0x20));
         else airData[0] = (byte) (airData[0] & (0xDF));
 
-        //        super.parseACInfo(airData);
+//        super.parseACInfo(airData);
         boolean isAirActivity = "com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity());
         if (isAirActivity) {
             Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
@@ -162,7 +101,8 @@ public class SlimKeyCF006 extends Canbox {
                 }
             }, 300);
         }
-        //MMLog.d(TAG, "sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
+        MMLog.d(TAG, "sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
+
     }
 
     public void updateOutDoorTemp(int temp) {
@@ -185,6 +125,7 @@ public class SlimKeyCF006 extends Canbox {
         }
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
     }
+
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -240,9 +181,15 @@ public class SlimKeyCF006 extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
+        byte s = (byte) curDate.getSeconds();
         //byte []buf = new byte[] { (byte) 0x82, 0x06, y, mon, d, h,m, 0 };
-        byte[] buf = new byte[]{(byte) 0xC9, 0x06, m, h, d, mon, y, 0};
+        byte[] buf = new byte[]{0x00, (byte) 0xA4, 0x01, 0x00, 0x07, (byte) 0x9D, y, mon, d, h, m, s, (byte) (0xAC + 0x9D + y + mon + d + h + m + s)};
         sendDataToCanbox(buf, buf.length);
+    }
+
+    public void sendDataToCanbox(byte[] data, int len) {
+        Log.d(TAG, "sendDataToCanbox: data = " + ByteUtils.BuffToHexStr(data));
+        sendCmd(CANBOX_WRITE_COMMON_DATA, 0, data);
     }
 
     private final static int HIDE_RADAR = 0;
@@ -270,9 +217,12 @@ public class SlimKeyCF006 extends Canbox {
         byte radar;
         boolean show = false;
         Handler handler = null;
-        MMLog.d(TAG, "CanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
+
+        MMLog.d(TAG, "parseCanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
         if (data[3] < 0x06) {
-        parseACInfo(data);
+            parseACInfo(data);
+        } else {
+            parseWheelKey(data, data.length);
         }
     }
 
@@ -306,6 +256,17 @@ public class SlimKeyCF006 extends Canbox {
     @Override
     public void touchInReverseEx(int x, int y, int w, int h, int down) {
         super.touchInReverseEx(x, y, w, h, down);
-        ///MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
+//        Log.d(TAG, "touchInReverseEx: ", new Exception());
+//        MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
+        int sendX = x * 1919 / w;
+        byte sendXHi = (byte) (sendX >> 8);
+        byte sendXLo = (byte) sendX;
+        int sendY = y * 719 / h;
+        byte sendYHi = (byte) (sendY >> 8);
+        byte sendYLo = (byte) sendY;
+        byte touchAction = (byte) (down == 1?0x01:0x03);
+        byte sumValue = (byte) (0xA4 + 0x01 + 0x07 + 0x88 + sendYHi + sendYLo + sendXHi + sendXLo + touchAction);
+        byte[] buf = new byte[]{0x00,(byte) 0xA4, 0x01, 0x00, 0x07, (byte) 0x88, 0x00, sendXHi, sendXLo, sendYHi, sendYLo, touchAction, sumValue};
+        sendDataToCanbox(buf, buf.length);
     }
 }
