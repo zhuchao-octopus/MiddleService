@@ -90,7 +90,7 @@ public class CarUtil {
         if (mSettingCanboxBrake != 0) {
             McuManager mMcuManager = McuManager.getInstance();
             if (mMcuManager != null) {
-                MMLog.d(TAG, "updateCanboxBrake:" + " brake " + brake + ":" + mPreCanboxBrake + "mBrakeSwitch:" + mMcuManager.mBrakeSwitch);
+                MMLog.d(TAG, "UpdateCanboxBrake:" + " brake " + brake + ":" + mPreCanboxBrake + " mBrakeSwitch:" + mMcuManager.mBrakeSwitch);
                 if (mMcuManager.mBrakeSwitch == 0) {
                     return;
                 }
@@ -495,7 +495,7 @@ public class CarUtil {
                                         break;
                                 }
                             }
-                            MMLog.d(TAG, ":" + mModelId);
+                            MMLog.d(TAG, "getCanboxSetting() mModelId=" + mModelId);
                         }
                     }
 

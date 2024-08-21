@@ -41,6 +41,7 @@ import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.view.BackStaticView;
 import com.zhuchao.android.car.view.BackTrackView;
 import com.zhuchao.android.car.view.TrackParamterDialog;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,8 +54,8 @@ import java.io.PrintWriter;
 import java.util.List;
 
 public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHolder.Callback {
+    private final static String TAG = "ReverseUI";
     private Canbox mCanBox;
-
     public boolean mPreviewing;
     // private boolean mPause;
     private final boolean mStartPreviewFail = false;
@@ -63,11 +64,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
     private SurfaceView mSurfaceView;
     // private static ReverseActivity mThis;
     private int mADRotation = 0;
-
-    private final static String TAG = "ReverseUI";
-
     private RadarUI mRadarUI;
-
     private static final ReverseUI[] mUI = new ReverseUI[MAX_DISPLAY];
 
     /**
@@ -89,17 +86,15 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
     public void onCreate() {
         // super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
-
         super.onCreate();
+        MMLog.d(TAG, TAG + ".onCreate");
+
         mCamerFailTime = 0;
         // setContentView(R.layout.back);
         // noSignalShowText(true);
         Canbox.addHandler("Reverse", mHandlerCanbox);
-
         mReverseUICanbox = new ReverseUICanbox();
         mReverseUICanbox.init(mMainView);
-        // test
 
         // Intent it = new Intent(Intent.ACTION_RUN);
         // it.setClass(this, CanService.class);
@@ -124,7 +119,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         mMainView.findViewById(R.id.backtrack_view).setVisibility(View.GONE);
         mMainView.findViewById(R.id.only_black).setVisibility(View.GONE);
 
-        Log.d(TAG, "layout id = " + mMainView.findViewById(R.id.screen1_main).getTag());
+        MMLog.d(TAG, TAG + ".layout id = " + mMainView.findViewById(R.id.screen1_main).getTag());
         // mMainView.findViewById(R.id.backstatic_view).setOnLongClickListener(new
         // OnLongClickListener() {
         //
@@ -181,12 +176,13 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             public boolean onTouch(View arg0, MotionEvent arg1) {
                 // TODO Auto-generated method stub
                 if (arg1.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d("eed", ":" + arg1.getX() + ":" + arg0.getWidth());
+                    //MMLog.d(TAG, "onTouch x:" + arg1.getX() + " height y:" + arg1.getY() + " width:" + arg0.getWidth());
                     if (CarUtil.getCanboxInstance() != null) {
                         CarUtil.getCanboxInstance().touchInReverse((int) arg1.getX(), (int) arg1.getY(), arg0.getWidth(), arg0.getHeight());
                         CarUtil.getCanboxInstance().touchInReverseEx((int) arg1.getX(), (int) arg1.getY(), arg0.getWidth(), arg0.getHeight(), 1);
                     }
                 } else if (arg1.getAction() == MotionEvent.ACTION_UP) {
+                    //MMLog.d(TAG, "onTouch x:" + arg1.getX() + " height y:" + arg1.getY() + " width:" + arg0.getWidth());
                     if (CarUtil.getCanboxInstance() != null) {
                         CarUtil.getCanboxInstance().touchInReverseEx((int) arg1.getX(), (int) arg1.getY(), arg0.getWidth(), arg0.getHeight(), 0);
                     }
@@ -199,8 +195,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
             @Override
             public boolean onLongClick(View arg0) {
-                // TODO Auto-generated method stub
-                // if (!Util.isRKSystem()) {
+                //if (!Util.isRKSystem()) {
                 Intent it = new Intent(MyCmd.BROADCAST_START_BACKLIGHTSETTINGS);
                 if (MachineConfig.VALUE_SYSTEM_UI20_RM10_1.equals(GlobalDefinition.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM10_2.equals(GlobalDefinition.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM12.equals(GlobalDefinition.mSystemUI)) {
                     File f = new File(GlobalDefinition.BRIGHTNESS_CONTRAST);
@@ -212,7 +207,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
                 } else {
                     it.putExtra("cmd", -3);//
                 }
-
                 mContext.sendBroadcast(it);
                 // }
 
@@ -235,10 +229,8 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
                 return false;
             }
         });
-        // Log.d(TAG, ">>onCreate");
 
         updateCameraType();
-
         if (Util.isGLCamera() && mGLSurfaceView == null) {
             FrameLayout v = mMainView.findViewById(R.id.glsuface_main);
             if (com.common.util.Util.isAndroidP() || com.common.util.Util.isAndroidQ() || com.common.util.Util.isAndroidR()) {
@@ -297,8 +289,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
         Log.d(TAG, "mCameraType=" + mCameraType);
 
-        if (MachineConfig.VALUE_CANBOX_ZHONGXING_OD.equals(CarUtil.getCanboxType()))
-            mCameraType = MachineConfig.VAULE_CAMERA4;
+        if (MachineConfig.VALUE_CANBOX_ZHONGXING_OD.equals(CarUtil.getCanboxType())) mCameraType = MachineConfig.VAULE_CAMERA4;
 
         if (mCameraType == MachineConfig.VAULE_CAMERA_FRONT) {
 
@@ -1418,9 +1409,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
                     }
                 };
 
-                int[] BUTTON_ON_CLICK_NISSAN = new int[]{
-                        R.id.btn_up, R.id.btn1, R.id.btn_left, R.id.btn_right, R.id.btn2, R.id.btn_down, R.id.canceal, R.id.start, R.id.back1, R.id.vertical1, R.id.lateral, R.id.imgpa, R.id.triangle
-                };
+                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.btn_up, R.id.btn1, R.id.btn_left, R.id.btn_right, R.id.btn2, R.id.btn_down, R.id.canceal, R.id.start, R.id.back1, R.id.vertical1, R.id.lateral, R.id.imgpa, R.id.triangle};
 
                 for (int i : BUTTON_ON_CLICK_NISSAN) {
                     v = mMainView.findViewById(i);
@@ -1875,11 +1864,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
                     }
                 };
 
-                int[] BUTTON_ON_CLICK_NISSAN = new int[]{
-                        R.id.can15_all_b, R.id.can15_back, R.id.can15_left_back, R.id.can15_right_back, R.id.settings_b, R.id.can15_all_f, R.id.can15_front, R.id.can15_left_front,
-                        R.id.can15_right_front, R.id.settings_f, R.id.can15_exit_settings, R.id.can15_guidelines, R.id.can15_warning, R.id.can15_frontview, R.id.can15_rearview,
-                        R.id.can15_front_all_settings, R.id.can15_front_only_settings, R.id.can15_front_left_settings, R.id.can15_front_right_settings, R.id.can15_back_all_settings,
-                        R.id.can15_back_only_settings, R.id.can15_back_left_settings, R.id.can15_back_right_settings, R.id.can15_guidelines_settings, R.id.can15_warning_settings,
+                int[] BUTTON_ON_CLICK_NISSAN = new int[]{R.id.can15_all_b, R.id.can15_back, R.id.can15_left_back, R.id.can15_right_back, R.id.settings_b, R.id.can15_all_f, R.id.can15_front, R.id.can15_left_front, R.id.can15_right_front, R.id.settings_f, R.id.can15_exit_settings, R.id.can15_guidelines, R.id.can15_warning, R.id.can15_frontview, R.id.can15_rearview, R.id.can15_front_all_settings, R.id.can15_front_only_settings, R.id.can15_front_left_settings, R.id.can15_front_right_settings, R.id.can15_back_all_settings, R.id.can15_back_only_settings, R.id.can15_back_left_settings, R.id.can15_back_right_settings, R.id.can15_guidelines_settings, R.id.can15_warning_settings,
 
                 };
 

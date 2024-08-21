@@ -1,18 +1,23 @@
 package com.zhuchao.android.car.cartype.hiworld;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 
 import com.common.util.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.fbase.ByteUtils;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class ToyotaHiworld extends Canbox {
+    private final String TAG = "ToyotaHiworld";
 
     public ToyotaHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -33,6 +38,7 @@ public class ToyotaHiworld extends Canbox {
         mIdKey3 = 0x021122;
         MAP_KEYS3 = KEYS_WHEEL3;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
+        MMLog.d(TAG, "NEW ToyotaHiworld CANBOX");
     }
 
 
@@ -41,13 +47,9 @@ public class ToyotaHiworld extends Canbox {
 
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x12, 0x13, 0x16, 0x17, 0x1f, 0x48, 0x62, 0x32, (byte) 0xa6
-    };
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x12, 0x13, 0x16, 0x17, 0x1f, 0x48, 0x62, 0x32, (byte) 0xa6};
 
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.NEXT},
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.MODLE},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.MODLE},
 
             {0xe, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PREVIOUS},
 
@@ -55,17 +57,12 @@ public class ToyotaHiworld extends Canbox {
             //		{ 0xd, MyCmd.Keycode },
     };
 
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.PLAY_PAUSE}, {0x2b, MyCmd.Keycode.HOME}, {0x2c, MyCmd.Keycode.MODLE},
-            {0x2f, MyCmd.Keycode.MENU}, {0x30, MyCmd.Keycode.BT}, {0x33, MyCmd.Keycode.RADIO}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.PLAY_PAUSE}, {0x2b, MyCmd.Keycode.HOME}, {0x2c, MyCmd.Keycode.MODLE}, {0x2f, MyCmd.Keycode.MENU}, {0x30, MyCmd.Keycode.BT}, {0x33, MyCmd.Keycode.RADIO}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
 
 
-            {0x4b, MyCmd.Keycode.RADIO}, {0x3, MyCmd.Keycode.NEXT}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x28, MyCmd.Keycode.BT},
-    };
+            {0x4b, MyCmd.Keycode.RADIO}, {0x3, MyCmd.Keycode.NEXT}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x28, MyCmd.Keycode.BT},};
 
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
 
     public void parseCanboxData(byte[] data, int len) {
         switch (data[0]) {
@@ -163,12 +160,8 @@ public class ToyotaHiworld extends Canbox {
 
     @Override
     public int getAngleValue2(byte[] data) {
-
         short angle = (short) ((data[9] & 0xff) | ((data[8] & 0xff) << 8));
-
         return -angle;
-
-
     }
 
     private int getACTemp1(byte data) {
@@ -201,18 +194,11 @@ public class ToyotaHiworld extends Canbox {
     public void parseACInfo(byte[] data) {
         byte[] airData = new byte[12];
         airData[0] = (byte) ((data[2] & 0x08) | ((data[2] & 0x40) << 1) | ((data[3] & 0x20) >> 5) | ((data[3] & 0x08) << 2) | ((data[3] & 0x44) >> 0) | ((data[3] & 0x10) >> 3));
-
         airData[4] = (byte) (((data[3] & 0x80) >> 5));
-
         airData[7] = (byte) (((data[3] & 0x02) >> 1));
-
-
         airData[1] = (byte) (((data[6] & 0x10) << 3) | ((data[6] & 0x20) << 1) | ((data[6] & 0x40) >> 1) | ((data[6] & 0x0f) >> 0));
-
-
         airData[2] = (byte) getACTemp1(data[4]);
         airData[3] = (byte) getACTemp1(data[5]);
-
 
         switch ((data[7] & 0xff)) {
             case 1:
@@ -226,10 +212,7 @@ public class ToyotaHiworld extends Canbox {
                 break;
         }
         airData[11] |= (byte) (data[8] & 0x0f);
-
-
         airData[10] = (byte) getACTemp(data[9]);
-
         airData[5] |= 0x80;
         super.parseACInfo(airData);
     }
@@ -238,16 +221,10 @@ public class ToyotaHiworld extends Canbox {
     public void parseACInfo2(byte[] data) {
         byte[] airData = new byte[12];
         airData[0] = (byte) ((data[2] & 0x08) | ((data[2] & 0x40) << 1) | ((data[3] & 0x10) << 1) | ((data[3] & 0x44) >> 0) | ((data[4] & 0x10) >> 3) | ((data[4] & 0x20) >> 5));
-
-
         airData[4] = (byte) (((data[3] & 0x80) >> 4) | ((data[2] & 0x20) >> 3) | ((data[3] & 0x08) << 4) | ((data[4] & 0x03) << 4) | ((data[4] & 0x0c) >> 2));
-
-
         airData[8] = (byte) (((data[5] & 0xc0) >> 4) | ((data[5] & 0x30) >> 0));
-
         //		airData[7] = (byte) (
         //				((data[3] & 0x02) >> 1));
-
 
         switch ((data[6] & 0xf)) {
             case 1:
@@ -275,7 +252,6 @@ public class ToyotaHiworld extends Canbox {
 
         airData[1] |= (byte) (((data[7] & 0x0f) >> 0));
 
-
         switch ((data[10] & 0xf)) {
             case 1:
                 airData[11] = (byte) (0x20);
@@ -289,11 +265,8 @@ public class ToyotaHiworld extends Canbox {
         }
 
         airData[11] |= (byte) (data[12] & 0x0f);
-
         airData[2] = (byte) getACTemp2(data[8]);
         airData[3] = (byte) getACTemp2(data[9]);
-
-
         airData[10] = (byte) getACTemp2(data[12]);
         airData[5] |= 0x80;
         super.parseACInfo(airData);
@@ -377,8 +350,7 @@ public class ToyotaHiworld extends Canbox {
             }
 
             sendDataToCanbox(data, data.length);
-        } catch (Exception e) {
-
+        } catch (Exception ignored) {
         }
     }
 
@@ -415,8 +387,7 @@ public class ToyotaHiworld extends Canbox {
             System.arraycopy(n, 2, data, 2, num_len);
 
             sendDataToCanbox(data, data.length);
-        } catch (Exception e) {
-
+        } catch (Exception ignored) {
         }
     }
 
@@ -440,7 +411,7 @@ public class ToyotaHiworld extends Canbox {
         super.sendDataToCanboxHiword1(data, len);
     }
 
-    private final Handler mHandlerRepeat = new Handler() {
+    private final Handler mHandlerRepeat = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 sendEQCmd(msg.arg1, msg.arg2);
@@ -584,15 +555,66 @@ public class ToyotaHiworld extends Canbox {
 
 
         byte m = (byte) curDate.getMinutes();
-
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 0
-        };
-
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 0};
         sendDataToCanbox(buf, buf.length);
+    }
 
+    @Override
+    public void touchInReverse(int x, int y, int w, int h) {
+        super.touchInReverse(x, y, w, h);
+        ///MMLog.d(TAG, "touchInReverse x:" + x + " y:" + y + " w:" + w + " h:" + h);
+        int w4 = w / 4;
+        int h4 = h / 4;
+        byte[] buf = new byte[]{(byte) 0xfa, (byte) 0xff, 0x01, 0x01};
+        if (x > 0 && x < w4 && y < h4) {
+            buf[2] = 0x05;
+            MMLog.d(TAG, "Send Data " + ByteUtils.BuffToHexStr(buf));
+            sendDataToCanbox(buf, buf.length);
+        } else if (x > 0 && x < w4 && y > 3 * h4) {
+            buf[2] = 0x01;
+            MMLog.d(TAG, "Send Data " + ByteUtils.BuffToHexStr(buf));
+            sendDataToCanbox(buf, buf.length);
+        } else if (x > w4 && x < 2 * w4 && y > 3 * h4) {
+            //buf[2] = 0x02;
+        } else if (x > 2 * w4 && x < 3 * w4 && y > 3 * h4) {
+            buf[2] = 0x03;
+            MMLog.d(TAG, "Send Data " + ByteUtils.BuffToHexStr(buf));
+            sendDataToCanbox(buf, buf.length);
+        } else if (x > 3 * w4 && x < 4 * w4 && y > 3 * h4) {
+            buf[2] = 0x04;
+            MMLog.d(TAG, "Send Data " + ByteUtils.BuffToHexStr(buf));
+            sendDataToCanbox(buf, buf.length);
+        }
+    }
+
+    @Override
+    public void touchInReverseEx(int x, int y, int w, int h, int down) {
+        super.touchInReverseEx(x, y, w, h, down);
+        ///MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
+        int w4 = w / 4;
+        int h4 = h / 4;
+        byte[] buf = new byte[]{(byte) 0xfa, (byte) 0xff, 0x01, 0x00};
+        if (x > 0 && x < w4 && y < h4) {
+            buf[2] = 0x05;
+            MMLog.d(TAG, "Send Data " + ByteUtils.BuffToHexStr(buf));
+            sendDataToCanbox(buf, buf.length);
+        } else if (x > 0 && x < w4 && y > 3 * h4) {
+            buf[2] = 0x01;
+            MMLog.d(TAG, "Send Data " + ByteUtils.BuffToHexStr(buf));
+            sendDataToCanbox(buf, buf.length);
+        } else if (x > w4 && x < 2 * w4 && y > 3 * h4) {
+            //buf[2] = 0x02;
+        } else if (x > 2 * w4 && x < 3 * w4 && y > 3 * h4) {
+            buf[2] = 0x03;
+            MMLog.d(TAG, "Send Data " + ByteUtils.BuffToHexStr(buf));
+            sendDataToCanbox(buf, buf.length);
+        } else if (x > 3 * w4 && x < 4 * w4 && y > 3 * h4) {
+            buf[2] = 0x04;
+            MMLog.d(TAG, "Send Data " + ByteUtils.BuffToHexStr(buf));
+            sendDataToCanbox(buf, buf.length);
+        }
     }
 }

@@ -308,21 +308,15 @@ import com.zhuchao.android.car.cartype.xinfeiyang.ToyotaXinFeiYang;
 
 public class CanboxToPro {
 
-
     //this index is the same as CanBus说明文档*.*
     private final static Class<?>[] mAllCanbox = {
             CarFordSimple.class,//1
             CarToyota2013.class, CarMazda.class, CarX80.class, CarTEANA.class, CarOPEL.class, CarVW.class, MitsubishiOutLanderSimple.class, CarHY.class, CarPSABagoo.class,//10
-            CarGMSimple.class, CarHondaDASimple.class, VWGolfSimple.class, RamFIATSimple.class, RenaultMeganeFluenceSimple.class, BMWE90X1Union.class, FIATSimple.class, FordMondeoSimple.class,
-            PSASimple.class, BenzBagoo.class,//20
-            KadjarRaise.class, GMCSimple.class, BenzB200Union.class, CarMazdaBT50Simple.class, JeepSimple.class, Accord7ChangYuanTong.class, CarToyotaBinarytek.class, CarMazdaXinbas.class,
-            Peugeot206Simple.class, Accord2013Simple.class,//30
-            Nissan2013Simple.class, PorscheUnionSimple.class, Mazda3BinarytekSimple.class, BravoUnionSimple.class, TouaregHiworld.class, DaciaSimple.class, NissanRaise.class, PetgeoRaise.class,
-            FordExplorerSimple.class, AccordBinarytek.class,//40
-            AudiA3Simple.class, SubrauODS.class, MiniHiword.class, NissanBinarytek.class, CarBenzVito.class, VWMQBRaise.class, CheryOD.class, ChryslerSimple.class, Mazda3Simple.class,
-            CarOBDBinarytek.class,//50
-            HaferH3Xinbas.class, HondaRaise.class, PetgeoScreenRaise.class, CarFordRaise.class, SmartHaozheng.class, LandRoverHaozheng.class, PetgeoScreenUnion.class, MazdaCX5Simple.class,
-            RX330HaoZheng.class, Peugeot206307OldSimple.class,//60
+            CarGMSimple.class, CarHondaDASimple.class, VWGolfSimple.class, RamFIATSimple.class, RenaultMeganeFluenceSimple.class, BMWE90X1Union.class, FIATSimple.class, FordMondeoSimple.class, PSASimple.class, BenzBagoo.class,//20
+            KadjarRaise.class, GMCSimple.class, BenzB200Union.class, CarMazdaBT50Simple.class, JeepSimple.class, Accord7ChangYuanTong.class, CarToyotaBinarytek.class, CarMazdaXinbas.class, Peugeot206Simple.class, Accord2013Simple.class,//30
+            Nissan2013Simple.class, PorscheUnionSimple.class, Mazda3BinarytekSimple.class, BravoUnionSimple.class, TouaregHiworld.class, DaciaSimple.class, NissanRaise.class, PetgeoRaise.class, FordExplorerSimple.class, AccordBinarytek.class,//40
+            AudiA3Simple.class, SubrauODS.class, MiniHiword.class, NissanBinarytek.class, CarBenzVito.class, VWMQBRaise.class, CheryOD.class, ChryslerSimple.class, Mazda3Simple.class, CarOBDBinarytek.class,//50
+            HaferH3Xinbas.class, HondaRaise.class, PetgeoScreenRaise.class, CarFordRaise.class, SmartHaozheng.class, LandRoverHaozheng.class, PetgeoScreenUnion.class, MazdaCX5Simple.class, RX330HaoZheng.class, Peugeot206307OldSimple.class,//60
             X30Raise.class, MondeoDaojun.class, JeepXinbas.class, OuShangRaise.class, FiatEGEARaise.class, HYRaise.class, AlphaBagoo.class, ToyotaRaise.class, MiniHaoZheng.class, SubaruSimple.class,
             //70
             GMOD.class, MazdaRaise.class, GMRaise.class, AudiRaise.class, Q3Raise.class,//75
@@ -373,14 +367,9 @@ public class CanboxToPro {
             BeiqiDianDongCheOther.class,//290
             QQiceScreamOD.class, WeiChaiU70OD.class, JeepBNR2.class, DongFengOD.class, CarMazda.class, // 3->295 (38400)
             NaZhiJieU6Raise.class, JiLiBoRuiOD.class, DongFengXinNengYuanOD.class, SaiOu3Hiworld.class, TestKLD.class, //300
-            BMWE46LuZheng.class, Megane3.class, Teana2005XinChi.class, ZHONGXINGOD.class
-    };
+            BMWE46LuZheng.class, Megane3.class, Teana2005XinChi.class, ZHONGXINGOD.class};
 
-    private final static String[] RETURN_TYPE = {
-            "3,4,6,231,295",
-            "299,287,288,252,264,263,261,260,239,238,237,236,235,234,233,232,229,223,221,218,217,216,214,209,104,106,107,108,109,110,111,117,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,137,138,139,147,165,166,167,168,169,170,171,172,174,176,178,180,181,182,183,187,188,189,191,192,193,194,195,200,207,208",
-            "215", "302",
-    };
+    private final static String[] RETURN_TYPE = {"3,4,6,231,295", "299,287,288,252,264,263,261,260,239,238,237,236,235,234,233,232,229,223,221,218,217,216,214,209,104,106,107,108,109,110,111,117,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,137,138,139,147,165,166,167,168,169,170,171,172,174,176,178,180,181,182,183,187,188,189,191,192,193,194,195,200,207,208", "215", "302",};
 
     public final static Canbox getPro(String mCanboxType, int version, int index) {
         Canbox mCanbox = null;
@@ -545,15 +534,11 @@ public class CanboxToPro {
                     mCanbox = new MazdaRaise();
                 } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOYOTA_LOW)) {
                     mCanbox = new CarToyota2013Low();
-                }
-                else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ZHONGXING_OD)) {
+                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ZHONGXING_OD)) {
                     mCanbox = new ZHONGXINGOD();
-                }
-                else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_SLIMKEY2)) {
+                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_SLIMKEY2)) {
                     mCanbox = new SlimKeyCF006();
-                }
-
-                else {
+                } else {
                     mCanboxType = null;
                     mCanbox = new CarNone();
                     mCanbox = null;
@@ -572,10 +557,8 @@ public class CanboxToPro {
     public final static int getReturnMsgType(String mCanboxType, int version, int index) {
         int type = 0;
 
-        if (version >= 3)
-        {
-            if (index > 0 && index <= mAllCanbox.length)
-            {
+        if (version >= 3) {
+            if (index > 0 && index <= mAllCanbox.length) {
                 for (int i = 0; i < RETURN_TYPE.length; ++i) {
                     String[] ss = RETURN_TYPE[i].split(",");
                     for (String s : ss) {
