@@ -270,16 +270,9 @@ public class SlimKeyCF006 extends Canbox {
         byte radar;
         boolean show = false;
         Handler handler = null;
-
         MMLog.d(TAG, "CanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
-
-        //if (data[3] < 0x06) {
-        //parseACInfo(data);
-        //}
-        //else if (data[3] == 0x07)
-        {
-            //byte[] datas = new byte[]{(byte) 0x90, 0x4, 0x71, 0, 0, 0};
-            sendDataToCanbox(data, data.length - 1);
+        if (data[3] < 0x06) {
+        parseACInfo(data);
         }
     }
 

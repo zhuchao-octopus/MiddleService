@@ -58,7 +58,6 @@ import com.common.util.SystemProperties;
 import com.common.util.Util;
 import com.common.util.UtilSystem;
 import com.common.util.UtilSystem.StorageInfo;
-
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.autotest.AutoTest;
@@ -113,6 +112,7 @@ public class MyCarService extends Service {
     private static final int MSG_REPEAT_GPS_SETTINGS = 16;
     private static final String UPDATE_FILE = "ak48_update_guide.txt";
     private static final String UPDATE_FILE_HOLDER = "ak47_update_hold.txt";
+    private static final String CANBOX_UPDATE_FILE_NAME = "/canbox.upde";
     int mDelSdUpdate = 2;
 
     public static MyCarService mThis;
@@ -2082,7 +2082,7 @@ public class MyCarService extends Service {
         String update = null;
         for (StorageInfo si : ls) {
             if (si.mType == StorageInfo.TYPE_USB || si.mType == StorageInfo.TYPE_SD) {
-                file = si.mPath + "/canbox.upde";
+                file = si.mPath + CANBOX_UPDATE_FILE_NAME;
                 f = new File(file);
                 if (f.exists()) {
                     update = file;
@@ -2090,7 +2090,7 @@ public class MyCarService extends Service {
                 }
             }
         }
-        MMLog.d(TAG, "doUpdateCanbox:" + update);
+        MMLog.d(TAG, TAG+".doUpdateCanbox:" + update);
         if (update != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String title = String.format(getResources().getString(R.string.update_canbox), update);

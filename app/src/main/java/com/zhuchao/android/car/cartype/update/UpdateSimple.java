@@ -42,31 +42,22 @@ public class UpdateSimple extends Canbox {
 
     private byte[] buf;
     private int mSendLen = -1;
-
     public int getReturnType() {
         return 0;
     }
-
     private void startUpdate() {
-        if (CarUtil.mUpdateFile != null) {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(CarUtil.mUpdateFile);
-
+        if (CarUtil.mUpdateFile != null)
+        {
+            try (FileInputStream fis = new FileInputStream(CarUtil.mUpdateFile)) {
                 buf = new byte[fis.available()];
-
                 int n = fis.read(buf);
                 int crc = 0;
-                for (int i = 0; i < buf.length; ++i) {
-                    crc += buf[i] & 0xff;
+
+                for (byte b : buf) {
+                    crc += b & 0xff;
                 }
 
-                byte[] data = new byte[]{
-                        (byte) 0xe0, 0x9, 0x2, (byte) ((buf.length & 0xff000000) >> 24), (byte) ((buf.length & 0xff0000) >> 16), (byte) ((buf.length & 0xff00) >> 8), (byte) ((buf.length & 0xff) >> 0),
-
-                        (byte) ((crc & 0xff000000) >> 24), (byte) ((crc & 0xff0000) >> 16), (byte) ((crc & 0xff00) >> 8), (byte) ((crc & 0xff) >> 0)
-
-                };
+                byte[] data = new byte[]{(byte) 0xe0, 0x9, 0x2, (byte) ((buf.length & 0xff000000) >> 24), (byte) ((buf.length & 0xff0000) >> 16), (byte) ((buf.length & 0xff00) >> 8), (byte) ((buf.length & 0xff) >> 0), (byte) ((crc & 0xff000000) >> 24), (byte) ((crc & 0xff0000) >> 16), (byte) ((crc & 0xff00) >> 8), (byte) ((crc & 0xff) >> 0)};
                 mSendLen = 0;
                 sendDataToCanbox(data, data.length);
                 // mToast = Toast.makeText(mContext, "start",
@@ -74,16 +65,7 @@ public class UpdateSimple extends Canbox {
                 // if(mToast!=null){
                 // // mToast.setDuration(99900000);
                 // }
-            } catch (Exception ce) {
-
-            } finally {
-                if (fis != null) {
-                    try {
-                        fis.close();
-                    } catch (Exception ce) {
-
-                    }
-                }
+            } catch (Exception ignored) {
             }
 
         }
