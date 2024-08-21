@@ -7,6 +7,7 @@ import android.util.Log;
 import com.common.util.BroadcastUtil;
 import com.common.util.MyCmd;
 import com.zhuchao.android.car.R;
+import com.zhuchao.android.fbase.MMLog;
 
 public class ReverseActivity2 extends Activity {
 
@@ -16,12 +17,10 @@ public class ReverseActivity2 extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.back);
-        Log.d("aa", "onCreate");
         mRadioUI = ReverseUI.getInstance(this, findViewById(R.id.screen1_main), 0);
-
-        assert mRadioUI != null;
-        mRadioUI.onCreate();
-
+        if(mRadioUI != null)
+           mRadioUI.onCreate();
+        MMLog.d("ReverseActivity2", "onCreate tag="+findViewById(R.id.screen1_main).getTag());
     }
 
     @Override

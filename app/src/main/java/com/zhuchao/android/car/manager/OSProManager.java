@@ -323,7 +323,7 @@ public class OSProManager {
     private final Handler mOsHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         @Override
         public void handleMessage(Message msg) {
-            MMLog.d(TAG,msg.toString());
+            MMLog.d(TAG,"mOsHandler.msg="+msg.toString());
             switch (msg.what) {
                 case Mcu.MSG_RECEIVE_OS_DATA:
                     byte[] protocol = (byte[]) msg.obj;

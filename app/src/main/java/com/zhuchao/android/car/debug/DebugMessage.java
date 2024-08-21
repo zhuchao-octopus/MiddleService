@@ -1,5 +1,6 @@
 package com.zhuchao.android.car.debug;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.view.Gravity;
@@ -298,6 +299,7 @@ public class DebugMessage {
         return hs;
     }
 
+    @SuppressLint("DefaultLocale")
     public static boolean updateText(byte[] param, boolean recv) {
         if (mDebug != null) {
             String s = null;
@@ -311,9 +313,6 @@ public class DebugMessage {
                 }
             }
             switch (mMsgType) {
-                case 0:
-                    s = byteArrayToHex(param);
-                    break;
                 case DEUBG_CANBOX:
                     if (param[0] == 0x5 && (param[1] == 0x1 || param[1] == 0x3)) {
                         s = byteArrayToHex(param, 2, param.length);
@@ -325,13 +324,11 @@ public class DebugMessage {
             }
 
             if (s != null) {
-
                 mTest++;
                 //				if (mTest >= 500) {
                 //					mTest = 1;
                 //					mDebug.setText("");
                 //				}
-
                 String pre;
                 if (recv) {
                     pre = "->";
@@ -346,16 +343,13 @@ public class DebugMessage {
                 byte sec = (byte) d1.getSeconds();
                 //				SimpleDateFormat format = new SimpleDateFormat("mm:ss");
                 s = String.format("%03d-%02d:%03d", mTest % 1000, sec, time % 1000) + " " + pre + s;
-
                 //mDebug.setText(mDebug.getText() + "\n" + s);
                 //mScrollView.fullScroll(View.FOCUS_DOWN);
-
                 mAdapter.addData(s);
                 mAdapter.notifyDataSetChanged();
                 mListView.setSelection(mAdapter.getCount() - 1);
                 return true;
             }
-
         }
         return false;
     }

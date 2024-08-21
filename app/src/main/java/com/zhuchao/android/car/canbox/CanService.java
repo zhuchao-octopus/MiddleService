@@ -43,7 +43,7 @@ public class CanService {
 
     private AirConditionPanel mAirConditionPanel;
     private DoorStatusPanel mDoorStatusPanel;
-
+    private final Context mContext;
     public CarUtil mCarUtil;
 
     public static CanService getInstance(Context context) {
@@ -55,30 +55,22 @@ public class CanService {
         return mThis;
     }
 
-    Context mContext;
-
     public CanService(Context context) {
-
         mContext = context;
-
     }
 
     public void doCmd(int cmd, Intent intent) {
         byte[] buf = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_DATA);
-
         canboxDataParser(buf, buf.length);
-
     }
 
     private static final int PARSER_CANBOX_DATA = 0x01;
     private static final int CANBOX_UPDATE_TIME = 0x02;
     private final static int MSG_GPS_COMPASS = 0x03;
-
-    private int mUpdateCaboxTime = 0;
+    private int mUpdateCanboxTime = 0;
 
     public void canboxDataParser(byte[] data, int len) {
         mHandler.sendMessage(mThis.mHandler.obtainMessage(PARSER_CANBOX_DATA, len, 0, data));
-
     }
 
     private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
@@ -172,11 +164,10 @@ public class CanService {
     }
 
     public void updateCanbox() {
-
         mCarUtil = CarUtil.getCarUtilInstance();
         mCanbox = CarUtil.getCanboxInstance();
-
         unregisterListener();
+
         if (mCanbox != null) {
             mAppSource = -1;
             mCanbox.setContext(mContext);
@@ -195,11 +186,11 @@ public class CanService {
 
     private void initCanboxTime() {
         mHandler.removeMessages(CANBOX_UPDATE_TIME);
-        mUpdateCaboxTime = CarUtil.isNeedSendTime();
-        if (mUpdateCaboxTime != 0) {
+        mUpdateCanboxTime = CarUtil.isNeedSendTime();
+        if (mUpdateCanboxTime != 0) {
 
             updateCanboxTime();
-            if (mUpdateCaboxTime == 60000) { //1 min
+            if (mUpdateCanboxTime == 60000) { //1 min
                 Date curDate = new Date(System.currentTimeMillis());
                 int second = (byte) curDate.getSeconds();
                 second = ((60 - second) % 60);
@@ -319,9 +310,7 @@ public class CanService {
                                 }
                             }
 
-                            if (s != null) {
-                                GlobalDefinition.updateLcd(fm | MyCmd.SOURCE_RADIO, s);
-                            }
+                            GlobalDefinition.updateLcd(fm | MyCmd.SOURCE_RADIO, s);
                         }
 
                         if (GlobalDefinition.mMediaInfoToastBackground != 0) {
@@ -417,13 +406,9 @@ public class CanService {
                             int status = intent.getIntExtra("status", 0);
                             String num = intent.getStringExtra("num");
                             String name = intent.getStringExtra("name");
-                            // Log.e("", status+":"+num);
-                            if (num == null) {
-                                num = "  ";
-                            }
+                            if (num == null) num = "  ";
                             CarUtil.getCanboxInstance().setPhone(status, num);
                             CarUtil.getCanboxInstance().setPhoneEx(status, num, name);
-
                         }
                     } else if (action.equals(MyCmd.BROADCAST_SEND_TO_CAN) || action.equals(MyCmd.BROADCAST_SEND_TO_CAN_FROM_BT)) {
                         if (mCanbox != null) {
@@ -644,8 +629,8 @@ public class CanService {
             if (!CarUtil.mIsUpdating) {
                 mCanbox.updateTime();
             }
-            if (mUpdateCaboxTime > 0) {
-                mHandler.sendEmptyMessageDelayed(CANBOX_UPDATE_TIME, mUpdateCaboxTime);
+            if (mUpdateCanboxTime > 0) {
+                mHandler.sendEmptyMessageDelayed(CANBOX_UPDATE_TIME, mUpdateCanboxTime);
             }
         }
     }

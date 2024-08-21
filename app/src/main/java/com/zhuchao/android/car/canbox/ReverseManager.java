@@ -27,11 +27,12 @@ import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.cartype.simple.Nissan2013Simple;
 import com.zhuchao.android.car.manager.McuManager;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.util.Objects;
 
 public class ReverseManager {
-
+    private static final String TAG="ReverseManager";
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams mLayoutParams;
     @SuppressLint("StaticFieldLeak")
@@ -64,8 +65,8 @@ public class ReverseManager {
             if (Util.isRK356X() || Util.isPX6() || Util.isPX30() || (Util.isPX5() && (Util.isAndroidQ() || Util.isAndroidR()))) {
                 mLayoutParams.setTitle("AK_RFV240658f4");
             }
-            String s = MachineConfig.getPropertyOnce(MachineConfig.KEY_SCREEN1_VIEW);
 
+            String s = MachineConfig.getPropertyOnce(MachineConfig.KEY_SCREEN1_VIEW);
             if (s != null && s.contains(MachineConfig.VALUE_SCREEN1_VIEW_REVERSE)) {
                 mShowScreen1 = true;
                 DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
@@ -84,6 +85,7 @@ public class ReverseManager {
                 mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             }
 
+            MMLog.d(TAG, TAG+".init tag="+mView.findViewById(R.id.screen1_main).getTag());
         }
     }
 
@@ -129,7 +131,6 @@ public class ReverseManager {
                     break;
                 case STOP_UI:
                     if (!isShow) {
-
                         Log.e("allen", "STOP_UI ");
                         mUI.onPause();
                         mUI.onDestroy();
@@ -145,7 +146,6 @@ public class ReverseManager {
                         }
                         mLastStartDelay = 0;
                         mHandler.sendEmptyMessageDelayed(REMOVE_UI, delay);
-
                     }
                     break;
             }
@@ -175,7 +175,7 @@ public class ReverseManager {
     private static long mLastStopTime = 0;
 
     public static void start(Context context, int delay) {
-        Log.e("ReverseUI", "reverse start: " + isShow);
+        MMLog.d(TAG, TAG+".start delay=" + delay);
         if (!isShow) {
             mShowFrontCamera = false;
             if (Util.isRKSystem()) {
@@ -184,10 +184,10 @@ public class ReverseManager {
                 mHandler.removeMessages(REMOVE_UI);
             }
 
-            //			if (RadarManager.isShow) {
-            //				RadarManager.stop();
-            //				RadarManager.start(context);
-            //			}
+            //if (RadarManager.isShow) {
+            //	RadarManager.stop();
+            //	RadarManager.start(context);
+            //	}
 
             if (GlobalDefinition.mReverseBrightness != 0) {
                 Log.d("ReverseManager", "mReverseBrightness:" + GlobalDefinition.mReverseBrightness);
@@ -211,7 +211,6 @@ public class ReverseManager {
             // mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
             if (mUI == null) {
                 mUI = ReverseUI.getInstance(context, mView.findViewById(R.id.screen1_main), 0);
-
             }
 
             mUI.onCreate();
@@ -296,7 +295,7 @@ public class ReverseManager {
     }
 
     public static void stop() {
-        Log.e("ReverseUI", "reverse stop: " + isShow);
+        MMLog.d(TAG, TAG+".stop isShow=" + isShow);
         if (isShow) {
             mHandler.removeMessages(REQUEST_ANGLE);
             //			Log.d("test", "stop");

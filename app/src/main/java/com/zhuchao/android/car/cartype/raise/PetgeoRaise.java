@@ -12,18 +12,16 @@ import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.RadarManager;
 import com.zhuchao.android.car.canbox.WarningMsgManager;
 import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.fbase.ByteUtils;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.util.Date;
 
 public class PetgeoRaise extends Canbox {
 
     public PetgeoRaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x1, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x1, 0x1, 0x2, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x1, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x1, 0x1, 0x2, 0x1});
 
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         // updateCanboxSettings();
@@ -80,9 +78,7 @@ public class PetgeoRaise extends Canbox {
 
     private final static byte[][] KEYS_WHEEL = {
 
-            {0x2, KEY_HOME}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x7, KEY_PLAYPAUSE}, {0x8, KEY_BACK}, {0x10, KEY_SOURCE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV},
-            {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D}, {0x16, KEY_MUTE}, {0x17, KEY_PREVIOUSSONG}, {0x18, KEY_NEXTSONG}, {0x1F, KEY_MIC}, {0x50, KEY_BT},
-            {0x20, MyCmd.Keycode.KEY_CAR_INFO},
+            {0x2, KEY_HOME}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x7, KEY_PLAYPAUSE}, {0x8, KEY_BACK}, {0x10, KEY_SOURCE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D}, {0x16, KEY_MUTE}, {0x17, KEY_PREVIOUSSONG}, {0x18, KEY_NEXTSONG}, {0x1F, KEY_MIC}, {0x50, KEY_BT}, {0x20, MyCmd.Keycode.KEY_CAR_INFO},
 
             {0x21, KEY_MENU}, {0x23, KEY_BT},
 
@@ -92,23 +88,18 @@ public class PetgeoRaise extends Canbox {
 
             {(byte) 0x44, KEY_NUM_1}, {(byte) 0x45, KEY_NUM_2}, {(byte) 0x46, KEY_NUM_3}, {(byte) 0x47, KEY_NUM_4}, {(byte) 0x48, KEY_NUM_5}, {(byte) 0x49, KEY_NUM_6},
 
-            {(byte) 0x97, KEY_PREVIOUSSONG}, {(byte) 0x98, KEY_NEXTSONG}, {(byte) 0x99, KEY_FM}, {(byte) 0x9a, MyCmd.Keycode.BRIGHTNESS}, {(byte) 0x9b, KEY_HOME}, {(byte) 0x9c, KEY_PREVIOUSSONG},
-            {(byte) 0x9d, KEY_NEXTSONG}, {(byte) 0x9e, KEY_MENU}, {(byte) 0x9f, MyCmd.Keycode.MODLE},
+            {(byte) 0x97, KEY_PREVIOUSSONG}, {(byte) 0x98, KEY_NEXTSONG}, {(byte) 0x99, KEY_FM}, {(byte) 0x9a, MyCmd.Keycode.BRIGHTNESS}, {(byte) 0x9b, KEY_HOME}, {(byte) 0x9c, KEY_PREVIOUSSONG}, {(byte) 0x9d, KEY_NEXTSONG}, {(byte) 0x9e, KEY_MENU}, {(byte) 0x9f, MyCmd.Keycode.MODLE},
 
             {(byte) 0xa0, MyCmd.Keycode.MULT_SOURCE_AND_BT}, {(byte) 0xa1, KEY_MEDIA}, {(byte) 0xa2, KEY_PLAYPAUSE}, {(byte) 0xa3, KEY_BACK}, {(byte) 0xa4, KEY_MUTE},
             // { (byte)0xa5, KEY_MODE },
             {(byte) 0xa6, KEY_HOME},
 
-            {(byte) 0xb0, KEY_BT_DIAL}, {(byte) 0xb1, KEY_BT_HANG}, {(byte) 0xb2, KEY_BACK}, {(byte) 0xb3, KEY_GPS}, {(byte) 0xb4, MyCmd.Keycode.RDS_TA_SWITCH}, {(byte) 0xb5, KEY_FM},
-            {(byte) 0xb6, KEY_MEDIA}, {(byte) 0xb7, KEY_SET}, {(byte) 0xb8, MyCmd.Keycode.KEY_RECENT_APPS}, {(byte) 0xb9, KEY_PREVIOUSSONG}, {(byte) 0xba, KEY_NEXTSONG}, {(byte) 0xbb, KEY_SEEK_PREV},
-            {(byte) 0xbc, KEY_SEEK_NEXT}, {(byte) 0xbd, KEY_PLAYPAUSE}, {(byte) 0xbe, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0xbf, MyCmd.Keycode.ROLL_PREV},
+            {(byte) 0xb0, KEY_BT_DIAL}, {(byte) 0xb1, KEY_BT_HANG}, {(byte) 0xb2, KEY_BACK}, {(byte) 0xb3, KEY_GPS}, {(byte) 0xb4, MyCmd.Keycode.RDS_TA_SWITCH}, {(byte) 0xb5, KEY_FM}, {(byte) 0xb6, KEY_MEDIA}, {(byte) 0xb7, KEY_SET}, {(byte) 0xb8, MyCmd.Keycode.KEY_RECENT_APPS}, {(byte) 0xb9, KEY_PREVIOUSSONG}, {(byte) 0xba, KEY_NEXTSONG}, {(byte) 0xbb, KEY_SEEK_PREV}, {(byte) 0xbc, KEY_SEEK_NEXT}, {(byte) 0xbd, KEY_PLAYPAUSE}, {(byte) 0xbe, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0xbf, MyCmd.Keycode.ROLL_PREV},
 
             {(byte) 0x81, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_DOWN},
 
 
-            {(byte) 0x29, MyCmd.Keycode.SPEECH}, {(byte) 0x2a, MyCmd.Keycode.KEY_CAR_SETTING}, {(byte) 0x30, MyCmd.Keycode.MULT_SOURCE_AND_BT}, {(byte) 0x33, MyCmd.Keycode.RADIO},
-            {(byte) 0x2b, MyCmd.Keycode.NAVIGATION}, {(byte) 0x2c, MyCmd.Keycode.RADIO}, {(byte) 0x2d, MyCmd.Keycode.BT}, {(byte) 0x2e, MyCmd.Keycode.SETUP},
-            {(byte) 0x2f, MyCmd.Keycode.KEY_AIR_CONTROL}, {(byte) 0x32, MyCmd.Keycode.NAVIGATION}, {(byte) 0x35, MyCmd.Keycode.NAVIGATION},
+            {(byte) 0x29, MyCmd.Keycode.SPEECH}, {(byte) 0x2a, MyCmd.Keycode.KEY_CAR_SETTING}, {(byte) 0x30, MyCmd.Keycode.MULT_SOURCE_AND_BT}, {(byte) 0x33, MyCmd.Keycode.RADIO}, {(byte) 0x2b, MyCmd.Keycode.NAVIGATION}, {(byte) 0x2c, MyCmd.Keycode.RADIO}, {(byte) 0x2d, MyCmd.Keycode.BT}, {(byte) 0x2e, MyCmd.Keycode.SETUP}, {(byte) 0x2f, MyCmd.Keycode.KEY_AIR_CONTROL}, {(byte) 0x32, MyCmd.Keycode.NAVIGATION}, {(byte) 0x35, MyCmd.Keycode.NAVIGATION},
 
             {(byte) 0x34, MyCmd.Keycode.SETUP},
 
@@ -300,10 +291,7 @@ public class PetgeoRaise extends Canbox {
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
-        // TODO Auto-generated method stub
-        //		--len;
-        //		byte[] data = new byte[len];
-        //		byteArrayCopy(d, data, 0, 1, len);
+        MMLog.d(TAG, "CanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
 
         switch (data[1]) {
             case 0x2: {
@@ -311,11 +299,11 @@ public class PetgeoRaise extends Canbox {
             }
             break;
             case 0x21: {
-                //sendCanboxInfo("com.canboxsetting", data);
+                ///sendCanboxInfo("com.canboxsetting", data);
                 parseACInfo(data, len);
+                ///setVolume(10);
             }
             break;
-
             case 0x32: // Radar back
             {
                 mRadarSwitch = data[2];
@@ -371,10 +359,8 @@ public class PetgeoRaise extends Canbox {
                     }
                     Handler handler = getHandler(RadarManager.TAG);
                     if (null != handler) {
-                        //					checkHideRadar();
+                        //checkHideRadar();
                         handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_LEFT));
-
-
                         handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_RIGHT));
                     }
                 }
@@ -404,17 +390,12 @@ public class PetgeoRaise extends Canbox {
                     temp = -temp;
                 }
 
-
                 String s = String.format("%d%s", temp, mContext.getResources().getString(R.string.temp_unic_centigrade));
                 GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
-
             }
             break;
 
-
             case 0x29: {
-
-
                 Handler handler = getHandler("Reverse");
                 if (null != handler) {
                     short a = (short) ((data[2] & 0xff) | ((data[3] & 0xff) << 8));// bu
@@ -465,7 +446,6 @@ public class PetgeoRaise extends Canbox {
     private int showWarningMsg = -1;
 
     public void updateCanboxSettings() {
-
         showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SystemConfig.SHOW_FOCUS_CAR_WARNING_MSG, 0);
         if (showWarningMsg != 0) {
             WarningMsgManager.stop();
@@ -490,14 +470,11 @@ public class PetgeoRaise extends Canbox {
     }
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
-
         byte min = (byte) ((time / 60) % 60);
         byte sec = (byte) ((time) % 60);
         //		++play;
         byte[] data;
-
         byte s = 0;
-
         switch (source) {
 
             case MyCmd.SOURCE_DVD:
@@ -510,25 +487,18 @@ public class PetgeoRaise extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-
         } else {
             ++play;
-
         }
 
-        data = new byte[]{
-                0x9, (byte) 0xc0, s, 1, (byte) ((total & 0xff00) >> 8), (byte) (total & 0xff), (byte) ((play & 0xff00) >> 8), (byte) (play & 0xff)
-        };
-
+        data = new byte[]{0x9, (byte) 0xc0, s, 1, (byte) ((total & 0xff00) >> 8), (byte) (total & 0xff), (byte) ((play & 0xff00) >> 8), (byte) (play & 0xff)};
         sendDataToCanbox(data, data.length);
-
     }
 
     private final int mSource = MyCmd.SOURCE_NONE;
     private final int mBaud = 0;
 
     public void setVolume(int volume) {
-
         byte[] data = new byte[]{0x4, (byte) 0xc4, (byte) volume};
         sendDataToCanbox(data, data.length);
     }
@@ -575,12 +545,8 @@ public class PetgeoRaise extends Canbox {
                 break;
         }
         byte[] data;
-
-
         data = new byte[]{0x9, (byte) 0xc0, s, 1, 0, 0, 0, 0};
-
         sendDataToCanbox(data, data.length);
-
     }
 
     String mName = null;
@@ -592,7 +558,6 @@ public class PetgeoRaise extends Canbox {
     }
 
     public void sendId3(byte index, String num) {
-
         //		try {
         //			if (num == null) {
         //				num = "";

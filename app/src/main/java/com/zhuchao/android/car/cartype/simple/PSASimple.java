@@ -14,16 +14,14 @@ import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.RadarManager;
 import com.zhuchao.android.car.canbox.WarningMsgManager;
 import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.fbase.ByteUtils;
+import com.zhuchao.android.fbase.MMLog;
 
 public class PSASimple extends Canbox {
 
     public PSASimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
 
         buildBrake((byte) 0x38, (byte) 0x4, (byte) 0x2, (byte) 0);
         buildCmdRepeatSendCarType(getCarTypeCmd(), 1);
@@ -60,9 +58,7 @@ public class PSASimple extends Canbox {
     int caneq = 0;
 
     public void startConnect() {// default is simple box
-
         caneq = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_CANBOX_EQ);
-
         if (CarUtil.getCarEQ() == 1 || caneq == 1 || CarUtil.getCanboxProVersion() >= 3) {
             CarUtil.mIsNeedSendEQ = true;
             Util.doSleep(10);
@@ -77,7 +73,14 @@ public class PSASimple extends Canbox {
         data = new byte[]{(byte) 0x90, 0x4, 0x17, 0, 0, 0};
         sendDataToCanbox(data, data.length);
 
-
+        /*switch (CarUtil.getAirCondition()) {
+            case 4:
+                MMLog.d(TAG, "getAirCondition==4");
+                break;
+            case 5:
+                MMLog.d(TAG, "getAirCondition==5");
+                break;
+        }*/
     }
 
     //	private void intKeyType() {
@@ -98,25 +101,17 @@ public class PSASimple extends Canbox {
 
     private final static byte[][] KEYS_WHEEL_NORMAL = {
 
-            {0x2, KEY_HOME}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x7, KEY_PLAYPAUSE}, {0x8, KEY_BACK}, {0x10, KEY_SOURCE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV},
-            {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D}, {0x16, KEY_MUTE}, {0x1F, KEY_MIC}, {0x50, KEY_BT}, {0x20, MyCmd.Keycode.KEY_CAR_INFO}, {0x21, KEY_MODE}, {0x23, KEY_BT},
-            {0x30, MyCmd.Keycode.MULT_SOURCE_AND_BT},
+            {0x2, KEY_HOME}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x7, KEY_PLAYPAUSE}, {0x8, KEY_BACK}, {0x10, KEY_SOURCE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D}, {0x16, KEY_MUTE}, {0x1F, KEY_MIC}, {0x50, KEY_BT}, {0x20, MyCmd.Keycode.KEY_CAR_INFO}, {0x21, KEY_MODE}, {0x23, KEY_BT}, {0x30, MyCmd.Keycode.MULT_SOURCE_AND_BT},
 
             {(byte) 0x17, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x18, MyCmd.Keycode.ROLL_PREV},
 
-            {0x19, AK_KEYPAD_VOLUME_A}, {0x1a, AK_KEYPAD_VOLUME_D}, {0x22, KEY_EJECT}, {(byte) 0x91, KEY_NUM_1}, {(byte) 0x92, KEY_NUM_2}, {(byte) 0x93, KEY_NUM_3}, {(byte) 0x94, KEY_NUM_4},
-            {(byte) 0x95, KEY_NUM_5}, {(byte) 0x96, KEY_NUM_6}, {(byte) 0x97, KEY_PREVIOUSSONG}, {(byte) 0x98, KEY_NEXTSONG}, {(byte) 0x99, KEY_FM}, {(byte) 0x9a, MyCmd.Keycode.BRIGHTNESS},
-            {(byte) 0x9b, KEY_HOME}, {(byte) 0x9c, KEY_PREVIOUSSONG}, {(byte) 0x9d, KEY_NEXTSONG}, {(byte) 0x9e, KEY_MODE}, {(byte) 0x9f, MyCmd.Keycode.KEY_RECENT_APPS},
+            {0x19, AK_KEYPAD_VOLUME_A}, {0x1a, AK_KEYPAD_VOLUME_D}, {0x22, KEY_EJECT}, {(byte) 0x91, KEY_NUM_1}, {(byte) 0x92, KEY_NUM_2}, {(byte) 0x93, KEY_NUM_3}, {(byte) 0x94, KEY_NUM_4}, {(byte) 0x95, KEY_NUM_5}, {(byte) 0x96, KEY_NUM_6}, {(byte) 0x97, KEY_PREVIOUSSONG}, {(byte) 0x98, KEY_NEXTSONG}, {(byte) 0x99, KEY_FM}, {(byte) 0x9a, MyCmd.Keycode.BRIGHTNESS}, {(byte) 0x9b, KEY_HOME}, {(byte) 0x9c, KEY_PREVIOUSSONG}, {(byte) 0x9d, KEY_NEXTSONG}, {(byte) 0x9e, KEY_MODE}, {(byte) 0x9f, MyCmd.Keycode.KEY_RECENT_APPS},
 
             {(byte) 0xa0, MyCmd.Keycode.MULT_SOURCE_AND_BT}, {(byte) 0xa1, KEY_MEDIA}, {(byte) 0xa2, KEY_PLAYPAUSE}, {(byte) 0xa3, KEY_BACK}, {(byte) 0xa4, KEY_MUTE},
             // { (byte)0xa5, KEY_MODE },
             {(byte) 0xa6, KEY_HOME},
 
-            {(byte) 0xb0, KEY_BT_DIAL}, {(byte) 0xb1, KEY_BT_HANG}, {(byte) 0xb2, KEY_BACK}, {(byte) 0xb3, KEY_GPS}, {(byte) 0xb4, MyCmd.Keycode.RDS_TA_SWITCH}, {(byte) 0xb5, KEY_FM},
-            {(byte) 0xb6, KEY_MEDIA}, {(byte) 0xb7, KEY_SET}, {(byte) 0xb8, MyCmd.Keycode.KEY_RECENT_APPS}, {(byte) 0xb9, KEY_PREVIOUSSONG}, {(byte) 0xba, KEY_NEXTSONG}, {(byte) 0xbb, KEY_SEEK_PREV},
-            {(byte) 0xbc, KEY_SEEK_NEXT}, {(byte) 0xbd, KEY_PLAYPAUSE}, {(byte) 0xbe, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0xbf, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-            {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-
+            {(byte) 0xb0, KEY_BT_DIAL}, {(byte) 0xb1, KEY_BT_HANG}, {(byte) 0xb2, KEY_BACK}, {(byte) 0xb3, KEY_GPS}, {(byte) 0xb4, MyCmd.Keycode.RDS_TA_SWITCH}, {(byte) 0xb5, KEY_FM}, {(byte) 0xb6, KEY_MEDIA}, {(byte) 0xb7, KEY_SET}, {(byte) 0xb8, MyCmd.Keycode.KEY_RECENT_APPS}, {(byte) 0xb9, KEY_PREVIOUSSONG}, {(byte) 0xba, KEY_NEXTSONG}, {(byte) 0xbb, KEY_SEEK_PREV}, {(byte) 0xbc, KEY_SEEK_NEXT}, {(byte) 0xbd, KEY_PLAYPAUSE}, {(byte) 0xbe, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0xbf, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_DOWN},
 
             {(byte) 0xa5, MyCmd.Keycode.KEY_AIR_CONTROL},
 
@@ -187,8 +182,8 @@ public class PSASimple extends Canbox {
     byte[] airData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
-        int windMode = 0;
         boolean airControl = false;
+        int windMode = 0;
 
         // if ((data[6] & 0x2) == 0) {
         // data[4] = (byte)0xfe;
@@ -201,7 +196,6 @@ public class PSASimple extends Canbox {
         // } else {
         // data[4] = 0;
         // }
-        //
         // if (data[5] >= 0x7f) {
         // data[5] = (byte) 0xff;
         // } else if (data[5] >= 0x1f && data[5] <= 0x3B) {
@@ -223,11 +217,16 @@ public class PSASimple extends Canbox {
         airData[1] = (byte) (data[3] & 0xf0);
         airData[1] |= wind;
 
-        airData[2] = (byte) (data[4] & 0xff);
-        airData[3] = (byte) (data[5] & 0xff);
+        //if ((CarUtil.getAirCondition() == 4) || CarUtil.getAirCondition() == 5) {
+        //    airData[2] = (byte) (data[4] & 0xff);
+        //}
+        //else
+        {
+            airData[2] = (byte) (data[4] & 0xff);
+            airData[3] = (byte) (data[5] & 0xff);
+        }
 
         airData[4] = (byte) (((data[6] & 0x20) << 2) | ((data[6] & 0x08) >> 1) | ((data[6] & 0x04) << 1));
-
         airData[5] = (byte) (((data[6] & 0x1)));
 
         if (data[1] > 7) {
@@ -236,12 +235,13 @@ public class PSASimple extends Canbox {
                 windMode = 1;
             }
         }
-        //暂时不处理手动空调
-        //		if ((data[6] & 0x2) == 0) {
-        //			airData[7] = 0x40;
-        //		} else {
-        //			airData[7] = 0x0;
-        //		}
+
+        ///暂时不处理手动空调
+        ///	if ((data[6] & 0x2) == 0) {
+        ///	   airData[7] = 0x40;
+        ///	} else {
+        ///	airData[7] = 0x0;
+        ///	}
 
         int msg = CANBOX_HIDE_AIR;
         if ((data[2] & 0x80) != 0) {
@@ -280,14 +280,14 @@ public class PSASimple extends Canbox {
     @SuppressLint("DefaultLocale")
     @Override
     public void parseCanboxData(byte[] data, int len) {
-        // TODO Auto-generated method stub
+        MMLog.d(TAG, "CanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
         switch (data[0]) {
             case 0x20: {
                 parseWheelKey(data, len);
             }
             break;
             case 0x21: {
-                // sendCanboxInfo("com.canboxsetting", data);
+                //sendCanboxInfo("com.canboxsetting", data);
                 parseACInfo(data, len);
             }
             break;
@@ -330,23 +330,18 @@ public class PSASimple extends Canbox {
                     Handler handler = getHandler("CanService");
                     if (null != handler) {
                         handler.sendMessage(handler.obtainMessage(CANBOX_DOOR_STATUS, mDoorStatus, 0));
-
                     }
                 }
-
                 sendCanboxInfo("com.canboxsetting", data);
             }
             break;
             case 0x36: {
-
                 int temp = (data[2] & 0x7f);
                 if ((data[2] & 0x80) != 0) {
                     temp = -temp;
                 }
-
                 String s = String.format("%d%s", temp, mContext.getResources().getString(R.string.temp_unic_centigrade));
                 GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
-
             }
             break;
 
@@ -354,16 +349,13 @@ public class PSASimple extends Canbox {
                 Handler handler = getHandler("Reverse");
                 if (null != handler) {
                     short a = (short) ((data[2] & 0xff) | ((data[3] & 0xff) << 8));// bu
-                    // ma
-
                     int angle = ((a * 3000) / 5450);
-
                     if (angle > -50 && angle < 50) {
                         angle = 50;
                     }
-                    // Log.e("1", ""+(data[2] & 0xff));
-                    // Log.e("2", ""+(data[3] & 0xff));
-                    // Log.e("3", ""+((data[3] << 8) | (data[2] & 0xff)));
+                    /// Log.e("1", ""+(data[2] & 0xff));
+                    /// Log.e("2", ""+(data[3] & 0xff));
+                    /// Log.e("3", ""+((data[3] << 8) | (data[2] & 0xff)));
                     handler.sendMessage(handler.obtainMessage(CANBOX_STEER_ANGLE, angle, 100));
                 }
             }
@@ -373,10 +365,8 @@ public class PSASimple extends Canbox {
             case 0x35:
             case 0x3A:
             case 0x3B:
-
                 sendCanboxInfo("com.canboxsetting", data);
                 break;
-
             case 0x17:
                 CarUtil.mIsNeedSendEQ = ((data[2] & 0x80) != 0);
                 sendCanboxInfo("com.canboxsetting", data);
@@ -384,14 +374,12 @@ public class PSASimple extends Canbox {
             case 0x30: {
                 byte[] version = new byte[16];
                 Util.byteArrayCopy(version, data, 0, 2, version.length);
-
                 mVersion = (new String(version));
-                // version
                 break;
             }
             case 0x71: {
-                // byte[] version = new byte[9];
-                // Util.byteArrayCopy(version, data, 0, 2, version.length);
+                /// byte[] version = new byte[9];
+                /// Util.byteArrayCopy(version, data, 0, 2, version.length);
                 String date = ((data[4] & 0xf0) >> 4) + String.valueOf((data[4] & 0xf) >> 0) + "-" + ((data[5] & 0xf0) >> 4) + ((data[5] & 0xf) >> 0) + "-" + ((data[6] & 0xf0) >> 4) + ((data[6] & 0xf) >> 0);
                 mVersionEx = data[2] + " " + data[3] + " " + date + "v" + data[8] + data[9] + data[10];
                 // Log.d("ff", ""+mVersion);
@@ -404,7 +392,6 @@ public class PSASimple extends Canbox {
     private int showWarningMsg = -1;
 
     public void updateCanboxSettings() {
-
         showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SystemConfig.SHOW_FOCUS_CAR_WARNING_MSG, 0);
         if (showWarningMsg != 0) {
             WarningMsgManager.stop();
@@ -432,7 +419,6 @@ public class PSASimple extends Canbox {
 
         byte min = (byte) ((time / 60) % 60);
         byte sec = (byte) ((time) % 60);
-        // ++play;
         byte[] data;
 
         byte s = 0;
@@ -458,14 +444,10 @@ public class PSASimple extends Canbox {
             if (total > 0xff) {
                 total = 0xff;
             }
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, mediaType, (byte) play, (byte) total, 0, 0, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, mediaType, (byte) play, (byte) total, 0, 0, min, sec};
         } else {
             ++play;
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, mediaType, (byte) (play & 0xff), (byte) ((play & 0xff00) >> 8), (byte) (total & 0xff), (byte) ((total & 0xff00) >> 8), min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, mediaType, (byte) (play & 0xff), (byte) ((play & 0xff00) >> 8), (byte) (total & 0xff), (byte) ((total & 0xff00) >> 8), min, sec};
         }
 
         sendDataToCanbox(data, data.length);

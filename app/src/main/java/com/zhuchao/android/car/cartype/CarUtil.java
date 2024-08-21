@@ -25,14 +25,12 @@ import com.zhuchao.android.fbase.MMLog;
 import java.io.File;
 
 public class CarUtil {
-
     public static final String TAG = "CarUtil";
     private Canbox mCanbox = null;
     private static CarUtil mCarUtil = null;
     public static int m360UI = 0;
     public static int mTempUnit = 0;
     // public static int mMileagepUnit = 0;
-
     public static final int INVALID_OUT_DOOR_TEMP = Integer.MAX_VALUE;
     public static final int CLEAR_OUT_DOOR_TEMP = Integer.MAX_VALUE - 1;
 
@@ -40,17 +38,14 @@ public class CarUtil {
     public static final int SWITCH_CANBOX_LR_TURNER_LIGHT = (1 << 1);
     public static final int SWITCH_CANBOX_BRAKE = (1 << 2);
 
-
     public static final int AC_CONFIG_TEMP_CHANGE = (1 << 2);
     public static final int AC_CONFIG_HIDE = (1 << 3);
     public static final int AC_CONFIG_OURDOOR_HIDE = (1 << 4);
 
     public static int mSettingCanboxBrake = 0;
     public static int mPreCanboxBrake = 0;
-
     private static String mCanboxType = null;
     private static final int TIME_CANBOX_UPDATE_TIME = 60000;
-
     public final static String PG = "/dev/ptyCan";
 
     private CarUtil() {
@@ -67,13 +62,12 @@ public class CarUtil {
         } else {
             MMLog.d(TAG, "mCanbox == null !!!!!!!!!!!");
         }
-
         initPGBin();
     }
 
     public static CarUtil getCarUtilInstance() {
         if (mCarUtil != null) {
-            mCarUtil.clear();
+            mCarUtil.clear();//stopConnect();
         }
         // if (null == mCarUtil) {
         mCarUtil = new CarUtil();
@@ -82,10 +76,7 @@ public class CarUtil {
     }
 
     public static Canbox getCanboxInstance() {
-        if (mCarUtil != null) {
-            return mCarUtil.mCanbox;
-        }
-        return null;
+        return mCarUtil.mCanbox;
     }
 
     public static void initCanboxBrake() {
@@ -99,7 +90,7 @@ public class CarUtil {
         if (mSettingCanboxBrake != 0) {
             McuManager mMcuManager = McuManager.getInstance();
             if (mMcuManager != null) {
-                MMLog.d(TAG, "updateCanboxBrake:" + " brake " + brake + ":" + mPreCanboxBrake + "mBrakeSwitch:" + mMcuManager.mBrakeSwitch);
+                MMLog.d(TAG, "UpdateCanboxBrake:" + " brake " + brake + ":" + mPreCanboxBrake + " mBrakeSwitch:" + mMcuManager.mBrakeSwitch);
                 if (mMcuManager.mBrakeSwitch == 0) {
                     return;
                 }
@@ -425,12 +416,11 @@ public class CarUtil {
         mOtherSettings = 0;
         mProVersion = 0;
         mProIndex = -1;
-
         mExternalRadarId = 0;
 
         mExternalRadarId = MachineConfig.getPropertyInt(MachineConfig.KEY_EXTERNAL_BOX);
-
         mCanboxType = MachineConfig.getPropertyOnce(MachineConfig.KEY_CAN_BOX);
+
         if (mCanboxType == null) {
             mCanboxType = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_CAN_BOX);
         }
@@ -505,7 +495,7 @@ public class CarUtil {
                                         break;
                                 }
                             }
-                            MMLog.d(TAG, ":" + mModelId);
+                            MMLog.d(TAG, "getCanboxSetting() mModelId=" + mModelId);
                         }
                     }
 

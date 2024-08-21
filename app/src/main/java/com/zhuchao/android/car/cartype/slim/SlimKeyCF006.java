@@ -1,5 +1,6 @@
 package com.zhuchao.android.car.cartype.slim;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -98,14 +99,68 @@ public class SlimKeyCF006 extends Canbox {
                         mContext.sendBroadcast(i);
                     }
                 }
-            }, 300);
+            },300);
         }
-        MMLog.d(TAG, "sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
+        MMLog.d(TAG,"sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
 
     }
 
     public void updateOutDoorTemp(int temp) {
+        if ((temp < -40) || (temp > 86)) {
+            return;
+        }
 
+        int t = temp;
+
+        if (CarUtil.mTempUnit == 2) {
+            mOutDoorTempUnit |= 0x40;
+        } else if (CarUtil.mTempUnit == 1) {
+            mOutDoorTempUnit = 0;
+        }
+
+        String unit = mContext.getResources().getString(R.string.temp_unic_centigrade);
+        if ((mOutDoorTempUnit & 0x40) != 0) {
+            unit = mContext.getResources().getString(R.string.temp_unic_fahrenheit);
+            t = (t * 18 + 320) / 10;
+        }
+        GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
+    }
+
+
+    private byte getRadarData(byte i) {
+        byte data = 0;
+        if (i == 0x1) {
+            data = 1;
+        } else if (i >= 0x2 && i <= 0x3) {
+            data = 2;
+        } else if (i >= 0x4 && i <= 0x5) {
+            data = 3;
+        } else if (i >= 0x6 && i <= 0x7) {
+            data = 4;
+        } else if (i >= 0x8 && i <= 0x9) {
+            data = 5;
+        } else if (i >= 0xa && i <= 0xb) {
+            data = 6;
+        } else if (i >= 0xc && i <= 0xd) {
+            data = 7;
+        } else if (i >= 0xe && i <= 0xf) {
+            data = 8;
+        } else if (i >= 0x10 && i <= 0x11) {
+            data = 9;
+        } else if (i >= 0x12 && i <= 0x13) {
+            data = 10;
+        } else if (i >= 0x14 && i <= 0x15) {
+            data = 11;
+        } else if (i >= 0x16 && i <= 0x17) {
+            data = 13;
+        } else if (i >= 0x18 && i <= 0x19) {
+            data = 14;
+        } else if (i >= 0x1a && i <= 0x1b) {
+            data = 15;
+        } else if (i >= 0x1c && i <= 0x1f) {
+            data = 16;
+        }
+        return data;
     }
 
     private int mSource = MyCmd.SOURCE_NONE;
@@ -187,4 +242,20 @@ public class SlimKeyCF006 extends Canbox {
         Log.d(TAG, "SlimKeyCF006 stopConnect()");
     }
 
+    @Override
+    public void setContext(Context c) {
+        super.setContext(c);
+    }
+
+    @Override
+    public void touchInReverse(int x, int y, int w, int h) {
+        super.touchInReverse(x, y, w, h);
+        ///MMLog.d(TAG, "touchInReverse x:" + x + " y:" + y + " w:" + w + " h:" + h);
+    }
+
+    @Override
+    public void touchInReverseEx(int x, int y, int w, int h, int down) {
+        super.touchInReverseEx(x, y, w, h, down);
+        ///MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
+    }
 }

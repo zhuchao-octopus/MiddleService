@@ -21,6 +21,7 @@ import com.common.util.UtilSystem;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
+import com.zhuchao.android.fbase.ByteUtils;
 import com.zhuchao.android.fbase.MMLog;
 
 import java.util.Locale;
@@ -201,7 +202,7 @@ public class AirConditionPanel extends Handler {
     }
 
     public void handleMessage(Message msg) {
-        MMLog.d(TAG, "AirConditionPanel.handleMessage " + msg.toString()+","+CarUtil.isShowAC());
+        ///MMLog.d(TAG, "AirConditionPanel.handleMessage " + msg.toString()+","+CarUtil.isShowAC());
         switch (msg.what) {
             case MESSAGE_AIR_CONDITION:
                 byte[] airData = (byte[]) msg.obj;
@@ -214,8 +215,7 @@ public class AirConditionPanel extends Handler {
                     Util.byteArrayCopy(mAirDataBackup, airData, 0, 0, airData.length);
                 }
 
-                if ((airData[0] & 0x80) == 0)
-                {
+                if ((airData[0] & 0x80) == 0) {
                     //off = true;
                     if ((airData[5] & 0x80) != 0) {
                         off = true;
@@ -276,8 +276,7 @@ public class AirConditionPanel extends Handler {
                     //return;
                 }
 
-                if (CarUtil.isShowAC())
-                {
+                if (CarUtil.isShowAC()) {
                     if (!"com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity())) {
                         if (!off /*&& !dataEqual*/ && !CarUtil.isHideAirCondition()) {
                             UtilSystem.doRunActivity(mContext, "com.canboxsetting", "com.canboxsetting.CanAirControlActivity");
@@ -294,9 +293,7 @@ public class AirConditionPanel extends Handler {
                         sendMessageDelayed(obtainMessage(MESSAGE_AIR_TO_ACCONTROL_APK, msg.obj), 500);
                     }
                     return;
-                }
-                else
-                {
+                } else {
                     if ("com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity())) {
                         sendMessage(obtainMessage(MESSAGE_AIR_TO_ACCONTROL_APK, msg.obj));
                         return;
@@ -304,8 +301,7 @@ public class AirConditionPanel extends Handler {
                 }
 
                 ///MMLog.d(TAG, "AirConditionPanel.handleMessage " + msg.toString()+",off="+off);
-                if (off)
-                {
+                if (off) {
                     if (airConditionView.getParent() != null) {
                         mWindowManager.removeView(airConditionView);
                     }
@@ -342,10 +338,9 @@ public class AirConditionPanel extends Handler {
                         }
                     }
                 }
-                else
-                {
-                    AirManager.start(mContext, mAirData);
-                }
+                ///else {
+                ///AirManager.start(mContext, mAirData);
+                ///}
 
                 break;
             case MESSAGE_AIR_TO_ACCONTROL_APK:
@@ -364,12 +359,12 @@ public class AirConditionPanel extends Handler {
                     mContext.sendBroadcast(i);
                 }
                 break;
-            //        case MESSAGE_AIR_OUTDOOR_TEMP:
-            //        	outDoorTemp = msg.arg1;
-            //        	break;
-            //        case MESSAGE_AIR_HIDE:
-            //        	mToast.cancel();
-            //        	break;
+            // case MESSAGE_AIR_OUTDOOR_TEMP:
+            // outDoorTemp = msg.arg1;
+            //  	break;
+            // case MESSAGE_AIR_HIDE:
+            //   	mToast.cancel();
+            //   	break;
         }
     }
 
@@ -464,9 +459,7 @@ public class AirConditionPanel extends Handler {
         if ((mAirData[7] & 0x06) == 0) {
             view.findViewById(R.id.fast).setVisibility(View.GONE);
             view.findViewById(R.id.soft).setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             if ((mAirData[7] & 0x06) == 0x4) {
                 view.findViewById(R.id.fast).setVisibility(View.VISIBLE);
                 view.findViewById(R.id.soft).setVisibility(View.GONE);
@@ -642,9 +635,68 @@ public class AirConditionPanel extends Handler {
     void setAirConditionTemperature(View view) {
         int leftTemp = mAirData[2] & 0xff;
         int rightTemp = mAirData[3] & 0xff;
-
-        if ((mAirData[5] & 0x2) == 0) {
-            if (leftTemp == 0x00) {
+        MMLog.d(TAG,"leftTemp="+ leftTemp+",rightTemp="+rightTemp);
+        if ((mAirData[5] & 0x2) == 0)
+        {
+            if ((CarUtil.getAirCondition() == 4) || CarUtil.getAirCondition() == 5)
+            {
+                switch (leftTemp) {
+                    case 0x00:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText(R.string.LO);
+                        break;
+                    case 0x20:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("14°C");
+                        break;
+                    case 0x22:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("15°C");
+                        break;
+                    case 0x24:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("16°C");
+                        break;
+                    case 0x26:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("17°C");
+                        break;
+                    case 0x28:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("18°C");
+                        break;
+                    case 0x29:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("18.5°C");
+                        break;
+                    case 0x2B:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("19.5°C");
+                        break;
+                    case 0x2D:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("20.5°C");
+                        break;
+                    case 0x2F:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("21.5°C");
+                        break;
+                    case 0x31:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("22.5°C");
+                        break;
+                    case 0x33:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("23.5°C");
+                        break;
+                    case 0x34:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("24°C");
+                        break;
+                    case 0x36:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("25°C");
+                        break;
+                    case 0x38:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("26°C");
+                        break;
+                    case 0x3a:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("27°C");
+                        break;
+                    case 0x3c:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText("28°C");
+                        break;
+                    case 0xFF:
+                        ((TextView) view.findViewById(R.id.left_temp)).setText(R.string.HI);
+                        break;
+                }
+            } else if (leftTemp == 0x00) {
                 ((TextView) view.findViewById(R.id.left_temp)).setText(R.string.LO);
             } else if (leftTemp == 0xff) {
                 ((TextView) view.findViewById(R.id.left_temp)).setText(R.string.HI);
@@ -657,11 +709,71 @@ public class AirConditionPanel extends Handler {
             }
             view.findViewById(R.id.left_temp).setVisibility(View.VISIBLE);
         } else {
-
             view.findViewById(R.id.left_temp).setVisibility(View.INVISIBLE);
         }
-        if ((mAirData[5] & 0x4) == 0) {
-            if (rightTemp == 0x00) {
+        if ((mAirData[5] & 0x4) == 0)
+        {
+            if ((CarUtil.getAirCondition() == 4) || CarUtil.getAirCondition() == 5) {
+                switch (rightTemp) {
+                    case 0x00:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText(R.string.LO);
+                        break;
+                    case 0x20:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("14°C");
+                        break;
+                    case 0x22:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("15°C");
+                        break;
+                    case 0x24:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("16°C");
+                        break;
+                    case 0x26:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("17°C");
+                        break;
+                    case 0x28:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("18°C");
+                        break;
+
+                    case 0x29:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("18.5°C");
+                        break;
+                    case 0x2B:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("19.5°C");
+                        break;
+                    case 0x2D:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("20.5°C");
+                        break;
+                    case 0x2F:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("21.5°C");
+                        break;
+                    case 0x31:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("22.5°C");
+                        break;
+                    case 0x33:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("23.5°C");
+                        break;
+
+                    case 0x34:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("24°C");
+                        break;
+                    case 0x36:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("25°C");
+                        break;
+                    case 0x38:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("26°C");
+                        break;
+                    case 0x3a:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("27°C");
+                        break;
+                    case 0x3c:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText("28°C");
+                        break;
+                    case 0xFF:
+                        ((TextView) view.findViewById(R.id.right_temp)).setText(R.string.HI);
+                        break;
+                }
+            }
+            else if (rightTemp == 0x00) {
                 ((TextView) view.findViewById(R.id.right_temp)).setText(R.string.LO);
             } else if (rightTemp == 0xff) {
                 ((TextView) view.findViewById(R.id.right_temp)).setText(R.string.HI);

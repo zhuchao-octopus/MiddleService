@@ -79,7 +79,9 @@ public class Mcu {
         // byte[] param = new byte[param2.length+1];
         // Util.byteArrayCopy(param, param2, 0, 0, param2.length);
         // param[param2.length] = checkSum(param2, param2.length);
-        //MMLog.d(TAG, "sendCmd:" + Util.byteArrayToHex(param2));
+        ///if(param2.length >=2) {
+            ///if (param2[0] != 0x01 && param2[1] != 0x01) MMLog.d(TAG, "sendCmd:" + Util.byteArrayToHex(param2));
+        ///}
         DebugMessage.updateText(param2, false);
         return nativeSendCommand(MCU_WRITE_DATA, param2.length, param2);
     }

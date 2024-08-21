@@ -543,7 +543,6 @@ public class Canbox {
     public int mKeyDown = 0;
     public long mClickTime = 0;
     public boolean longClick = false;
-
     public static final int LONG_CLICK_TIME = 1000;
 
     public int getLongKey(int key) {
@@ -630,7 +629,6 @@ public class Canbox {
 
     protected void doKey(int value, int status) { // all long key to this. is
         // good?
-
         // Log.d("Nissan2013Simple", "doKey:"+value);
         // if (CarUtil.getChangeKey() == 1) {
         value = changeKey(value);
