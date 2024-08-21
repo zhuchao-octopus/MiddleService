@@ -39,7 +39,7 @@ public class SlimKeyCF006 extends Canbox {
     private byte mOutDoorTempUnit;
 
     protected void parseWheelKey(byte[] data, int len) {
-        MMLog.d(TAG, "parseWheelKey: data = " +ByteUtils.BuffToHexStr(data));
+        MMLog.d(TAG, "parseWheelKey: data = " + ByteUtils.BuffToHexStr(data));
         if (data != null && data.length == 6) {
             Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
             i.putExtra("buf", data);
@@ -99,9 +99,9 @@ public class SlimKeyCF006 extends Canbox {
                         mContext.sendBroadcast(i);
                     }
                 }
-            },300);
+            }, 300);
         }
-        MMLog.d(TAG,"sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
+        MMLog.d(TAG, "sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
 
     }
 
@@ -183,7 +183,7 @@ public class SlimKeyCF006 extends Canbox {
         byte d = (byte) curDate.getDate();
         byte s = (byte) curDate.getSeconds();
         //byte []buf = new byte[] { (byte) 0x82, 0x06, y, mon, d, h,m, 0 };
-        byte[] buf = new byte[]{0x00,(byte) 0xA4, 0x01, 0x00, 0x07, (byte) 0x9D, y, mon, d, h, m, s, (byte) (0xAC + 0x9D + y + mon + d + h + m + s)};
+        byte[] buf = new byte[]{0x00, (byte) 0xA4, 0x01, 0x00, 0x07, (byte) 0x9D, y, mon, d, h, m, s, (byte) (0xAC + 0x9D + y + mon + d + h + m + s)};
         sendDataToCanbox(buf, buf.length);
     }
 
@@ -256,6 +256,17 @@ public class SlimKeyCF006 extends Canbox {
     @Override
     public void touchInReverseEx(int x, int y, int w, int h, int down) {
         super.touchInReverseEx(x, y, w, h, down);
-        ///MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
+//        Log.d(TAG, "touchInReverseEx: ", new Exception());
+//        MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
+        int sendX = x * 1919 / w;
+        byte sendXHi = (byte) (sendX >> 8);
+        byte sendXLo = (byte) sendX;
+        int sendY = y * 719 / h;
+        byte sendYHi = (byte) (sendY >> 8);
+        byte sendYLo = (byte) sendY;
+        byte touchAction = (byte) (down == 1?0x01:0x03);
+        byte sumValue = (byte) (0xA4 + 0x01 + 0x07 + 0x88 + sendYHi + sendYLo + sendXHi + sendXLo + touchAction);
+        byte[] buf = new byte[]{0x00,(byte) 0xA4, 0x01, 0x00, 0x07, (byte) 0x88, 0x00, sendXHi, sendXLo, sendYHi, sendYLo, touchAction, sumValue};
+        sendDataToCanbox(buf, buf.length);
     }
 }
