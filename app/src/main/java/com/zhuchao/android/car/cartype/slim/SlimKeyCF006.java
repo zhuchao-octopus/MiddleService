@@ -1,5 +1,6 @@
 package com.zhuchao.android.car.cartype.slim;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -273,12 +274,12 @@ public class SlimKeyCF006 extends Canbox {
         MMLog.d(TAG, "CanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
 
         //if (data[3] < 0x06) {
-            //parseACInfo(data);
+        //parseACInfo(data);
         //}
         //else if (data[3] == 0x07)
         {
             //byte[] datas = new byte[]{(byte) 0x90, 0x4, 0x71, 0, 0, 0};
-            sendDataToCanbox(data, data.length-1);
+            sendDataToCanbox(data, data.length - 1);
         }
     }
 
@@ -298,4 +299,20 @@ public class SlimKeyCF006 extends Canbox {
         Log.d(TAG, "SlimKeyCF006 stopConnect()");
     }
 
+    @Override
+    public void setContext(Context c) {
+        super.setContext(c);
+    }
+
+    @Override
+    public void touchInReverse(int x, int y, int w, int h) {
+        super.touchInReverse(x, y, w, h);
+        ///MMLog.d(TAG, "touchInReverse x:" + x + " y:" + y + " w:" + w + " h:" + h);
+    }
+
+    @Override
+    public void touchInReverseEx(int x, int y, int w, int h, int down) {
+        super.touchInReverseEx(x, y, w, h, down);
+        ///MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
+    }
 }
