@@ -37,74 +37,13 @@ public class SlimKeyCF006 extends Canbox {
     byte[] airData = new byte[10];
     private byte mOutDoorTempUnit;
 
-    private void parseWheelKey(byte[] data, int len) {
-        if (doKeyStudy(data[2], data[3])) {
-            return;
-        }
-
-        switch (data[2]) {
-            case 0x0:
-                doKey(0, 0);
-                break;
-            case 0x1:
-                doKey(AK_KEYPAD_VOLUME_A, data[3]); // vol+
-                break;
-            case 0x2:
-                doKey(AK_KEYPAD_VOLUME_D, data[3]);// vol-
-                break;
-            case 0x3:
-                doKey(MyCmd.Keycode.MULT_NEXT_AND_HANG, data[3]);
-                break;
-            case 0x4:
-                doKey(MyCmd.Keycode.MULT_PREV_AND_RECEIVE, data[3]);
-                break;
-            case 0x5:
-            case 0x09:
-            case 0x0A:
-                doKey(KEY_BT, data[3]);
-                break;
-            case 0x6:
-                doKey(AK_KEYPAD_MUTE_FAKE, data[3]);// mute
-                break;
-            case 0x7:
-                doKey(KEY_MODE, data[3]);
-                break;
-            case 0xe:
-                doKey(KEY_PREVIOUSSONG, data[3]);
-                break;
-            case 0xf:
-                doKey(KEY_NEXTSONG, data[3]);
-                break;
-            case 0x10:
-                doKey(MyCmd.Keycode.KEY_TURN_D, data[3]);
-                break;
-            case 0x11:
-                doKey(MyCmd.Keycode.KEY_TURN_A, data[3]);
-                break;
-            case 0x12:
-                doKey(KEY_PLAYPAUSE, data[3]);
-                break;
-            default:
-                byte key = 0;
-                for (byte[] bytes : KEYS_WHEEL) {
-                    if (bytes[0] == data[2]) {
-                        key = bytes[1];
-                        break;
-                    }
-                }
-
-                if (key != 0) {
-                    doKey(key, data[3]);
-                    if (data[2] == 0x60 || data[2] == 0x61 || data[2] == (byte) 0xf1 || data[2] == (byte) 0xf0) {
-                        Util.doSleep(1);
-                        doKey(0, 0);
-                    }
-                } else {
-                    if (data[3] == 0) {
-                        doKey(0, 0);
-                    }
-                }
-                break;
+    protected void parseWheelKey(byte[] data, int len) {
+        MMLog.d(TAG, "parseWheelKey: data = " +ByteUtils.BuffToHexStr(data));
+        if (data != null && data.length == 6) {
+            Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
+            i.putExtra("buf", data);
+            i.putExtra(MyCmd.EXTRA_COMMON_CMD, "settings");
+            mContext.sendBroadcast(i);
         }
     }
 
@@ -159,68 +98,14 @@ public class SlimKeyCF006 extends Canbox {
                         mContext.sendBroadcast(i);
                     }
                 }
-            },300);
+            }, 300);
         }
-        MMLog.d(TAG,"sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
+        MMLog.d(TAG, "sendCanboxAir buf = " + ByteUtils.BuffToHexStr(data) + "   isAirActivity = " + isAirActivity);
 
     }
 
     public void updateOutDoorTemp(int temp) {
-        if ((temp < -40) || (temp > 86)) {
-            return;
-        }
 
-        int t = temp;
-
-        if (CarUtil.mTempUnit == 2) {
-            mOutDoorTempUnit |= 0x40;
-        } else if (CarUtil.mTempUnit == 1) {
-            mOutDoorTempUnit = 0;
-        }
-
-        String unit = mContext.getResources().getString(R.string.temp_unic_centigrade);
-        if ((mOutDoorTempUnit & 0x40) != 0) {
-            unit = mContext.getResources().getString(R.string.temp_unic_fahrenheit);
-            t = (t * 18 + 320) / 10;
-        }
-        GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
-    }
-
-
-    private byte getRadarData(byte i) {
-        byte data = 0;
-        if (i == 0x1) {
-            data = 1;
-        } else if (i >= 0x2 && i <= 0x3) {
-            data = 2;
-        } else if (i >= 0x4 && i <= 0x5) {
-            data = 3;
-        } else if (i >= 0x6 && i <= 0x7) {
-            data = 4;
-        } else if (i >= 0x8 && i <= 0x9) {
-            data = 5;
-        } else if (i >= 0xa && i <= 0xb) {
-            data = 6;
-        } else if (i >= 0xc && i <= 0xd) {
-            data = 7;
-        } else if (i >= 0xe && i <= 0xf) {
-            data = 8;
-        } else if (i >= 0x10 && i <= 0x11) {
-            data = 9;
-        } else if (i >= 0x12 && i <= 0x13) {
-            data = 10;
-        } else if (i >= 0x14 && i <= 0x15) {
-            data = 11;
-        } else if (i >= 0x16 && i <= 0x17) {
-            data = 13;
-        } else if (i >= 0x18 && i <= 0x19) {
-            data = 14;
-        } else if (i >= 0x1a && i <= 0x1b) {
-            data = 15;
-        } else if (i >= 0x1c && i <= 0x1f) {
-            data = 16;
-        }
-        return data;
     }
 
     private int mSource = MyCmd.SOURCE_NONE;
@@ -241,9 +126,15 @@ public class SlimKeyCF006 extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
+        byte s = (byte) curDate.getSeconds();
         //byte []buf = new byte[] { (byte) 0x82, 0x06, y, mon, d, h,m, 0 };
-        byte[] buf = new byte[]{(byte) 0xC9, 0x06, m, h, d, mon, y, 0};
+        byte[] buf = new byte[]{0x00,(byte) 0xA4, 0x01, 0x00, 0x07, (byte) 0x9D, y, mon, d, h, m, s, (byte) (0xAC + 0x9D + y + mon + d + h + m + s)};
         sendDataToCanbox(buf, buf.length);
+    }
+
+    public void sendDataToCanbox(byte[] data, int len) {
+        Log.d(TAG, "sendDataToCanbox: data = " + ByteUtils.BuffToHexStr(data));
+        sendCmd(CANBOX_WRITE_COMMON_DATA, 0, data);
     }
 
     private final static int HIDE_RADAR = 0;
@@ -275,6 +166,8 @@ public class SlimKeyCF006 extends Canbox {
         MMLog.d(TAG, "parseCanboxData data=" + ByteUtils.BuffToHexStr(data) + "length=" + len);
         if (data[3] < 0x06) {
             parseACInfo(data);
+        } else {
+            parseWheelKey(data, data.length);
         }
     }
 

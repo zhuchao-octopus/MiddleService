@@ -25,7 +25,10 @@ import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.cartype.other.TestKLD;
+import com.zhuchao.android.car.cartype.slim.SlimKeyCF006;
 import com.zhuchao.android.car.manager.AutoIlluminManager;
+import com.zhuchao.android.fbase.ByteUtils;
+import com.zhuchao.android.fbase.MMLog;
 
 import java.util.Date;
 import java.util.Locale;
@@ -426,7 +429,13 @@ public class CanService {
                         if (mCanbox != null) {
                             byte[] buf = intent.getByteArrayExtra("buf");
                             if (buf != null) {
-                                mCanbox.sendDataToCanbox(buf, buf.length);
+                                MMLog.d(TAG, "onReceive: buf = " + ByteUtils.BuffToHexStr(buf));
+                                if (mCanbox instanceof SlimKeyCF006) {
+                                    SlimKeyCF006 slimCanbox = (SlimKeyCF006) mCanbox;
+                                    slimCanbox.sendDataToCanbox(buf,buf.length);
+                                } else {
+                                    mCanbox.sendDataToCanbox(buf, buf.length);
+                                }
                             } else {
                                 int cmd = intent.getIntExtra(MyCmd.EXTRA_COMMON_CMD, 0);
                                 if (cmd != 0) {

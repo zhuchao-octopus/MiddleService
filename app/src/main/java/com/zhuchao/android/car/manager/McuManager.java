@@ -138,7 +138,7 @@ public class McuManager {
     private void doMcuData(byte[] param) {
         ///if (!DebugMessage.updateText(param, true)) {
         ///}
-        if(param[0] != ProtocolAk47.TYPE_RDS_RECEIVE)
+//        if(param[0] != ProtocolAk47.TYPE_RDS_RECEIVE)
            MMLog.i(TAG, "DoMcuData:" + ByteUtils.BuffToHexStr(param));//Util.byteArrayToHex(param) +","+
 
         if (GlobalDefinition.getTestingEx()) {
