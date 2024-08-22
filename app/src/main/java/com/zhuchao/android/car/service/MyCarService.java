@@ -48,16 +48,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
-import com.common.util.AppConfig;
-import com.common.util.BroadcastUtil;
-import com.common.util.Kernel;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.SystemProperties;
-import com.common.util.Util;
-import com.common.util.UtilSystem;
-import com.common.util.UtilSystem.StorageInfo;
+import com.common.utils.AppConfig;
+import com.common.utils.BroadcastUtil;
+import com.common.utils.Kernel;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.SystemProperties;
+import com.common.utils.Util;
+import com.common.utils.UtilSystem;
+import com.common.utils.UtilSystem.StorageInfo;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.autotest.AutoTest;
@@ -365,9 +365,9 @@ public class MyCarService extends Service {
         }
 
         // Log.d(TAG, "initParamterMachineConfig:"+mDefaultKeyboard);
-        value = MachineConfig.getPropertyReadOnly(SystemConfig.REVERSE_STATIC_TRACK);
+        value = MachineConfig.getPropertyReadOnly(SettingProperties.REVERSE_STATIC_TRACK);
         if (MachineConfig.VALUE_ON.equals(value)) {
-            Settings.Global.putInt(getContentResolver(), SystemConfig.REVERSE_STATIC_TRACK, 1);
+            Settings.Global.putInt(getContentResolver(), SettingProperties.REVERSE_STATIC_TRACK, 1);
         }
 
         value = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_USB_DVD);
@@ -455,7 +455,7 @@ public class MyCarService extends Service {
         int night = MachineConfig.getPropertyIntReadOnly(AutoIlluminManager.NIGHT_BRIGHTNESS);
         MMLog.d(TAG, "set night:" + night);
         if (night != 0) {
-            SystemConfig.setIntProperty(this, AutoIlluminManager.NIGHT_BRIGHTNESS, night);
+            SettingProperties.setIntProperty(this, AutoIlluminManager.NIGHT_BRIGHTNESS, night);
         }
 
         // Log.d(TAG, "initParamterMachineConfig:"+mDefaultKeyboard);
@@ -470,10 +470,10 @@ public class MyCarService extends Service {
             }
         }
 
-        value = MachineConfig.getPropertyReadOnly(SystemConfig.AUTO_PLAY_MUSIC_DEVICES_MOUNTED);
-        //Log.d(TAG,"initParamterMachineConfig SystemConfig.AUTO_PLAY_MUSIC_DEVICES_MOUNTED:" + value);
+        value = MachineConfig.getPropertyReadOnly(SettingProperties.AUTO_PLAY_MUSIC_DEVICES_MOUNTED);
+        //Log.d(TAG,"initParamterMachineConfig SettingProperties.AUTO_PLAY_MUSIC_DEVICES_MOUNTED:" + value);
         if (value != null) {
-            Settings.Global.putInt(getContentResolver(), SystemConfig.AUTO_PLAY_MUSIC_DEVICES_MOUNTED, 0);
+            Settings.Global.putInt(getContentResolver(), SettingProperties.AUTO_PLAY_MUSIC_DEVICES_MOUNTED, 0);
         }
 
         // ww+, for ScreenSaver
@@ -490,20 +490,20 @@ public class MyCarService extends Service {
             MMLog.e(TAG, e.toString());
         }
 
-        value = MachineConfig.getPropertyReadOnly(SystemConfig.KEY_REVERSE_VOLUME);
+        value = MachineConfig.getPropertyReadOnly(SettingProperties.KEY_REVERSE_VOLUME);
         if (value != null) {
             try {
                 int mix = Integer.parseInt(value);
-                SystemConfig.setIntProperty(this, SystemConfig.KEY_REVERSE_VOLUME, mix);
+                SettingProperties.setIntProperty(this, SettingProperties.KEY_REVERSE_VOLUME, mix);
             } catch (Exception ignored) {
             }
         }
 
-        value = MachineConfig.getPropertyReadOnly(SystemConfig.KEY_NAVI_MIX_SOUND);
+        value = MachineConfig.getPropertyReadOnly(SettingProperties.KEY_NAVI_MIX_SOUND);
         if (value != null) {
             try {
                 int mix = Integer.parseInt(value);
-                SystemConfig.setIntProperty(this, SystemConfig.KEY_NAVI_MIX_SOUND, mix);
+                SettingProperties.setIntProperty(this, SettingProperties.KEY_NAVI_MIX_SOUND, mix);
                 Util.setFileValue(MCU_NAVI_MIX_NODE, mix);
             } catch (Exception ignored) {
             }
@@ -516,13 +516,13 @@ public class MyCarService extends Service {
         }
 
         int data;
-        data = MachineConfig.getPropertyIntReadOnly(SystemConfig.CANBOX_DOOR_VOICE);
+        data = MachineConfig.getPropertyIntReadOnly(SettingProperties.CANBOX_DOOR_VOICE);
         if (data != 0) {
-            SystemConfig.setIntProperty(this, SystemConfig.CANBOX_DOOR_VOICE, data);
+            SettingProperties.setIntProperty(this, SettingProperties.CANBOX_DOOR_VOICE, data);
         }
-        data = MachineConfig.getPropertyIntReadOnly(SystemConfig.CANBOX_FRONT_RADAR_OPEN_CAMERA);
+        data = MachineConfig.getPropertyIntReadOnly(SettingProperties.CANBOX_FRONT_RADAR_OPEN_CAMERA);
         if (data != 0) {
-            SystemConfig.setIntProperty(this, SystemConfig.CANBOX_FRONT_RADAR_OPEN_CAMERA, data);
+            SettingProperties.setIntProperty(this, SettingProperties.CANBOX_FRONT_RADAR_OPEN_CAMERA, data);
         }
     }
 
@@ -555,7 +555,7 @@ public class MyCarService extends Service {
     private final static String[] MACHINE_CONFIG_DEFAULT = {MachineConfig.KEY_LED_TYPE, MachineConfig.KEY_PANEL_KEY_DEF_CONFIG, MachineConfig.KEY_SWC_KEY_DEF_CONFIG, MachineConfig.KEY_FACTORY_AUDIO_GAIN, MachineConfig.KEY_TPMS_TYPE, MachineConfig.KEY_RDS, MachineConfig.KEY_TOUCH3_IDENTIFY};
 
     private void initMcuBootSetting() {
-        int index = SystemConfig.getIntProperty2(this, SystemConfig.KEY_REVERSE_VOLUME);
+        int index = SettingProperties.getIntProperty2(this, SettingProperties.KEY_REVERSE_VOLUME);
 
         Log.d(TAG, "initMcuBootSetting KEY_REVERSE_VOLUME.:" + index);
         if (index != -1) {
@@ -602,7 +602,7 @@ public class MyCarService extends Service {
     private final static String MIC_CTL = "/sys/class/ak/source/mic_ctrl";
 
     private void setMicType() {
-        int value = SystemConfig.getIntProperty2(this, SystemConfig.KEY_MIC_TYPE);
+        int value = SettingProperties.getIntProperty2(this, SettingProperties.KEY_MIC_TYPE);
         if (value == 0 || value == 1) {
             Util.setFileValue(MIC_CTL, value);
         }
@@ -873,12 +873,12 @@ public class MyCarService extends Service {
     /// "/sys/class/ak/source/arm_sound_switch";
     private void updateAccPowerOffDelay(String s) {
         if (s == null) {
-            s = SystemConfig.getProperty(this, MachineConfig.KEY_ACC_DELAY_OFF);
+            s = SettingProperties.getProperty(this, MachineConfig.KEY_ACC_DELAY_OFF);
             if (s == null) {
                 s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_ACC_DELAY_OFF);
                 if (s != null) {
                     Log.d(TAG, "updateAccPowerOffDelay:" + s);
-                    SystemConfig.setProperty(this, MachineConfig.KEY_ACC_DELAY_OFF, s);
+                    SettingProperties.setProperty(this, MachineConfig.KEY_ACC_DELAY_OFF, s);
                 }
             }
         }
@@ -893,7 +893,7 @@ public class MyCarService extends Service {
 
         //check dvr delytime
         int timeDvr = -1;
-        s = SystemConfig.getProperty(this, SystemConfig.KEY_ACC_DELAY_OFF_DVR);
+        s = SettingProperties.getProperty(this, SettingProperties.KEY_ACC_DELAY_OFF_DVR);
         if (s != null) {
             try {
                 timeDvr = Integer.parseInt(s);
@@ -950,14 +950,14 @@ public class MyCarService extends Service {
             }
         }
         //
-        String packageName = SystemConfig.getProperty(mThis, MachineConfig.KEY_GPS_PACKAGE);
+        String packageName = SettingProperties.getProperty(mThis, MachineConfig.KEY_GPS_PACKAGE);
         if (packageName == null) {
             String s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_DEFAULT_GPS);
             if (s != null) {
                 String[] ss = s.split("/");
                 if (ss.length > 1) {
-                    SystemConfig.setProperty(mThis, MachineConfig.KEY_GPS_PACKAGE, ss[0]);
-                    SystemConfig.setProperty(mThis, MachineConfig.KEY_GPS_CLASS, ss[1]);
+                    SettingProperties.setProperty(mThis, MachineConfig.KEY_GPS_PACKAGE, ss[0]);
+                    SettingProperties.setProperty(mThis, MachineConfig.KEY_GPS_CLASS, ss[1]);
                 }
             }
         }
@@ -1107,7 +1107,7 @@ public class MyCarService extends Service {
                  */
                 int autoGps = 0;
                 try {
-                    autoGps = Settings.Global.getInt(getContentResolver(), SystemConfig.GPS_AUTO_UPDATE_TIME);
+                    autoGps = Settings.Global.getInt(getContentResolver(), SettingProperties.GPS_AUTO_UPDATE_TIME);
                 } catch (SettingNotFoundException ignored) {
                 }
 
@@ -1479,7 +1479,7 @@ public class MyCarService extends Service {
                         case MachineConfig.KEY_CAN_BOX_EX:
                             CarUtil.updateCanboxExData();
                             break;
-                        case SystemConfig.SHOW_FOCUS_CAR_WARNING_MSG:
+                        case SettingProperties.SHOW_FOCUS_CAR_WARNING_MSG:
                             CanService.updateCanboxSettings();
                             break;
                         case MachineConfig.KEY_SCREEN1_VIEW:
@@ -1516,7 +1516,7 @@ public class MyCarService extends Service {
 
                             GlobalDefinition.mPannelKeyType = (value & 0xff00) >> 8;
                             break;
-                        case SystemConfig.CANBOX_TEMP_UNIT:
+                        case SettingProperties.CANBOX_TEMP_UNIT:
                             String v = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
                             try {
                                 CarUtil.updateTempUnit(Integer.parseInt(v));
@@ -1524,7 +1524,7 @@ public class MyCarService extends Service {
                             }
 
                             break;
-                        case SystemConfig.KEY_LAUNCHER_UI_RM10:
+                        case SettingProperties.KEY_LAUNCHER_UI_RM10:
                             mHandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1533,20 +1533,20 @@ public class MyCarService extends Service {
                                 }
                             }, 300);
                             break;
-                        case SystemConfig.GPS_BRAKE:
-                        case SystemConfig.CANBOX_DOOR_VOICE:
-                        case SystemConfig.CANBOX_FRONT_RADAR_OPEN_CAMERA:
+                        case SettingProperties.GPS_BRAKE:
+                        case SettingProperties.CANBOX_DOOR_VOICE:
+                        case SettingProperties.CANBOX_FRONT_RADAR_OPEN_CAMERA:
                             GlobalDefinition.initGPSSpeedSettings(mThis);
                             initGPSSpeedInfo();
                             break;
-                        case SystemConfig.KEY_CAR_CELL:
-                            GlobalDefinition.mMcuBatteryCell = SystemConfig.getIntProperty(mThis, SystemConfig.KEY_CAR_CELL);
+                        case SettingProperties.KEY_CAR_CELL:
+                            GlobalDefinition.mMcuBatteryCell = SettingProperties.getIntProperty(mThis, SettingProperties.KEY_CAR_CELL);
                             if (GlobalDefinition.mMcuBatteryCell == 1) {
                                 mMcuManager.queryBattery();
                             }
                             break;
-                        case SystemConfig.KEY_SCREEN_SAVE_STYLE:
-                            GlobalDefinition.mScreenSaverStyle = SystemConfig.getIntProperty(mThis, SystemConfig.KEY_SCREEN_SAVE_STYLE);
+                        case SettingProperties.KEY_SCREEN_SAVE_STYLE:
+                            GlobalDefinition.mScreenSaverStyle = SettingProperties.getIntProperty(mThis, SettingProperties.KEY_SCREEN_SAVE_STYLE);
                             break;
                         case MachineConfig.KEY_RADIO_ANT_POWER:
                             int i = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);

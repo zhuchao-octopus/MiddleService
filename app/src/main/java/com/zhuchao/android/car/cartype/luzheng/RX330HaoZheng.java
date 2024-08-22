@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 
-import com.common.util.MyCmd;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -579,7 +579,7 @@ public class RX330HaoZheng extends Canbox {
 
         powerEQ(true); // power on
         Util.doSleep(2);
-        //		mVolume = MachineConfig.getIntProperty2(SystemConfig.CANBOX_EQ_VOLUME);
+        //		mVolume = MachineConfig.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
         //		if (mVolume == -1) {
         //			mVolume = 40;
         //		}

@@ -1,14 +1,13 @@
 package com.zhuchao.android.car.manager.key;
 
-import static com.common.util.MachineConfig.VENDOR_DIR;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.util.Log;
 
-import com.common.util.MyCmd;
-import com.common.util.Util;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.manager.McuManager;
 
@@ -43,7 +42,7 @@ public class TouchKeyProcessor {
     // private byte[] mAlreadyStudyTouchKeys = new byte[20];
     // private List<Byte> mAlreadyStudyTouchKeys = new ArrayList<Byte>();
 
-    class Keys {
+    static class Keys {
         public int mKey;
         public Rect mRt;
 
@@ -68,7 +67,7 @@ public class TouchKeyProcessor {
 
     private final static int LONG_CLICK_MOVE_4K = 1024 * 4;
 
-    private final static String TOUCH_KEY_MAPPING_FILE = VENDOR_DIR + ".touch_key_mapping";
+    private final static String TOUCH_KEY_MAPPING_FILE = MachineConfig.VENDOR_DIR + ".touch_key_mapping";
     // private final static String DEFAULT_TOUCH_KEY_MAPPING_FILE =
     // "touch_key_mapping.cfg";
     private final File mMappingFile;

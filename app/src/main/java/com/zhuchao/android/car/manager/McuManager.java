@@ -33,16 +33,17 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.common.util.AppConfig;
-import com.common.util.BroadcastUtil;
-import com.common.util.Kernel;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.ProtocolAk47;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
-import com.common.util.UtilCarKey;
-import com.common.util.UtilSystem;
+import com.common.utils.AppConfig;
+import com.common.utils.BroadcastUtil;
+import com.common.utils.Kernel;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.ProtocolAk47;
+
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
+import com.common.utils.UtilCarKey;
+import com.common.utils.UtilSystem;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.autotest.AutoTest;
@@ -2657,7 +2658,7 @@ public class McuManager {
         void startObserving() {
             ContentResolver resolver = mContext.getContentResolver();
 
-            resolver.registerContentObserver(Settings.System.getUriFor(SystemConfig.KEY_EQ_INDEPEND_SWITCH), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(SettingProperties.KEY_EQ_INDEPEND_SWITCH), false, this);
         }
 
         void stopObserving() {
@@ -2673,7 +2674,7 @@ public class McuManager {
     private void initEQIndepend() {
 
         try {
-            mEQindpenOn = Settings.Global.getInt(mContext.getContentResolver(), SystemConfig.KEY_EQ_INDEPEND_SWITCH);
+            mEQindpenOn = Settings.Global.getInt(mContext.getContentResolver(), SettingProperties.KEY_EQ_INDEPEND_SWITCH);
         } catch (Exception snfe) {
             mEQindpenOn = 0;
         }
@@ -2685,7 +2686,7 @@ public class McuManager {
 
         // mEQindpenOn = 1;
         if (mEQindpenOn == 1) {
-            String s = SystemConfig.getProperty(mContext, SystemConfig.KEY_EQ_INDEPEND);
+            String s = SettingProperties.getProperty(mContext, SettingProperties.KEY_EQ_INDEPEND);
             if (s != null) {
                 String[] ss = s.split(",");
                 for (int i = 0; i < mEQValue.length; ++i) {
@@ -2785,7 +2786,7 @@ public class McuManager {
                     s += ",";
                 }
             }
-            SystemConfig.setProperty(mContext, SystemConfig.KEY_EQ_INDEPEND, s);
+            SettingProperties.setProperty(mContext, SettingProperties.KEY_EQ_INDEPEND, s);
         }
     }
 
@@ -3432,7 +3433,7 @@ public class McuManager {
             return;
         }
 
-        int i = SystemConfig.getIntProperty2(mContext, SystemConfig.KEY_DEFAULT_RESET_VOLUME_LEVEL);
+        int i = SettingProperties.getIntProperty2(mContext, SettingProperties.KEY_DEFAULT_RESET_VOLUME_LEVEL);
         if (i != -1) {
             DEFAULT_VOLUME = i;
         }
@@ -3547,7 +3548,7 @@ public class McuManager {
     private void doKeyCustomApp() {
         boolean ret = false;
 
-        String pc = SystemConfig.getProperty(mContext, SystemConfig.KEY_CUSTOM_APP);
+        String pc = SettingProperties.getProperty(mContext, SettingProperties.KEY_CUSTOM_APP);
         if (pc != null) {
             String[] ss = pc.split("/");
             Intent it = new Intent();
@@ -3617,14 +3618,14 @@ public class McuManager {
 
     private void updateDSP(int i) {
 
-        int dsp = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_DSP);
+        int dsp = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_DSP);
 
         if (i == 1) {
             mDsp = true;
         }
 
         if (dsp != i) {
-            SystemConfig.setIntProperty(mContext, SystemConfig.KEY_DSP, i);
+            SettingProperties.setIntProperty(mContext, SettingProperties.KEY_DSP, i);
 
             Intent it = new Intent(MyCmd.BROADCAST_MACHINECONFIG_UPDATE);
             it.putExtra(MyCmd.EXTRA_COMMON_CMD, MachineConfig.KEY_APP_HIDE);
@@ -3637,8 +3638,8 @@ public class McuManager {
                 // Settings.System.putInt(mContext.getContentResolver(),
                 // Settings.System.SCREEN_OFF_TIMEOUT, 30000);
 
-                // SystemConfig.setIntProperty(mContext,
-                // SystemConfig.KEY_DSP_SCREEN_SAVER, 2);
+                // SettingProperties.setIntProperty(mContext,
+                // SettingProperties.KEY_DSP_SCREEN_SAVER, 2);
 
             } else {
                 // if (GlobalDef.mSystemUI != null

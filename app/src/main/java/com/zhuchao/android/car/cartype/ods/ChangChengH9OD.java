@@ -2,7 +2,7 @@ package com.zhuchao.android.car.cartype.ods;
 
 import android.util.Log;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 
 import java.util.Calendar;

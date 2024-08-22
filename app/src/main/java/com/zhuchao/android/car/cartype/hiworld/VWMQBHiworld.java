@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.provider.Settings;
 
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.fbase.MMLog;
 
@@ -287,7 +287,7 @@ public class VWMQBHiworld extends Canbox {
 
         byte format = 2;
 
-        String date_foramt = SystemConfig.getProperty(mContext, SystemConfig.KEY_DATE_FORMAT);
+        String date_foramt = SettingProperties.getProperty(mContext, SettingProperties.KEY_DATE_FORMAT);
         if (date_foramt != null) {
             if ("dd/MM/yyyy".equals(date_foramt)) {
                 format = 1;

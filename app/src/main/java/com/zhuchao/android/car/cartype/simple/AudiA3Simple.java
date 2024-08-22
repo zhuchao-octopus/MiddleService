@@ -2,8 +2,8 @@ package com.zhuchao.android.car.cartype.simple;
 
 import android.util.Log;
 
-import com.common.util.MyCmd;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 
 import java.util.Locale;

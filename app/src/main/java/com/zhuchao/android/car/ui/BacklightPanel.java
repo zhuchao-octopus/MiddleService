@@ -20,10 +20,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import com.common.util.AKProperty;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.AKProperty;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.manager.AutoIlluminManager;
@@ -55,7 +55,7 @@ public class BacklightPanel extends Handler {
     }
 
     private void initDefalutScreen1Backlight() {
-        int brightness = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_SCREEN1_BACKLIGHT);
+        int brightness = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_SCREEN1_BACKLIGHT);
         if (brightness != 0) {
             Util.setFileValue(GlobalDefinition.BRIGHTNESS_SCREEN1, brightness);
         }
@@ -232,8 +232,8 @@ public class BacklightPanel extends Handler {
         } catch (Exception ignored) {
         }
 
-        GlobalDefinition.mReverseBrightness = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_REVERSE_BACKLIGHT);
-        GlobalDefinition.mReverseContrast = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_REVERSE_CONTRAST);
+        GlobalDefinition.mReverseBrightness = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_REVERSE_BACKLIGHT);
+        GlobalDefinition.mReverseContrast = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_REVERSE_CONTRAST);
         ///		Log.d(TAG, GlobalDef.CVBS_DEFALUT_BRIGHTNESS+":"+GlobalDef.mReverseBrightness);
         ///		if (GlobalDef.mReverseBrightness == 0) {
         ///			GlobalDef.mReverseBrightness = GlobalDef.CVBS_DEFALUT_BRIGHTNESS;
@@ -315,7 +315,7 @@ public class BacklightPanel extends Handler {
             //throw new RuntimeException(e);
         }
 
-        int night = SystemConfig.getIntProperty2(mContext, AutoIlluminManager.NIGHT_BRIGHTNESS);
+        int night = SettingProperties.getIntProperty2(mContext, AutoIlluminManager.NIGHT_BRIGHTNESS);
 
 
         boolean set = false;
@@ -325,7 +325,7 @@ public class BacklightPanel extends Handler {
         if (on) {
             if (mSetIll == -1) {
                 //				mDayBrightness = value;
-                SystemConfig.setIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS, value);
+                SettingProperties.setIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS, value);
 
                 if (night != -1) {
                     value = night;
@@ -352,12 +352,12 @@ public class BacklightPanel extends Handler {
                 //				}
                 mSetIll = -1;
 
-                value = SystemConfig.getIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS);
-                //				SystemConfig.setIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS, -1);
+                value = SettingProperties.getIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS);
+                //				SettingProperties.setIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS, -1);
             }
         }
         Util.setProperty(AKProperty.PROPERTY_ILL_STATE, String.valueOf(mSetIll));
-        SystemConfig.setIntProperty(mContext, SystemConfig.KEY_ILL_STATE_TRIGGER, mSetIll);
+        SettingProperties.setIntProperty(mContext, SettingProperties.KEY_ILL_STATE_TRIGGER, mSetIll);
 
         if (set) {
             try {
@@ -383,9 +383,9 @@ public class BacklightPanel extends Handler {
                     Settings.System.putInt(mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, val);
 
                     if (mSetIll != -1) {
-                        SystemConfig.setIntProperty(mContext, AutoIlluminManager.NIGHT_BRIGHTNESS, val);
+                        SettingProperties.setIntProperty(mContext, AutoIlluminManager.NIGHT_BRIGHTNESS, val);
                     } else {
-                        SystemConfig.setIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS, val);
+                        SettingProperties.setIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS, val);
                     }
 
                 } catch (Exception e) {
@@ -408,7 +408,7 @@ public class BacklightPanel extends Handler {
 
             brightness = (((brightness * 20 * 100) / 255) / 100);
             Util.setFileValue(GlobalDefinition.BRIGHTNESS_SCREEN1, brightness);
-            SystemConfig.setIntProperty(mContext, SystemConfig.KEY_SCREEN1_BACKLIGHT, brightness);
+            SettingProperties.setIntProperty(mContext, SettingProperties.KEY_SCREEN1_BACKLIGHT, brightness);
         } else if (type == -3 || type == -4) {
             //			brightness = (((brightness * 20 * 100) / 255) / 100);
             if (brightness <= 1) {
@@ -420,7 +420,7 @@ public class BacklightPanel extends Handler {
             GlobalDefinition.mReverseBrightness = (brightness);
             Util.setFileValue(GlobalDefinition.BRIGHTNESS_CVBS, brightness);
             Log.d(TAG, type + ":" + brightness);
-            SystemConfig.setIntProperty(mContext, SystemConfig.KEY_REVERSE_BACKLIGHT, brightness);
+            SettingProperties.setIntProperty(mContext, SettingProperties.KEY_REVERSE_BACKLIGHT, brightness);
         }
     }
 
@@ -436,7 +436,7 @@ public class BacklightPanel extends Handler {
             GlobalDefinition.mReverseContrast = (contrast);
             Util.setFileValue(GlobalDefinition.BRIGHTNESS_CONTRAST, contrast);
             Log.d(TAG, type + ":" + contrast);
-            SystemConfig.setIntProperty(mContext, SystemConfig.KEY_REVERSE_CONTRAST, contrast);
+            SettingProperties.setIntProperty(mContext, SettingProperties.KEY_REVERSE_CONTRAST, contrast);
         }
     }
 

@@ -6,9 +6,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Display;
 
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.RadarManager;
@@ -548,7 +548,7 @@ public class MazdaRaise extends Canbox {
 
     private void sendTouch(int x, int y) {
         if (mContext != null) {
-            int i = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_CANBOX_TOUCH_PANNEL);
+            int i = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_CANBOX_TOUCH_PANNEL);
             if (i == 0) {
                 if (widthScreen == 0 || heightScreen == 0) {
 

@@ -1,6 +1,6 @@
 package com.zhuchao.android.car.autotest;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 
 public class TestNode {
 

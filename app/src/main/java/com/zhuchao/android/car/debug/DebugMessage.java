@@ -16,10 +16,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.common.util.MachineConfig;
-import com.common.util.Util;
-import com.common.util.UtilSystem;
-import com.common.util.UtilSystem.StorageInfo;
+import com.common.utils.MachineConfig;
+import com.common.utils.Util;
+import com.common.utils.UtilSystem;
+import com.common.utils.UtilSystem.StorageInfo;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 

@@ -9,10 +9,10 @@ import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.common.util.AppConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.AppConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -701,7 +701,7 @@ public class VWMQBBNR extends Canbox {
     public void setContext(Context c) {
         super.setContext(c);
         updateTime();
-        //		requestSteerAngle();//test for pg
+        //requestSteerAngle();//test for pg
     }
 
     public int getUpdateTime() {
@@ -718,7 +718,7 @@ public class VWMQBBNR extends Canbox {
 
         byte format = 1;
 
-        String date_foramt = SystemConfig.getProperty(mContext, SystemConfig.KEY_DATE_FORMAT);
+        String date_foramt = SettingProperties.getProperty(mContext, SettingProperties.KEY_DATE_FORMAT);
         if (date_foramt != null) {
             if ("dd/MM/yyyy".equals(date_foramt)) {
                 format = 0;

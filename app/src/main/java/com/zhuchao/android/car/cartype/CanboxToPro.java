@@ -1,6 +1,6 @@
 package com.zhuchao.android.car.cartype;
 
-import com.common.util.MachineConfig;
+import com.common.utils.MachineConfig;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.bagoo.AlphaBagoo;
 import com.zhuchao.android.car.cartype.bagoo.AudiBagoo;

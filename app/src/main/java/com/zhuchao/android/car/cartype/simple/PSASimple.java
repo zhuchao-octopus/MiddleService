@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -58,7 +58,7 @@ public class PSASimple extends Canbox {
     int caneq = 0;
 
     public void startConnect() {// default is simple box
-        caneq = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_CANBOX_EQ);
+        caneq = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_CANBOX_EQ);
         if (CarUtil.getCarEQ() == 1 || caneq == 1 || CarUtil.getCanboxProVersion() >= 3) {
             CarUtil.mIsNeedSendEQ = true;
             Util.doSleep(10);
@@ -392,7 +392,7 @@ public class PSASimple extends Canbox {
     private int showWarningMsg = -1;
 
     public void updateCanboxSettings() {
-        showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SystemConfig.SHOW_FOCUS_CAR_WARNING_MSG, 0);
+        showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SettingProperties.SHOW_FOCUS_CAR_WARNING_MSG, 0);
         if (showWarningMsg != 0) {
             WarningMsgManager.stop();
         }
@@ -699,6 +699,6 @@ public class PSASimple extends Canbox {
 
     public void udpateSet(int data) {
         caneq = data;
-        SystemConfig.setIntProperty(mContext, SystemConfig.KEY_CANBOX_EQ, caneq);
+        SettingProperties.setIntProperty(mContext, SettingProperties.KEY_CANBOX_EQ, caneq);
     }
 }

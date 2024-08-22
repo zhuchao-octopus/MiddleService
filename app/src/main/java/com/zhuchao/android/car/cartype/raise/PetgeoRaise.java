@@ -3,9 +3,9 @@ package com.zhuchao.android.car.cartype.raise;
 import android.os.Handler;
 import android.provider.Settings;
 
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -446,7 +446,7 @@ public class PetgeoRaise extends Canbox {
     private int showWarningMsg = -1;
 
     public void updateCanboxSettings() {
-        showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SystemConfig.SHOW_FOCUS_CAR_WARNING_MSG, 0);
+        showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SettingProperties.SHOW_FOCUS_CAR_WARNING_MSG, 0);
         if (showWarningMsg != 0) {
             WarningMsgManager.stop();
         }

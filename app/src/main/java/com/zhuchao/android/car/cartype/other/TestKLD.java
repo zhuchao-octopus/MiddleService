@@ -19,14 +19,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.common.util.AppConfig;
-import com.common.util.BroadcastUtil;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.SystemProperties;
-import com.common.util.Util;
-import com.common.util.shell.ShellUtils;
+import com.common.utils.AppConfig;
+import com.common.utils.BroadcastUtil;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.SystemProperties;
+import com.common.utils.Util;
+import com.common.utils.shell.ShellUtils;
 
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -321,7 +321,7 @@ public class TestKLD extends Canbox {
                             BacklightPanel.setBrightness(data[3] & 0xff, 0);
                             break;
                         case 2:
-                            int value = SystemConfig.getIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS);
+                            int value = SettingProperties.getIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS);
                             sendToCan(0x60, 0x2, (byte) value);
                             break;
                     }
@@ -1070,8 +1070,8 @@ public class TestKLD extends Canbox {
 
         String[] ss = s.split("/");
         if (ss.length > 1) {
-            SystemConfig.setProperty(mContext, MachineConfig.KEY_GPS_PACKAGE, ss[0]);
-            SystemConfig.setProperty(mContext, MachineConfig.KEY_GPS_CLASS, ss[1]);
+            SettingProperties.setProperty(mContext, MachineConfig.KEY_GPS_PACKAGE, ss[0]);
+            SettingProperties.setProperty(mContext, MachineConfig.KEY_GPS_CLASS, ss[1]);
         }
 
     }

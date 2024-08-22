@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 
-import com.common.util.MachineConfig;
+import com.common.utils.MachineConfig;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.manager.McuManager;
 
@@ -69,7 +69,7 @@ public class SosManager {
                     break;
             }
 
-            s = MachineConfig.getParameterPath() + s;
+            s = MachineConfig.getDefaultParameterConfigPathName() + s;
 
             Drawable d = Drawable.createFromPath(s);
             if (d != null) {

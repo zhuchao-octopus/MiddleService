@@ -5,8 +5,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 
-import com.common.util.MyCmd;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 
 import java.nio.charset.StandardCharsets;

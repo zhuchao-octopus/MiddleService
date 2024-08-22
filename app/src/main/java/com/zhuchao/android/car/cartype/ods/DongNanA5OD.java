@@ -1,7 +1,7 @@
 package com.zhuchao.android.car.cartype.ods;
 
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 
 public class DongNanA5OD extends Canbox {

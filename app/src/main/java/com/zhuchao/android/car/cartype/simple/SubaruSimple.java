@@ -6,10 +6,10 @@ import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -614,7 +614,7 @@ public class SubaruSimple extends Canbox {
         }
 
         powerEQ(true); //power on
-        mVolume = MachineConfig.getIntProperty2(SystemConfig.CANBOX_EQ_VOLUME);
+        mVolume = MachineConfig.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
         if (mVolume == -1) {
             if (CarUtil.getCarType2() == 0) {
                 mVolume = 45;

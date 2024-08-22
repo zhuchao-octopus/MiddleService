@@ -19,8 +19,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.common.util.AppConfig;
-import com.common.util.MyCmd;
+import com.common.utils.AppConfig;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;

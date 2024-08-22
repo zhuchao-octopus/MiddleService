@@ -2,8 +2,8 @@ package com.zhuchao.android.car.cartype.xinchi;
 
 import android.provider.Settings;
 
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
 import com.zhuchao.android.car.canbox.Canbox;
 
 import java.util.Date;
@@ -118,7 +118,7 @@ public class Accord8XinChi extends Canbox {
 
         byte format = 0;
 
-        String date_foramt = SystemConfig.getProperty(mContext, SystemConfig.KEY_DATE_FORMAT);
+        String date_foramt = SettingProperties.getProperty(mContext, SettingProperties.KEY_DATE_FORMAT);
         if (date_foramt != null) {
             if ("dd/MM/yyyy".equals(date_foramt)) {
                 format = 0;

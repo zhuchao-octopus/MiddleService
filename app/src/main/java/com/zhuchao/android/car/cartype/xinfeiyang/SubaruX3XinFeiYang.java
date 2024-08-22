@@ -1,6 +1,6 @@
 package com.zhuchao.android.car.cartype.xinfeiyang;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 
 public class SubaruX3XinFeiYang extends Canbox {

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.common.util.Util;
+import com.common.utils.Util;
 import com.zhuchao.android.car.service.MyCarService;
 
 import java.io.File;

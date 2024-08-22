@@ -1,14 +1,13 @@
 package com.zhuchao.android.car.manager.key;
 
-import static com.common.util.MachineConfig.VENDOR_DIR;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
-import com.common.util.MyCmd;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,7 +25,7 @@ public class JoyKey {
 
     private static final String TAG = "JoyKey";
 
-    private final static String TOUCH_KEY_MAPPING_FILE = VENDOR_DIR + ".joy_key_mapping";
+    private final static String TOUCH_KEY_MAPPING_FILE = MachineConfig.VENDOR_DIR + ".joy_key_mapping";
     private static final int[] KEYS = new int[]{
             MyCmd.Keycode.KEY_JOY_UP, MyCmd.Keycode.KEY_JOY_DOWN, MyCmd.Keycode.KEY_JOY_LEFT, MyCmd.Keycode.KEY_JOY_RIGHT, MyCmd.Keycode.KEY_JOY_ENTER, MyCmd.Keycode.KEY_JOY_ROLL_LEFT,
             MyCmd.Keycode.KEY_JOY_ROLL_RIGHT, MyCmd.Keycode.KEY_JOY_HOME, MyCmd.Keycode.KEY_JOY_BACK

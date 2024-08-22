@@ -29,10 +29,10 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.MyGLSurfaceView;
@@ -104,7 +104,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
         mCanBox = CarUtil.getCanboxInstance();
         mSurfaceView = mMainView.findViewById(R.id.camera_surfaceview);
-        if (!(com.common.util.Util.isAndroidP() || com.common.util.Util.isAndroidQ() || com.common.util.Util.isAndroidR())) {
+        if (!(com.common.utils.Util.isAndroidP() || com.common.utils.Util.isAndroidQ() || com.common.utils.Util.isAndroidR())) {
             SurfaceHolder holder = mSurfaceView.getHolder();
             holder.addCallback(this);
             holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -233,7 +233,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         updateCameraType();
         if (Util.isGLCamera() && mGLSurfaceView == null) {
             FrameLayout v = mMainView.findViewById(R.id.glsuface_main);
-            if (com.common.util.Util.isAndroidP() || com.common.util.Util.isAndroidQ() || com.common.util.Util.isAndroidR()) {
+            if (com.common.utils.Util.isAndroidP() || com.common.utils.Util.isAndroidQ() || com.common.utils.Util.isAndroidR()) {
                 v.setVisibility(View.GONE);
                 mGLSurfaceView = new MyGLSurfaceView(mContext, mMainView.findViewById(R.id.screen1_main));
 				/*if (Util.isPX6()) {
@@ -264,7 +264,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
     private void initMirrorPreview(Context c) {
         try {
-            mMirrorPreview = Settings.Global.getInt(c.getContentResolver(), SystemConfig.MIRROR_PREVIEW);
+            mMirrorPreview = Settings.Global.getInt(c.getContentResolver(), SettingProperties.MIRROR_PREVIEW);
         } catch (Exception ignored) {
         }
     }
@@ -383,7 +383,7 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             }
 
             try {
-                Settings.Global.putInt(mContext.getContentResolver(), SystemConfig.MIRROR_PREVIEW, mMirrorPreview);
+                Settings.Global.putInt(mContext.getContentResolver(), SettingProperties.MIRROR_PREVIEW, mMirrorPreview);
             } catch (Exception e) {
 
             }
@@ -1217,18 +1217,18 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
     public void initBackTrack() {
 
         try {
-            mStaticTrackExist = Settings.Global.getInt(mContext.getContentResolver(), SystemConfig.REVERSE_STATIC_TRACK);
+            mStaticTrackExist = Settings.Global.getInt(mContext.getContentResolver(), SettingProperties.REVERSE_STATIC_TRACK);
         } catch (SettingNotFoundException snfe) {
 
         }
         try {
-            mDyncTrackExist = Settings.Global.getInt(mContext.getContentResolver(), SystemConfig.REVERSE_DYNC_TRACK);
+            mDyncTrackExist = Settings.Global.getInt(mContext.getContentResolver(), SettingProperties.REVERSE_DYNC_TRACK);
         } catch (SettingNotFoundException snfe) {
 
         }
 
         // int i = Settings.Global.getInt(mContext.getContentResolver(),
-        // SystemConfig.GPS_AUTO_UPDATE_TIME);
+        // SettingProperties.GPS_AUTO_UPDATE_TIME);
 
         mBackTrackView = mMainView.findViewById(R.id.backtrack_view);
         // if (mBackTrackView != null) {

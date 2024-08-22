@@ -1,7 +1,7 @@
 package com.zhuchao.android.car.cartype.xinchi;
 
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
 import com.zhuchao.android.car.canbox.Canbox;
 
 public class Sorento13XinChi extends Canbox {
@@ -155,7 +155,7 @@ public class Sorento13XinChi extends Canbox {
     public void stopConnect() {
         // TODO Auto-generated method stub
         String value = mEQData[0] + "," + mEQData[1] + "," + mEQData[2] + "," + mEQData[3] + "," + mEQData[4] + "," + mEQData[5];
-        SystemConfig.setProperty(mContext, SystemConfig.CANBOX_EQ_VOLUME, value);
+        SettingProperties.setProperty(mContext, SettingProperties.CANBOX_EQ_VOLUME, value);
         stopEQ();
         super.stopConnect();
     }
@@ -170,7 +170,7 @@ public class Sorento13XinChi extends Canbox {
 
     private void startEQ() {
 
-        String s = SystemConfig.getProperty(mContext, SystemConfig.CANBOX_EQ_VOLUME);
+        String s = SettingProperties.getProperty(mContext, SettingProperties.CANBOX_EQ_VOLUME);
         if (s != null) {
             String[] ss = s.split(",");
             if (ss != null && ss.length > 5) {

@@ -2,7 +2,7 @@ package com.zhuchao.android.car.cartype.hiworld;
 
 import android.os.Handler;
 
-import com.common.util.Util;
+import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 
 

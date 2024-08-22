@@ -3,7 +3,7 @@ package com.zhuchao.android.car.cartype.binarytek;
 import android.os.Handler;
 import android.os.Message;
 
-import com.common.util.Util;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.OBDView;

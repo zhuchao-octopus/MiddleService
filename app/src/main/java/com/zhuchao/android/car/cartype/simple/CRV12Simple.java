@@ -3,7 +3,7 @@ package com.zhuchao.android.car.cartype.simple;
 import android.content.Context;
 import android.provider.Settings;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 
 import java.util.Date;

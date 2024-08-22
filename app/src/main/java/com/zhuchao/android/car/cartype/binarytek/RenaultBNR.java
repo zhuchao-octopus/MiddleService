@@ -2,7 +2,7 @@ package com.zhuchao.android.car.cartype.binarytek;
 
 import android.provider.Settings;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 

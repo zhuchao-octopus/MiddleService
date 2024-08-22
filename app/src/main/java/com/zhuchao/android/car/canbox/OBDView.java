@@ -4,7 +4,7 @@ package com.zhuchao.android.car.canbox;
 import android.content.Context;
 import android.content.Intent;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.manager.McuManager;

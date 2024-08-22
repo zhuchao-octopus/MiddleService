@@ -6,8 +6,8 @@ import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.common.util.MyCmd;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.RadarManager;
 import com.zhuchao.android.car.cartype.CarUtil;
@@ -890,8 +890,8 @@ public class NissanRaise extends Canbox {
     //
     //	private void sendTouch(int x, int y) {
     //		if (mContext != null) {
-    //			int i = SystemConfig.getIntProperty(mContext,
-    //					SystemConfig.KEY_CANBOX_TOUCH_PANNEL);
+    //			int i = SettingProperties.getIntProperty(mContext,
+    //					SettingProperties.KEY_CANBOX_TOUCH_PANNEL);
     //			if (i == 0) {
     //				if (widthScreen == 0 || heightScreen == 0) {
     //

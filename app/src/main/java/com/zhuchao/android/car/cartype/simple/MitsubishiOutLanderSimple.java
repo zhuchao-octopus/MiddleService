@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
-import com.common.util.MachineConfig;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MachineConfig;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.RadarManager;
 import com.zhuchao.android.car.cartype.CarUtil;
@@ -28,7 +28,7 @@ public class MitsubishiOutLanderSimple extends Canbox {
     public void setContext(Context c) {
         super.setContext(c);
 
-        int volume = MachineConfig.getIntProperty2(SystemConfig.CANBOX_EQ_VOLUME);
+        int volume = MachineConfig.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
         if (volume == -1) {
             volume = 38;
         }

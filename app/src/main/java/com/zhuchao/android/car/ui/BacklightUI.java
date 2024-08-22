@@ -12,7 +12,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.common.util.SystemConfig;
+import com.common.utils.SettingProperties;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.UIBase;
@@ -165,8 +165,8 @@ public class BacklightUI extends UIBase {
         // brightness = (((brightness * 20 * 100) / 255) / 100);
         // Util.setFileValue("/sys/class/backlight/ak-backlight/aux_bkl_lvl",
         // brightness);
-        // SystemConfig.setIntProperty(mContext,
-        // SystemConfig.KEY_SCREEN1_BACKLIGHT, brightness);
+        // SettingProperties.setIntProperty(mContext,
+        // SettingProperties.KEY_SCREEN1_BACKLIGHT, brightness);
         // }
     }
 
@@ -250,7 +250,7 @@ public class BacklightUI extends UIBase {
             mLevel.setProgress(value - mMinimumBacklight);
             mLevelBacklight.setVisibility(View.GONE);
         } else if (mType == -1) {
-            int s = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_SCREEN1_BACKLIGHT);
+            int s = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_SCREEN1_BACKLIGHT);
             if (s != 0) {
                 value = s;
                 value = value * 255 / 20;
@@ -262,7 +262,7 @@ public class BacklightUI extends UIBase {
             mLevel.setProgress(value - mMinimumBacklight);
             mLevelBacklight.setVisibility(View.GONE);
         } else if (mType == -3 || mType == -4) {
-            int s = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_REVERSE_BACKLIGHT);
+            int s = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_REVERSE_BACKLIGHT);
             if (s == 0) {
                 s = GlobalDefinition.CVBS_DEFALUT_BRIGHTNESS;
             }
@@ -271,7 +271,7 @@ public class BacklightUI extends UIBase {
             mLevelBacklight.setText(String.valueOf(s));
             mLevelBacklight.setVisibility(View.VISIBLE);
             if (mType == -4) {
-                s = SystemConfig.getIntProperty(mContext, SystemConfig.KEY_REVERSE_CONTRAST);
+                s = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_REVERSE_CONTRAST);
                 if (s == 0) {
                     s = GlobalDefinition.CVBS_DEFALUT_BRIGHTNESS;
                 }

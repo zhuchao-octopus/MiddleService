@@ -6,10 +6,10 @@ import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -802,14 +802,14 @@ public class CarHY extends Canbox {
             }
 
             powerEQ(true); //power on
-            mVolume = MachineConfig.getIntProperty2(SystemConfig.CANBOX_EQ_VOLUME);
+            mVolume = MachineConfig.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
             if (mVolume == -1) {
                 mVolume = 30;
             }
             setEQVolume(mVolume);
 
         } else {
-            String s = MachineConfig.getProperty(SystemConfig.CANBOX_EQ_VOLUME);
+            String s = MachineConfig.getProperty(SettingProperties.CANBOX_EQ_VOLUME);
             if (s != null) {
                 String[] ss = s.split(",");
                 if (ss != null && ss.length > 5) {
@@ -979,7 +979,7 @@ public class CarHY extends Canbox {
             }
 
             String value = mEQData[0] + "," + mEQData[1] + "," + mEQData[2] + "," + mEQData[3] + "," + mEQData[4] + "," + mEQData[5];
-            MachineConfig.setProperty(SystemConfig.CANBOX_EQ_VOLUME, value);
+            MachineConfig.setProperty(SettingProperties.CANBOX_EQ_VOLUME, value);
             sendDataToCanbox(buf, buf.length);
             returnEQData();
         }

@@ -9,12 +9,12 @@ import android.os.PowerManager.WakeLock;
 import android.os.UserHandle;
 import android.util.Log;
 
-import com.common.util.AppConfig;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
-import com.common.util.UtilSystem;
+import com.common.utils.AppConfig;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
+import com.common.utils.UtilSystem;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.hardware.BackTrack;
 import com.zhuchao.android.car.manager.McuManager;
@@ -91,10 +91,10 @@ public class GlobalDefinition {
         }
 
 
-        mMediaInfoToastBackground = MachineConfig.getPropertyIntReadOnly(SystemConfig.MEDIA_INFO_TOAST_BACKGROUND);
-        CarUtil.mTempUnit = SystemConfig.getIntProperty(c, SystemConfig.CANBOX_TEMP_UNIT);
-        mScreenSaverStyle = SystemConfig.getIntProperty(c, SystemConfig.KEY_SCREEN_SAVE_STYLE);
-        mMcuBatteryCell = SystemConfig.getIntProperty(c, SystemConfig.KEY_CAR_CELL);
+        mMediaInfoToastBackground = MachineConfig.getPropertyIntReadOnly(SettingProperties.MEDIA_INFO_TOAST_BACKGROUND);
+        CarUtil.mTempUnit = SettingProperties.getIntProperty(c, SettingProperties.CANBOX_TEMP_UNIT);
+        mScreenSaverStyle = SettingProperties.getIntProperty(c, SettingProperties.KEY_SCREEN_SAVE_STYLE);
+        mMcuBatteryCell = SettingProperties.getIntProperty(c, SettingProperties.KEY_CAR_CELL);
         mModeKeyDelayTime = MachineConfig.getPropertyIntReadOnly(MachineConfig.KEY_MODE_DELAY_TIME);
         if (mModeKeyDelayTime <= 0 || mModeKeyDelayTime > 5000) {
             mModeKeyDelayTime = 2000;
@@ -105,9 +105,9 @@ public class GlobalDefinition {
     }
 
     public static void initGPSSpeedSettings(Context c) {
-        mSettingGPSBrake = MachineConfig.getPropertyIntReadOnly(SystemConfig.GPS_BRAKE);
+        mSettingGPSBrake = MachineConfig.getPropertyIntReadOnly(SettingProperties.GPS_BRAKE);
         if (mSettingGPSBrake == 1) {
-            mSettingGPSBrake = SystemConfig.getIntProperty(c, SystemConfig.GPS_BRAKE);
+            mSettingGPSBrake = SettingProperties.getIntProperty(c, SettingProperties.GPS_BRAKE);
             if (mSettingGPSBrake == 1) {
                 mSettingGPSBrake = 15;
             } else {
@@ -115,8 +115,8 @@ public class GlobalDefinition {
             }
         }
 
-        mSettingDoorVoice = SystemConfig.getIntProperty(c, SystemConfig.CANBOX_DOOR_VOICE);
-        mSettingRadarFrontCamera = SystemConfig.getIntProperty(c, SystemConfig.CANBOX_FRONT_RADAR_OPEN_CAMERA);
+        mSettingDoorVoice = SettingProperties.getIntProperty(c, SettingProperties.CANBOX_DOOR_VOICE);
+        mSettingRadarFrontCamera = SettingProperties.getIntProperty(c, SettingProperties.CANBOX_FRONT_RADAR_OPEN_CAMERA);
     }
 
     public static void setScreen1Source(int i) {

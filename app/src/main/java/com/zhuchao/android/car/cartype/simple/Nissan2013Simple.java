@@ -7,10 +7,10 @@ import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.canbox.RadarManager;
@@ -123,7 +123,7 @@ public class Nissan2013Simple extends Canbox {
             mNissian360ButtonView = null;
         }
 
-        mAVMCarType = SystemConfig.getIntProperty(mContext, MachineConfig.VALUE_CANBOX_NISSAN2013);
+        mAVMCarType = SettingProperties.getIntProperty(mContext, MachineConfig.VALUE_CANBOX_NISSAN2013);
     }
 
     public void startConnect() {

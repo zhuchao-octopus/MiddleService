@@ -2,8 +2,8 @@ package com.zhuchao.android.car.cartype.other;
 
 import android.content.SharedPreferences;
 
-import com.common.util.MyCmd;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 

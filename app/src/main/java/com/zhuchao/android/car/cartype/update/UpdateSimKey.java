@@ -2,7 +2,7 @@ package com.zhuchao.android.car.cartype.update;
 
 import android.widget.Toast;
 
-import com.common.util.Util;
+import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.fbase.MMLog;

@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 
@@ -496,8 +496,8 @@ public class RanualtHiworld extends Canbox {
 
         //		byte format = 2;
         //
-        //		String date_foramt = SystemConfig.getProperty(mContext,
-        //				SystemConfig.KEY_DATE_FORMAT);
+        //		String date_foramt = SettingProperties.getProperty(mContext,
+        //				SettingProperties.KEY_DATE_FORMAT);
         //		if (date_foramt != null) {
         //			if ("dd/MM/yyyy".equals(date_foramt)){
         //				format = 1;

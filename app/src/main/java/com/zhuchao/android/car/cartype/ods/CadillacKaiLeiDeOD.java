@@ -2,7 +2,7 @@ package com.zhuchao.android.car.cartype.ods;
 
 import android.os.Handler;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 
 

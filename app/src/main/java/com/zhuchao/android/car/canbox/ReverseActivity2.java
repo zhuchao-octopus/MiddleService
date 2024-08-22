@@ -2,10 +2,9 @@ package com.zhuchao.android.car.canbox;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.common.util.BroadcastUtil;
-import com.common.util.MyCmd;
+import com.common.utils.BroadcastUtil;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.fbase.MMLog;
 

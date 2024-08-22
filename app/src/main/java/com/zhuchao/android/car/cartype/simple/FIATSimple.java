@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
-import com.common.util.AppConfig;
-import com.common.util.BroadcastUtil;
-import com.common.util.MyCmd;
-import com.common.util.Util;
+import com.common.utils.AppConfig;
+import com.common.utils.BroadcastUtil;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;

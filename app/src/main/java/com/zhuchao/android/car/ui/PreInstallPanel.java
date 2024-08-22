@@ -18,8 +18,8 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.common.util.MachineConfig;
-import com.common.util.Util;
+import com.common.utils.MachineConfig;
+import com.common.utils.Util;
 import com.zhuchao.android.car.R;
 
 import java.io.BufferedReader;

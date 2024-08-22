@@ -10,8 +10,8 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -57,7 +57,7 @@ public class AutoIlluminManager {
         mSettingsObserver.startObserving();
         mAutoIlluminHandler.sendEmptyMessageDelayed(MSG_UPDATE_AUTO_ILLUMIN, 1);
 
-        int value = SystemConfig.getIntProperty(mContext, DAY_BRIGHTNESS);
+        int value = SettingProperties.getIntProperty(mContext, DAY_BRIGHTNESS);
         if (value != 0) {
             PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
 
@@ -68,7 +68,7 @@ public class AutoIlluminManager {
 
                 ///Settings.System.putIntForUser(mContext.getContentResolver(),Settings.System.SCREEN_BRIGHTNESS, value,UserHandle.USER_CURRENT);
 
-                ///SystemConfig.setIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS, -1);
+                ///SettingProperties.setIntProperty(mContext, AutoIlluminManager.DAY_BRIGHTNESS, -1);
             } catch (Exception e) {
                 Log.v(TAG, "doIllSwitch: err" + e);
             }

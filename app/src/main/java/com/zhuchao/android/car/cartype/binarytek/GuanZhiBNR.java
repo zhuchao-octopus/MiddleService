@@ -3,8 +3,8 @@ package com.zhuchao.android.car.cartype.binarytek;
 import android.content.Intent;
 import android.provider.Settings;
 
-import com.common.util.AppConfig;
-import com.common.util.MyCmd;
+import com.common.utils.AppConfig;
+import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 
 import java.util.Date;

@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 
-import com.common.util.AppConfig;
-import com.common.util.MyCmd;
-import com.common.util.UtilSystem;
+import com.common.utils.AppConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.UtilSystem;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 

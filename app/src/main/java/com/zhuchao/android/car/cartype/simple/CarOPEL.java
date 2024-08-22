@@ -3,9 +3,9 @@ package com.zhuchao.android.car.cartype.simple;
 import android.os.Handler;
 import android.os.Message;
 
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
 import com.zhuchao.android.car.canbox.Canbox;
 
 
@@ -28,7 +28,7 @@ public class CarOPEL extends Canbox {
         }
 
         if (data[5] == 0x8 || data[5] == 0x9 || data[5] == 0xa) {
-            int which = SystemConfig.getIntProperty(mContext, MachineConfig.VALUE_CANBOX_OPEL);
+            int which = SettingProperties.getIntProperty(mContext, MachineConfig.VALUE_CANBOX_OPEL);
             if (which != 0) {
                 return;
             }

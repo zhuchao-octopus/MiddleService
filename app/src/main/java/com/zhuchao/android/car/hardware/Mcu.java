@@ -2,7 +2,7 @@ package com.zhuchao.android.car.hardware;
 
 import android.os.Handler;
 
-import com.common.util.Util;
+import com.common.utils.Util;
 import com.zhuchao.android.car.debug.DebugMessage;
 import com.zhuchao.android.fbase.MMLog;
 

@@ -16,7 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 
-import com.common.util.MachineConfig;
+import com.common.utils.MachineConfig;
 import com.zhuchao.android.car.R;
 
 import java.util.Objects;

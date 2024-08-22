@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 
-import com.common.util.MyCmd;
-import com.common.util.Util;
-import com.common.util.decode.JavaDecode;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
+import com.common.utils.decode.JavaDecode;
 
 /**
  * 处理触摸按键，形成各种事件

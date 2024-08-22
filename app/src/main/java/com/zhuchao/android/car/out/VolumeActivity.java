@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.common.util.MyCmd;
+import com.common.utils.MyCmd;
 
 public class VolumeActivity extends Activity {
     @Override

@@ -23,12 +23,13 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
 
-import com.common.util.BroadcastUtil;
-import com.common.util.Kernel;
-import com.common.util.MyCmd;
-import com.common.util.Util;
-import com.common.util.UtilSystem;
-import com.common.util.UtilSystem.StorageInfo;
+import com.common.utils.BroadcastUtil;
+import com.common.utils.Kernel;
+import com.common.utils.MyCmd;
+import com.common.utils.Util;
+import com.common.utils.UtilSystem;
+import com.common.utils.UtilSystem.StorageInfo;
+
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.manager.McuManager;

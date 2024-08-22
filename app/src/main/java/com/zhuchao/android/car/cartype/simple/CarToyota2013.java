@@ -7,11 +7,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.common.util.AppConfig;
-import com.common.util.MachineConfig;
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.AppConfig;
+import com.common.utils.MachineConfig;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -103,8 +103,8 @@ public class CarToyota2013 extends Canbox {
         }
         mHandlerSendEQ.removeMessages(0);
         if (CarUtil.mIsNeedSendEQ) {
-            // int volume = SystemConfig.getIntProperty2(mContext,
-            // SystemConfig.CANBOX_EQ_VOLUME);
+            // int volume = SettingProperties.getIntProperty2(mContext,
+            // SettingProperties.CANBOX_EQ_VOLUME);
             // if (volume == -1) {
             // volume = 45;
             // }
@@ -310,7 +310,7 @@ public class CarToyota2013 extends Canbox {
     Handler mHandlerSendEQ = new Handler() {
         public void handleMessage(Message msg) {
 
-            int volume = MachineConfig.getIntProperty2(SystemConfig.CANBOX_EQ_VOLUME);
+            int volume = MachineConfig.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
             if (volume == -1) {
                 volume = 45;
             }

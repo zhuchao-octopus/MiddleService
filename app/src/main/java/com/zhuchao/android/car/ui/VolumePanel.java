@@ -19,8 +19,8 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.common.util.MyCmd;
-import com.common.util.ProtocolAk47;
+import com.common.utils.MyCmd;
+import com.common.utils.ProtocolAk47;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.manager.McuManager;
 

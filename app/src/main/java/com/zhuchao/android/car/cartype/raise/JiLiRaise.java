@@ -3,9 +3,9 @@ package com.zhuchao.android.car.cartype.raise;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.common.util.MyCmd;
-import com.common.util.SystemConfig;
-import com.common.util.Util;
+import com.common.utils.MyCmd;
+import com.common.utils.SettingProperties;
+import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
 
@@ -431,7 +431,7 @@ public class JiLiRaise extends Canbox {
 
         byte format = 1;
 
-        String date_foramt = SystemConfig.getProperty(mContext, SystemConfig.KEY_DATE_FORMAT);
+        String date_foramt = SettingProperties.getProperty(mContext, SettingProperties.KEY_DATE_FORMAT);
         if (date_foramt != null) {
             if ("dd/MM/yyyy".equals(date_foramt)) {
                 format = 0;

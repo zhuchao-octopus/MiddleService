@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.common.util.Util;
+import com.common.utils.Util;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 
