@@ -20,28 +20,8 @@ import com.zhuchao.android.car.manager.OSProManager;
 
 public class DaciaSimple extends Canbox {
 
-    public DaciaSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-        if (CarUtil.getModelId() == 23) {
-            KEYS_WHEEL = KEYS_WHEEL2;
-        }
-
-        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
-    }
-
     private final static byte[] IDS_TO_CANBOXSETTING = {0x38};
-
-
-    private byte[][] KEYS_WHEEL = KEYS_WHEEL1;
-
-    private final static byte[][] KEYS_WHEEL1 = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+    private final static byte[][] KEYS_WHEEL1 = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
 
             {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE},
 
@@ -52,9 +32,7 @@ public class DaciaSimple extends Canbox {
             {0x16, KEY_PLAYPAUSE},
 
     };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
 
             {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
             //			{ 0x6, KEY_MUTE },
@@ -67,6 +45,29 @@ public class DaciaSimple extends Canbox {
             {0x16, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {6, MyCmd.Keycode.MULT_PREV_AND_RECEIVE},
 
     };
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] mAirData = new byte[8];
+    int mDoorStatus;
+    private byte[][] KEYS_WHEEL = KEYS_WHEEL1;
+
+    public DaciaSimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+        if (CarUtil.getModelId() == 23) {
+            KEYS_WHEEL = KEYS_WHEEL2;
+        }
+
+        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -122,8 +123,6 @@ public class DaciaSimple extends Canbox {
         }
         return data;
     }
-
-    byte[] mAirData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -182,8 +181,6 @@ public class DaciaSimple extends Canbox {
             }
         }
     }
-
-    int mDoorStatus;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -347,16 +344,6 @@ public class DaciaSimple extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 

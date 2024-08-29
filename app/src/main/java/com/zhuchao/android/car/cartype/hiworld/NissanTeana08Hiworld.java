@@ -6,6 +6,16 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class NissanTeana08Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x84, (byte) 0xa7, (byte) 0x86, (byte) 0xa8, (byte) 0xa6, (byte) 0xa9};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+
+            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
+
+            {0xb, MyCmd.Keycode.MODLE},
+
+    };
+
     public NissanTeana08Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -33,20 +43,6 @@ public class NissanTeana08Hiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            (byte) 0x84, (byte) 0xa7, (byte) 0x86, (byte) 0xa8, (byte) 0xa6, (byte) 0xa9
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-
-            {0xb, MyCmd.Keycode.MODLE},
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {

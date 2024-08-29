@@ -14,6 +14,28 @@ import java.util.Date;
 
 public class JiLiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x27, 0x52, 0x4e, 0x4f, 0x50};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
+
+            {0x6, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE},
+
+
+            {0x8, MyCmd.Keycode.BT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.BT_DIAL}, {0xc, MyCmd.Keycode.BT_HANG}, {0xd, MyCmd.Keycode.HOME}, {0xe, MyCmd.Keycode.PLAY_PAUSE}, {0xf, MyCmd.Keycode.MODLE}, {0x10, MyCmd.Keycode.SPEECH},
+            //			{ 0x40, MyCmd.Keycode },
+            {(byte) 0x80, MyCmd.Keycode.HOME},
+            //			{ 0xae, MyCmd.Keycode },
+            //			{ 0xaf, MyCmd.Keycode },
+            //			{ 0xb0, MyCmd.Keycode },
+
+    };
+    private final byte[] airData = new byte[8];
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+
+
     public JiLiRaise() {
         mIdAC = 0x23;
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -29,9 +51,6 @@ public class JiLiRaise extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
         setVoiceSupportRaise();
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x27, 0x52, 0x4e, 0x4f, 0x50};
-
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xee, 0x02, 0x70, 0};
@@ -117,25 +136,6 @@ public class JiLiRaise extends Canbox {
         return cmd;
     }
 
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
-
-            {0x6, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE},
-
-
-            {0x8, MyCmd.Keycode.BT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.BT_DIAL}, {0xc, MyCmd.Keycode.BT_HANG}, {0xd, MyCmd.Keycode.HOME},
-            {0xe, MyCmd.Keycode.PLAY_PAUSE}, {0xf, MyCmd.Keycode.MODLE}, {0x10, MyCmd.Keycode.SPEECH},
-            //			{ 0x40, MyCmd.Keycode },
-            {(byte) 0x80, MyCmd.Keycode.HOME},
-            //			{ 0xae, MyCmd.Keycode },
-            //			{ 0xaf, MyCmd.Keycode },
-            //			{ 0xb0, MyCmd.Keycode },
-
-    };
-
-
     private byte getACType() {
         byte t = 0;
         switch (CarUtil.getModelId()) {
@@ -147,7 +147,6 @@ public class JiLiRaise extends Canbox {
         return t;
     }
 
-
     public void parseCanboxData(byte[] data, int len) {
         if (data[0] == 0x22) {
             parseACInfo2(data);
@@ -155,7 +154,6 @@ public class JiLiRaise extends Canbox {
             super.parseCanboxData(data, len);
         }
     }
-
 
     public int getACTempPriv(byte data) {
         if ((data & 0xff) == 0) {
@@ -174,14 +172,11 @@ public class JiLiRaise extends Canbox {
         return data & 0xff;
     }
 
-
     public void parseACInfo2(byte[] data) {
         airData[7] = (byte) ((data[2] & 0x80) >> 7);
         airData[5] |= 0x80;
         super.parseACInfo(airData);
     }
-
-    private final byte[] airData = new byte[8];
 
     public void parseACInfo(byte[] data) {
 
@@ -233,7 +228,6 @@ public class JiLiRaise extends Canbox {
         super.parseACInfo(airData);
     }
 
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
     }
@@ -243,9 +237,7 @@ public class JiLiRaise extends Canbox {
         if (b[0] > 0x10) {
             b[0] = 0x10;
         }
-        byte[] mData = new byte[]{
-                (byte) 0xc0, 0x5, 0x1, 0x1, b[0], b[1], b[2]
-        };
+        byte[] mData = new byte[]{(byte) 0xc0, 0x5, 0x1, 0x1, b[0], b[1], b[2]};
 
         sendDataToCanbox(mData, mData.length);
     }
@@ -337,11 +329,6 @@ public class JiLiRaise extends Canbox {
             Log.d("Nissan2013Simple", "sendId3" + e);
         }
     }
-
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
 
     public void setSongName(String s) {
         sendId3((byte) 0x70, s);
@@ -458,9 +445,7 @@ public class JiLiRaise extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                (byte) 0xa6, 0x06, y, mon, d, h, m, s
-        };
+        byte[] buf = new byte[]{(byte) 0xa6, 0x06, y, mon, d, h, m, s};
 
         sendDataToCanbox(buf, buf.length);
     }

@@ -26,13 +26,43 @@ import java.util.Locale;
 
 public class FordExplorerSimple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
+
+            {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER},
+
+            {0x48, KEY_PLAYPAUSE}, {0x4a, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x49, MyCmd.Keycode.KEY_SEEK_PREV}, {0x4b, KEY_PREVIOUSSONG}, {0x4c, KEY_NEXTSONG},
+
+            {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG},
+
+            {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE}, {0x5b, MyCmd.Keycode.DARK},
+            // { 0x5c, 0 },
+            // { 0x5d, 0 },
+            // { 0x5e, 0 },
+            // { 0x5f, 0 },
+            {0x62, MyCmd.Keycode.PLAY_PAUSE}, {0x68, MyCmd.Keycode.BACK}, {0x6A, MyCmd.Keycode.SETUP}, {0x6F, MyCmd.Keycode.AUDIO},
+
+            {0x61, MyCmd.Keycode.KEY_TURN_D}, {0x60, MyCmd.Keycode.KEY_TURN_A},
+
+            // { (byte) 0x86, KEY_PLAYPAUSE },
+            {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D},
+            // { (byte) 0xF2, MyCmd.Keycode.KEY_TURN_A },
+            // { (byte) 0xF3, MyCmd.Keycode.KEY_TURN_D },
+
+    };
+    private final int mSource = MyCmd.SOURCE_NONE;
+    private final int mBaud = 0;
+    byte[] mAirData = new byte[8];
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private int showWarningMsg = -1;
+    private int mDoorStatus = 0;
+
     public FordExplorerSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
 
         // updateCanboxSettings();
     }
@@ -96,33 +126,6 @@ public class FordExplorerSimple extends Canbox {
         byte[] buf = {(byte) 0xc6, 0x2, (byte) 0xa4, (byte) lang};
         sendDataToCanbox(buf, buf.length);
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8},
-            {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
-
-            {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER},
-
-            {0x48, KEY_PLAYPAUSE}, {0x4a, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x49, MyCmd.Keycode.KEY_SEEK_PREV}, {0x4b, KEY_PREVIOUSSONG}, {0x4c, KEY_NEXTSONG},
-
-            {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG},
-
-            {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE}, {0x5b, MyCmd.Keycode.DARK},
-            // { 0x5c, 0 },
-            // { 0x5d, 0 },
-            // { 0x5e, 0 },
-            // { 0x5f, 0 },
-            {0x62, MyCmd.Keycode.PLAY_PAUSE}, {0x68, MyCmd.Keycode.BACK}, {0x6A, MyCmd.Keycode.SETUP}, {0x6F, MyCmd.Keycode.AUDIO},
-
-            {0x61, MyCmd.Keycode.KEY_TURN_D}, {0x60, MyCmd.Keycode.KEY_TURN_A},
-
-            // { (byte) 0x86, KEY_PLAYPAUSE },
-            {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D},
-            // { (byte) 0xF2, MyCmd.Keycode.KEY_TURN_A },
-            // { (byte) 0xF3, MyCmd.Keycode.KEY_TURN_D },
-
-    };
 
     private void parseWheelKey(byte[] data, int len) {
         if (doKeyStudy(data[2], data[3])) {
@@ -191,8 +194,6 @@ public class FordExplorerSimple extends Canbox {
                 break;
         }
     }
-
-    byte[] mAirData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
         byte[] airData = new byte[8];
@@ -542,8 +543,6 @@ public class FordExplorerSimple extends Canbox {
                 break;
         }
     }
-
-    private int showWarningMsg = -1;
 
     public void updateCanboxSettings() {
 
@@ -1121,8 +1120,6 @@ public class FordExplorerSimple extends Canbox {
         }
     }
 
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -1138,9 +1135,6 @@ public class FordExplorerSimple extends Canbox {
         sendDataToCanbox(data, data.length);
     }
 
-    private final int mSource = MyCmd.SOURCE_NONE;
-    private final int mBaud = 0;
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         byte min = (byte) ((time / 60) % 60);
         byte sec = (byte) ((time) % 60);
@@ -1148,13 +1142,9 @@ public class FordExplorerSimple extends Canbox {
         byte[] data;
 
         if (MyCmd.SOURCE_DVD != source) {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }
@@ -1212,9 +1202,7 @@ public class FordExplorerSimple extends Canbox {
         }
         byte[] data;
         if (s == 0xb || s == 0x7) {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, mediaType, 0, 0, 0, 0, 0, 0
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, mediaType, 0, 0, 0, 0, 0, 0};
         } else {
             data = new byte[]{(byte) 0xc0, 0x2, s, mediaType};
         }
@@ -1421,10 +1409,6 @@ public class FordExplorerSimple extends Canbox {
             Log.d("Nissan2013Simple", "sendId3" + e);
         }
     }
-
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
 
     public void setSongName(String s) {
         sendId3((byte) 0x3, s);

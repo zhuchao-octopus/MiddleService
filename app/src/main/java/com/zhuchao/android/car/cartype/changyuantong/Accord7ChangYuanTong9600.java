@@ -11,16 +11,13 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class Accord7ChangYuanTong9600 extends Canbox {
 
-    public Accord7ChangYuanTong9600() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x0, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x5, 0x3, 0x5, 0x0
-        });
-    }
-
     byte[] mAirData = new byte[8];
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+
+    public Accord7ChangYuanTong9600() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x0, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x5, 0x3, 0x5, 0x0});
+    }
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -83,8 +80,6 @@ public class Accord7ChangYuanTong9600 extends Canbox {
         }
 
     }
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
 
     public void updateOutDoorTemp(int temp) {
 

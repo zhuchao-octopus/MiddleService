@@ -17,20 +17,31 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class GMOD extends Canbox {
 
-    public GMOD() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, KEY_SOURCE}, {0x6, MyCmd.Keycode.MULT_SPEECH_AND_BT},
-            {0x7, MyCmd.Keycode.MULT_MUTE_AND_HANG},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, KEY_SOURCE}, {0x6, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0x7, MyCmd.Keycode.MULT_MUTE_AND_HANG},
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x3, KEY_NEXTSONG}, {0x2, KEY_PREVIOUSSONG}, {0x4, MyCmd.Keycode.SETUP}, {0x5, MyCmd.Keycode.EQ}, {0x6, MyCmd.Keycode.BACK}, {0x7, MyCmd.Keycode.RADIO}, {0x8, MyCmd.Keycode.DVD}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x10, MyCmd.Keycode.NAVIGATION}, {0x11, MyCmd.Keycode.EJECT}, {0x12, MyCmd.Keycode.SETUP}, {0x13, MyCmd.Keycode.TIME_SETTING}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.AS}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x19, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x1a, MyCmd.Keycode.KEY_SEEK_PREV}, {0x1b, MyCmd.Keycode.PLAY_PAUSE}, {0x1c, MyCmd.Keycode.PREVIOUS}, {0x1d, MyCmd.Keycode.NEXT}, {0x40, MyCmd.Keycode.AUX_IN}, {0x34, MyCmd.Keycode.KEY_TURN_A}, {0x35, MyCmd.Keycode.KEY_TURN_D}, {0x50, MyCmd.Keycode.HOME}, {0x51, MyCmd.Keycode.MODLE}, {0x52, MyCmd.Keycode.RDS_TA_SWITCH}, {0x53, MyCmd.Keycode.MENU}, {0x54, MyCmd.Keycode.AUDIO},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] mAirData = new byte[8];
+    private byte mTemp = 127;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+
+    public GMOD() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     @Override
     public void setContext(Context c) {
@@ -42,7 +53,6 @@ public class GMOD extends Canbox {
         }
         sendDataToCanbox(data, data.length);
     }
-
 
     private void parseWheelKey(byte[] data) {
 
@@ -67,17 +77,6 @@ public class GMOD extends Canbox {
         }
     }
 
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x3, KEY_NEXTSONG}, {0x2, KEY_PREVIOUSSONG}, {0x4, MyCmd.Keycode.SETUP}, {0x5, MyCmd.Keycode.EQ}, {0x6, MyCmd.Keycode.BACK}, {0x7, MyCmd.Keycode.RADIO},
-            {0x8, MyCmd.Keycode.DVD}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4},
-            {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x10, MyCmd.Keycode.NAVIGATION}, {0x11, MyCmd.Keycode.EJECT}, {0x12, MyCmd.Keycode.SETUP}, {0x13, MyCmd.Keycode.TIME_SETTING},
-            {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.AS}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x19, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x1a, MyCmd.Keycode.KEY_SEEK_PREV}, {0x1b, MyCmd.Keycode.PLAY_PAUSE}, {0x1c, MyCmd.Keycode.PREVIOUS}, {0x1d, MyCmd.Keycode.NEXT}, {0x40, MyCmd.Keycode.AUX_IN},
-            {0x34, MyCmd.Keycode.KEY_TURN_A}, {0x35, MyCmd.Keycode.KEY_TURN_D}, {0x50, MyCmd.Keycode.HOME}, {0x51, MyCmd.Keycode.MODLE}, {0x52, MyCmd.Keycode.RDS_TA_SWITCH},
-            {0x53, MyCmd.Keycode.MENU}, {0x54, MyCmd.Keycode.AUDIO},
-
-    };
-
     private void parsePannelKey(byte[] data) {
 
         if (doKeyStudy(data[2], data[3])) {
@@ -100,10 +99,6 @@ public class GMOD extends Canbox {
             }
         }
     }
-
-    byte[] mAirData = new byte[8];
-
-    private byte mTemp = 127;
 
     private byte getTemp(byte in) {
         if (in == 0x1e) {
@@ -228,7 +223,6 @@ public class GMOD extends Canbox {
 
 
     }
-
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -404,10 +398,6 @@ public class GMOD extends Canbox {
         }
     }
 
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     public void updateOutDoorTemp(int temp) {
 
         if (temp == CarUtil.INVALID_OUT_DOOR_TEMP) {
@@ -449,28 +439,14 @@ public class GMOD extends Canbox {
 
     }
 
-    private int mDoorStatus = 0;
-
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
     }
 
     public void setMediaSrc(int source, byte type, byte[] b) {
     }
 
-
     private void checkHideRadar() {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
 }

@@ -14,6 +14,36 @@ import java.util.Locale;
 
 public class JeepRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0xa, 6, 7, 0x19, 0x10, 0x11};
+
+    //	public int getOutTemp(byte[] data) {//
+    //		int t = ((data[9] & 0xff) - 40) * 10;
+    //		return t;
+    //	}
+    private final static byte[][] KEYS_WHEEL = {{0x6, KEY_MUTE}, {0x11, AK_KEYPAD_VOLUME_A}, {0x12, AK_KEYPAD_VOLUME_D},
+            //			{ 0x14, KEY_NEXTSONG },
+            //			{ 0x13, KEY_PREVIOUSSONG },
+            {0x15, KEY_SOURCE}, {0x16, KEY_BACK}, {0x17, KEY_MIC}, {0x18, KEY_BT}, {0x1a, KEY_SOURCE}, {0x1b, KEY_FM}, {0x1c, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x1d, MyCmd.Keycode.KEY_SEEK_PREV},
+            //			{ 0x1f, KEY_NEXTSONG },
+            //			{ 0x1e, KEY_PREVIOUSSONG },
+            //			{ 0x20, MyCmd.Keycode.PLAY_PAUSE },
+    };
+    private final static byte[][] KEYS_WHEEL2 = {
+
+            {0x1, MyCmd.Keycode.BACKLIGHT_OFF}, {0x2, MyCmd.Keycode.BACK}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.HOME}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.VOLUME_UP}, {0x7, MyCmd.Keycode.KEY_SEEK_PREV}, {0x8, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x9, MyCmd.Keycode.POWER}, {0xa, MyCmd.Keycode.POWER},
+            //		{ 0xb, MyCmd.Keycode.BACKLIGHT_OFF },
+
+
+            {0x6, KEY_MUTE}, {0x11, AK_KEYPAD_VOLUME_A}, {0x12, AK_KEYPAD_VOLUME_D},
+            //			{ 0x14, KEY_NEXTSONG },
+            //			{ 0x13, KEY_PREVIOUSSONG },
+            {0x15, KEY_SOURCE}, {0x16, KEY_BACK}, {0x17, KEY_MIC}, {0x18, KEY_BT}, {0x1a, KEY_SOURCE}, {0x1b, KEY_FM}, {0x1c, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x1d, MyCmd.Keycode.KEY_SEEK_PREV},
+            //			{ 0x1f, KEY_NEXTSONG },
+            //			{ 0x1e, KEY_PREVIOUSSONG },
+            //			{ 0x20, MyCmd.Keycode.PLAY_PAUSE },
+    };
+    private final byte[] mLcdInfo = new byte[33];
+
     public JeepRaise() {
         mIdAC = 0x5;
         buildCmdDoor((byte) 0xa, (byte) 0x2, (byte) 0xf8, (byte) 0x03);
@@ -37,11 +67,6 @@ public class JeepRaise extends Canbox {
         mLcdInfo[0] = (byte) 0x90;
         mLcdInfo[1] = 0x1f;
     }
-
-    //	public int getOutTemp(byte[] data) {//
-    //		int t = ((data[9] & 0xff) - 40) * 10;
-    //		return t;
-    //	}
 
     public int getAngleValue(byte[] data) {
         short a = (short) ((data[3] & 0xff) | (((data[2] & 0xff)) << 8));
@@ -67,38 +92,9 @@ public class JeepRaise extends Canbox {
         return angle;
     }
 
-
     private boolean isAnglesStyle0() {
         return CarUtil.getModelId() != 4 && CarUtil.getModelId() != 15;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0xa, 6, 7, 0x19, 0x10, 0x11};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x6, KEY_MUTE}, {0x11, AK_KEYPAD_VOLUME_A}, {0x12, AK_KEYPAD_VOLUME_D},
-            //			{ 0x14, KEY_NEXTSONG },
-            //			{ 0x13, KEY_PREVIOUSSONG },
-            {0x15, KEY_SOURCE}, {0x16, KEY_BACK}, {0x17, KEY_MIC}, {0x18, KEY_BT}, {0x1a, KEY_SOURCE}, {0x1b, KEY_FM}, {0x1c, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x1d, MyCmd.Keycode.KEY_SEEK_PREV},
-            //			{ 0x1f, KEY_NEXTSONG },
-            //			{ 0x1e, KEY_PREVIOUSSONG },
-            //			{ 0x20, MyCmd.Keycode.PLAY_PAUSE },
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-
-            {0x1, MyCmd.Keycode.BACKLIGHT_OFF}, {0x2, MyCmd.Keycode.BACK}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.HOME}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.VOLUME_UP},
-            {0x7, MyCmd.Keycode.KEY_SEEK_PREV}, {0x8, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x9, MyCmd.Keycode.POWER}, {0xa, MyCmd.Keycode.POWER},
-            //		{ 0xb, MyCmd.Keycode.BACKLIGHT_OFF },
-
-
-            {0x6, KEY_MUTE}, {0x11, AK_KEYPAD_VOLUME_A}, {0x12, AK_KEYPAD_VOLUME_D},
-            //			{ 0x14, KEY_NEXTSONG },
-            //			{ 0x13, KEY_PREVIOUSSONG },
-            {0x15, KEY_SOURCE}, {0x16, KEY_BACK}, {0x17, KEY_MIC}, {0x18, KEY_BT}, {0x1a, KEY_SOURCE}, {0x1b, KEY_FM}, {0x1c, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x1d, MyCmd.Keycode.KEY_SEEK_PREV},
-            //			{ 0x1f, KEY_NEXTSONG },
-            //			{ 0x1e, KEY_PREVIOUSSONG },
-            //			{ 0x20, MyCmd.Keycode.PLAY_PAUSE },
-    };
 
     private int getTempStyle() {
         if (CarUtil.getModelId() == 7 || CarUtil.getModelId() == 12) {
@@ -164,8 +160,6 @@ public class JeepRaise extends Canbox {
         airData[5] |= 0x80;
         super.parseACInfo(airData);
     }
-
-    private final byte[] mLcdInfo = new byte[33];
 
     public void sendLcdInfo() {
         sendDataToCanbox(mLcdInfo, mLcdInfo.length);

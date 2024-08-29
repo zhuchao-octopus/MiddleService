@@ -17,20 +17,35 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class Accord2013Simple extends Canbox {
 
-    public Accord2013Simple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL},
-            {0xA, KEY_BT_HANG}, {0x17, KEY_HOME},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL}, {0xA, KEY_BT_HANG}, {0x17, KEY_HOME},
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME}, {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final byte mRadarSwitch = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+    public Accord2013Simple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
 
@@ -54,12 +69,6 @@ public class Accord2013Simple extends Canbox {
             }
         }
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME},
-            {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
-
-    };
 
     private void parseWheelKey2(byte[] data) {
         byte key = 0;
@@ -261,10 +270,6 @@ public class Accord2013Simple extends Canbox {
         }
     }
 
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -307,9 +312,6 @@ public class Accord2013Simple extends Canbox {
 
     }
 
-    private final byte mRadarSwitch = 0;
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -324,8 +326,9 @@ public class Accord2013Simple extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] data;
+    //	public void setPhone(int status, String num) {
+    //		sendId3((byte)0x1, num);
+    //	}
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -358,14 +361,10 @@ public class Accord2013Simple extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         }
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -379,12 +378,9 @@ public class Accord2013Simple extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        data = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(data, data.length);
     }
-
 
     public void sendId3(byte index, String num) {
 
@@ -419,13 +415,6 @@ public class Accord2013Simple extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-    //	public void setPhone(int status, String num) {
-    //		sendId3((byte)0x1, num);
-    //	}
-
     public void setSongName(String s) {
         sendId3((byte) 0x2, s);
         mName = s;
@@ -440,8 +429,6 @@ public class Accord2013Simple extends Canbox {
         sendId3((byte) 0x3, s);
         mAlbum = s;
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 
@@ -512,16 +499,6 @@ public class Accord2013Simple extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
     //
     // public void setPhone(int status, String num) {// default is simple box
     // switch (status) {

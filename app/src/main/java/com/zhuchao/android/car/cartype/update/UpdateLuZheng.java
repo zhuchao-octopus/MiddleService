@@ -10,16 +10,17 @@ import java.io.FileInputStream;
 
 public class UpdateLuZheng extends Canbox {
 
-    public UpdateLuZheng() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
+    private final static int PACKAGE_LEN = 128;
     UpdateDialog mUpdateDialog;
+    private byte[] buf;
+    private int mSendLen = -1;
+    private int mPackageTotalNum = 0;
+    private int mPackageSendNum = 0;
+
+    public UpdateLuZheng() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     @Override
     public void startConnect() {
@@ -43,12 +44,6 @@ public class UpdateLuZheng extends Canbox {
         return 0;
     }
 
-    private byte[] buf;
-    private int mSendLen = -1;
-    private int mPackageTotalNum = 0;
-    private int mPackageSendNum = 0;
-    private final static int PACKAGE_LEN = 128;
-
     private void startUpdate() {
         if (CarUtil.mUpdateFile != null) {
             FileInputStream fis = null;
@@ -69,8 +64,7 @@ public class UpdateLuZheng extends Canbox {
                     return;
                 }
 
-                byte[] data = new byte[]{
-                        (byte) 0xea, 0x2, (byte) ((mPackageTotalNum & 0xff00) >> 8), (byte) ((mPackageTotalNum & 0xff) >> 0)
+                byte[] data = new byte[]{(byte) 0xea, 0x2, (byte) ((mPackageTotalNum & 0xff00) >> 8), (byte) ((mPackageTotalNum & 0xff) >> 0)
 
                 };
                 mSendLen = 0;

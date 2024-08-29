@@ -7,6 +7,18 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class ShangQiSAP006Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x87, 0x32};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+            {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
+
+            {0x5, MyCmd.Keycode.BT},
+
+
+            {0xa, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x18, MyCmd.Keycode.NAVIGATION},
+
+    };
+
     public ShangQiSAP006Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -21,25 +33,10 @@ public class ShangQiSAP006Hiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x87, 0x32};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-            {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
-
-            {0x5, MyCmd.Keycode.BT},
-
-
-            {0xa, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x18, MyCmd.Keycode.NAVIGATION},
-
-    };
 
     public void startConnect() {
 

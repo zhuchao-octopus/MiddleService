@@ -9,6 +9,18 @@ import java.util.Date;
 
 public class HyXinbasi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x3, 0x4, 0x7, 0x8, 0xa, 0xb};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0xa, MyCmd.Keycode.SPEECH},
+
+            {0x6, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.BT_DIAL}, {0x9, MyCmd.Keycode.BT_HANG},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.RADIO}, {0x2, MyCmd.Keycode.AUDIO}, {0x3, MyCmd.Keycode.BT}, {0x4, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x5, MyCmd.Keycode.KEY_SEEK_PREV}, {0x6, MyCmd.Keycode.NAVIGATION}, {0x7, MyCmd.Keycode.NAVIGATION}, {0x8, MyCmd.Keycode.SETUP}, {0x9, MyCmd.Keycode.PLAY_PAUSE}, {0xa, MyCmd.Keycode.POWER}, {0xb, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MUTE}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x10, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x11, MyCmd.Keycode.ROLL_NEXT}, {0x12, MyCmd.Keycode.ROLL_PREV}, {0x13, MyCmd.Keycode.KEY_DISPLAY}, {0x14, MyCmd.Keycode.HOME},
+            //		{ 0x15, MyCmd.Keycode. },
+
+
+    };
+
     public HyXinbasi() {
         buildCmdDoor((byte) 0x8, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
         buildCmdRadarFront((byte) 0x4, (byte) 0x1, (byte) 0x3);
@@ -23,27 +35,6 @@ public class HyXinbasi extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x3, 0x4, 0x7, 0x8, 0xa, 0xb
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0xa, MyCmd.Keycode.SPEECH},
-
-            {0x6, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.BT_DIAL}, {0x9, MyCmd.Keycode.BT_HANG},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.RADIO}, {0x2, MyCmd.Keycode.AUDIO}, {0x3, MyCmd.Keycode.BT}, {0x4, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x5, MyCmd.Keycode.KEY_SEEK_PREV}, {0x6, MyCmd.Keycode.NAVIGATION},
-            {0x7, MyCmd.Keycode.NAVIGATION}, {0x8, MyCmd.Keycode.SETUP}, {0x9, MyCmd.Keycode.PLAY_PAUSE}, {0xa, MyCmd.Keycode.POWER}, {0xb, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MUTE},
-            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x10, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x11, MyCmd.Keycode.ROLL_NEXT},
-            {0x12, MyCmd.Keycode.ROLL_PREV}, {0x13, MyCmd.Keycode.KEY_DISPLAY}, {0x14, MyCmd.Keycode.HOME},
-            //		{ 0x15, MyCmd.Keycode. },
-
-
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -103,9 +94,7 @@ public class HyXinbasi extends Canbox {
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
-        byte[] mData = new byte[]{
-                (byte) 0x84, 0x5, 8, (byte) 0x20, (byte) (play & 0xff), (byte) (((play & 0xf00) >> 2) | ((time % 60) & 0x3f)), (byte) (time / 60)
-        };
+        byte[] mData = new byte[]{(byte) 0x84, 0x5, 8, (byte) 0x20, (byte) (play & 0xff), (byte) (((play & 0xf00) >> 2) | ((time % 60) & 0x3f)), (byte) (time / 60)};
         sendDataToCanbox(mData, mData.length);
 
     }

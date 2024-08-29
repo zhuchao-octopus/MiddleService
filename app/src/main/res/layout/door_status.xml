@@ -4,9 +4,9 @@
     android:layout_height="400px"
     android:background="@drawable/panel_background"
     android:gravity="center"
+    android:orientation="vertical"
     android:scaleX="0.7"
-    android:scaleY="0.7"
-    android:orientation="vertical">
+    android:scaleY="0.7">
 
     <ImageView
         android:id="@+id/door_car"
@@ -95,17 +95,17 @@
         android:id="@+id/door_status_7"
         android:layout_width="83px"
         android:layout_height="35px"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="180px"
         android:background="@drawable/car_door_top_wind"
-        android:layout_centerHorizontal="true"
         android:visibility="gone" />
 
     <View
         android:id="@+id/door_status_8"
         android:layout_width="83px"
         android:layout_height="70px"
-        android:layout_marginTop="180px"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="180px"
         android:background="@drawable/car_door_top_wind_full"
         android:visibility="gone" />
 

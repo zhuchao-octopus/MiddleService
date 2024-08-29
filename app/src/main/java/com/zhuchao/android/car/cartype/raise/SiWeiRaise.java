@@ -6,6 +6,14 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class SiWeiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x41, 0x25};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG},
+
+            {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x83, MyCmd.Keycode.ROLL_PREV}, {(byte) 0x84, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x85, MyCmd.Keycode.BACK}, {(byte) 0x86, MyCmd.Keycode.HOME}, {(byte) 0x87, MyCmd.Keycode.MULT_OK_AND_POWER},};
+    private final byte[] mLcdInfo = new byte[]{(byte) 0xa5, 0x3, 0, 0, 0};
+    private int mPhoneStatus;
+
+
     public SiWeiRaise() {
         mIdAC = 0x21;
         buildCmdDoor((byte) 0x25, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -18,17 +26,6 @@ public class SiWeiRaise extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x41, 0x25};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC},
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG},
-
-            {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x83, MyCmd.Keycode.ROLL_PREV}, {(byte) 0x84, MyCmd.Keycode.ROLL_NEXT},
-            {(byte) 0x85, MyCmd.Keycode.BACK}, {(byte) 0x86, MyCmd.Keycode.HOME}, {(byte) 0x87, MyCmd.Keycode.MULT_OK_AND_POWER},
-    };
-
-
     public void parseRadarBack(int id, byte[] data) {
         int max = data[3];
         mRadar[0] = radarChangeStyle(data[4], max, 0);
@@ -37,7 +34,6 @@ public class SiWeiRaise extends Canbox {
         mRadar[3] = radarChangeStyle(data[7], max, 0);
         parseRadar();
     }
-
 
     @Override
     public int getACTemp(byte data) {
@@ -117,8 +113,6 @@ public class SiWeiRaise extends Canbox {
 
     }
 
-    private final byte[] mLcdInfo = new byte[]{(byte) 0xa5, 0x3, 0, 0, 0};
-
     public void setMediaSrc(int source) {// default is simple box
         byte s = -1;
 
@@ -154,7 +148,6 @@ public class SiWeiRaise extends Canbox {
 
     }
 
-
     public boolean requestAngleData() {
         byte[] data3 = new byte[]{(byte) 0x90, 0x2, 0x29, 0};
         sendDataToCanbox(data3, data3.length);
@@ -165,8 +158,6 @@ public class SiWeiRaise extends Canbox {
         int t = data[2];
         return t * 10;
     }
-
-    private int mPhoneStatus;
 
     public void setPhone(int phone_status, String num) {// default is simple box
         mPhoneStatus = phone_status;

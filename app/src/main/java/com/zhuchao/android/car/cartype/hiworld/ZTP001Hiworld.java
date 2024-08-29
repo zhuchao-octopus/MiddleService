@@ -6,25 +6,8 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class ZTP001Hiworld extends Canbox {
 
-    public ZTP001Hiworld() {
-
-        buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
-
-        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-
-        buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
-        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
-
-        mIdAC = 0x31;
-        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
-    }
-
     private final static byte[] IDS_TO_CANBOXSETTING = {0x37};
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
 
             {0x3, MyCmd.Keycode.MUTE},
 
@@ -39,6 +22,21 @@ public class ZTP001Hiworld extends Canbox {
 
 
     };
+
+
+    public ZTP001Hiworld() {
+
+        buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
+
+        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+
+        buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
+        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
+
+        mIdAC = 0x31;
+        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
+    }
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x20};

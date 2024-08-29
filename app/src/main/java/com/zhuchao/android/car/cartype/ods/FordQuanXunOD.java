@@ -10,6 +10,9 @@ import java.util.Date;
 
 public class FordQuanXunOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x38, 0x39, 0x41, 0x42};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MULT_SPEECH_MODE},};
+
     public FordQuanXunOD() {
 
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -24,13 +27,6 @@ public class FordQuanXunOD extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x38, 0x39, 0x41, 0x42};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MUTE},
-            {0x7, MyCmd.Keycode.MULT_SPEECH_MODE},
-    };
 
     @Override
     public int getAngleValue(byte[] data) {

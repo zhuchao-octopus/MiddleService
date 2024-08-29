@@ -15,6 +15,29 @@ import java.util.Locale;
 
 public class RanualtHiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x13, (byte) 0x14, (byte) 0x1b, 0x26, 0x31, 0x61, 0x62};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MULT_MUTE_AND_BT}, {0x4, MyCmd.Keycode.NAVIGATION}, {0x7, MyCmd.Keycode.SPEECH},
+
+            {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0x10, MyCmd.Keycode.MULT_SOURCE_AND_BT}, {0x11, MyCmd.Keycode.MODLE}, {0x18, MyCmd.Keycode.SPEECH},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x4, MyCmd.Keycode.MENU}, {0x6, MyCmd.Keycode.BACK}, {0x9, MyCmd.Keycode.MUTE}, {0x12, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.PREVIOUS}, {0x18, MyCmd.Keycode.NEXT}, {0x19, MyCmd.Keycode.PREVIOUS}, {0x1a, MyCmd.Keycode.NEXT}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x21, MyCmd.Keycode.NAVIGATION}, {0x25, MyCmd.Keycode.KEY_REPEAT}, {0x2b, MyCmd.Keycode.HOME}, {0x31, MyCmd.Keycode.DARK}, {0x37, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.BRIGHTNESS}, {0x54, MyCmd.Keycode.NAVIGATION}, {0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN},
+
+
+            {0x5b, MyCmd.Keycode.HOME}, {0x5c, MyCmd.Keycode.BACK},};
+    byte mLcdType = -1;    private final Handler mHandlerSendLcd = new Handler() {
+        public void handleMessage(Message msg) {
+
+            if (mLcdType != -1) {
+                sendLcdInfo(mLcdType, mLcdString, false);
+                startSendLcd();
+            }
+
+            super.handleMessage(msg);
+        }
+    };
+    String mLcdString;
     public RanualtHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 2);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -81,22 +104,6 @@ public class RanualtHiworld extends Canbox {
         return cmd;
     }
 
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
-
-    private final Handler mHandlerSendLcd = new Handler() {
-        public void handleMessage(Message msg) {
-
-            if (mLcdType != -1) {
-                sendLcdInfo(mLcdType, mLcdString, false);
-                startSendLcd();
-            }
-
-            super.handleMessage(msg);
-        }
-    };
-
     private void startSendLcd() {
         stoptSendLcd();
         //		mHandlerSendLcd.sendEmptyMessageDelayed(0, 1000);
@@ -114,28 +121,6 @@ public class RanualtHiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            (byte) 0x13, (byte) 0x14, (byte) 0x1b, 0x26, 0x31, 0x61, 0x62
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MULT_MUTE_AND_BT}, {0x4, MyCmd.Keycode.NAVIGATION}, {0x7, MyCmd.Keycode.SPEECH},
-
-            {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0x10, MyCmd.Keycode.MULT_SOURCE_AND_BT}, {0x11, MyCmd.Keycode.MODLE},
-            {0x18, MyCmd.Keycode.SPEECH},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x4, MyCmd.Keycode.MENU}, {0x6, MyCmd.Keycode.BACK}, {0x9, MyCmd.Keycode.MUTE}, {0x12, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.PLAY_PAUSE},
-            {0x17, MyCmd.Keycode.PREVIOUS}, {0x18, MyCmd.Keycode.NEXT}, {0x19, MyCmd.Keycode.PREVIOUS}, {0x1a, MyCmd.Keycode.NEXT}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x21, MyCmd.Keycode.NAVIGATION},
-            {0x25, MyCmd.Keycode.KEY_REPEAT}, {0x2b, MyCmd.Keycode.HOME}, {0x31, MyCmd.Keycode.DARK}, {0x37, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.BRIGHTNESS}, {0x54, MyCmd.Keycode.NAVIGATION},
-            {0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN},
-
-
-            {0x5b, MyCmd.Keycode.HOME}, {0x5c, MyCmd.Keycode.BACK},
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -281,9 +266,6 @@ public class RanualtHiworld extends Canbox {
         sendLcdInfo((byte) 0x20, String.format("VOL %02d", volume, Locale.ENGLISH), false);
     }
 
-    byte mLcdType = -1;
-    String mLcdString;
-
     public void setMediaSrc(int source, byte type, byte[] b) {
         int freq = (b[1] & 0xff) | ((b[2] & 0xff) << 8);
         if (source == MyCmd.SOURCE_RADIO) {
@@ -338,7 +320,6 @@ public class RanualtHiworld extends Canbox {
         sendLcdInfo(s, null, false);
     }
 
-
     public void sendLcdInfo(byte index, String num, boolean end) {
 
         try {
@@ -374,7 +355,6 @@ public class RanualtHiworld extends Canbox {
 
         }
     }
-
 
     public void sendId3(byte index, String num, int data_len, int reserve) {
 
@@ -455,10 +435,6 @@ public class RanualtHiworld extends Canbox {
         }
     }
 
-    //	public void setSongAlbum(String s) {
-    //		sendId3((byte) 0x93, s, 0x20, 0);
-    //	}
-
     public void sendDataToCanbox(byte[] data, int len) { // default is simple
         super.sendDataToCanboxHiword1(data, len);
     }
@@ -472,6 +448,10 @@ public class RanualtHiworld extends Canbox {
             return super.getOutTemp(data);
         }
     }
+
+    //	public void setSongAlbum(String s) {
+    //		sendId3((byte) 0x93, s, 0x20, 0);
+    //	}
 
     public int getUpdateTime() {
         return 60000;
@@ -512,9 +492,7 @@ public class RanualtHiworld extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 1
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 1};
 
         sendDataToCanbox(buf, buf.length);
 
@@ -667,4 +645,8 @@ public class RanualtHiworld extends Canbox {
         //		sendId3((byte) 0x96, name, 0x19, 1);
 
     }
+
+
+
+
 }

@@ -13,17 +13,20 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class AlphaBagoo extends Canbox {
 
-    public AlphaBagoo() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x2, AK_KEYPAD_VOLUME_A}, {0x3, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x5, KEY_PREVIOUSSONG}, {0x13, KEY_NEXTSONG}, {0x12, KEY_PREVIOUSSONG}, {0x1, KEY_MUTE},
+    private final static byte[][] KEYS_WHEEL = {{0x2, AK_KEYPAD_VOLUME_A}, {0x3, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x5, KEY_PREVIOUSSONG}, {0x13, KEY_NEXTSONG}, {0x12, KEY_PREVIOUSSONG}, {0x1, KEY_MUTE},
 
             {0x11, KEY_SOURCE}, {0x15, KEY_MIC}, {0x14, KEY_BT},
 
     };
+    byte[] data;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+
+    public AlphaBagoo() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
 
@@ -95,9 +98,6 @@ public class AlphaBagoo extends Canbox {
 
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -142,14 +142,10 @@ public class AlphaBagoo extends Canbox {
 
     }
 
-    private int mDoorStatus = 0;
-
     public void requestInfo(byte param) {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] data;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 

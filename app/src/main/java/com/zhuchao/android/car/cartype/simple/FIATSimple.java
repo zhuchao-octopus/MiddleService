@@ -18,13 +18,20 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class FIATSimple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x4, AK_KEYPAD_VOLUME_A}, {0x5, AK_KEYPAD_VOLUME_D}, {0x9, KEY_NEXTSONG}, {0x8, KEY_PREVIOUSSONG},
+
+            {0x6, KEY_MUTE}, {0x3, KEY_SOURCE}, {0xA, KEY_GPS},
+
+    };
+    byte[] mMediaData = new byte[2];
+    byte mMediaType = -1;
+    private int mDoorStatus = 0;
+    private int mTime = -1;
+    private byte mUSBBTInfo = 0;
+
     public FIATSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
     }
 
     @Override
@@ -43,13 +50,6 @@ public class FIATSimple extends Canbox {
         sendDataToCanbox(data, data.length);
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x4, AK_KEYPAD_VOLUME_A}, {0x5, AK_KEYPAD_VOLUME_D}, {0x9, KEY_NEXTSONG}, {0x8, KEY_PREVIOUSSONG},
-
-            {0x6, KEY_MUTE}, {0x3, KEY_SOURCE}, {0xA, KEY_GPS},
-
-    };
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -71,6 +71,23 @@ public class FIATSimple extends Canbox {
             }
         }
     }
+
+    // private final static int CHECK_PLAYSTATUS = 0;
+    // private Handler mHandler = new Handler() {
+    // public void handleMessage(Message msg) {
+    // switch (msg.what) {
+    // case CHECK_PLAYSTATUS:
+    // if (mMediaType == 0x2 || mMediaType == 0x4) {
+    // mMediaData[1] = 0x0;
+    // byte[] data = new byte[] { (byte) 0x93, 0x6, mMediaType, 0,
+    // mMediaData[0], mMediaData[1], 0, 0 };
+    // sendDataToCanbox(data, data.length);
+    // }
+    // break;
+    // }
+    // super.handleMessage(msg);
+    // }
+    // };
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -189,8 +206,6 @@ public class FIATSimple extends Canbox {
         }
     }
 
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -205,26 +220,6 @@ public class FIATSimple extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    // private final static int CHECK_PLAYSTATUS = 0;
-    // private Handler mHandler = new Handler() {
-    // public void handleMessage(Message msg) {
-    // switch (msg.what) {
-    // case CHECK_PLAYSTATUS:
-    // if (mMediaType == 0x2 || mMediaType == 0x4) {
-    // mMediaData[1] = 0x0;
-    // byte[] data = new byte[] { (byte) 0x93, 0x6, mMediaType, 0,
-    // mMediaData[0], mMediaData[1], 0, 0 };
-    // sendDataToCanbox(data, data.length);
-    // }
-    // break;
-    // }
-    // super.handleMessage(msg);
-    // }
-    // };
-
-    byte[] mMediaData = new byte[2];
-    private int mTime = -1;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -257,9 +252,7 @@ public class FIATSimple extends Canbox {
                 mMediaData[1] = 0;
             }
 
-            byte[] data = new byte[]{
-                    (byte) 0x93, 0x6, mMediaType, 0, mMediaData[0], mMediaData[1], 0, 0
-            };
+            byte[] data = new byte[]{(byte) 0x93, 0x6, mMediaType, 0, mMediaData[0], mMediaData[1], 0, 0};
             sendDataToCanbox(data, data.length);
 
             // mHandler.removeMessages(CHECK_PLAYSTATUS);
@@ -287,8 +280,6 @@ public class FIATSimple extends Canbox {
         }
 
     }
-
-    byte mMediaType = -1;
 
     public void setMediaSrc(int source) {// default is simple box
 
@@ -320,14 +311,10 @@ public class FIATSimple extends Canbox {
         }
         //
         if (mMediaType != mediaType) {
-            byte[] data = new byte[]{
-                    (byte) 0x93, 0x6, mediaType, 0, 0, 0, 0, 0
-            };
+            byte[] data = new byte[]{(byte) 0x93, 0x6, mediaType, 0, 0, 0, 0, 0};
             sendDataToCanbox(data, data.length);
         }
     }
-
-    private byte mUSBBTInfo = 0;
 
     public void sendDataToCanbox(byte[] data, int len) {
         if ((data[0] & 0xff) == 0xff) {

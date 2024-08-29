@@ -36,44 +36,38 @@ import java.util.Objects;
 
 public class CanService {
     private static final String TAG = "CanService";
+    private static final int PARSER_CANBOX_DATA = 0x01;
+    private static final int CANBOX_UPDATE_TIME = 0x02;
+    private final static int MSG_GPS_COMPASS = 0x03;
+    private static final String RADIO_SOURCE_CHANGE = "com.zhuchao.android.car.radio.SOURCE_CHANGE";
+    private static final String DVD_SOURCE_CHANGE = "com.zhuchao.android.car.dvd.SOURCE_CHANGE";
+    private static final String AUDIO_SOURCE_CHANGE = "com.zhuchao.android.car.audio.SOURCE_CHANGE";
+    private static final String VIDEO_SOURCE_CHANGE = "com.zhuchao.android.car.video.SOURCE_CHANGE";
+    private static final String IPOD_SOURCE_CHANGE = "com.zhuchao.android.car.ipod.SOURCE_CHANGE";
+    private static final String MY_OUT_VOLUME_CHANGE = "com.zhuchao.android.car.out.VOLUME_CHANGE";
+    private static final String BT_PHONE_BROADCAST = "com.zhuchao.android.car.bt.BT_PHONE_BROADCAST";
     @SuppressLint("StaticFieldLeak")
     public static Canbox mCanbox;//for canbox mcu update set to null
     @SuppressLint("StaticFieldLeak")
     private static CanService mThis;
-
-    private AirConditionPanel mAirConditionPanel;
-    private DoorStatusPanel mDoorStatusPanel;
     private final Context mContext;
-    public CarUtil mCarUtil;
-
-    public static CanService getInstance(Context context) {
-        if (mThis == null) {
-            mThis = new CanService(context);
-
-            mThis.onCreate();
+    private final Handler mHandlerMediaInfoToCanbox = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    //				if (msg.obj != null) {
+                    mCanbox.setSongAritst((String) msg.obj);
+                    //				}
+                    break;
+                case 2:
+                    //				if (msg.obj != null) {
+                    mCanbox.setSongAlbum((String) msg.obj);
+                    //				}
+                    break;
+            }
         }
-        return mThis;
-    }
-
-    public CanService(Context context) {
-        mContext = context;
-    }
-
-    public void doCmd(int cmd, Intent intent) {
-        byte[] buf = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_DATA);
-        canboxDataParser(buf, buf.length);
-    }
-
-    private static final int PARSER_CANBOX_DATA = 0x01;
-    private static final int CANBOX_UPDATE_TIME = 0x02;
-    private final static int MSG_GPS_COMPASS = 0x03;
-    private int mUpdateCanboxTime = 0;
-
-    public void canboxDataParser(byte[] data, int len) {
-        mHandler.sendMessage(mThis.mHandler.obtainMessage(PARSER_CANBOX_DATA, len, 0, data));
-    }
-
-    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+    };
+    public CarUtil mCarUtil;    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Canbox.CANBOX_RETURN_AIR:
@@ -128,21 +122,33 @@ public class CanService {
     // mReverseUI = new ReverseUI();
     // mReverseUI.onCreate();
     // }
+    private AirConditionPanel mAirConditionPanel;
+    private DoorStatusPanel mDoorStatusPanel;
+    private int mUpdateCanboxTime = 0;
+    private int mMediaPlayTime = 0;
+    private BroadcastReceiver mReceiver;
+    private int mGpsInitTime = 5;
+    private LocationManager mLocationManager = null;
+    private MyLocationListener mLocationListener = null;
+    private int mAppSource = MyCmd.SOURCE_NONE;
+    private BroadcastReceiver mBroadcastReceiver;
+    private Toast mToastMedia;
+    private String mMusicName = null;
+    private String mBTMusicName = null;
+    private String mRadioName = null;
+    private int mFreqency = 0;
 
-    public void onCreate() {
-        mThis = this;
+    public CanService(Context context) {
+        mContext = context;
+    }
 
-        if (mAirConditionPanel == null) {
-            mAirConditionPanel = new AirConditionPanel(mContext);
+    public static CanService getInstance(Context context) {
+        if (mThis == null) {
+            mThis = new CanService(context);
+
+            mThis.onCreate();
         }
-
-        if (mDoorStatusPanel == null) {
-            mDoorStatusPanel = new DoorStatusPanel(mContext);
-        }
-
-        Canbox.addHandler("CanService", mHandler);
-        updateCanbox();
-        mHandlerMediaInfoToCanbox.sendEmptyMessageDelayed(0, 1000);
+        return mThis;
     }
 
     public static void updateCanboxEx() {
@@ -161,6 +167,31 @@ public class CanService {
         if (mThis != null) {
             mCanbox.updateCanboxSettings();
         }
+    }
+
+    public void doCmd(int cmd, Intent intent) {
+        byte[] buf = intent.getByteArrayExtra(MyCmd.EXTRA_COMMON_DATA);
+        canboxDataParser(buf, buf.length);
+    }
+
+    public void canboxDataParser(byte[] data, int len) {
+        mHandler.sendMessage(mThis.mHandler.obtainMessage(PARSER_CANBOX_DATA, len, 0, data));
+    }
+
+    public void onCreate() {
+        mThis = this;
+
+        if (mAirConditionPanel == null) {
+            mAirConditionPanel = new AirConditionPanel(mContext);
+        }
+
+        if (mDoorStatusPanel == null) {
+            mDoorStatusPanel = new DoorStatusPanel(mContext);
+        }
+
+        Canbox.addHandler("CanService", mHandler);
+        updateCanbox();
+        mHandlerMediaInfoToCanbox.sendEmptyMessageDelayed(0, 1000);
     }
 
     public void updateCanbox() {
@@ -212,26 +243,6 @@ public class CanService {
             initCanboxTime();
         }
     }
-
-    private int mMediaPlayTime = 0;
-    private final Handler mHandlerMediaInfoToCanbox = new Handler(Objects.requireNonNull(Looper.myLooper())) {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1:
-                    //				if (msg.obj != null) {
-                    mCanbox.setSongAritst((String) msg.obj);
-                    //				}
-                    break;
-                case 2:
-                    //				if (msg.obj != null) {
-                    mCanbox.setSongAlbum((String) msg.obj);
-                    //				}
-                    break;
-            }
-        }
-    };
-
-    private BroadcastReceiver mReceiver;
 
     private void unregisterListener() {
         if (mReceiver != null) {
@@ -417,7 +428,7 @@ public class CanService {
                                 MMLog.d(TAG, "onReceive: buf = " + ByteUtils.BuffToHexStr(buf));
                                 if (mCanbox instanceof SlimKeyCF006) {
                                     SlimKeyCF006 slimCanbox = (SlimKeyCF006) mCanbox;
-                                    slimCanbox.sendDataToCanbox(buf,buf.length);
+                                    slimCanbox.sendDataToCanbox(buf, buf.length);
                                 } else {
                                     mCanbox.sendDataToCanbox(buf, buf.length);
                                 }
@@ -502,11 +513,6 @@ public class CanService {
         }
     }
 
-    private int mGpsInitTime = 5;
-
-    private LocationManager mLocationManager = null;
-    private MyLocationListener mLocationListener = null;
-
     private void initGpsCompass() {
 
         if (mLocationManager == null) {
@@ -531,31 +537,6 @@ public class CanService {
         // mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SAVE_TIME, 1);
         // doUpdateGpsTime();
     }
-
-    public static class MyLocationListener implements LocationListener {
-        public void onLocationChanged(Location location) {
-            float bearing = location.getBearing();
-            double altitude = location.getAltitude();
-
-            //Log.d(TAG, "bearing:"+bearing);
-            if (mCanbox != null) {
-                mCanbox.updateCompass((int) bearing);
-                mCanbox.updateCompass((int) bearing, altitude);
-                mCanbox.updateExtRadar((int) location.getSpeed());
-            }
-        }
-
-        public void onProviderDisabled(String provider) {
-
-        }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-    }
-
 
     private void doBTCmd(Intent intent) {
         //		if (GlobalDef.mMediaInfoToastBackground != 0) {
@@ -602,15 +583,6 @@ public class CanService {
         //		}
     }
 
-    private int mAppSource = MyCmd.SOURCE_NONE;
-    private static final String RADIO_SOURCE_CHANGE = "com.zhuchao.android.car.radio.SOURCE_CHANGE";
-    private static final String DVD_SOURCE_CHANGE = "com.zhuchao.android.car.dvd.SOURCE_CHANGE";
-    private static final String AUDIO_SOURCE_CHANGE = "com.zhuchao.android.car.audio.SOURCE_CHANGE";
-    private static final String VIDEO_SOURCE_CHANGE = "com.zhuchao.android.car.video.SOURCE_CHANGE";
-    private static final String IPOD_SOURCE_CHANGE = "com.zhuchao.android.car.ipod.SOURCE_CHANGE";
-    private static final String MY_OUT_VOLUME_CHANGE = "com.zhuchao.android.car.out.VOLUME_CHANGE";
-    private static final String BT_PHONE_BROADCAST = "com.zhuchao.android.car.bt.BT_PHONE_BROADCAST";
-
     public void setSource(int id) {
         if (mAppSource != id) {
             if (id != -1) {
@@ -634,8 +606,6 @@ public class CanService {
             }
         }
     }
-
-    private BroadcastReceiver mBroadcastReceiver;
 
     private void unregisterReceiver() {
         if (mBroadcastReceiver != null) {
@@ -663,11 +633,6 @@ public class CanService {
 
         mContext.registerReceiver(mBroadcastReceiver, intentFilter);
     }
-
-    private Toast mToastMedia;
-    private String mMusicName = null;
-    private String mBTMusicName = null;
-    private String mRadioName = null;
 
     private void showToastMediaBackground(String s) {
         if (mContext != null) {
@@ -739,8 +704,6 @@ public class CanService {
         }
     }
 
-    private int mFreqency = 0;
-
     private void showToastMediaBackgroundRadio(int freqency, int band) {
 
         if (mAppSource != MyCmd.SOURCE_RADIO) {
@@ -789,6 +752,32 @@ public class CanService {
             mBTMusicName = null;
         }
     }
+
+    public static class MyLocationListener implements LocationListener {
+        public void onLocationChanged(Location location) {
+            float bearing = location.getBearing();
+            double altitude = location.getAltitude();
+
+            //Log.d(TAG, "bearing:"+bearing);
+            if (mCanbox != null) {
+                mCanbox.updateCompass((int) bearing);
+                mCanbox.updateCompass((int) bearing, altitude);
+                mCanbox.updateExtRadar((int) location.getSpeed());
+            }
+        }
+
+        public void onProviderDisabled(String provider) {
+
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    }
+
+
 
 
 }

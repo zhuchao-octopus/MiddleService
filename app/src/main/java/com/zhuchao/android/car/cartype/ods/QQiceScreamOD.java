@@ -9,6 +9,18 @@ import java.util.Calendar;
 
 public class QQiceScreamOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x27};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x4, AK_KEYPAD_VOLUME_D},
+
+            {0x7, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.NEXT},
+
+            {0xc, MyCmd.Keycode.BT_DIAL}, {0xd, MyCmd.Keycode.BT_HANG},
+
+            {0x10, KEY_SOURCE}, {0x19, MyCmd.Keycode.MUTE}, {0x1b, MyCmd.Keycode.POWER},
+
+    };
+
+
     public QQiceScreamOD() {
         mIdAC = 0x28;
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -22,21 +34,6 @@ public class QQiceScreamOD extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x27};
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x4, AK_KEYPAD_VOLUME_D},
-
-            {0x7, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.NEXT},
-
-            {0xc, MyCmd.Keycode.BT_DIAL}, {0xd, MyCmd.Keycode.BT_HANG},
-
-            {0x10, KEY_SOURCE}, {0x19, MyCmd.Keycode.MUTE}, {0x1b, MyCmd.Keycode.POWER},
-
-    };
-
 
     public int getAngleValue2(byte[] data) {
 

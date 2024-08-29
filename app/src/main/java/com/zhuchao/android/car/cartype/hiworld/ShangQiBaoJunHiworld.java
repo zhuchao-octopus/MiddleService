@@ -10,6 +10,17 @@ import java.util.Locale;
 
 public class ShangQiBaoJunHiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x87, 0x32};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+            {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
+
+            {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_HANG},
+
+            {0xa, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
+
+    };
+
     public ShangQiBaoJunHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -32,20 +43,6 @@ public class ShangQiBaoJunHiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x87, 0x32};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-            {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
-
-            {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_HANG},
-
-            {0xa, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
-
-    };
-
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x0};

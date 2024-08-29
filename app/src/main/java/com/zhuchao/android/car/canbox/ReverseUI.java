@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.hardware.Camera.Size;
-
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -33,7 +32,6 @@ import com.common.utils.MachineConfig;
 import com.common.utils.MyCmd;
 import com.common.utils.SettingProperties;
 import com.common.utils.Util;
-
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.MyGLSurfaceView;
 import com.zhuchao.android.car.R;
@@ -55,17 +53,64 @@ import java.util.List;
 
 public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHolder.Callback {
     private final static String TAG = "ReverseUI";
-    private Canbox mCanBox;
-    public boolean mPreviewing;
+    private static final ReverseUI[] mUI = new ReverseUI[MAX_DISPLAY];
+    private static final int[] BUTTON_ON_CLICK = new int[]{R.id.cam1, R.id.cam2, R.id.cam3, R.id.cam4, R.id.switch_camera, R.id.switch_camera_mirror};
+    private final static String CAMERA_INDEX = "/sys/class/misc/mst701/device/source2";
+    private static final String SCREEN_COLOR_BRIGHT = "/sys/class/ak/camera/bright";
+    private static final int MSG_CHECK_SIGNAL = 14;
+    private static final int TIME_CHECK_SIGNAL = 1000;
+    private final static int MSG_RESTART_CAMERA_FAIL = 10000;
+    private final static int MSG_SWITCH_CAMER_P90 = 10001;
+    private final static int HIDE_EMPTY = 1;
+    private final static int START_RADAR_UI = 6;
+    private static final int MSG_REMOVE_BLACK = 15;
+    private static final String SAVE_DATA = "com.zhuchao.android.car.carapp.SAVE_DATA";
+    public static int mReverseLight = -1;
+    public static boolean checkCamera0IfFacing = false;
+    private static int mToSetCameraSource;
     // private boolean mPause;
     private final boolean mStartPreviewFail = false;
+    public boolean mPreviewing;
+    // for ba ktrack
+    BackTrackView mBackTrackView;
+    int mStaticTrackExist = 0;
+    int mDyncTrackExist = 1;
+    private Canbox mCanBox;
     private android.hardware.Camera mCameraDevice;
     private SurfaceHolder mSurfaceHolder = null;
     private SurfaceView mSurfaceView;
     // private static ReverseActivity mThis;
     private int mADRotation = 0;
     private RadarUI mRadarUI;
-    private static final ReverseUI[] mUI = new ReverseUI[MAX_DISPLAY];
+    private ReverseUICanbox mReverseUICanbox;
+    private TrackParamterDialog mTrackParamterDialog;
+    private int mFirstCheckSignalFast = 0;
+    private int mMirrorPreview = 0;
+    private MyGLSurfaceView mGLSurfaceView;
+    private int mCameraType = MachineConfig.VAULE_CAMERA_FRONT;
+    private long mLockClickSwitch = 0;
+    private long mUpdateCameraTime = 0;
+    private int mCameraIndex = 1;
+    private int mSignal = -1;
+    private int mPreSignal = -1;
+    private View mSignalView;
+    private View mEmptyView;
+    private long lastHaveSignalTime = SystemClock.uptimeMillis();
+    private int mCamerFailTime = 0;
+    private BroadcastReceiver mReceiver = null;
+    private OnClickListener mOnClickListener;
+    private boolean mShowHYSetting = false;
+
+    // private final static String CAMERA_INDEX =
+    // "/sys/class/i2c-dev/i2c-1/device/1-0044/channel";
+
+    // private boolean mSetSource = true;
+    private byte mHYParam = 0;
+    private byte mMazdaUI = 0;
+
+    public ReverseUI(Context context, View view, int index) {
+        super(context, view, index);
+    }
 
     /**
      * Called when the activity is first created.
@@ -78,11 +123,15 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         return mUI[index];
     }
 
-    public ReverseUI(Context context, View view, int index) {
-        super(context, view, index);
+    public static void setCameraSource(int source) {
+        mToSetCameraSource = source;
+        new Thread() {
+            public void run() {
+                Util.setFileValue(CAMERA_INDEX, mToSetCameraSource);
+            }
+        }.start();
+        // Log.d("acccd", source+":"+getCameraSource());
     }
-
-    private static final int[] BUTTON_ON_CLICK = new int[]{R.id.cam1, R.id.cam2, R.id.cam3, R.id.cam4, R.id.switch_camera, R.id.switch_camera_mirror};
 
     public void onCreate() {
         // super.onCreate(savedInstanceState);
@@ -255,21 +304,12 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
     }
 
-    private ReverseUICanbox mReverseUICanbox;
-
-    private TrackParamterDialog mTrackParamterDialog;
-
-    private int mFirstCheckSignalFast = 0;
-    private int mMirrorPreview = 0;
-
     private void initMirrorPreview(Context c) {
         try {
             mMirrorPreview = Settings.Global.getInt(c.getContentResolver(), SettingProperties.MIRROR_PREVIEW);
         } catch (Exception ignored) {
         }
     }
-
-    private MyGLSurfaceView mGLSurfaceView;
 
     private void init4Camera() {
         initPresentationUI();
@@ -278,8 +318,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         Intent it = new Intent(MyCmd.BROADCAST_CMD_TO_CARUI_CAMERA);
         mContext.sendBroadcast(it);
     }
-
-    private int mCameraType = MachineConfig.VAULE_CAMERA_FRONT;
 
     private void updateCameraType() {
         String s = MachineConfig.getPropertyOnce(MachineConfig.KEY_CAMERA_TYPE);
@@ -443,25 +481,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
 
     }
 
-    private long mLockClickSwitch = 0;
-    private final static String CAMERA_INDEX = "/sys/class/misc/mst701/device/source2";
-
-
-    private static int mToSetCameraSource;
-
-    public static void setCameraSource(int source) {
-        mToSetCameraSource = source;
-        new Thread() {
-            public void run() {
-                Util.setFileValue(CAMERA_INDEX, mToSetCameraSource);
-            }
-        }.start();
-        // Log.d("acccd", source+":"+getCameraSource());
-    }
-
-    private long mUpdateCameraTime = 0;
-    private int mCameraIndex = 1;
-
     private void setCamera(int index) {
         if (mCameraIndex != index) {
             if ((System.currentTimeMillis() - mUpdateCameraTime) < 1200) {
@@ -615,11 +634,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         mSurfaceHolder = null;
     }
 
-    // private final static String CAMERA_INDEX =
-    // "/sys/class/i2c-dev/i2c-1/device/1-0044/channel";
-
-    // private boolean mSetSource = true;
-
     public void setSource() {
         // if (mSetSource) {
         // mSetSource = true;
@@ -707,9 +721,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         Log.d(TAG, ">>>HIDE_EMPTY startPreview");
     }
 
-    private static final String SCREEN_COLOR_BRIGHT = "/sys/class/ak/camera/bright";
-    public static int mReverseLight = -1;
-
     private void ensureCameraDevice() throws Exception {
         if (mCameraDevice == null) {
             mCameraDevice = CameraHolder.instance().open();
@@ -753,17 +764,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         }
     }
 
-    private int mSignal = -1;
-    private int mPreSignal = -1;
-
-    private View mSignalView;
-
-    private View mEmptyView;
-
-    private static final int MSG_CHECK_SIGNAL = 14;
-
-    private static final int TIME_CHECK_SIGNAL = 1000;
-
     private void noSignalShowText(int s) {
         Log.d(TAG, "no signal ShowText:" + s);
         if (mSignalView != null) {
@@ -802,9 +802,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
     private void stopCheckSignal() {
         mHandler.removeMessages(MSG_CHECK_SIGNAL);
     }
-
-
-    private long lastHaveSignalTime = SystemClock.uptimeMillis();
 
     private void startCheckSignal(boolean check) {
         int time = TIME_CHECK_SIGNAL;
@@ -864,9 +861,43 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         //		Log.d(TAG, "empty: " + ((View)mMainView.findViewById(R.id.empty)).getVisibility());
         //		Log.d(TAG, "only_black: " + ((View)mMainView.findViewById(R.id.only_black)).getVisibility());
         //		Log.d(TAG, "camera4" + ((View)mMainView.findViewById(R.id.camera4)).getVisibility());
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    // if (mThis != null) {
+                    // mThis.finish();
+                    // }
+                    break;
+                case HIDE_EMPTY:
+                    hideEmpty();
+                    break;
+                case MSG_RESTART_CAMERA_FAIL:
+                    restartPreview();
+                    break;
+                case MSG_CHECK_SIGNAL:
+                    startCheckSignal(true);
+                    break;
 
-    public static boolean checkCamera0IfFacing = false;
+                case MSG_REMOVE_BLACK:
+                    showBlack(false);
+                    break;
+                case MSG_SWITCH_CAMER_P90:
+                    doSwitchToFrontCamera(msg.arg1);
+                    break;
+                case START_RADAR_UI:
+                    if (RadarManager.isShow && mContext != null) {
+                        RadarManager.stop();
+                        RadarManager.start(mContext);
+                        Handler handler = Canbox.getHandler(RadarManager.TAG);
+                        if (null != handler) {
+                            handler.sendMessage(handler.obtainMessage(Canbox.CANBOX_RADAR_BACK));
+                        }
+                    }
+                    break;
+            }
+        }
+    };
 
     private boolean isCamera0Facing0() {
         boolean ret = false;
@@ -887,7 +918,91 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             checkCamera0IfFacing = true;
         }
         return ret;
-    }
+    }    private final Handler mHandlerCanbox = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Canbox.CANBOX_RADAR_FRONT: {
+                    // showRadarOSD();
+                }
+                break;
+                case Canbox.CANBOX_RADAR_BACK: {
+                    // showRadarOSD();
+                }
+                break;
+                case Canbox.CANBOX_STEER_ANGLE: {
+                    // showLocusOSD();
+                    // Log.e("", ""+msg.arg1);
+                    // msg.arg1 = msg.arg1/10;
+                    if (mDyncTrackExist == 1) {
+                        if (mBackTrackView != null) {
+                            mBackTrackView.setVisibility(View.VISIBLE);
+                            if (msg.arg2 == 0) {
+                                mBackTrackView.doTrack(msg.arg1);
+                            } else {
+                                mBackTrackView.doTrack(msg.arg1 * 1.0f / msg.arg2);
+                            }
+                            mBackTrackView.invalidate();
+                        }
+                    }
+                }
+                break;
+                case Canbox.CANBOX_RADAR_STATUS: {
+                    // byte[] status = (byte[]) msg.obj;
+                    // showRadarStatus(status);
+                }
+                break;
+
+                case Canbox.CANBOX_NISSIAN_UI_DATA:
+                    try {
+                        if (msg.obj != null) {
+                            showNissianUI((byte[]) (msg.obj));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    break;
+                case Canbox.CANBOX_DACIA_UI_DATA:
+                    showDaciaUI(msg.arg1);
+                    break;
+                case Canbox.CANBOX_NISSIAN_REQUEST_INFO:
+                    if (!mPause) {
+                        byte[] buf = new byte[]{(byte) 0x90, 0x02, (byte) 0x94, 0x0};
+                        CarUtil.sendDataToCanbox(buf);
+                        mHandlerCanbox.sendEmptyMessageDelayed(Canbox.CANBOX_NISSIAN_REQUEST_INFO, 1000);
+                    }
+
+                case Canbox.CANBOX_HY_UI_DATA:
+                    try {
+                        if (msg.obj != null) {
+                            showHYUI((byte[]) (msg.obj));
+                        }
+                    } catch (Exception e) {
+
+                    }
+                    break;
+                case Canbox.CANBOX_MAZDA_RAISE_UI_DATA:
+                    showMazdaUI(msg.arg1);
+                    break;
+                case Canbox.CANBOX_SUBARU_UI_DATA:
+                    try {
+                        showSabaruUI(msg.arg1);
+                    } catch (Exception e) {
+
+                    }
+                    break;
+                case Canbox.CANBOX_HY_REQUEST_INFO:
+                    if (!mPause) {
+                        byte[] buf = new byte[]{(byte) 0x90, 0x01, (byte) 0x50};
+                        CarUtil.sendDataToCanbox(buf);
+                        mHandlerCanbox.sendEmptyMessageDelayed(Canbox.CANBOX_HY_REQUEST_INFO, 1000);
+                    }
+                    break;
+                default:
+                    mReverseUICanbox.doMsg(msg.what, msg.arg1, msg.arg2);
+                    break;
+            }
+        }
+    };
 
     public int isSignal() {
         String source;
@@ -1063,140 +1178,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         }
     }
 
-    private final static int MSG_RESTART_CAMERA_FAIL = 10000;
-    private final static int MSG_SWITCH_CAMER_P90 = 10001;
-    private int mCamerFailTime = 0;
-
-    private final static int HIDE_EMPTY = 1;
-
-    private final static int START_RADAR_UI = 6;
-    private static final int MSG_REMOVE_BLACK = 15;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    // if (mThis != null) {
-                    // mThis.finish();
-                    // }
-                    break;
-                case HIDE_EMPTY:
-                    hideEmpty();
-                    break;
-                case MSG_RESTART_CAMERA_FAIL:
-                    restartPreview();
-                    break;
-                case MSG_CHECK_SIGNAL:
-                    startCheckSignal(true);
-                    break;
-
-                case MSG_REMOVE_BLACK:
-                    showBlack(false);
-                    break;
-                case MSG_SWITCH_CAMER_P90:
-                    doSwitchToFrontCamera(msg.arg1);
-                    break;
-                case START_RADAR_UI:
-                    if (RadarManager.isShow && mContext != null) {
-                        RadarManager.stop();
-                        RadarManager.start(mContext);
-                        Handler handler = Canbox.getHandler(RadarManager.TAG);
-                        if (null != handler) {
-                            handler.sendMessage(handler.obtainMessage(Canbox.CANBOX_RADAR_BACK));
-                        }
-                    }
-                    break;
-            }
-        }
-    };
-
-    private final Handler mHandlerCanbox = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case Canbox.CANBOX_RADAR_FRONT: {
-                    // showRadarOSD();
-                }
-                break;
-                case Canbox.CANBOX_RADAR_BACK: {
-                    // showRadarOSD();
-                }
-                break;
-                case Canbox.CANBOX_STEER_ANGLE: {
-                    // showLocusOSD();
-                    // Log.e("", ""+msg.arg1);
-                    // msg.arg1 = msg.arg1/10;
-                    if (mDyncTrackExist == 1) {
-                        if (mBackTrackView != null) {
-                            mBackTrackView.setVisibility(View.VISIBLE);
-                            if (msg.arg2 == 0) {
-                                mBackTrackView.doTrack(msg.arg1);
-                            } else {
-                                mBackTrackView.doTrack(msg.arg1 * 1.0f / msg.arg2);
-                            }
-                            mBackTrackView.invalidate();
-                        }
-                    }
-                }
-                break;
-                case Canbox.CANBOX_RADAR_STATUS: {
-                    // byte[] status = (byte[]) msg.obj;
-                    // showRadarStatus(status);
-                }
-                break;
-
-                case Canbox.CANBOX_NISSIAN_UI_DATA:
-                    try {
-                        if (msg.obj != null) {
-                            showNissianUI((byte[]) (msg.obj));
-                        }
-                    } catch (Exception e) {
-
-                    }
-                    break;
-                case Canbox.CANBOX_DACIA_UI_DATA:
-                    showDaciaUI(msg.arg1);
-                    break;
-                case Canbox.CANBOX_NISSIAN_REQUEST_INFO:
-                    if (!mPause) {
-                        byte[] buf = new byte[]{(byte) 0x90, 0x02, (byte) 0x94, 0x0};
-                        CarUtil.sendDataToCanbox(buf);
-                        mHandlerCanbox.sendEmptyMessageDelayed(Canbox.CANBOX_NISSIAN_REQUEST_INFO, 1000);
-                    }
-
-                case Canbox.CANBOX_HY_UI_DATA:
-                    try {
-                        if (msg.obj != null) {
-                            showHYUI((byte[]) (msg.obj));
-                        }
-                    } catch (Exception e) {
-
-                    }
-                    break;
-                case Canbox.CANBOX_MAZDA_RAISE_UI_DATA:
-                    showMazdaUI(msg.arg1);
-                    break;
-                case Canbox.CANBOX_SUBARU_UI_DATA:
-                    try {
-                        showSabaruUI(msg.arg1);
-                    } catch (Exception e) {
-
-                    }
-                    break;
-                case Canbox.CANBOX_HY_REQUEST_INFO:
-                    if (!mPause) {
-                        byte[] buf = new byte[]{(byte) 0x90, 0x01, (byte) 0x50};
-                        CarUtil.sendDataToCanbox(buf);
-                        mHandlerCanbox.sendEmptyMessageDelayed(Canbox.CANBOX_HY_REQUEST_INFO, 1000);
-                    }
-                    break;
-                default:
-                    mReverseUICanbox.doMsg(msg.what, msg.arg1, msg.arg2);
-                    break;
-            }
-        }
-    };
-
-    private static final String SAVE_DATA = "com.zhuchao.android.car.carapp.SAVE_DATA";
-
     private void saveData(String s, int v) {
         SharedPreferences.Editor sharedata = mContext.getSharedPreferences(SAVE_DATA, 0).edit();
         sharedata.putInt(s, v);
@@ -1208,11 +1189,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         SharedPreferences sharedata = mContext.getSharedPreferences(SAVE_DATA, 0);
         return sharedata.getInt(s, 0);
     }
-
-    // for ba ktrack
-    BackTrackView mBackTrackView;
-    int mStaticTrackExist = 0;
-    int mDyncTrackExist = 1;
 
     public void initBackTrack() {
 
@@ -1250,8 +1226,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             }
         }
     }
-
-    private BroadcastReceiver mReceiver = null;
 
     private void unregisterListener() {
         if (mReceiver != null) {
@@ -1424,8 +1398,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             }
         }
     }
-
-    private OnClickListener mOnClickListener;
 
     private void setViewVisible(int id, int visibility) {
         View v = mMainView.findViewById(id);
@@ -1600,9 +1572,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         }
 
     }
-
-    private boolean mShowHYSetting = false;
-    private byte mHYParam = 0;
 
     private void showHYUI(byte[] data) {
         setViewVisible(R.id.layout_canbus_hy, View.GONE);
@@ -1931,7 +1900,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         }
     }
 
-
     private void setDaciaSelectButton(int id) {
         setViewSelected(R.id.dacia_cam_type1, false);
         setViewSelected(R.id.dacia_cam_type2, false);
@@ -2050,8 +2018,6 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
         }
     }
 
-    private byte mMazdaUI = 0;
-
     private void showMazdaUI(int data) {
         if (mOnClickListener == null) {
             mOnClickListener = new OnClickListener() {
@@ -2101,4 +2067,8 @@ public class ReverseUI extends UIBase implements View.OnClickListener, SurfaceHo
             }
         }
     }
+
+
+
+
 }

@@ -6,6 +6,8 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BeiQiH3HeChi extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS},};
+
     public BeiQiH3HeChi() {
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
         buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0x7);
@@ -18,10 +20,6 @@ public class BeiQiH3HeChi extends Canbox {
         mIdKey = 0x21;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS},
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {

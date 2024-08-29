@@ -17,31 +17,23 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class AutoIlluminManager {
+    public static final String NIGHT_BRIGHTNESS = "night_brightness";
+    public static final String DAY_BRIGHTNESS = "day_brightness";
     private final static String TAG = "AutoIlluminManager";
-
     private static final int MSG_UPDATE_AUTO_ILLUMIN = 1;
-
     private static final int UPDATE_AUTO_ILLUMIN_TIME = 60000;    // 60 second
-
     private static final String MCU_ILL_CTRL_NODE = "/sys/class/ak/source/illuminsw";
     private static final int ILLUMIN_MODE_BY_CAR = 0;    // deteminated by car ill signal
     private static final int ILLUMIN_MODE_NIGHT = 1;    // always dim screen and LED on
     private static final int ILLUMIN_MODE_DAY = 2;        // always not dim screen and LED ff
-
     private final static String AUTO_ILL_ENABLE = "auto_ill_enable";
     private final static String AUTO_ILL_START_HOUR = "auto_ill_start_hour";
     private final static String AUTO_ILL_START_MINUTE = "auto_ill_start_minute";
     private final static String AUTO_ILL_STOP_HOUR = "auto_ill_stop_hour";
     private final static String AUTO_ILL_STOP_MINUTE = "auto_ill_stop_minute";
-
-    private Context mContext;
-
     private static SettingsObserver mSettingsObserver;
-
     private static AutoIlluminManager mThis;
-
-    public static final String NIGHT_BRIGHTNESS = "night_brightness";
-    public static final String DAY_BRIGHTNESS = "day_brightness";
+    private Context mContext;
 
     public static AutoIlluminManager getInstanse(Context c) {
         if (mThis == null && c != null) {
@@ -49,6 +41,12 @@ public class AutoIlluminManager {
             mThis.init(c);
         }
         return mThis;
+    }
+
+    public static void updateIlluminModeEx() {
+        if (mThis != null) {
+            mThis.updateIlluminMode();
+        }
     }
 
     public void init(Context c) {
@@ -73,9 +71,7 @@ public class AutoIlluminManager {
                 Log.v(TAG, "doIllSwitch: err" + e);
             }
         }
-    }
-
-    private final Handler mAutoIlluminHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+    }    private final Handler mAutoIlluminHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == MSG_UPDATE_AUTO_ILLUMIN) {
@@ -180,9 +176,5 @@ public class AutoIlluminManager {
         }
     }
 
-    public static void updateIlluminModeEx() {
-        if (mThis != null) {
-            mThis.updateIlluminMode();
-        }
-    }
+
 }

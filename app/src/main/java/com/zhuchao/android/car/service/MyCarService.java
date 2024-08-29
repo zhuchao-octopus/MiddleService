@@ -90,10 +90,7 @@ import java.util.Objects;
 public class MyCarService extends Service {
 
     public static final String TAG = "MyCarService";
-    private LocationManager mLocationManager = null;
-    private MyLocationListener mLocationListener = null;
     private static final int MSG_DELETE_UPDATE_FILE = 1;
-
     private static final int MSG_INSTALL_PRE_APP = 2;
     private static final int MSG_UPDATE_TOUCH_CONFIG = 3;
     private static final int MSG_UPDATE_SAVE_TIME = 8;
@@ -113,10 +110,11 @@ public class MyCarService extends Service {
     private static final String UPDATE_FILE = "ak48_update_guide.txt";
     private static final String UPDATE_FILE_HOLDER = "ak47_update_hold.txt";
     private static final String CANBOX_UPDATE_FILE_NAME = "/canbox.upde";
-    int mDelSdUpdate = 2;
-
-    public static MyCarService mThis;
-    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+    private static final String OTG = "/sys/class/ak/source/otg_id";
+    private static final String OTG_60 = "/sys/devices/platform/dwc_otg/otg_mode";
+    private static final String SYSTEM_VERSION = "/system/";
+    private static final String HOURS_12 = "12";
+    private static final String HOURS_24 = "24";    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_REPEAT_INIT_SUDING_ILL:
@@ -187,6 +185,211 @@ public class MyCarService extends Service {
             super.handleMessage(msg);
         }
     };
+    private static final String MCU_REVERSE_VOLUME = "/sys/class/ak/source/reverse_volume";
+    private static final String MCU_NAVI_MIX_NODE = "/sys/class/ak/source/navi_mix";
+    private final static String[] MACHINE_CONFIG_DEFAULT = {MachineConfig.KEY_LED_TYPE, MachineConfig.KEY_PANEL_KEY_DEF_CONFIG, MachineConfig.KEY_SWC_KEY_DEF_CONFIG, MachineConfig.KEY_FACTORY_AUDIO_GAIN, MachineConfig.KEY_TPMS_TYPE, MachineConfig.KEY_RDS, MachineConfig.KEY_TOUCH3_IDENTIFY};
+    private final static String MIC_CTL = "/sys/class/ak/source/mic_ctrl";
+    private static final String ACC_DELAY_POWEROFF = "/sys/class/ak/source/acc_delay_poweroff";
+    private static final String PACKAGE_TTS = "com.svox.pico";
+    private static final String PACKAGE_IGO = "com.nng.igo";
+    private static final String[] CARPLAY_APK = {"com.suding.speedplay", "com.zjinnova.zlink"};
+    private static final String SAVE_DATA = "MyService";
+    private static final String SAVE_DATA_TIME = "time";
+    private static final String SAVE_DATA_FIRST_SYSTEM_BOOT = "first_system_boot";
+    private static final String IGO_PATH = "com.navngo.igo.javaclient/com.navngo.igo.javaclient.MainActivity";
+    private static final String IGO_PACKAGE = "com.navngo.igo.javaclient";
+    //private String mPreTopActivity;
+    private final static String ZLINK_BROAST = "com.zjinnova.zlink";
+    private static final String YL_APPLICATION = "net.easyconn/net.easyconn.MainActivity";
+    private static final String YL_APPLICATION2 = "net.easyconn/net.easyconn.ScreenActivity";
+    private final static int LOCK_KEY_TIME = 900;
+    public static MyCarService mThis;
+    public static AlertDialog mDialogUpdateCanbox;
+    private static List<ResolveInfo> apps;
+    private static int mInitGpsSettingTime = 10;
+    private static boolean mIsTestMemory = false;
+    private final BroadcastReceiver mUSBDeviceEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action != null && action.equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
+                if (GlobalDefinition.mIsUSBDvd && isDiscExist(intent)) {
+                    GlobalDefinition.makeUSBDVDExist();
+                }
+            }
+        }
+    };
+    private final String PROC_TOUCH_CONFIG = "/proc/gt9xx_config";
+    private final String TOUCH_CONFIG_FILE = "/touch_config.cfg";
+    private final MediaRouter.SimpleCallback mMediaRouterCallback = new MediaRouter.SimpleCallback() {
+        @Override
+        public void onRouteSelected(MediaRouter router, int type, RouteInfo info) {
+            Log.w(TAG, "onRouteSelected: type=" + type + ", info=" + info);
+        }
+
+        @Override
+        public void onRouteUnselected(MediaRouter router, int type, RouteInfo info) {
+            Log.w(TAG, "onRouteUnselected: type=" + type + ", info=" + info);
+        }
+
+        @Override
+        public void onRoutePresentationDisplayChanged(MediaRouter router, RouteInfo info) {
+            Log.w(TAG, "onRoutePresentationDisplayChanged: info=" + info);
+        }
+    };
+    private final ArrayList<String> mPackageSet = new ArrayList<String>();
+    int mDelSdUpdate = 2;
+    AutoTest mAutoTest;
+    Toast mToastSaveDrive;
+    private LocationManager mLocationManager = null;
+    private MyLocationListener mLocationListener = null;
+    private PreInstallPanel mPreInstallPanel;
+    private int mGpsInitTime = 10;
+    private McuManager mMcuManager;
+    private JoyKey mJoyKey;
+    private WindowManager mWindowManager;
+    private WindowManager.LayoutParams mLayoutParams;
+    private View mEmptyView;
+    private boolean mShowGpuBug = false;
+    private boolean mShowGpuBugOnce = false;
+    private boolean mTopCarletter = false;
+    private boolean mCarletterConnect = false;
+    private WakeLock mWakeLock;
+    private boolean mFirstRun = true;
+    private long mStartPlayTime = 0;
+    private MediaRouter mMediaRouter = null;
+    private int mSaveDriveSwitch = 0;
+    private String file = null;
+    private LocationListener mGpsBrakeLocationListener = null;
+
+    public static void reinitGpsTime() {
+        if (mThis != null) {
+            mThis.doReinitGpsTime();
+        }
+    }
+
+    public static void initGpsSettings() {
+        // init carplay id
+        int carplay_uid = 0;
+        for (ResolveInfo appInfo : apps) {
+            for (String packageName : CARPLAY_APK) {
+                if (packageName.equals(appInfo.activityInfo.packageName)) {
+                    carplay_uid = appInfo.activityInfo.applicationInfo.uid;
+                    Log.d(TAG, "initGpsSettings carplay uid" + packageName + carplay_uid);
+                    SystemProperties.set("ak.af.carplay.uid", String.valueOf(carplay_uid));
+                    SystemProperties.set("ak.af.carplay.package", packageName);
+                    break;
+                }
+            }
+        }
+        //
+        String packageName = SettingProperties.getProperty(mThis, MachineConfig.KEY_GPS_PACKAGE);
+        if (packageName == null) {
+            String s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_DEFAULT_GPS);
+            if (s != null) {
+                String[] ss = s.split("/");
+                if (ss.length > 1) {
+                    SettingProperties.setProperty(mThis, MachineConfig.KEY_GPS_PACKAGE, ss[0]);
+                    SettingProperties.setProperty(mThis, MachineConfig.KEY_GPS_CLASS, ss[1]);
+                }
+            }
+        }
+
+        if (packageName != null) {
+            int uid = 0;
+            int tts_uid = 0;
+            for (ResolveInfo appInfo : apps) {
+                if (packageName.equals(appInfo.activityInfo.packageName)) {
+                    uid = appInfo.activityInfo.applicationInfo.uid;
+                    break;
+                }
+            }
+
+            if (uid != 0) {
+                SystemProperties.set("ak.af.navi.uid", String.valueOf(uid));
+            } else {
+                mInitGpsSettingTime--;
+                if (mInitGpsSettingTime > 0) {
+                    mThis.mHandler.removeMessages(MSG_REPEAT_GPS_SETTINGS);
+                    mThis.mHandler.sendEmptyMessageDelayed(MSG_REPEAT_GPS_SETTINGS, 4000);
+                }
+            }
+
+            if (packageName.startsWith(PACKAGE_IGO)) {
+                final Intent intent = new Intent("android.intent.action.TTS_SERVICE", null);
+                final List<ResolveInfo> apps1 = mThis.getPackageManager().queryIntentServices(intent, 0);
+                String ttsPkgname = Settings.Secure.getString(mThis.getContentResolver(), TTS_DEFAULT_SYNTH);
+                if (ttsPkgname != null) {
+                    for (ResolveInfo appInfo : apps1) {
+                        if (appInfo != null && appInfo.serviceInfo != null) {
+                            if (ttsPkgname.equals(appInfo.serviceInfo.packageName)) {
+                                if (appInfo.serviceInfo.applicationInfo != null) {
+                                    tts_uid = appInfo.serviceInfo.applicationInfo.uid;
+                                    //										Log.d(TAG, "found tts uid=" + tts_uid);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (tts_uid == 0) {
+                    final Intent mainIntent = new Intent("android.intent.action.START_TTS_ENGINE", null);
+                    final List<ResolveInfo> apps2 = mThis.getPackageManager().queryIntentActivities(mainIntent, 0);
+                    for (ResolveInfo appInfo : apps2) {
+                        if (appInfo.activityInfo != null) {
+                            if (PACKAGE_TTS.equals(appInfo.activityInfo.packageName)) {
+                                tts_uid = appInfo.activityInfo.applicationInfo.uid;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            SystemProperties.set("ak.af.tts.uid", String.valueOf(tts_uid));
+            Log.d(TAG, packageName + ":set uid:" + uid + "tts uid" + tts_uid);
+
+        }
+    }
+
+    public static void updatePackageList() {
+        if (mThis != null) {
+
+            PackageManager mPackageManager = mThis.getPackageManager();
+            final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            apps = mPackageManager.queryIntentActivities(mainIntent, 0);
+
+            initGpsSettings();
+            checkTestMemory();
+        }
+    }
+
+    private static void checkTestMemory() {
+        if (apps != null) {
+            for (ResolveInfo rv : apps) {
+                if ("com.longsys.testdram".equals(rv.activityInfo.packageName)) {
+                    mIsTestMemory = true;
+                    return;
+                }
+            }
+        }
+        mIsTestMemory = false;
+    }
+
+    public static void doSaveDriver() {
+        if (mThis != null) {
+            String s = AppConfig.getTopActivity();
+            mThis.doSaveDriver(s);
+        }
+    }
+
+    public static void testGPSSpeed2(int speed) {
+        if (mThis != null) {
+            mThis.testGPSSpeed(speed);
+        }
+    }
 
     @Override
     public void onCreate() {
@@ -250,8 +453,6 @@ public class MyCarService extends Service {
         super.onDestroy();
     }
 
-    private PreInstallPanel mPreInstallPanel;
-
     private void installPreInstallApp() {
         if (mPreInstallPanel == null) {
             mPreInstallPanel = new PreInstallPanel(mThis);
@@ -300,10 +501,6 @@ public class MyCarService extends Service {
         }
     }
 
-    private static final String OTG = "/sys/class/ak/source/otg_id";
-    private static final String OTG_60 = "/sys/devices/platform/dwc_otg/otg_mode";
-    private static final String SYSTEM_VERSION = "/system/";
-
     private boolean isFirstBoot() {
         boolean ret = false;
         String SAVE_FIRST_BOOT = "first_boot";
@@ -314,9 +511,6 @@ public class MyCarService extends Service {
         }
         return ret;
     }
-
-    private static final String HOURS_12 = "12";
-    private static final String HOURS_24 = "24";
 
     private void set24Hour(boolean is24Hour) {
         Settings.System.putString(getContentResolver(), Settings.System.TIME_12_24, is24Hour ? HOURS_24 : HOURS_12);
@@ -549,11 +743,6 @@ public class MyCarService extends Service {
         }
     }
 
-
-    private static final String MCU_REVERSE_VOLUME = "/sys/class/ak/source/reverse_volume";
-    private static final String MCU_NAVI_MIX_NODE = "/sys/class/ak/source/navi_mix";
-    private final static String[] MACHINE_CONFIG_DEFAULT = {MachineConfig.KEY_LED_TYPE, MachineConfig.KEY_PANEL_KEY_DEF_CONFIG, MachineConfig.KEY_SWC_KEY_DEF_CONFIG, MachineConfig.KEY_FACTORY_AUDIO_GAIN, MachineConfig.KEY_TPMS_TYPE, MachineConfig.KEY_RDS, MachineConfig.KEY_TOUCH3_IDENTIFY};
-
     private void initMcuBootSetting() {
         int index = SettingProperties.getIntProperty2(this, SettingProperties.KEY_REVERSE_VOLUME);
 
@@ -598,8 +787,6 @@ public class MyCarService extends Service {
         } catch (Exception ignored) {
         }
     }
-
-    private final static String MIC_CTL = "/sys/class/ak/source/mic_ctrl";
 
     private void setMicType() {
         int value = SettingProperties.getIntProperty2(this, SettingProperties.KEY_MIC_TYPE);
@@ -733,7 +920,224 @@ public class MyCarService extends Service {
         // saveData(SAVE_DATA_TIME, System.currentTimeMillis());
         // mHandler.removeMessages(MSG_SAVE_TIME);
         // mHandler.sendEmptyMessageDelayed(MSG_SAVE_TIME, 60000);
-    }
+    }    private final BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            MMLog.d(TAG, "mEventReceiver.onReceive action=" + action);
+            ///if (intent.getExtras() != null) MMLog.d(TAG, "mEventReceiver.onReceive getExtras=" + intent.getExtras().toString());
+
+            switch (Objects.requireNonNull(action)) {
+                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE:
+                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_ID:
+                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_UI:
+                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI:
+                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI_FRAMEWORK:
+                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_BT:
+                    doReceiveAppsCmd(intent);
+                    break;
+                case MyCmd.BROADCAST_MACHINECONFIG_UPDATE: {
+                    String ss = intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD);
+                    switch (Objects.requireNonNull(ss)) {
+                        case MachineConfig.KEY_CAN_BOX:
+                            CanService.updateCanboxEx();
+                            break;
+                        case MachineConfig.KEY_CAN_BOX_EX:
+                            CarUtil.updateCanboxExData();
+                            break;
+                        case SettingProperties.SHOW_FOCUS_CAR_WARNING_MSG:
+                            CanService.updateCanboxSettings();
+                            break;
+                        case MachineConfig.KEY_SCREEN1_VIEW:
+                            ReverseManager.reinit(mThis);
+                            break;
+                        case MachineConfig.KEY_RUDDER:
+                            GlobalDefinition.mRudder = intent.getBooleanExtra(MyCmd.EXTRA_COMMON_DATA, false);
+                            break;
+                        case MachineConfig.KEY_SAVE_DRIVER_PACKAGE:
+                            getSaveDriveConfig();
+                            break;
+                        case MachineConfig.KEY_SAVE_DRIVER:
+                            getSaveDriveSwitch();
+                            break;
+                        case MachineConfig.KEY_NO_REVERSE:
+                            OSProManager.mNoReverse = intent.getBooleanExtra(MyCmd.EXTRA_COMMON_DATA, false);
+                            break;
+                        case MachineConfig.KEY_SWITCH_TO_FRONT_CAMER:
+                            OSProManager.mSwitchToFrontCameraTime = MachineConfig.getPropertyIntOnce(MachineConfig.KEY_SWITCH_TO_FRONT_CAMER);
+                            break;
+                        case MachineConfig.KEY_ACC_DELAY_OFF:
+                            String time = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
+                            updateAccPowerOffDelay(time);
+                            break;
+                        case MachineConfig.KEY_APP_HIDE:
+                            AppConfig.updateHideAppConfig();
+                            if (mMcuManager != null) {
+                                mMcuManager.initModeKeyToast(true);
+                            }
+                            updateUSBDvdConfig(true);
+                            break;
+                        case MachineConfig.KEY_PANEL_KEY_DEF_CONFIG:
+                            int value = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+
+                            GlobalDefinition.mPannelKeyType = (value & 0xff00) >> 8;
+                            break;
+                        case SettingProperties.CANBOX_TEMP_UNIT:
+                            String v = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
+                            try {
+                                CarUtil.updateTempUnit(Integer.parseInt(v));
+                            } catch (Exception ignored) {
+                            }
+
+                            break;
+                        case SettingProperties.KEY_LAUNCHER_UI_RM10:
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // TODO Auto-generated method stub
+                                    killLauncher();
+                                }
+                            }, 300);
+                            break;
+                        case SettingProperties.GPS_BRAKE:
+                        case SettingProperties.CANBOX_DOOR_VOICE:
+                        case SettingProperties.CANBOX_FRONT_RADAR_OPEN_CAMERA:
+                            GlobalDefinition.initGPSSpeedSettings(mThis);
+                            initGPSSpeedInfo();
+                            break;
+                        case SettingProperties.KEY_CAR_CELL:
+                            GlobalDefinition.mMcuBatteryCell = SettingProperties.getIntProperty(mThis, SettingProperties.KEY_CAR_CELL);
+                            if (GlobalDefinition.mMcuBatteryCell == 1) {
+                                mMcuManager.queryBattery();
+                            }
+                            break;
+                        case SettingProperties.KEY_SCREEN_SAVE_STYLE:
+                            GlobalDefinition.mScreenSaverStyle = SettingProperties.getIntProperty(mThis, SettingProperties.KEY_SCREEN_SAVE_STYLE);
+                            break;
+                        case MachineConfig.KEY_RADIO_ANT_POWER:
+                            int i = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
+                            mMcuManager.setRadioAntPower(i);
+                            break;
+                    }
+                    break;
+                }
+                case MyCmd.BROADCAST_ACTIVITY_STATUS: {
+                    String s = intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD);
+                    if (mFirstRun) {
+                        mFirstRun = false;
+                    }
+
+                    GlobalDefinition.mTopIsNeedCanboxInfo = (s != null && s.contains("com.canboxsetting"));
+                    if ((s != null) && (s.contains("com.zjinnova.zlink") || s.contains("com.suding.speedplay") || s.contains("net.easyconn") || s.contains("com.carletter.car"))) {
+                        Util.setProperty("ak.codec.disable_video_out", "0");
+                        GlobalDefinition.mTopIsNoNeedBrakeControl = true;
+                        sendRudderToSuding();
+                    } else {
+                        if (GlobalDefinition.mTopIsNoNeedBrakeControl) {
+                            GlobalDefinition.mTopIsNoNeedBrakeControl = false;
+                            mMcuManager.setBrakeProp();
+                        }
+                    }
+
+                    if ((s != null) && s.contains("com.carletter.car")) {
+                        mTopCarletter = true;
+                        sendBroadcast(new Intent("carletter.intent.action.Foreground"));
+                        MMLog.d(TAG, "send carletter.intent.action.Foreground!" + mCarletterConnect);
+
+                        if (mCarletterConnect) {
+                            mMcuManager.setSource(MyCmd.SOURCE_BT_MUSIC);
+                        }
+                    } else {
+                        if (mTopCarletter) {
+                            sendBroadcast(new Intent("carletter.intent.action.Background"));
+                            MMLog.d(TAG, "send carletter.intent.action.Background!");
+                            mTopCarletter = false;
+                        }
+                    }
+
+                    MMLog.d(TAG, "BROADCAST_ACTIVITY_STATUS:" + s);
+                    if ((s != null) && s.contains("com.antutu.benchmark.full.lite")) {
+                        Util.setProperty("use_nuplayer", "true");
+                    } else {
+                        Util.setProperty("use_nuplayer", "false");
+                    }
+
+                    if (!doSaveDriver(s)) {
+                        if (isNeedResetArmSound(s)) {
+                            Util.setFileValue("/sys/class/ak/source/arm_sound", 1);
+                            // mMcuManager.updateArmSound(true);
+                        }
+                    }
+
+                    try {
+                        if (AppConfig.isGpsApp(mThis, s)) {
+                            if (mWakeLock == null) {
+                                PowerManager pManager = ((PowerManager) getSystemService(POWER_SERVICE));
+                                mWakeLock = pManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, getPackageName());
+                                mWakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
+                                MMLog.d(TAG, "mWakeLock! acquire");
+                            }
+                        } else {
+                            if (mWakeLock != null) {
+                                mWakeLock.release();
+                                mWakeLock = null;
+                                MMLog.d(TAG, "mWakeLock! release");
+                            }
+                        }
+                    } catch (Exception e) {
+                        MMLog.d(TAG, "error mWakeLock! " + e);
+                    }
+
+                    GlobalDefinition.sendByCarServiceToSystemUI(mThis, "com.android.systemui", MyCmd.Cmd.SHOW_CUR_APP_NAME);
+                    break;
+                }
+                case Intent.ACTION_LOCALE_CHANGED:
+                    mToastSaveDrive = null;
+                    initToastSaveDrive();
+
+                    Canbox box = CarUtil.getCanboxInstance();
+                    if (box != null) {
+                        box.udpateLang();
+                    }
+
+                    break;
+                case Intent.ACTION_CONFIGURATION_CHANGED:
+                    mToastSaveDrive = null;
+                    initToastSaveDrive();
+                    if (Util.isRKSystem()) {
+                        // Util.doSleep(5);
+                        if (!(MachineConfig.VALUE_SYSTEM_UI20_RM10_1.equals(GlobalDefinition.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM10_2.equals(GlobalDefinition.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM12.equals(GlobalDefinition.mSystemUI)/*
+									|| MachineConfig.VALUE_SYSTEM_UI16_7099.equals(GlobalDef.mSystemUI)*/)) {
+                            killLauncher();
+                        }
+                    }
+                    break;
+                case "com.carletter.link":
+                    int eventType = intent.getIntExtra("linkMode", 0);
+                    String stat = intent.getStringExtra("status");
+                    MMLog.d(TAG, "com.carletter.link eventType=" + eventType + ":" + stat);
+                    if (eventType == 4) {
+                        if ("CONNECTED".equals(stat)) {
+                            mCarletterConnect = true;
+                            if (mTopCarletter) {
+                                mMcuManager.setSource(MyCmd.SOURCE_BT_MUSIC);
+                            }
+                        } else if ("DISCONNECT".equals(stat)) {
+                            mCarletterConnect = false;
+                        }
+                    }
+
+                    break;
+                case ZLINK_BROAST:
+                    String status = intent.getStringExtra("status");
+                    MMLog.d(TAG, status + "!!!!!!!!!!33:");
+                    if ("CONNECTED".equals(status)) {
+                        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_REPEAT_INIT_SUDING_ILL, 4, 0), 100);
+                    }
+                    break;
+            }
+        }
+    };
 
     private void updateSaveTime() {/*
      * long t = getData(SAVE_DATA_TIME);
@@ -752,17 +1156,9 @@ public class MyCarService extends Service {
      */
     }
 
-    private int mGpsInitTime = 10;
-
     public void doReinitGpsTime() {
         mGpsInitTime = 10;
         initGpsTime();
-    }
-
-    public static void reinitGpsTime() {
-        if (mThis != null) {
-            mThis.doReinitGpsTime();
-        }
     }
 
     private void initGpsTime() {
@@ -848,8 +1244,6 @@ public class MyCarService extends Service {
         /// mHandler.sendEmptyMessageDelayed(MSG_UPDATE_SAVE_TIME, 1);
     }
 
-    private McuManager mMcuManager;
-
     private void initMcu() {
         mMcuManager = McuManager.getInstance(this);
         OSProManager mOsManager = OSProManager.getInstance(this);
@@ -930,96 +1324,6 @@ public class MyCarService extends Service {
 
     }
 
-    private static final String ACC_DELAY_POWEROFF = "/sys/class/ak/source/acc_delay_poweroff";
-    private static final String PACKAGE_TTS = "com.svox.pico";
-    private static final String PACKAGE_IGO = "com.nng.igo";
-    private static final String[] CARPLAY_APK = {"com.suding.speedplay", "com.zjinnova.zlink"};
-
-    public static void initGpsSettings() {
-        // init carplay id
-        int carplay_uid = 0;
-        for (ResolveInfo appInfo : apps) {
-            for (String packageName : CARPLAY_APK) {
-                if (packageName.equals(appInfo.activityInfo.packageName)) {
-                    carplay_uid = appInfo.activityInfo.applicationInfo.uid;
-                    Log.d(TAG, "initGpsSettings carplay uid" + packageName + carplay_uid);
-                    SystemProperties.set("ak.af.carplay.uid", String.valueOf(carplay_uid));
-                    SystemProperties.set("ak.af.carplay.package", packageName);
-                    break;
-                }
-            }
-        }
-        //
-        String packageName = SettingProperties.getProperty(mThis, MachineConfig.KEY_GPS_PACKAGE);
-        if (packageName == null) {
-            String s = MachineConfig.getPropertyReadOnly(MachineConfig.KEY_DEFAULT_GPS);
-            if (s != null) {
-                String[] ss = s.split("/");
-                if (ss.length > 1) {
-                    SettingProperties.setProperty(mThis, MachineConfig.KEY_GPS_PACKAGE, ss[0]);
-                    SettingProperties.setProperty(mThis, MachineConfig.KEY_GPS_CLASS, ss[1]);
-                }
-            }
-        }
-
-        if (packageName != null) {
-            int uid = 0;
-            int tts_uid = 0;
-            for (ResolveInfo appInfo : apps) {
-                if (packageName.equals(appInfo.activityInfo.packageName)) {
-                    uid = appInfo.activityInfo.applicationInfo.uid;
-                    break;
-                }
-            }
-
-            if (uid != 0) {
-                SystemProperties.set("ak.af.navi.uid", String.valueOf(uid));
-            } else {
-                mInitGpsSettingTime--;
-                if (mInitGpsSettingTime > 0) {
-                    mThis.mHandler.removeMessages(MSG_REPEAT_GPS_SETTINGS);
-                    mThis.mHandler.sendEmptyMessageDelayed(MSG_REPEAT_GPS_SETTINGS, 4000);
-                }
-            }
-
-            if (packageName.startsWith(PACKAGE_IGO)) {
-                final Intent intent = new Intent("android.intent.action.TTS_SERVICE", null);
-                final List<ResolveInfo> apps1 = mThis.getPackageManager().queryIntentServices(intent, 0);
-                String ttsPkgname = Settings.Secure.getString(mThis.getContentResolver(), TTS_DEFAULT_SYNTH);
-                if (ttsPkgname != null) {
-                    for (ResolveInfo appInfo : apps1) {
-                        if (appInfo != null && appInfo.serviceInfo != null) {
-                            if (ttsPkgname.equals(appInfo.serviceInfo.packageName)) {
-                                if (appInfo.serviceInfo.applicationInfo != null) {
-                                    tts_uid = appInfo.serviceInfo.applicationInfo.uid;
-                                    //										Log.d(TAG, "found tts uid=" + tts_uid);
-                                }
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (tts_uid == 0) {
-                    final Intent mainIntent = new Intent("android.intent.action.START_TTS_ENGINE", null);
-                    final List<ResolveInfo> apps2 = mThis.getPackageManager().queryIntentActivities(mainIntent, 0);
-                    for (ResolveInfo appInfo : apps2) {
-                        if (appInfo.activityInfo != null) {
-                            if (PACKAGE_TTS.equals(appInfo.activityInfo.packageName)) {
-                                tts_uid = appInfo.activityInfo.applicationInfo.uid;
-
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            SystemProperties.set("ak.af.tts.uid", String.valueOf(tts_uid));
-            Log.d(TAG, packageName + ":set uid:" + uid + "tts uid" + tts_uid);
-
-        }
-    }
-
     private void initUIService() {
         Intent it = new Intent(Intent.ACTION_RUN);
         try {
@@ -1067,8 +1371,6 @@ public class MyCarService extends Service {
         MMLog.d(TAG, "SystemReleaseVersion:" + Util.getFileString("/system/etc/ak47_release_version"));
     }
 
-    AutoTest mAutoTest;
-
     private void doAutoTest() {
         mAutoTest = new AutoTest();
         mAutoTest.init(mThis);
@@ -1083,60 +1385,6 @@ public class MyCarService extends Service {
     private long getData(String s) {
         SharedPreferences shareData = getSharedPreferences(SAVE_DATA, 0);
         return shareData.getLong(s, 0);
-    }
-
-    private static final String SAVE_DATA = "MyService";
-    private static final String SAVE_DATA_TIME = "time";
-    private static final String SAVE_DATA_FIRST_SYSTEM_BOOT = "first_system_boot";
-
-    public class MyLocationListener implements LocationListener {
-        public void onLocationChanged(Location location) {
-            long timestamp = location.getTime();
-
-            if (timestamp > 1451581346350L) {// >20160101----
-                /*
-                 * long timestamp2 = System.currentTimeMillis(); mUpdateGpsTime
-                 * = true; if ((timestamp2 - timestamp) >= 180000 || (timestamp2
-                 * - timestamp) <= -180000) { // try{
-                 * CarSystemClock.setCurrentTimeMillis(timestamp, mContext); //
-                 * }catch(Exception e){ // // } Log.i(TAG, "true UpdateGpsTime:"
-                 * + timestamp); } else {
-                 *
-                 * Log.i(TAG, "no need UpdateGpsTime:" + (timestamp2 -
-                 * timestamp)); }
-                 */
-                int autoGps = 0;
-                try {
-                    autoGps = Settings.Global.getInt(getContentResolver(), SettingProperties.GPS_AUTO_UPDATE_TIME);
-                } catch (SettingNotFoundException ignored) {
-                }
-
-                if (autoGps != 1) {
-                    try {
-                        SystemClock.setCurrentTimeMillis(timestamp);
-                    } catch (Exception ignored) {
-                    }
-                }
-
-                Log.i(TAG, "true UpdateGpsTime:" + timestamp + ":" + autoGps + ":" + mLocationListener);
-
-                if (mLocationManager != null && mLocationListener != null) {
-                    mLocationManager.removeUpdates(mLocationListener);
-                    mLocationListener = null;
-                }
-            }
-
-        }
-
-        public void onProviderDisabled(@NonNull String provider) {
-
-        }
-
-        public void onProviderEnabled(@NonNull String provider) {
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
     }
 
     private void doRadioCmd(Intent intent) {
@@ -1423,17 +1671,6 @@ public class MyCarService extends Service {
         }
     }
 
-    private JoyKey mJoyKey;
-    private WindowManager mWindowManager;
-    private WindowManager.LayoutParams mLayoutParams;
-    private View mEmptyView;
-    private boolean mShowGpuBug = false;
-    private static final String IGO_PATH = "com.navngo.igo.javaclient/com.navngo.igo.javaclient.MainActivity";
-    private static final String IGO_PACKAGE = "com.navngo.igo.javaclient";
-    private boolean mShowGpuBugOnce = false;
-    //private String mPreTopActivity;
-    private final static String ZLINK_BROAST = "com.zjinnova.zlink";
-
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void registerEventReceiver() {
         IntentFilter iFilter = new IntentFilter();
@@ -1453,237 +1690,6 @@ public class MyCarService extends Service {
         iFilter.addAction("com.carletter.link");
         registerReceiver(mEventReceiver, iFilter);
     }
-
-    private final BroadcastReceiver mEventReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            MMLog.d(TAG, "mEventReceiver.onReceive action=" + action);
-            ///if (intent.getExtras() != null) MMLog.d(TAG, "mEventReceiver.onReceive getExtras=" + intent.getExtras().toString());
-
-            switch (Objects.requireNonNull(action)) {
-                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE:
-                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_ID:
-                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_SYSTEM_UI:
-                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI:
-                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_CAR_UI_FRAMEWORK:
-                case MyCmd.BROADCAST_CMD_TO_CAR_SERVICE_BT:
-                    doReceiveAppsCmd(intent);
-                    break;
-                case MyCmd.BROADCAST_MACHINECONFIG_UPDATE: {
-                    String ss = intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD);
-                    switch (Objects.requireNonNull(ss)) {
-                        case MachineConfig.KEY_CAN_BOX:
-                            CanService.updateCanboxEx();
-                            break;
-                        case MachineConfig.KEY_CAN_BOX_EX:
-                            CarUtil.updateCanboxExData();
-                            break;
-                        case SettingProperties.SHOW_FOCUS_CAR_WARNING_MSG:
-                            CanService.updateCanboxSettings();
-                            break;
-                        case MachineConfig.KEY_SCREEN1_VIEW:
-                            ReverseManager.reinit(mThis);
-                            break;
-                        case MachineConfig.KEY_RUDDER:
-                            GlobalDefinition.mRudder = intent.getBooleanExtra(MyCmd.EXTRA_COMMON_DATA, false);
-                            break;
-                        case MachineConfig.KEY_SAVE_DRIVER_PACKAGE:
-                            getSaveDriveConfig();
-                            break;
-                        case MachineConfig.KEY_SAVE_DRIVER:
-                            getSaveDriveSwitch();
-                            break;
-                        case MachineConfig.KEY_NO_REVERSE:
-                            OSProManager.mNoReverse = intent.getBooleanExtra(MyCmd.EXTRA_COMMON_DATA, false);
-                            break;
-                        case MachineConfig.KEY_SWITCH_TO_FRONT_CAMER:
-                            OSProManager.mSwitchToFrontCameraTime = MachineConfig.getPropertyIntOnce(MachineConfig.KEY_SWITCH_TO_FRONT_CAMER);
-                            break;
-                        case MachineConfig.KEY_ACC_DELAY_OFF:
-                            String time = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
-                            updateAccPowerOffDelay(time);
-                            break;
-                        case MachineConfig.KEY_APP_HIDE:
-                            AppConfig.updateHideAppConfig();
-                            if (mMcuManager != null) {
-                                mMcuManager.initModeKeyToast(true);
-                            }
-                            updateUSBDvdConfig(true);
-                            break;
-                        case MachineConfig.KEY_PANEL_KEY_DEF_CONFIG:
-                            int value = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
-
-                            GlobalDefinition.mPannelKeyType = (value & 0xff00) >> 8;
-                            break;
-                        case SettingProperties.CANBOX_TEMP_UNIT:
-                            String v = intent.getStringExtra(MyCmd.EXTRA_COMMON_DATA);
-                            try {
-                                CarUtil.updateTempUnit(Integer.parseInt(v));
-                            } catch (Exception ignored) {
-                            }
-
-                            break;
-                        case SettingProperties.KEY_LAUNCHER_UI_RM10:
-                            mHandler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // TODO Auto-generated method stub
-                                    killLauncher();
-                                }
-                            }, 300);
-                            break;
-                        case SettingProperties.GPS_BRAKE:
-                        case SettingProperties.CANBOX_DOOR_VOICE:
-                        case SettingProperties.CANBOX_FRONT_RADAR_OPEN_CAMERA:
-                            GlobalDefinition.initGPSSpeedSettings(mThis);
-                            initGPSSpeedInfo();
-                            break;
-                        case SettingProperties.KEY_CAR_CELL:
-                            GlobalDefinition.mMcuBatteryCell = SettingProperties.getIntProperty(mThis, SettingProperties.KEY_CAR_CELL);
-                            if (GlobalDefinition.mMcuBatteryCell == 1) {
-                                mMcuManager.queryBattery();
-                            }
-                            break;
-                        case SettingProperties.KEY_SCREEN_SAVE_STYLE:
-                            GlobalDefinition.mScreenSaverStyle = SettingProperties.getIntProperty(mThis, SettingProperties.KEY_SCREEN_SAVE_STYLE);
-                            break;
-                        case MachineConfig.KEY_RADIO_ANT_POWER:
-                            int i = intent.getIntExtra(MyCmd.EXTRA_COMMON_DATA, 0);
-                            mMcuManager.setRadioAntPower(i);
-                            break;
-                    }
-                    break;
-                }
-                case MyCmd.BROADCAST_ACTIVITY_STATUS: {
-                    String s = intent.getStringExtra(MyCmd.EXTRA_COMMON_CMD);
-                    if (mFirstRun) {
-                        mFirstRun = false;
-                    }
-
-                    GlobalDefinition.mTopIsNeedCanboxInfo = (s != null && s.contains("com.canboxsetting"));
-                    if ((s != null) && (s.contains("com.zjinnova.zlink") || s.contains("com.suding.speedplay") || s.contains("net.easyconn") || s.contains("com.carletter.car"))) {
-                        Util.setProperty("ak.codec.disable_video_out", "0");
-                        GlobalDefinition.mTopIsNoNeedBrakeControl = true;
-                        sendRudderToSuding();
-                    } else {
-                        if (GlobalDefinition.mTopIsNoNeedBrakeControl) {
-                            GlobalDefinition.mTopIsNoNeedBrakeControl = false;
-                            mMcuManager.setBrakeProp();
-                        }
-                    }
-
-                    if ((s != null) && s.contains("com.carletter.car")) {
-                        mTopCarletter = true;
-                        sendBroadcast(new Intent("carletter.intent.action.Foreground"));
-                        MMLog.d(TAG, "send carletter.intent.action.Foreground!" + mCarletterConnect);
-
-                        if (mCarletterConnect) {
-                            mMcuManager.setSource(MyCmd.SOURCE_BT_MUSIC);
-                        }
-                    } else {
-                        if (mTopCarletter) {
-                            sendBroadcast(new Intent("carletter.intent.action.Background"));
-                            MMLog.d(TAG, "send carletter.intent.action.Background!");
-                            mTopCarletter = false;
-                        }
-                    }
-
-                    MMLog.d(TAG, "BROADCAST_ACTIVITY_STATUS:" + s);
-                    if ((s != null) && s.contains("com.antutu.benchmark.full.lite")) {
-                        Util.setProperty("use_nuplayer", "true");
-                    } else {
-                        Util.setProperty("use_nuplayer", "false");
-                    }
-
-                    if (!doSaveDriver(s)) {
-                        if (isNeedResetArmSound(s)) {
-                            Util.setFileValue("/sys/class/ak/source/arm_sound", 1);
-                            // mMcuManager.updateArmSound(true);
-                        }
-                    }
-
-                    try {
-                        if (AppConfig.isGpsApp(mThis, s)) {
-                            if (mWakeLock == null) {
-                                PowerManager pManager = ((PowerManager) getSystemService(POWER_SERVICE));
-                                mWakeLock = pManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, getPackageName());
-                                mWakeLock.acquire(10 * 60 * 1000L /*10 minutes*/);
-                                MMLog.d(TAG, "mWakeLock! acquire");
-                            }
-                        } else {
-                            if (mWakeLock != null) {
-                                mWakeLock.release();
-                                mWakeLock = null;
-                                MMLog.d(TAG, "mWakeLock! release");
-                            }
-                        }
-                    } catch (Exception e) {
-                        MMLog.d(TAG, "error mWakeLock! " + e);
-                    }
-
-                    GlobalDefinition.sendByCarServiceToSystemUI(mThis, "com.android.systemui", MyCmd.Cmd.SHOW_CUR_APP_NAME);
-                    break;
-                }
-                case Intent.ACTION_LOCALE_CHANGED:
-                    mToastSaveDrive = null;
-                    initToastSaveDrive();
-
-                    Canbox box = CarUtil.getCanboxInstance();
-                    if (box != null) {
-                        box.udpateLang();
-                    }
-
-                    break;
-                case Intent.ACTION_CONFIGURATION_CHANGED:
-                    mToastSaveDrive = null;
-                    initToastSaveDrive();
-                    if (Util.isRKSystem()) {
-                        // Util.doSleep(5);
-                        if (!(MachineConfig.VALUE_SYSTEM_UI20_RM10_1.equals(GlobalDefinition.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM10_2.equals(GlobalDefinition.mSystemUI) || MachineConfig.VALUE_SYSTEM_UI21_RM12.equals(GlobalDefinition.mSystemUI)/*
-									|| MachineConfig.VALUE_SYSTEM_UI16_7099.equals(GlobalDef.mSystemUI)*/)) {
-                            killLauncher();
-                        }
-                    }
-                    break;
-                case "com.carletter.link":
-                    int eventType = intent.getIntExtra("linkMode", 0);
-                    String stat = intent.getStringExtra("status");
-                    MMLog.d(TAG, "com.carletter.link eventType=" + eventType + ":" + stat);
-                    if (eventType == 4) {
-                        if ("CONNECTED".equals(stat)) {
-                            mCarletterConnect = true;
-                            if (mTopCarletter) {
-                                mMcuManager.setSource(MyCmd.SOURCE_BT_MUSIC);
-                            }
-                        } else if ("DISCONNECT".equals(stat)) {
-                            mCarletterConnect = false;
-                        }
-                    }
-
-                    break;
-                case ZLINK_BROAST:
-                    String status = intent.getStringExtra("status");
-                    MMLog.d(TAG, status + "!!!!!!!!!!33:");
-                    if ("CONNECTED".equals(status)) {
-                        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_REPEAT_INIT_SUDING_ILL, 4, 0), 100);
-                    }
-                    break;
-            }
-        }
-    };
-
-    private final BroadcastReceiver mUSBDeviceEventReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null && action.equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
-                if (GlobalDefinition.mIsUSBDvd && isDiscExist(intent)) {
-                    GlobalDefinition.makeUSBDVDExist();
-                }
-            }
-        }
-    };
 
     private void registerMountListener() {
         IntentFilter iFilter = new IntentFilter();
@@ -1763,10 +1769,6 @@ public class MyCarService extends Service {
         sendBroadcast(it);
     }
 
-    private boolean mTopCarletter = false;
-    private boolean mCarletterConnect = false;
-    private WakeLock mWakeLock;
-
     private void killLauncher() {
         MMLog.d(TAG, "killLauncher!");
         try {
@@ -1777,8 +1779,6 @@ public class MyCarService extends Service {
             MMLog.d(TAG, "killLauncher fail!");
         }
     }
-
-    private boolean mFirstRun = true;
 
     private void unregisterListener() {
         if (mEventReceiver != null) {
@@ -1811,9 +1811,6 @@ public class MyCarService extends Service {
         }
         return false;
     }
-
-    private final String PROC_TOUCH_CONFIG = "/proc/gt9xx_config";
-    private final String TOUCH_CONFIG_FILE = "/touch_config.cfg";
 
     private void updateTouchScreenConfig(String path) {
         Util.doSleep(1000);
@@ -1859,36 +1856,6 @@ public class MyCarService extends Service {
         dialog.show();
     }
 
-    private static List<ResolveInfo> apps;
-
-    public static void updatePackageList() {
-        if (mThis != null) {
-
-            PackageManager mPackageManager = mThis.getPackageManager();
-            final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            apps = mPackageManager.queryIntentActivities(mainIntent, 0);
-
-            initGpsSettings();
-            checkTestMemory();
-        }
-    }
-
-    private static int mInitGpsSettingTime = 10;
-    private static boolean mIsTestMemory = false;
-
-    private static void checkTestMemory() {
-        if (apps != null) {
-            for (ResolveInfo rv : apps) {
-                if ("com.longsys.testdram".equals(rv.activityInfo.packageName)) {
-                    mIsTestMemory = true;
-                    return;
-                }
-            }
-        }
-        mIsTestMemory = false;
-    }
-
     private int getId(String packageName) {
 
         if (apps == null) {
@@ -1907,9 +1874,6 @@ public class MyCarService extends Service {
 
         return uid;
     }
-
-    private static final String YL_APPLICATION = "net.easyconn/net.easyconn.MainActivity";
-    private static final String YL_APPLICATION2 = "net.easyconn/net.easyconn.ScreenActivity";
 
     private boolean isNeedResetArmSound(String packageName) {
         String cmd = Util.getFileString("/sys/class/ak/source/app_snd_uids");
@@ -1937,9 +1901,6 @@ public class MyCarService extends Service {
         return false;
     }
 
-    private final static int LOCK_KEY_TIME = 900;
-    private long mStartPlayTime = 0;
-
     private void lockKey() {
         Log.d(TAG, "lockKey!");
         mStartPlayTime = System.currentTimeMillis();
@@ -1953,33 +1914,10 @@ public class MyCarService extends Service {
         return false;
     }
 
-    private MediaRouter mMediaRouter = null;
-
     private void initMediaRouter() {
         mMediaRouter = (MediaRouter) getSystemService(Context.MEDIA_ROUTER_SERVICE);
         mMediaRouter.addCallback(MediaRouter.ROUTE_TYPE_LIVE_VIDEO, mMediaRouterCallback);
     }
-
-    private final MediaRouter.SimpleCallback mMediaRouterCallback = new MediaRouter.SimpleCallback() {
-        @Override
-        public void onRouteSelected(MediaRouter router, int type, RouteInfo info) {
-            Log.w(TAG, "onRouteSelected: type=" + type + ", info=" + info);
-        }
-
-        @Override
-        public void onRouteUnselected(MediaRouter router, int type, RouteInfo info) {
-            Log.w(TAG, "onRouteUnselected: type=" + type + ", info=" + info);
-        }
-
-        @Override
-        public void onRoutePresentationDisplayChanged(MediaRouter router, RouteInfo info) {
-            Log.w(TAG, "onRoutePresentationDisplayChanged: info=" + info);
-        }
-    };
-
-    private int mSaveDriveSwitch = 0;
-    private final ArrayList<String> mPackageSet = new ArrayList<String>();
-    Toast mToastSaveDrive;
 
     private void initToastSaveDrive() {
         if (mToastSaveDrive == null) {
@@ -2028,14 +1966,6 @@ public class MyCarService extends Service {
         return false;
     }
 
-
-    public static void doSaveDriver() {
-        if (mThis != null) {
-            String s = AppConfig.getTopActivity();
-            mThis.doSaveDriver(s);
-        }
-    }
-
     private boolean isSet(String packageName) {
         for (String s : mPackageSet) {
             if (packageName.equals(s)) {
@@ -2071,9 +2001,6 @@ public class MyCarService extends Service {
         }
     }
 
-    public static AlertDialog mDialogUpdateCanbox;
-    private String file = null;
-
     private void doUpdateCanbox(String manufacturer) {
         List<StorageInfo> ls = UtilSystem.listAllStorage(this);
         File f = null;
@@ -2090,7 +2017,7 @@ public class MyCarService extends Service {
                 }
             }
         }
-        MMLog.d(TAG, TAG+".doUpdateCanbox:" + update);
+        MMLog.d(TAG, TAG + ".doUpdateCanbox:" + update);
         if (update != null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String title = String.format(getResources().getString(R.string.update_canbox), update);
@@ -2112,8 +2039,6 @@ public class MyCarService extends Service {
             Toast.makeText(this, "file not found", Toast.LENGTH_LONG).show();
         }
     }
-
-    private LocationListener mGpsBrakeLocationListener = null;
 
     private void initGPSSpeedInfo() {
         Log.d(TAG, "isNeedGPSSpeed:" + isNeedGPSSpeed() + ":" + GlobalDefinition.mSettingGPSBrake);
@@ -2211,9 +2136,57 @@ public class MyCarService extends Service {
         }
     }
 
-    public static void testGPSSpeed2(int speed) {
-        if (mThis != null) {
-            mThis.testGPSSpeed(speed);
+    public class MyLocationListener implements LocationListener {
+        public void onLocationChanged(Location location) {
+            long timestamp = location.getTime();
+
+            if (timestamp > 1451581346350L) {// >20160101----
+                /*
+                 * long timestamp2 = System.currentTimeMillis(); mUpdateGpsTime
+                 * = true; if ((timestamp2 - timestamp) >= 180000 || (timestamp2
+                 * - timestamp) <= -180000) { // try{
+                 * CarSystemClock.setCurrentTimeMillis(timestamp, mContext); //
+                 * }catch(Exception e){ // // } Log.i(TAG, "true UpdateGpsTime:"
+                 * + timestamp); } else {
+                 *
+                 * Log.i(TAG, "no need UpdateGpsTime:" + (timestamp2 -
+                 * timestamp)); }
+                 */
+                int autoGps = 0;
+                try {
+                    autoGps = Settings.Global.getInt(getContentResolver(), SettingProperties.GPS_AUTO_UPDATE_TIME);
+                } catch (SettingNotFoundException ignored) {
+                }
+
+                if (autoGps != 1) {
+                    try {
+                        SystemClock.setCurrentTimeMillis(timestamp);
+                    } catch (Exception ignored) {
+                    }
+                }
+
+                Log.i(TAG, "true UpdateGpsTime:" + timestamp + ":" + autoGps + ":" + mLocationListener);
+
+                if (mLocationManager != null && mLocationListener != null) {
+                    mLocationManager.removeUpdates(mLocationListener);
+                    mLocationListener = null;
+                }
+            }
+
+        }
+
+        public void onProviderDisabled(@NonNull String provider) {
+
+        }
+
+        public void onProviderEnabled(@NonNull String provider) {
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
         }
     }
+
+
+
+
 }

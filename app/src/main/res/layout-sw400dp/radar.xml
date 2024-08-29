@@ -16,8 +16,8 @@
         android:id="@+id/radar_switch"
         android:layout_width="74px"
         android:layout_height="74px"
-        android:onClick="onCickReverse"
         android:background="@drawable/radar_icon"
+        android:onClick="onCickReverse"
         android:tag="ak_paramter=100,50"></ImageButton>
 
 </LinearLayout>

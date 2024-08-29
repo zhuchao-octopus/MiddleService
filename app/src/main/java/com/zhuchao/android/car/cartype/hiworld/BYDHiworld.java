@@ -11,6 +11,19 @@ import java.util.Date;
 
 public class BYDHiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x61};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+            {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
+
+            {0x5, MyCmd.Keycode.BT_DIAL},
+
+            {0x6, MyCmd.Keycode.BT_HANG},
+
+            {0xa, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
+
+    };
+
     public BYDHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -24,26 +37,10 @@ public class BYDHiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x61};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-            {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
-
-            {0x5, MyCmd.Keycode.BT_DIAL},
-
-            {0x6, MyCmd.Keycode.BT_HANG},
-
-            {0xa, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
-
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x28};
@@ -195,9 +192,7 @@ public class BYDHiworld extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 0
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 0};
 
         sendDataToCanbox(buf, buf.length);
 

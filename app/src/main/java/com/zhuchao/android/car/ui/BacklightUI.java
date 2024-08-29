@@ -19,51 +19,20 @@ import com.zhuchao.android.car.canbox.UIBase;
 
 public class BacklightUI extends UIBase {
 
-    private static final String TAG = "BacklightUI";
-    // private final Toast mToast;
-    private final SeekBar mLevel;
-    private SeekBar mLevelContrast;
-
-    private final TextView mLevelBacklight;
-    private TextView mLevelConrast;
     public final static int MSG_SHOW = 0;
     public final static int MSG_HIDE = 1;
-
     public final static int MSG_SAVE_DATA = 10;
+    private static final String TAG = "BacklightUI";
     private final static long DELAY_HIDE_TIME = 3000;
-
-    /**
-     * Called when the activity is first created.
-     */
-    public static BacklightUI getInstanse(Context context, View view, int index) {
-        if (index >= MAX_DISPLAY) {
-            return null;
-        }
-
-        return new BacklightUI(context, view, index);
-    }
-
-    public void onCreate() {
-        super.onCreate();
-
-    }
-
-    @Override
-    public void onPause() {
-
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        doShow();
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-    }
+    private static Handler mHandler;
+    // private final Toast mToast;
+    private final SeekBar mLevel;
+    private final TextView mLevelBacklight;
+    private SeekBar mLevelContrast;
+    private TextView mLevelConrast;
+    private int mMinimumBacklight;
+    private int mMaximumBacklight;
+    private int mType;
 
     public BacklightUI(Context context, View view, int index) {
         super(context, view, index);
@@ -115,8 +84,42 @@ public class BacklightUI extends UIBase {
         });
     }
 
-    private int mMinimumBacklight;
-    private int mMaximumBacklight;
+    /**
+     * Called when the activity is first created.
+     */
+    public static BacklightUI getInstanse(Context context, View view, int index) {
+        if (index >= MAX_DISPLAY) {
+            return null;
+        }
+
+        return new BacklightUI(context, view, index);
+    }
+
+    public static void setHandler(Handler h) {
+        mHandler = h;
+    }
+
+    public void onCreate() {
+        super.onCreate();
+
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        doShow();
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     private void init() {
         if (mType == -3 || mType == -4) {
@@ -169,14 +172,6 @@ public class BacklightUI extends UIBase {
         // SettingProperties.KEY_SCREEN1_BACKLIGHT, brightness);
         // }
     }
-
-    private static Handler mHandler;
-
-    public static void setHandler(Handler h) {
-        mHandler = h;
-    }
-
-    private int mType;
 
     public void setType(int t) {
         mType = t;

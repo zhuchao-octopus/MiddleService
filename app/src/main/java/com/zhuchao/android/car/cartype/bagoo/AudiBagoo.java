@@ -8,6 +8,10 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class AudiBagoo extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x2, MyCmd.Keycode.SPEECH}, {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.VOLUME_UP}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.PLAY_PAUSE},
+
+    };
+
     public AudiBagoo() {
 
         buildCmdVersion((byte) 0x30, (byte) 0x0);
@@ -15,13 +19,6 @@ public class AudiBagoo extends Canbox {
         mIdKey = 0x20;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x2, MyCmd.Keycode.SPEECH}, {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.VOLUME_UP}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.PREVIOUS},
-            {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.PLAY_PAUSE},
-
-    };
-
 
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
@@ -45,13 +42,9 @@ public class AudiBagoo extends Canbox {
         byte[] data;
 
         if (MyCmd.SOURCE_DVD != source) {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }

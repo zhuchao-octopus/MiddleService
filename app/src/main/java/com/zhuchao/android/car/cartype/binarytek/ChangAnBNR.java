@@ -7,6 +7,10 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class ChangAnBNR extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0xd2, 0x13, 0x3a, 0x50, 0x66, 0x68, (byte) 0xd2, 0xa};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MUTE}, {0x6, MyCmd.Keycode.MODLE}, {0x7, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.SPEECH},};
+    private final byte[] airData = new byte[12];
+
     public ChangAnBNR() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x3a, (byte) 0x4, (byte) 0x3f, (byte) 0x02);
@@ -20,13 +24,6 @@ public class ChangAnBNR extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0xd2, 0x13, 0x3a, 0x50, 0x66, 0x68, (byte) 0xd2, 0xa};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MUTE}, {0x6, MyCmd.Keycode.MODLE},
-            {0x7, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.SPEECH},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xe2, 0x01, 0};
@@ -82,8 +79,6 @@ public class ChangAnBNR extends Canbox {
 
 
     }
-
-    private final byte[] airData = new byte[12];
 
     private void parseSeatHeat(byte[] data) {
 

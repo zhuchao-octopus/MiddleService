@@ -25,38 +25,25 @@ import com.zhuchao.android.car.cartype.simple.Nissan2013Simple;
 
 
 public class Nissian360ButtonView {
+    private final static int MIN_MOVE = 2;
+    public static Nissian360ButtonView mThis;
     private final WindowManager mWindowManager;
     private final WindowManager.LayoutParams mLayoutParams;
     private final WindowManager.LayoutParams mLayoutParamsMicButton;
-
-    private View mViewSpeech;
     private final View mViewMicButton;
-    private TextView mTitle;
     private final boolean isShowSpeech = false;
-    private boolean isShowMicButton = false;
     private final Context mContext;
-
-    public static Nissian360ButtonView mThis;
-
-    public static Nissian360ButtonView getInstance(Context context) {
-        if (mThis != null) {
-            mThis.hideSpeech();
-            mThis.hideMicButton();
-            mThis = null;
-        }
-        // if (mThis == null) {
-        mThis = new Nissian360ButtonView(context);
-        // }
-        return mThis;
-    }
-
-    public static Nissian360ButtonView getInstance() {
-        return mThis;
-    }
-
+    private View mViewSpeech;
+    private TextView mTitle;
+    private boolean isShowMicButton = false;
     private boolean mSendLong = false;
     private int mSendKeyTime = 0;
-
+    private String mSystemUI;
+    private float mTouchX;
+    private float mTouchY;
+    private int mOldX;
+    private int mOldY;
+    private boolean mHaveMove;
     public Nissian360ButtonView(Context context) {
         mContext = context;
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -213,6 +200,22 @@ public class Nissian360ButtonView {
 
     }
 
+    public static Nissian360ButtonView getInstance(Context context) {
+        if (mThis != null) {
+            mThis.hideSpeech();
+            mThis.hideMicButton();
+            mThis = null;
+        }
+        // if (mThis == null) {
+        mThis = new Nissian360ButtonView(context);
+        // }
+        return mThis;
+    }
+
+    public static Nissian360ButtonView getInstance() {
+        return mThis;
+    }
+
     public static void send360Key() {
         Canbox c = CarUtil.getCanboxInstance();
         if (c instanceof Nissan2013Simple) {
@@ -223,15 +226,6 @@ public class Nissian360ButtonView {
             new_name.sendAVMKey();
         }
     }
-
-    private String mSystemUI;
-
-    private final static int MIN_MOVE = 2;
-    private float mTouchX;
-    private float mTouchY;
-    private int mOldX;
-    private int mOldY;
-    private boolean mHaveMove;
 
     public void hideSpeech() {
 

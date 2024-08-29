@@ -3,9 +3,9 @@
     android:id="@+id/screen1_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/vehicle_camera_colorkey"
     android:orientation="vertical"
-    android:tag="3"
-    android:background="@color/vehicle_camera_colorkey">
+    android:tag="3">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,9 +27,9 @@
             android:id="@+id/no_signal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#000000"
             android:gravity="center"
             android:orientation="vertical"
-            android:background="#000000"
             android:visibility="gone">
 
             <ImageView
@@ -58,24 +58,24 @@
         <RelativeLayout
             android:layout_width="1280px"
             android:layout_height="670px"
-            android:paddingLeft="156px"
             android:layout_centerInParent="true"
+            android:paddingLeft="156px"
             android:paddingTop="100px">
 
             <com.zhuchao.android.car.view.BackStaticView
-                android:scaleX="1.25"
-                android:scaleY="1.2"
                 android:id="@+id/backstatic_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleX="1.25"
+                android:scaleY="1.2"
                 android:visibility="gone" />
 
             <com.zhuchao.android.car.view.BackTrackView
-                android:scaleX="1.25"
-                android:scaleY="1.2"
                 android:id="@+id/backtrack_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleX="1.25"
+                android:scaleY="1.2"
                 android:visibility="gone" />
         </RelativeLayout>
         <!--         hardware camera fix the black bug. so no need this -->
@@ -87,10 +87,10 @@
 
         <View
             android:id="@+id/only_black"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#000001" />
+            android:background="#000001"
+            android:visibility="gone" />
 
         <!--         <include -->
         <!--             layout="@layout/radar" -->
@@ -98,36 +98,36 @@
 
         <LinearLayout
             android:id="@+id/camera4"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="60px"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="60px"
+            android:orientation="horizontal"
             android:paddingRight="8px"
-            android:visibility="visible"
-            android:orientation="horizontal">
+            android:visibility="visible">
 
             <ImageView
-                android:focusable="false"
                 android:id="@+id/cam1"
                 style="@style/FrontCameraButton"
+                android:focusable="false"
                 android:text="@string/cam1" />
 
             <TextView
-                android:focusable="false"
                 android:id="@+id/cam2"
                 style="@style/FrontCameraButton"
+                android:focusable="false"
                 android:text="@string/cam2" />
 
             <TextView
-                android:focusable="false"
                 android:id="@+id/cam3"
                 style="@style/FrontCameraButton"
+                android:focusable="false"
                 android:text="@string/cam3" />
 
             <TextView
-                android:focusable="false"
                 android:id="@+id/cam4"
                 style="@style/FrontCameraButton"
+                android:focusable="false"
                 android:text="@string/cam4" />
 
         </LinearLayout>

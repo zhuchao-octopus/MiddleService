@@ -6,6 +6,22 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class DongFeng002Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x9, MyCmd.Keycode.MUTE}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x5d, MyCmd.Keycode.KEY_DISPLAY}, {0x5e, MyCmd.Keycode.AS},
+
+            {0x24, MyCmd.Keycode.AUDIO}, {0x2b, MyCmd.Keycode.HOME}, {0x33, MyCmd.Keycode.RADIO},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+
+            {0x5, MyCmd.Keycode.BT}, {0xc, MyCmd.Keycode.MODLE},
+
+            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
+
+            {0x17, MyCmd.Keycode.NAVIGATION},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+
+
     public DongFeng002Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -23,34 +39,10 @@ public class DongFeng002Hiworld extends Canbox {
 
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x9, MyCmd.Keycode.MUTE}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x5d, MyCmd.Keycode.KEY_DISPLAY}, {0x5e, MyCmd.Keycode.AS},
-
-            {0x24, MyCmd.Keycode.AUDIO}, {0x2b, MyCmd.Keycode.HOME}, {0x33, MyCmd.Keycode.RADIO},
-    };
-
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
-
-            {0x5, MyCmd.Keycode.BT}, {0xc, MyCmd.Keycode.MODLE},
-
-            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
-
-            {0x17, MyCmd.Keycode.NAVIGATION},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x26};

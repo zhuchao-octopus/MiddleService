@@ -5,20 +5,7 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BentengFWP006Hiworld extends Canbox {
 
-    public BentengFWP006Hiworld() {
-        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
-        buildCmdAngle((byte) 0x72, (byte) 0x0, 7800);
-
-
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-        mIdAC = 0x73;
-
-        buildCmdKey((byte) 0x72, (byte) 5, (byte) 4, (byte) 0, KEYS_WHEEL);
-    }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
 
             {0x3, MyCmd.Keycode.MUTE},
 
@@ -33,7 +20,19 @@ public class BentengFWP006Hiworld extends Canbox {
 
 
     };
+    private final byte[] mLcdInfo = new byte[14];
+    private final boolean mShowVolume = false;
 
+    public BentengFWP006Hiworld() {
+        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
+        buildCmdAngle((byte) 0x72, (byte) 0x0, 7800);
+
+
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+        mIdAC = 0x73;
+
+        buildCmdKey((byte) 0x72, (byte) 5, (byte) 4, (byte) 0, KEYS_WHEEL);
+    }
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -90,7 +89,6 @@ public class BentengFWP006Hiworld extends Canbox {
         super.parseACInfo(airData);
     }
 
-
     public void startConnect() {
 
         byte[] buf = new byte[]{0x3, (byte) 0x6a, 0x5, 1, (byte) 0xf0};
@@ -98,13 +96,10 @@ public class BentengFWP006Hiworld extends Canbox {
         sendDataToCanbox(buf, buf.length);
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final byte[] mLcdInfo = new byte[14];
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -114,8 +109,6 @@ public class BentengFWP006Hiworld extends Canbox {
     public void setMediaSrc(int source, byte type, byte[] b) {
 
     }
-
-    private final boolean mShowVolume = false;
 
     public void setMediaSrc(int source) {// default is simple box
 

@@ -15,6 +15,14 @@ import java.util.Locale;
 
 public class HyBNR extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.KEY_DISPLAY}, {0xa, MyCmd.Keycode.HOME}, {0xb, MyCmd.Keycode.MENU}, {0xc, MyCmd.Keycode.BACK}, {0xd, MyCmd.Keycode.NEXT}, {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.BT_HANG}, {0x12, MyCmd.Keycode.SPEECH}, {0x30, MyCmd.Keycode.KEY_DISPLAY}, {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE}, {0x36, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.AUDIO}, {0x38, MyCmd.Keycode.BT}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3b, MyCmd.Keycode.POWER}, {0x3c, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3d, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x3e, MyCmd.Keycode.ROLL_NEXT}, {0x3f, MyCmd.Keycode.ROLL_PREV},
+
+            {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x83, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x84, MyCmd.Keycode.ROLL_PREV}, {(byte) 0x85, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x86, MyCmd.Keycode.ROLL_PREV}, {(byte) 0x87, MyCmd.Keycode.POWER}, {(byte) 0x88, MyCmd.Keycode.MODLE}, {(byte) 0x89, MyCmd.Keycode.MUTE}, {(byte) 0x8a, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x8b, MyCmd.Keycode.VOLUME_ROLL_DOWN},};
+    private final byte[] airDataEx = new byte[8];
+    private final int mVolume = 30;
+    byte[] mEQData = new byte[]{10, 10, 10, 10, 10, 30};
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public HyBNR() {
         buildCmdDoor((byte) 0x24, (byte) 0x0, (byte) 0x3f, (byte) 0x03);
         buildCmdRadarBack((byte) 0x22, (byte) 0x0, (byte) 0x3);
@@ -40,19 +48,6 @@ public class HyBNR extends Canbox {
         }
     }
 
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE},
-            {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.KEY_DISPLAY}, {0xa, MyCmd.Keycode.HOME}, {0xb, MyCmd.Keycode.MENU}, {0xc, MyCmd.Keycode.BACK},
-            {0xd, MyCmd.Keycode.NEXT}, {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.BT_HANG}, {0x12, MyCmd.Keycode.SPEECH}, {0x30, MyCmd.Keycode.KEY_DISPLAY},
-            {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE},
-            {0x36, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.AUDIO}, {0x38, MyCmd.Keycode.BT}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3b, MyCmd.Keycode.POWER},
-            {0x3c, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3d, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x3e, MyCmd.Keycode.ROLL_NEXT}, {0x3f, MyCmd.Keycode.ROLL_PREV},
-
-            {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x83, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x84, MyCmd.Keycode.ROLL_PREV},
-            {(byte) 0x85, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x86, MyCmd.Keycode.ROLL_PREV}, {(byte) 0x87, MyCmd.Keycode.POWER}, {(byte) 0x88, MyCmd.Keycode.MODLE}, {(byte) 0x89, MyCmd.Keycode.MUTE},
-            {(byte) 0x8a, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x8b, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-    };
-
     @Override
     public int getACTemp(byte data) {
         // TODO Auto-generated method stub
@@ -65,8 +60,6 @@ public class HyBNR extends Canbox {
         }
         return data;
     }
-
-    private final byte[] airDataEx = new byte[8];
 
     public void parseACInfo(byte[] data) {
 
@@ -101,10 +94,6 @@ public class HyBNR extends Canbox {
         }
     }
 
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -136,14 +125,10 @@ public class HyBNR extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         }
 
         // if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -157,9 +142,7 @@ public class HyBNR extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 
@@ -262,14 +245,10 @@ public class HyBNR extends Canbox {
         startEQ();
     }
 
-    private final int mVolume = 30;
-
     public void stopConnect() {
         stopEQ();
         super.stopConnect();
     }
-
-    byte[] mEQData = new byte[]{10, 10, 10, 10, 10, 30};
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;

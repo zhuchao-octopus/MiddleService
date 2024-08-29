@@ -14,6 +14,17 @@ import java.util.Locale;
 
 public class Mazda6LuZheng extends Canbox {
 
+    private final static int HIDE_RADAR = 0;
+    private final byte mDoorStatus = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+        }
+    };
+    byte[] airData = new byte[8];
+
     public Mazda6LuZheng() {
 
 
@@ -86,8 +97,6 @@ public class Mazda6LuZheng extends Canbox {
                 break;
         }
     }
-
-    byte[] airData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -210,8 +219,6 @@ public class Mazda6LuZheng extends Canbox {
 
     }
 
-    private final byte mDoorStatus = 0;
-
     // public void setReverseRadaVol(byte param) {
     // byte[] data = new byte[] { (byte) 0xc6, 0x2, 0x0, param };
     // sendDataToCanbox(data, data.length);
@@ -241,15 +248,6 @@ public class Mazda6LuZheng extends Canbox {
 
         // }
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-        }
-    };
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         int freq = (b[1] & 0xff) | ((b[2] & 0xff) << 8);

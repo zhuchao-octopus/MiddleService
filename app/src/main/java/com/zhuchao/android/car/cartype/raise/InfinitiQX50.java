@@ -6,6 +6,18 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class InfinitiQX50 extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x71, 0x72, 0x29, 0x27,};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.PREVIOUS},
+
+
+            {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+
+            {0x12, MyCmd.Keycode.SPEECH}, {0x15, MyCmd.Keycode.PLAY_PAUSE}, {0x16, MyCmd.Keycode.SPEED_UP},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.KEY_RADIO_PS}, {0x5, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x6, MyCmd.Keycode.KEY_SEEK_PREV}, {0x7, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x8, MyCmd.Keycode.AUDIO}, {0xa, MyCmd.Keycode.ROLL_PREV}, {0x9, MyCmd.Keycode.ROLL_NEXT}, {0xb, MyCmd.Keycode.NUMBER1}, {0xc, MyCmd.Keycode.NUMBER2}, {0xd, MyCmd.Keycode.NUMBER3}, {0xe, MyCmd.Keycode.NUMBER4}, {0xf, MyCmd.Keycode.NUMBER5}, {0x10, MyCmd.Keycode.NUMBER6},};
+
     public InfinitiQX50() {
         //		buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xf0, (byte) 0x02);
@@ -22,25 +34,6 @@ public class InfinitiQX50 extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x71, 0x72, 0x29, 0x27,};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.PREVIOUS},
-
-
-            {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-
-            {0x12, MyCmd.Keycode.SPEECH}, {0x15, MyCmd.Keycode.PLAY_PAUSE}, {0x16, MyCmd.Keycode.SPEED_UP},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.KEY_RADIO_PS}, {0x5, MyCmd.Keycode.KEY_RADIO_SCAN},
-            {0x6, MyCmd.Keycode.KEY_SEEK_PREV}, {0x7, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x8, MyCmd.Keycode.AUDIO}, {0xa, MyCmd.Keycode.ROLL_PREV}, {0x9, MyCmd.Keycode.ROLL_NEXT},
-            {0xb, MyCmd.Keycode.NUMBER1}, {0xc, MyCmd.Keycode.NUMBER2}, {0xd, MyCmd.Keycode.NUMBER3}, {0xe, MyCmd.Keycode.NUMBER4}, {0xf, MyCmd.Keycode.NUMBER5}, {0x10, MyCmd.Keycode.NUMBER6},
-    };
 
     public int getACTemp(byte data) {
         // TODO Auto-generated method stub

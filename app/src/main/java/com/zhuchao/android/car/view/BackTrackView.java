@@ -12,18 +12,19 @@ import com.zhuchao.android.car.hardware.BackTrack;
 public class BackTrackView extends View {
 
     private static final String TAG = "BackTrackView";
+    private final static int PAINT_WIDTH = 4;
+    private final static int UP_Y = 0;
+    private final static double[] SAWTOOTH = new double[]{35, 35, 30, 20, 18, 15};
+    private static double mAngle;
+    private BackTrack mBackTrack;
+    private Paint mPaint1;
+    private Paint mPaint2;
+    private Paint mPaint3;
 
     public BackTrackView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
-    private final static int PAINT_WIDTH = 4;
-
-    private BackTrack mBackTrack;
-    private Paint mPaint1;
-    private Paint mPaint2;
-    private Paint mPaint3;
 
     private void init() {
         mBackTrack = new BackTrack();
@@ -49,7 +50,12 @@ public class BackTrackView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec - UP_Y);
     }
 
-    private final static int UP_Y = 0;
+    // private final static int SAWTOOTH1 = 80;
+    // private final static int SAWTOOTH2 = 40;
+    // private final static int SAWTOOTH3 = 10;
+    // private final static int SAWTOOTH4 = 10;
+    // private final static int SAWTOOTH5 = 10;
+    // private final static int SAWTOOTH6 = 10;
 
     protected void onDraw(Canvas canvas) {
         // TODO Auto-generated method stub
@@ -183,17 +189,6 @@ public class BackTrackView extends View {
         //	Log.e(TAG, "d System.currentTimeMillis()" + System.currentTimeMillis());
     }
 
-    private final static double[] SAWTOOTH = new double[]{35, 35, 30, 20, 18, 15};
-
-    // private final static int SAWTOOTH1 = 80;
-    // private final static int SAWTOOTH2 = 40;
-    // private final static int SAWTOOTH3 = 10;
-    // private final static int SAWTOOTH4 = 10;
-    // private final static int SAWTOOTH5 = 10;
-    // private final static int SAWTOOTH6 = 10;
-
-    private static double mAngle;
-
     public void doTrack(double angle) {
         if (angle < -30 || angle > 30) {
             return;
@@ -211,36 +206,20 @@ public class BackTrackView extends View {
         // Log.e(TAG, "System.currentTimeMillis()"+System.currentTimeMillis());
     }
 
-    public void set_track_car_w(int w) {
-        BackTrack.set_track_car_w(w);
-    }
-
-    public void set_track_car_l(int w) {
-        BackTrack.set_track_car_l(w);
-    }
-
-    //	public void set_track_car_d(int w)
-    //	{
-    //		BackTrack.set_track_car_d(w);
-    //	}
-    public void set_track_camera_h(int w) {
-        BackTrack.set_track_camera_h(w);
-    }
-
-    public void set_track_angle_2a(double w) {
-        BackTrack.set_track_angle_2a(w);
-    }
-
-    public void set_track_angle_b(double w) {
-        BackTrack.set_track_angle_b(w);
-    }
-
     public int get_track_car_w() {
         return BackTrack.get_track_car_w();
     }
 
+    public void set_track_car_w(int w) {
+        BackTrack.set_track_car_w(w);
+    }
+
     public int get_track_car_l() {
         return BackTrack.get_track_car_l();
+    }
+
+    public void set_track_car_l(int w) {
+        BackTrack.set_track_car_l(w);
     }
 
     //	public int get_track_car_d()
@@ -251,14 +230,29 @@ public class BackTrackView extends View {
         return BackTrack.get_track_camera_h();
     }
 
+    //	public void set_track_car_d(int w)
+    //	{
+    //		BackTrack.set_track_car_d(w);
+    //	}
+    public void set_track_camera_h(int w) {
+        BackTrack.set_track_camera_h(w);
+    }
+
     public double get_track_angle_2a() {
         return BackTrack.get_track_angle_2a();
+    }
+
+    public void set_track_angle_2a(double w) {
+        BackTrack.set_track_angle_2a(w);
     }
 
     public double get_track_angle_b() {
         return BackTrack.get_track_angle_b();
     }
 
+    public void set_track_angle_b(double w) {
+        BackTrack.set_track_angle_b(w);
+    }
 
     public void setParam() {
 

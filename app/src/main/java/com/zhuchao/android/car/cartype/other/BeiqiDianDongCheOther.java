@@ -10,6 +10,14 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class BeiqiDianDongCheOther extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x40};
+    private static final byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_TURN_A}, {0x4, MyCmd.Keycode.KEY_TURN_D}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
+
+            {0x10, MyCmd.Keycode.KEY_FM}, {0x11, MyCmd.Keycode.KEY_AM}, {0x12, MyCmd.Keycode.POWER}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x15, MyCmd.Keycode.MUTE}, {0x16, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x17, MyCmd.Keycode.MODLE}, {0x18, MyCmd.Keycode.AS}, {0x19, MyCmd.Keycode.SETUP}, {0x20, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x21, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x22, MyCmd.Keycode.EQ}, {0x23, MyCmd.Keycode.MENU}, {0x24, MyCmd.Keycode.BT}, {0x25, MyCmd.Keycode.RADIO}, {0x26, MyCmd.Keycode.HOME}, {0x27, MyCmd.Keycode.EASY_CONNECT}, {0x28, MyCmd.Keycode.BT}, {0x29, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.BACKLIGHT_OFF}, {0x2b, MyCmd.Keycode.PLAY_PAUSE}, {0x2c, MyCmd.Keycode.ROLL_NEXT}, {0x2d, MyCmd.Keycode.ROLL_PREV}, {0x2e, MyCmd.Keycode.VOLUME_UP}, {0x2f, MyCmd.Keycode.VOLUME_DOWN},};
+    private final static String AC_DATA = "pro290_ac_data";
+    private final static String AC_KEY = "pro290_ac_key";
+    private final byte[] mAirDataSave = new byte[5];
+
     public BeiqiDianDongCheOther() {
         mIdAC = 0x21;
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
@@ -31,9 +39,6 @@ public class BeiqiDianDongCheOther extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x40};
-
-
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xee, 0x02, 0x4, 0};
         if (CarUtil.getModelId() == 36) {
@@ -43,17 +48,6 @@ public class BeiqiDianDongCheOther extends Canbox {
         }
         return cmd;
     }
-
-    private static final byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_TURN_A}, {0x4, MyCmd.Keycode.KEY_TURN_D}, {0x5, MyCmd.Keycode.BT_DIAL},
-            {0x6, MyCmd.Keycode.BT_HANG}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
-
-            {0x10, MyCmd.Keycode.KEY_FM}, {0x11, MyCmd.Keycode.KEY_AM}, {0x12, MyCmd.Keycode.POWER}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x15, MyCmd.Keycode.MUTE},
-            {0x16, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x17, MyCmd.Keycode.MODLE}, {0x18, MyCmd.Keycode.AS}, {0x19, MyCmd.Keycode.SETUP}, {0x20, MyCmd.Keycode.VOLUME_ROLL_UP},
-            {0x21, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x22, MyCmd.Keycode.EQ}, {0x23, MyCmd.Keycode.MENU}, {0x24, MyCmd.Keycode.BT}, {0x25, MyCmd.Keycode.RADIO}, {0x26, MyCmd.Keycode.HOME},
-            {0x27, MyCmd.Keycode.EASY_CONNECT}, {0x28, MyCmd.Keycode.BT}, {0x29, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.BACKLIGHT_OFF}, {0x2b, MyCmd.Keycode.PLAY_PAUSE},
-            {0x2c, MyCmd.Keycode.ROLL_NEXT}, {0x2d, MyCmd.Keycode.ROLL_PREV}, {0x2e, MyCmd.Keycode.VOLUME_UP}, {0x2f, MyCmd.Keycode.VOLUME_DOWN},
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -110,8 +104,6 @@ public class BeiqiDianDongCheOther extends Canbox {
         }
         return data & 0xff;
     }
-
-    private final byte[] mAirDataSave = new byte[5];
 
     public void parseACInfoInner(byte[] data) {
         byte[] airData = new byte[8];
@@ -199,9 +191,6 @@ public class BeiqiDianDongCheOther extends Canbox {
         }
         super.parseACInfo(airData);
     }
-
-    private final static String AC_DATA = "pro290_ac_data";
-    private final static String AC_KEY = "pro290_ac_key";
 
     private void saveACData(byte[] data) {
         if (mContext != null) {

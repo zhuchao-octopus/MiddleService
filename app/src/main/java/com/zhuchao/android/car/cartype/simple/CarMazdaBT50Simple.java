@@ -16,28 +16,13 @@ import com.zhuchao.android.car.manager.McuManager;
 
 public class CarMazdaBT50Simple extends Canbox {
 
-    public CarMazdaBT50Simple() {
-
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-    }
-
-    private final static byte[][] mKeyPannel = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x4, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x7, MyCmd.Keycode.KEY_MIC},
+    private final static byte[][] mKeyPannel = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x4, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x7, MyCmd.Keycode.KEY_MIC},
 
 
-            {0x20, MyCmd.Keycode.NUMBER0}, {0x21, MyCmd.Keycode.NUMBER1}, {0x22, MyCmd.Keycode.NUMBER2}, {0x23, MyCmd.Keycode.NUMBER3}, {0x24, MyCmd.Keycode.NUMBER4}, {0x25, MyCmd.Keycode.NUMBER5},
-            {0x26, MyCmd.Keycode.NUMBER6}, {0x27, MyCmd.Keycode.NUMBER7}, {0x28, MyCmd.Keycode.NUMBER8}, {0x29, MyCmd.Keycode.NUMBER9}, {0x2a, MyCmd.Keycode.NUMBER_STAR},
-            {0x2b, MyCmd.Keycode.NUMBER_POUND},
+            {0x20, MyCmd.Keycode.NUMBER0}, {0x21, MyCmd.Keycode.NUMBER1}, {0x22, MyCmd.Keycode.NUMBER2}, {0x23, MyCmd.Keycode.NUMBER3}, {0x24, MyCmd.Keycode.NUMBER4}, {0x25, MyCmd.Keycode.NUMBER5}, {0x26, MyCmd.Keycode.NUMBER6}, {0x27, MyCmd.Keycode.NUMBER7}, {0x28, MyCmd.Keycode.NUMBER8}, {0x29, MyCmd.Keycode.NUMBER9}, {0x2a, MyCmd.Keycode.NUMBER_STAR}, {0x2b, MyCmd.Keycode.NUMBER_POUND},
 
 
-            {0x33, MyCmd.Keycode.RADIO}, {0x34, MyCmd.Keycode.RADIO}, {0x35, MyCmd.Keycode.DVD}, {0x36, MyCmd.Keycode.AUX_IN}, {0x37, MyCmd.Keycode.HOME}, {0x38, MyCmd.Keycode.EQ},
-            {0x39, MyCmd.Keycode.BT}, {0x3D, MyCmd.Keycode.TIME_SETTING}, {0x3F, MyCmd.Keycode.POWER},
+            {0x33, MyCmd.Keycode.RADIO}, {0x34, MyCmd.Keycode.RADIO}, {0x35, MyCmd.Keycode.DVD}, {0x36, MyCmd.Keycode.AUX_IN}, {0x37, MyCmd.Keycode.HOME}, {0x38, MyCmd.Keycode.EQ}, {0x39, MyCmd.Keycode.BT}, {0x3D, MyCmd.Keycode.TIME_SETTING}, {0x3F, MyCmd.Keycode.POWER},
 
 
             {0x48, MyCmd.Keycode.PLAY_PAUSE}, {0x49, MyCmd.Keycode.PREVIOUS}, {0x4a, MyCmd.Keycode.NEXT}, {0x4b, MyCmd.Keycode.PREVIOUS}, {0x4c, MyCmd.Keycode.NEXT},
@@ -55,6 +40,28 @@ public class CarMazdaBT50Simple extends Canbox {
             //		{(byte) 0xf3, MyCmd.Keycode.KEY_TURN_D },
 
     };
+    private final static int SHOW_VOLUME_STEP = 1;
+    private final static int HIDE_RADAR = 0;
+
+    //	private boolean isOneKey(byte b) {
+    //		if (((b & 0xff) == 0xf0) || ((b & 0xff) == 0xf1)
+    //				|| ((b & 0xff) == 0xf2) || ((b & 0xff) == 0xf3)) {
+    //			return true;
+    //		}
+    //
+    //		return false;
+    //	}
+    byte[] airData = new byte[8];
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mDoorStatus = 0;
+    private int mLedStatus = 0;
+
+    public CarMazdaBT50Simple() {
+
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+    }
 
     private void parseWheelKey(byte[] data, int len) {
 
@@ -128,17 +135,6 @@ public class CarMazdaBT50Simple extends Canbox {
         }
     }
 
-    //	private boolean isOneKey(byte b) {
-    //		if (((b & 0xff) == 0xf0) || ((b & 0xff) == 0xf1)
-    //				|| ((b & 0xff) == 0xf2) || ((b & 0xff) == 0xf3)) {
-    //			return true;
-    //		}
-    //
-    //		return false;
-    //	}
-
-    private final static int SHOW_VOLUME_STEP = 1;
-
     private void doKeyStep(int key, int step) {
         mHandler.removeMessages(SHOW_VOLUME_STEP);
         doKey(key, 1);
@@ -148,8 +144,6 @@ public class CarMazdaBT50Simple extends Canbox {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
         }
     }
-
-    byte[] airData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
         //		boolean acMaxUsed = true;
@@ -209,8 +203,6 @@ public class CarMazdaBT50Simple extends Canbox {
 
         }
     }
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
 
     public void updateOutDoorTemp(int temp) {
 
@@ -291,10 +283,7 @@ public class CarMazdaBT50Simple extends Canbox {
     private void checkHideRadar() {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
-    }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HIDE_RADAR:
@@ -307,10 +296,6 @@ public class CarMazdaBT50Simple extends Canbox {
             super.handleMessage(msg);
         }
     };
-
-    private int mDoorStatus = 0;
-
-    private int mLedStatus = 0;
 
     public void setCanboxLED(int type, int status) {
         int set = 0;
@@ -351,5 +336,8 @@ public class CarMazdaBT50Simple extends Canbox {
         byte[] buf = {(byte) 0xc6, 0x2, (byte) 0xa2, (byte) mLedStatus};
         sendDataToCanbox(buf, buf.length);
     }
+
+
+
 
 }

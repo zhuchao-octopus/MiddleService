@@ -20,18 +20,13 @@ import com.zhuchao.android.car.tts.TextSpeaker;
 import java.util.Objects;
 
 public class DoorStatusPanel extends Handler {
+    public static final int MESSAGE_DOOR_CONDITION = 0x01;
     /**
      * Called when the activity is first created.
      */
     private static final String TAG = "DoorStatusPanel";
-    public static final int MESSAGE_DOOR_CONDITION = 0x01;
-    public static DoorStatusPanel mThis;
-
-    //	private Toast mToast = null;
-    public void postChanged(int type, int arg1) {
-        if (hasMessages(type)) return;
-        obtainMessage(type, arg1, 0).sendToTarget();
-    }
+    private final static int MSG_LF = 100;
+    private final static int MSG_RF = 101;
     /*bit
      *
      * 0:左前
@@ -43,6 +38,71 @@ public class DoorStatusPanel extends Handler {
      * 6.天窗半 开
      * 7.开窗全开
      * */
+    private final static int MSG_LR = 102;
+    private final static int MSG_RR = 103;
+    private final static int MSG_HOOD = 104;
+    private final static int MSG_TAIL = 105;
+    private final static int MSG_SKYLIGHT_HALF = 106;
+    private final static int MSG_SKYLIGHT = 107;
+    public static DoorStatusPanel mThis;
+    public static int mDoorStatus = 0;
+    private final Context mContext;
+    View airConditionView = null;
+    WindowManager mWindowManager;
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    if (airConditionView != null) {
+                        if (airConditionView.getParent() != null) {
+                            mWindowManager.removeView(airConditionView);
+                        }
+                    }
+                    break;
+                case MSG_LF:
+                case MSG_LR:
+                case MSG_RF:
+                case MSG_RR:
+                case MSG_TAIL:
+                case MSG_HOOD:
+                case MSG_SKYLIGHT:
+                case MSG_SKYLIGHT_HALF:
+                    doVoice(msg.what, (Boolean) msg.obj);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+    WindowManager.LayoutParams mLayoutParams;
+    private long mWarningTime = 0;
+    private long mLastWarningTime = 0;
+
+    @SuppressLint("InflateParams")
+    public DoorStatusPanel(Context context) {
+        mThis = this;
+        mContext = context;
+        // mToast = new Toast(context); // Toast.makeText(context,"",
+        // Toast.LENGTH_SHORT);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        airConditionView = inflater.inflate(R.layout.door_status, null);
+        //	mToast.setView(airConditionView);
+
+        mLayoutParams = new WindowManager.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.RGBA_8888);
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    }
+
+    //	private final static int WARNING_TIME = 20000;
+    public static void checkDoorOK() {
+        if (mThis != null) {
+            mThis.startcheckDoorOK();
+        }
+    }
+
+    //	private Toast mToast = null;
+    public void postChanged(int type, int arg1) {
+        if (hasMessages(type)) return;
+        obtainMessage(type, arg1, 0).sendToTarget();
+    }
 
     public void handleMessage(Message msg) {
         if (msg.what == MESSAGE_DOOR_CONDITION) {//if (msg.arg1 != 0) {
@@ -217,37 +277,6 @@ public class DoorStatusPanel extends Handler {
         }
     }
 
-    View airConditionView = null;
-    private final Context mContext;
-
-    @SuppressLint("InflateParams")
-    public DoorStatusPanel(Context context) {
-        mThis = this;
-        mContext = context;
-        // mToast = new Toast(context); // Toast.makeText(context,"",
-        // Toast.LENGTH_SHORT);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        airConditionView = inflater.inflate(R.layout.door_status, null);
-        //	mToast.setView(airConditionView);
-
-        mLayoutParams = new WindowManager.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.RGBA_8888);
-        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-    }
-
-    WindowManager mWindowManager;
-    WindowManager.LayoutParams mLayoutParams;
-
-    private final static int MSG_LF = 100;
-    private final static int MSG_RF = 101;
-    private final static int MSG_LR = 102;
-    private final static int MSG_RR = 103;
-
-
-    private final static int MSG_HOOD = 104;
-    private final static int MSG_TAIL = 105;
-    private final static int MSG_SKYLIGHT_HALF = 106;
-    private final static int MSG_SKYLIGHT = 107;
-
     private void prepareVoice(int msg, boolean show) {
         if (GlobalDefinition.mSettingDoorVoice == 1) {
             mHandler.removeMessages(msg);
@@ -296,42 +325,6 @@ public class DoorStatusPanel extends Handler {
                 s = s + " " + s2;//String.format(mContext.getString(R.string.is), s, s2);
                 TextSpeaker.speakDirect(GlobalDefinition.getContext(), s);
             }
-        }
-    }
-
-    public static int mDoorStatus = 0;
-    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    if (airConditionView != null) {
-                        if (airConditionView.getParent() != null) {
-                            mWindowManager.removeView(airConditionView);
-                        }
-                    }
-                    break;
-                case MSG_LF:
-                case MSG_LR:
-                case MSG_RF:
-                case MSG_RR:
-                case MSG_TAIL:
-                case MSG_HOOD:
-                case MSG_SKYLIGHT:
-                case MSG_SKYLIGHT_HALF:
-                    doVoice(msg.what, (Boolean) msg.obj);
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    private long mWarningTime = 0;
-    private long mLastWarningTime = 0;
-
-    //	private final static int WARNING_TIME = 20000;
-    public static void checkDoorOK() {
-        if (mThis != null) {
-            mThis.startcheckDoorOK();
         }
     }
 

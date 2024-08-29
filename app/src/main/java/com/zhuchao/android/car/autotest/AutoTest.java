@@ -29,7 +29,6 @@ import com.common.utils.MyCmd;
 import com.common.utils.Util;
 import com.common.utils.UtilSystem;
 import com.common.utils.UtilSystem.StorageInfo;
-
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.manager.McuManager;
@@ -43,30 +42,54 @@ import java.io.IOException;
 import java.util.List;
 
 public class AutoTest {
+    public final static int OTHER_CMD_RETURN = 0x60;
+    public final static int REVERSE_RETURN = 0x70;
+    public final static int BRAKE_RETURN = 0x71;
+    public final static int ACC_RETURN = 0x72;
+    public final static int ILL_RETURN = 0x73;
+    public final static int SWC_RETURN = 0x74;
+    public final static int RADIO_RETURN = 0x75;
     private final static String TAG = "AutoTest";
-
-    @SuppressLint("StaticFieldLeak")
-    public static AutoTest mThis;
-
-    private Context mContext;
-    private View mView;
-
-    private WindowManager mWindowManager;
-    private WindowManager.LayoutParams mLayoutParams;
-
-    private TextView mTVLog;
-
-    private McuTest mMcuTest;
-
-    private McuManager mMcuManager;
-
     private final static int NODE_TIMEOUT1 = 1000;
     private final static int NODE_TIMEOUT2 = 5000;
-
-    private int mRadioCheckIndex;
     private final static int RDS_INDEX = 4;
     private final static int AM_INDEX = 5;
     private final static int[] RADIO_FREQS = new int[]{9810, 9850, 10650, 9050, 8800, 630, 999, 1440};
+    private static final int[] BUTTON_ON_CLICK = new int[]{R.id.start, R.id.stop, R.id.quit, R.id.set, R.id.log, R.id.testing};
+    private final static int MSG_STAT_TEST = 0;
+    private final static int MSG_TESTING = 1;
+    private final static int MSG_TEST_END1 = 2;
+    private final static int MSG_TEST_END_ALL = 3;
+    private final static int MSG_TEST_TIMEOUT = 4;
+    private final static int MSG_TEST_CHECK_WIFI = 5;
+    private final static int MSG_TEST_CHECK_VOLUME = 7;
+    private final static int MSG_TEST_CHECK_VIDEO = 9;
+    private final static int MSG_TEST_TIME_LEFT = 8;
+    private final static int MSG_ALL_TIMEOUT = 14;    private final View.OnClickListener mViewListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            int id = v.getId();
+            if (id == R.id.start) {
+                doStart();
+            } else if (id == R.id.stop) {
+                doStop();
+            } else if (id == R.id.quit) {// mMcuTest.sendCmd(0x3, 0x2);
+                quit();
+            } else if (id == R.id.log || id == R.id.testing || id == R.id.set) {
+                showPage(v.getId());
+            }
+        }
+    };
+    private final static int MSG_TEST_DVD = 15;
+    private final static int MSG_TEST_RADIO = 16;
+    private final static int TIME_ALL_TIMEOUT = 120000;
+    private final static int TEST_STORAGE_USB_MAX = 4;
+    private final static int TEST_STORAGE_SD_MAX = 2;
+    private final static int TEST_STORAGE_WRITE = 0x1;
+    private final static int TEST_STORAGE_READ = 0x2;
+    private final static int TEST_STORAGE_OK = TEST_STORAGE_READ | TEST_STORAGE_WRITE;
+    private final static int[] OTHER_TEXT_ID = new int[]{R.id.result_auxin_audio,};
+    @SuppressLint("StaticFieldLeak")
+    public static AutoTest mThis;
     private final TestNode[] mTestNode = {
 
             new TestNode(R.string.test_swc2, TestNode.MCU_TEST_SWC2, NODE_TIMEOUT1, R.id.result_swc2), new TestNode(R.string.test_swc, TestNode.MCU_TEST_SWC, NODE_TIMEOUT1, R.id.result_swc),
@@ -92,8 +115,7 @@ public class AutoTest {
             //			new TestNode(R.string.button_text_aux, MyCmd.SOURCE_AUX, 3000,
             //					R.id.result_auxin),
 
-            new TestNode(R.string.test_b_camera, MyCmd.SOURCE_REVERSE, 3000, R.id.result_reverse), new TestNode(R.string.button_text_dvd, MyCmd.SOURCE_DVD, 3000, R.id.result_dvd),
-            new TestNode(R.string.button_text_radio, MyCmd.SOURCE_RADIO, 18000, R.id.result_radio),
+            new TestNode(R.string.test_b_camera, MyCmd.SOURCE_REVERSE, 3000, R.id.result_reverse), new TestNode(R.string.button_text_dvd, MyCmd.SOURCE_DVD, 3000, R.id.result_dvd), new TestNode(R.string.button_text_radio, MyCmd.SOURCE_RADIO, 18000, R.id.result_radio),
             //			new TestNode(R.string.test_arm, MyCmd.SOURCE_MX51, NODE_TIMEOUT2,
             //					R.id.result_arm_audio),
             //
@@ -105,124 +127,9 @@ public class AutoTest {
             //					R.id.result_wifi),
 
     };
-
-    public AutoTest() {
-        mThis = this;
-    }
-
-    public void init(Context context) {
-        mContext = context;
-        mMcuTest = new McuTest();
-        mMcuManager = McuManager.getInstance();
-        if (mView == null) {
-
-            mView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.main_test, null);
-
-            mLayoutParams = new WindowManager.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN, PixelFormat.RGBA_8888);
-
-            mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-
-            initClick();
-            Kernel.doKeyEvent(Kernel.KEY_HOMEPAGE);
-            mWindowManager.addView(mView, mLayoutParams);
-
-            mTVLog = mView.findViewById(R.id.auto_test_log);
-            mTVLog.setMovementMethod(ScrollingMovementMethod.getInstance());
-
-            mView.findViewById(R.id.tr_progress).setVisibility(View.GONE);
-
-            if (Build.VERSION.SDK_INT >= 26) {
-                GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SYSTEMUI_STATUS_BAR_GONE);
-            }
-        }
-        // doStart();
-    }
-
-    private boolean mPause = false;
-
-    private void quit() {
-        doStop();
-        mPause = true;
-
-        if (mLocationManager != null) {
-            // mLocationManager.removeGpsStatusListener(listener);
-            //
-            // mLocationManager
-            // .removeUpdates((LocationListener) mLocationListener);
-            // mLocationManager = null;
-        }
-        if (mView != null) {
-            mWindowManager.removeView(mView);
-            mView = null;
-        }
-        Kernel.doKeyEvent(Kernel.KEY_HOMEPAGE);
-
-        if (Build.VERSION.SDK_INT >= 26) {
-            GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SYSTEMUI_STATUS_BAR_VISIBLE);
-        }
-    }
-
-    private static final int[] BUTTON_ON_CLICK = new int[]{R.id.start, R.id.stop, R.id.quit, R.id.set, R.id.log, R.id.testing};
-
-    private void initClick() {
-        for (int i : BUTTON_ON_CLICK) {
-            View v = mView.findViewById(i);
-            if (v != null) {
-                v.setOnClickListener(mViewListener);
-            }
-        }
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    private void showPage(int id) {
-        if (id == R.id.log) {
-            mView.findViewById(R.id.layout_log).setVisibility(View.VISIBLE);
-            mView.findViewById(R.id.layout_set).setVisibility(View.GONE);
-            mView.findViewById(R.id.layout_testing).setVisibility(View.GONE);
-        } else if (id == R.id.testing) {
-            mView.findViewById(R.id.layout_log).setVisibility(View.GONE);
-            mView.findViewById(R.id.layout_set).setVisibility(View.GONE);
-            mView.findViewById(R.id.layout_testing).setVisibility(View.VISIBLE);
-        } else if (id == R.id.set) {
-            mView.findViewById(R.id.layout_log).setVisibility(View.GONE);
-            mView.findViewById(R.id.layout_set).setVisibility(View.VISIBLE);
-            mView.findViewById(R.id.layout_testing).setVisibility(View.GONE);
-        }
-    }
-
-    private final View.OnClickListener mViewListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            int id = v.getId();
-            if (id == R.id.start) {
-                doStart();
-            } else if (id == R.id.stop) {
-                doStop();
-            } else if (id == R.id.quit) {// mMcuTest.sendCmd(0x3, 0x2);
-                quit();
-            } else if (id == R.id.log || id == R.id.testing || id == R.id.set) {
-                showPage(v.getId());
-            }
-        }
-    };
-
-    private final static int MSG_STAT_TEST = 0;
-    private final static int MSG_TESTING = 1;
-    private final static int MSG_TEST_END1 = 2;
-    private final static int MSG_TEST_END_ALL = 3;
-    private final static int MSG_TEST_TIMEOUT = 4;
-    private final static int MSG_TEST_CHECK_WIFI = 5;
-
-    private final static int MSG_TEST_CHECK_VOLUME = 7;
-    private final static int MSG_TEST_CHECK_VIDEO = 9;
-
-    private final static int MSG_TEST_TIME_LEFT = 8;
-    private final static int MSG_ALL_TIMEOUT = 14;
-
-    private final static int MSG_TEST_DVD = 15;
-    private final static int MSG_TEST_RADIO = 16;
-    private final static int TIME_ALL_TIMEOUT = 120000;
-
-    private final Handler mHandler = new Handler() {
+    private final int mAudioOutputSource = -1;
+    MyLocationListener mLocationListener;
+    MediaPlayer mMediaPlayer;    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
 
             TestNode tn;
@@ -337,6 +244,124 @@ public class AutoTest {
             }
         }
     };
+    private Context mContext;
+    private View mView;
+    private WindowManager mWindowManager;
+
+    // private void startTestNeedSource(TestNode tn) {
+    // switch(tn.mSource){
+    //
+    // }
+    // }
+    private WindowManager.LayoutParams mLayoutParams;
+    private TextView mTVLog;
+    private McuTest mMcuTest;
+    private McuManager mMcuManager;
+    private int mRadioCheckIndex;
+    private boolean mPause = false;
+    private LocationManager mLocationManager;
+    private List<StorageInfo> mStorage;
+    private int mTestUSBIndex = -1;
+    private int mTestSDIndex = -1;
+    private String mSD1Name;
+    private int mTestTime = 0;
+    private TestNode mGPSNode;
+    private TestNode mNodeWifi;
+    private WifiManager mWifiManager;
+    private TestNode mCurSwcNode;
+    private String mTestRadioResult;
+    private int mFMStress = -1;
+    private TestNode mTestNodeAudio;
+
+    public AutoTest() {
+        mThis = this;
+    }
+
+    public static void parseTestData(byte[] data, int len) {
+        if (mThis != null) {
+            try {
+                mThis.parseCanboxData(data, len);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    public void init(Context context) {
+        mContext = context;
+        mMcuTest = new McuTest();
+        mMcuManager = McuManager.getInstance();
+        if (mView == null) {
+
+            mView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.main_test, null);
+
+            mLayoutParams = new WindowManager.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN, PixelFormat.RGBA_8888);
+
+            mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
+            initClick();
+            Kernel.doKeyEvent(Kernel.KEY_HOMEPAGE);
+            mWindowManager.addView(mView, mLayoutParams);
+
+            mTVLog = mView.findViewById(R.id.auto_test_log);
+            mTVLog.setMovementMethod(ScrollingMovementMethod.getInstance());
+
+            mView.findViewById(R.id.tr_progress).setVisibility(View.GONE);
+
+            if (Build.VERSION.SDK_INT >= 26) {
+                GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SYSTEMUI_STATUS_BAR_GONE);
+            }
+        }
+        // doStart();
+    }
+
+    private void quit() {
+        doStop();
+        mPause = true;
+
+        if (mLocationManager != null) {
+            // mLocationManager.removeGpsStatusListener(listener);
+            //
+            // mLocationManager
+            // .removeUpdates((LocationListener) mLocationListener);
+            // mLocationManager = null;
+        }
+        if (mView != null) {
+            mWindowManager.removeView(mView);
+            mView = null;
+        }
+        Kernel.doKeyEvent(Kernel.KEY_HOMEPAGE);
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SYSTEMUI_STATUS_BAR_VISIBLE);
+        }
+    }
+
+    private void initClick() {
+        for (int i : BUTTON_ON_CLICK) {
+            View v = mView.findViewById(i);
+            if (v != null) {
+                v.setOnClickListener(mViewListener);
+            }
+        }
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private void showPage(int id) {
+        if (id == R.id.log) {
+            mView.findViewById(R.id.layout_log).setVisibility(View.VISIBLE);
+            mView.findViewById(R.id.layout_set).setVisibility(View.GONE);
+            mView.findViewById(R.id.layout_testing).setVisibility(View.GONE);
+        } else if (id == R.id.testing) {
+            mView.findViewById(R.id.layout_log).setVisibility(View.GONE);
+            mView.findViewById(R.id.layout_set).setVisibility(View.GONE);
+            mView.findViewById(R.id.layout_testing).setVisibility(View.VISIBLE);
+        } else if (id == R.id.set) {
+            mView.findViewById(R.id.layout_log).setVisibility(View.GONE);
+            mView.findViewById(R.id.layout_set).setVisibility(View.VISIBLE);
+            mView.findViewById(R.id.layout_testing).setVisibility(View.GONE);
+        }
+    }
 
     private void checkAllTestFinish(boolean timeout) {
 
@@ -388,12 +413,6 @@ public class AutoTest {
             }
         }
     }
-
-    // private void startTestNeedSource(TestNode tn) {
-    // switch(tn.mSource){
-    //
-    // }
-    // }
 
     private void startTestNeedSource() {
         int i = getForTestDependNode();
@@ -583,9 +602,6 @@ public class AutoTest {
         mTVLog.setText(s + "\n" + text);
     }
 
-    private LocationManager mLocationManager;
-    MyLocationListener mLocationListener;
-
     private void startTestGPS(TestNode tn) {
         tn.mStatus = 0;
         mGPSNode = tn;
@@ -606,10 +622,6 @@ public class AutoTest {
         }
         setLogText(mContext.getResources().getString(tn.mName) + " " + mContext.getResources().getString(R.string.testing));
     }
-
-    private List<StorageInfo> mStorage;
-    private int mTestUSBIndex = -1;
-    private int mTestSDIndex = -1;
 
     private String getUSBPath(int index) {
         //		if (mStorage == null) {
@@ -711,8 +723,6 @@ public class AutoTest {
 
     }
 
-    private String mSD1Name;
-
     private void startTestSD(TestNode tn) {
         ++mTestSDIndex;
 
@@ -787,14 +797,76 @@ public class AutoTest {
 
         }
 
-    }
+    }    GpsStatus.Listener listener = new GpsStatus.Listener() {
+        public void onGpsStatusChanged(int event) {
+            Log.e(TAG, mGPSNode.mStatus + ":onGpsStatusChanged:" + event);
+            switch (event) {
+                // 第一次定位
+                case GpsStatus.GPS_EVENT_FIRST_FIX:
 
-    private final static int TEST_STORAGE_USB_MAX = 4;
-    private final static int TEST_STORAGE_SD_MAX = 2;
+                    Log.e("gps_test", "GPS_EVENT_FIRST_FIX");
 
-    private final static int TEST_STORAGE_WRITE = 0x1;
-    private final static int TEST_STORAGE_READ = 0x2;
-    private final static int TEST_STORAGE_OK = TEST_STORAGE_READ | TEST_STORAGE_WRITE;
+                    if (mGPSNode.mStatus == TestNode.STATUS_NORMAL) {
+                        setLogText(mContext.getResources().getString(R.string.test_gps) + mContext.getResources().getString(R.string.successed));
+                        // mLocationManager.removeGpsStatusListener(listener);
+                        // mLocationManager
+                        // .removeUpdates((LocationListener) mLocationListener);
+                        testResult(mGPSNode, TestNode.STATUS_SUCESS);
+                    }
+                    break;
+                // 卫星状态改变
+                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                    // 获取当前状态
+                    // GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
+                    // // 获取卫星颗数的默认最大值
+                    // int maxSatellites = gpsStatus.getMaxSatellites();
+                    // // 创建一个迭代器保存所有卫星
+                    // Iterator<GpsSatellite> iters = gpsStatus.getSatellites()
+                    // .iterator();
+                    // int count = 0;
+                    // // for (int i = 0; i < 12; ++i) {
+                    // // mGpsSatellite[i] = null;
+                    // // }
+                    // String log = "";
+                    // while (iters.hasNext() && count <= maxSatellites) { // get in
+                    // // used
+                    // // number
+                    // GpsSatellite s = iters.next();
+                    // if (s.usedInFix()) {
+                    // if (count >= 12)
+                    // break;
+                    // // mGpsSatellite[count] = s;
+                    //
+                    // Log.e(TAG, "1count:" + count + ":" + s.getSnr() + ":"
+                    // + s.getPrn());
+                    // count++;
+                    // log += "(" + s.getSnr() + "," + s.getPrn() + ")";
+                    // }
+                    // }
+                    // if (log.length() > 1) {
+                    // setLogText(log);
+                    // }
+                    // Log.e(TAG, "GPS_EVENT_SATELLITE_STATUS:"+maxSatellites);
+                    // Log.e(TAG, "GPS_EVENT_SATELLITE_STATUS");
+
+                    //				if (mGPSNode.mStatus == TestNode.STATUS_NORMAL) {
+                    //					setLogText(mContext.getResources().getString(
+                    //							R.string.test_gps)
+                    //							+ mContext.getResources().getString(
+                    //									R.string.successed));
+                    //					testResult(mGPSNode, TestNode.STATUS_SUCESS);
+                    //
+                    //					// mLocationManager.removeGpsStatusListener(listener);
+                    //					//
+                    //					// mLocationManager
+                    //					// .removeUpdates((LocationListener) mLocationListener);
+                    //				}
+
+                    break;
+            }
+        }
+
+    };
 
     private int testStorage(String path) {
         int ret = 0;
@@ -825,8 +897,6 @@ public class AutoTest {
         }
         return ret;
     }
-
-    private final static int[] OTHER_TEXT_ID = new int[]{R.id.result_auxin_audio,};
 
     private void clear() {
         mTVLog.setText("");
@@ -899,8 +969,6 @@ public class AutoTest {
         updateTestTime();
 
     }
-
-    private int mTestTime = 0;
 
     private void updateTestTime() {
         ((TextView) mView.findViewById(R.id.test_status)).setText(mContext.getString(R.string.testing) + "  " + mTestTime / 1000 + " s");
@@ -1141,108 +1209,6 @@ public class AutoTest {
         checkAllTestFinish(false);
     }
 
-    private TestNode mGPSNode;
-
-    // 状态监听
-    public class MyLocationListener implements LocationListener {
-        public void onLocationChanged(Location location) {
-            Log.d("gps_test", "onLocationChanged!!!!!!!!" + location.getLatitude() + ":" + location.getLongitude());
-            if (location.getLatitude() != 0 && location.getLongitude() != 0) {
-                if (mGPSNode.mStatus == TestNode.STATUS_NORMAL) {
-                    setLogText(mContext.getResources().getString(R.string.test_gps) + mContext.getResources().getString(R.string.successed));
-                    // mLocationManager.removeGpsStatusListener(listener);
-                    // mLocationManager
-                    // .removeUpdates((LocationListener) mLocationListener);
-                    testResult(mGPSNode, TestNode.STATUS_SUCESS);
-                }
-            }
-        }
-
-        public void onProviderDisabled(String provider) {
-
-        }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-    }
-
-    GpsStatus.Listener listener = new GpsStatus.Listener() {
-        public void onGpsStatusChanged(int event) {
-            Log.e(TAG, mGPSNode.mStatus + ":onGpsStatusChanged:" + event);
-            switch (event) {
-                // 第一次定位
-                case GpsStatus.GPS_EVENT_FIRST_FIX:
-
-                    Log.e("gps_test", "GPS_EVENT_FIRST_FIX");
-
-                    if (mGPSNode.mStatus == TestNode.STATUS_NORMAL) {
-                        setLogText(mContext.getResources().getString(R.string.test_gps) + mContext.getResources().getString(R.string.successed));
-                        // mLocationManager.removeGpsStatusListener(listener);
-                        // mLocationManager
-                        // .removeUpdates((LocationListener) mLocationListener);
-                        testResult(mGPSNode, TestNode.STATUS_SUCESS);
-                    }
-                    break;
-                // 卫星状态改变
-                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                    // 获取当前状态
-                    // GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
-                    // // 获取卫星颗数的默认最大值
-                    // int maxSatellites = gpsStatus.getMaxSatellites();
-                    // // 创建一个迭代器保存所有卫星
-                    // Iterator<GpsSatellite> iters = gpsStatus.getSatellites()
-                    // .iterator();
-                    // int count = 0;
-                    // // for (int i = 0; i < 12; ++i) {
-                    // // mGpsSatellite[i] = null;
-                    // // }
-                    // String log = "";
-                    // while (iters.hasNext() && count <= maxSatellites) { // get in
-                    // // used
-                    // // number
-                    // GpsSatellite s = iters.next();
-                    // if (s.usedInFix()) {
-                    // if (count >= 12)
-                    // break;
-                    // // mGpsSatellite[count] = s;
-                    //
-                    // Log.e(TAG, "1count:" + count + ":" + s.getSnr() + ":"
-                    // + s.getPrn());
-                    // count++;
-                    // log += "(" + s.getSnr() + "," + s.getPrn() + ")";
-                    // }
-                    // }
-                    // if (log.length() > 1) {
-                    // setLogText(log);
-                    // }
-                    // Log.e(TAG, "GPS_EVENT_SATELLITE_STATUS:"+maxSatellites);
-                    // Log.e(TAG, "GPS_EVENT_SATELLITE_STATUS");
-
-                    //				if (mGPSNode.mStatus == TestNode.STATUS_NORMAL) {
-                    //					setLogText(mContext.getResources().getString(
-                    //							R.string.test_gps)
-                    //							+ mContext.getResources().getString(
-                    //									R.string.successed));
-                    //					testResult(mGPSNode, TestNode.STATUS_SUCESS);
-                    //
-                    //					// mLocationManager.removeGpsStatusListener(listener);
-                    //					//
-                    //					// mLocationManager
-                    //					// .removeUpdates((LocationListener) mLocationListener);
-                    //				}
-
-                    break;
-            }
-        }
-
-    };
-
-    private TestNode mNodeWifi;
-    private WifiManager mWifiManager;
-
     private void startTestWIFI(TestNode tn) {
         try {
             mNodeWifi = tn;
@@ -1287,11 +1253,6 @@ public class AutoTest {
             Log.d(TAG, "checkWIFI:" + e);
         }
     }
-
-    private TestNode mCurSwcNode;
-    private String mTestRadioResult;
-
-    private int mFMStress = -1;
 
     public void parseCanboxData(byte[] data, int len) {
         TestNode tn;
@@ -1522,28 +1483,6 @@ public class AutoTest {
         }
     }
 
-    public final static int OTHER_CMD_RETURN = 0x60;
-
-    public final static int REVERSE_RETURN = 0x70;
-    public final static int BRAKE_RETURN = 0x71;
-    public final static int ACC_RETURN = 0x72;
-    public final static int ILL_RETURN = 0x73;
-
-    public final static int SWC_RETURN = 0x74;
-
-
-    public final static int RADIO_RETURN = 0x75;
-
-    public static void parseTestData(byte[] data, int len) {
-        if (mThis != null) {
-            try {
-                mThis.parseCanboxData(data, len);
-            } catch (Exception e) {
-
-            }
-        }
-    }
-
     private String isSpeakerOK(byte[] data) {
         String ret = null;
 
@@ -1566,11 +1505,6 @@ public class AutoTest {
         return ret;
 
     }
-
-    private final int mAudioOutputSource = -1;
-
-    MediaPlayer mMediaPlayer;
-    private TestNode mTestNodeAudio;
 
     private void testArmAudio() {
         stopArmAudio();
@@ -1658,5 +1592,37 @@ public class AutoTest {
             Util.setFileValue("/sys/class/misc/mst701/device/source", source);
         }
     }
+
+    // 状态监听
+    public class MyLocationListener implements LocationListener {
+        public void onLocationChanged(Location location) {
+            Log.d("gps_test", "onLocationChanged!!!!!!!!" + location.getLatitude() + ":" + location.getLongitude());
+            if (location.getLatitude() != 0 && location.getLongitude() != 0) {
+                if (mGPSNode.mStatus == TestNode.STATUS_NORMAL) {
+                    setLogText(mContext.getResources().getString(R.string.test_gps) + mContext.getResources().getString(R.string.successed));
+                    // mLocationManager.removeGpsStatusListener(listener);
+                    // mLocationManager
+                    // .removeUpdates((LocationListener) mLocationListener);
+                    testResult(mGPSNode, TestNode.STATUS_SUCESS);
+                }
+            }
+        }
+
+        public void onProviderDisabled(String provider) {
+
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    }
+
+
+
+
+
+
 
 }

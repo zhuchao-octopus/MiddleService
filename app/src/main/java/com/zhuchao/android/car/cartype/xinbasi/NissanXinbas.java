@@ -7,21 +7,24 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class NissanXinbas extends Canbox {
 
-    public NissanXinbas() {
-
-        buildCmdVersion((byte) 0x7f, (byte) 0x0);
-        mIdKey = 0x1;
-        MAP_KEYS = KEYS_WHEEL;
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
 
             {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
 
             {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x87, MyCmd.Keycode.POWER},
 
     };
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private byte[] mData = new byte[]{(byte) 0x82, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    public NissanXinbas() {
+
+        buildCmdVersion((byte) 0x7f, (byte) 0x0);
+        mIdKey = 0x1;
+        MAP_KEYS = KEYS_WHEEL;
+    }
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -71,10 +74,6 @@ public class NissanXinbas extends Canbox {
         sendDataToCanbox(data, data.length);
     }
 
-    private byte[] mData = new byte[]{
-            (byte) 0x82, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -106,14 +105,10 @@ public class NissanXinbas extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            mData = new byte[]{
-                    (byte) 0x82, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            mData = new byte[]{(byte) 0x82, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            mData = new byte[]{
-                    (byte) 0x82, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec
-            };
+            mData = new byte[]{(byte) 0x82, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec};
         }
 
         // if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -127,9 +122,7 @@ public class NissanXinbas extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0x82, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0x82, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 
@@ -228,11 +221,6 @@ public class NissanXinbas extends Canbox {
             Log.d("Nissan2013Simple", "sendId3" + e);
         }
     }
-
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
 
     public void setSongName(String s) {
         //		sendId3((byte) 0x83, s);

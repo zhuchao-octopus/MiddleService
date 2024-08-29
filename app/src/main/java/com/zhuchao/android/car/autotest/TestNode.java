@@ -4,26 +4,6 @@ import com.common.utils.MyCmd;
 
 public class TestNode {
 
-    public int mName;
-    public int mType;
-    public int mTimeout;
-    public int mSource;
-    public int mStatus;
-    public long mTimeStart;
-    public int mResultId;
-    public int mResultData;
-
-    final static int TYPE_INDEPEND = 0;
-    final static int TYPE_NEED_SOURCE = 1;
-
-    final static int STATUS_TIMEOUT = -2;
-    final static int STATUS_NORMAL = 0;
-    final static int STATUS_TESTING = 1;
-    final static int STATUS_SUCESS = 2;
-    final static int STATUS_FAIL = 3;
-    final static int STATUS_END = 9;
-
-
     public final static int MCU_TEST_SOURCE = 0x1000;
     public final static int MCU_TEST_ACC = 0x1002;
     public final static int MCU_TEST_REVERSE = 0x1003;
@@ -34,8 +14,23 @@ public class TestNode {
     public final static int MCU_TEST_SWC = 0x1008;
     public final static int MCU_TEST_REAR_VIDEO = 0x1009;
     public final static int MCU_TEST_VOLUME = 0x100a;
-
     public final static int MCU_TEST_SWC2 = 0x11008;
+    final static int TYPE_INDEPEND = 0;
+    final static int TYPE_NEED_SOURCE = 1;
+    final static int STATUS_TIMEOUT = -2;
+    final static int STATUS_NORMAL = 0;
+    final static int STATUS_TESTING = 1;
+    final static int STATUS_SUCESS = 2;
+    final static int STATUS_FAIL = 3;
+    final static int STATUS_END = 9;
+    public int mName;
+    public int mType;
+    public int mTimeout;
+    public int mSource;
+    public int mStatus;
+    public long mTimeStart;
+    public int mResultId;
+    public int mResultData;
 
     public TestNode(int name, int source, int timeout) {
         mName = name;

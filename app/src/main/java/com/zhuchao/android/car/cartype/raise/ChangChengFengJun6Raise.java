@@ -7,6 +7,14 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class ChangChengFengJun6Raise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+            {0xd, KEY_NEXTSONG}, {0xe, KEY_PREVIOUSSONG},
+
+
+    };
+
+
     public ChangChengFengJun6Raise() {
         mIdAC = 0x23;
         buildCmdVersion((byte) 0x7f, (byte) 0x0);
@@ -14,15 +22,6 @@ public class ChangChengFengJun6Raise extends Canbox {
         mIdKey = 0x21;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-            {0xd, KEY_NEXTSONG}, {0xe, KEY_PREVIOUSSONG},
-
-
-    };
 
     public int getOutTemp(byte[] data) {//
         int t = CarUtil.CLEAR_OUT_DOOR_TEMP;

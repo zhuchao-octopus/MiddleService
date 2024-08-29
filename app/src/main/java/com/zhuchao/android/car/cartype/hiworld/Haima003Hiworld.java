@@ -6,6 +6,17 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class Haima003Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+
+            {0x5, MyCmd.Keycode.BT_DIAL},
+
+
+            {0x21, MyCmd.Keycode.PREVIOUS}, {0x20, MyCmd.Keycode.NEXT},
+
+            {0xc, MyCmd.Keycode.MODLE},
+
+    };
+
     public Haima003Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -23,20 +34,6 @@ public class Haima003Hiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
-
-            {0x5, MyCmd.Keycode.BT_DIAL},
-
-
-            {0x21, MyCmd.Keycode.PREVIOUS}, {0x20, MyCmd.Keycode.NEXT},
-
-            {0xc, MyCmd.Keycode.MODLE},
-
-    };
-
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x4, 0x1e};

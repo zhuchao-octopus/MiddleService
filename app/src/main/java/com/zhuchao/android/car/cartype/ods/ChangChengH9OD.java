@@ -10,6 +10,16 @@ import java.util.Calendar;
 
 public class ChangChengH9OD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x35, 0x23, 0x28, 0x31, 0x34, 0x36, 0x38, 0x39, 0x3f, 0x37};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xC, KEY_NEXTSONG}, {0xB, KEY_PREVIOUSSONG}, {0xD, MyCmd.Keycode.SPEECH}, {0xE, MyCmd.Keycode.MUTE},
+
+
+            {0x10, MyCmd.Keycode.RADIO}, {0x11, MyCmd.Keycode.POWER}, {0x12, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x13, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x14, MyCmd.Keycode.BT}, {0x15, MyCmd.Keycode.NAVIGATION}, {0x16, MyCmd.Keycode.EQ}, {0x17, MyCmd.Keycode.BACK}, {0x18, MyCmd.Keycode.MENU}, {0x19, MyCmd.Keycode.HOME}, {0x1a, MyCmd.Keycode.ROLL_PREV}, {0x1b, MyCmd.Keycode.ROLL_PREV}, {0x20, MyCmd.Keycode.KEY_AIR_CONTROL},};
+    private final byte[] airData = new byte[12];
+
+
     public ChangChengH9OD() {
         mIdAC = 0x23;
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -25,27 +35,9 @@ public class ChangChengH9OD extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x35, 0x23, 0x28, 0x31, 0x34, 0x36, 0x38, 0x39, 0x3f, 0x37
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xC, KEY_NEXTSONG}, {0xB, KEY_PREVIOUSSONG}, {0xD, MyCmd.Keycode.SPEECH}, {0xE, MyCmd.Keycode.MUTE},
-
-
-            {0x10, MyCmd.Keycode.RADIO}, {0x11, MyCmd.Keycode.POWER}, {0x12, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x13, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x14, MyCmd.Keycode.BT},
-            {0x15, MyCmd.Keycode.NAVIGATION}, {0x16, MyCmd.Keycode.EQ}, {0x17, MyCmd.Keycode.BACK}, {0x18, MyCmd.Keycode.MENU}, {0x19, MyCmd.Keycode.HOME}, {0x1a, MyCmd.Keycode.ROLL_PREV},
-            {0x1b, MyCmd.Keycode.ROLL_PREV}, {0x20, MyCmd.Keycode.KEY_AIR_CONTROL},
-    };
-
-
     private byte getAngelStyle() {
         return 0;
     }
-
 
     public int getAngleValue(byte[] data) {
 
@@ -74,7 +66,6 @@ public class ChangChengH9OD extends Canbox {
         return angle;
     }
 
-
     public void parseCanboxData(byte[] data, int len) {
         if (data[0] == 0x24) {
             parseACInfoRear(data);
@@ -82,7 +73,6 @@ public class ChangChengH9OD extends Canbox {
             super.parseCanboxData(data, len);
         }
     }
-
 
     private int getACTempPriv(byte data) {//
         if ((data & 0xff) >= 0x70 && (data & 0xff) <= 0x90) {
@@ -92,8 +82,6 @@ public class ChangChengH9OD extends Canbox {
         }
         return data & 0xff;
     }
-
-    private final byte[] airData = new byte[12];
 
     public void parseACInfo(byte[] data) {
 
@@ -189,13 +177,9 @@ public class ChangChengH9OD extends Canbox {
         byte[] data;
 
         if (MyCmd.SOURCE_DVD != source) {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }
@@ -317,9 +301,7 @@ public class ChangChengH9OD extends Canbox {
     public void updateCompass(int compass) {
         int direction = compassAngleToDirect(compass);
 
-        byte[] buf = new byte[]{
-                (byte) (0x83), 0x3, 0x15, (byte) (direction & 0xff), 0
-        };
+        byte[] buf = new byte[]{(byte) (0x83), 0x3, 0x15, (byte) (direction & 0xff), 0};
 
         sendDataToCanbox(buf, buf.length);
     }

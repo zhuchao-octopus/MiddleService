@@ -11,6 +11,16 @@ import java.util.Date;
 
 public class RenaultBNR extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x71, (byte) 0x81,};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.ROLL_PREV}, {0x4, MyCmd.Keycode.ROLL_NEXT},
+
+            {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
+
+            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+            {0x12, MyCmd.Keycode.SPEECH}, {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.MODLE},};
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public RenaultBNR() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -26,18 +36,6 @@ public class RenaultBNR extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x71, (byte) 0x81,};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.ROLL_PREV}, {0x4, MyCmd.Keycode.ROLL_NEXT},
-
-            {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
-
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-            {0x12, MyCmd.Keycode.SPEECH}, {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.MODLE},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xe2, 0x01, 0};
@@ -128,10 +126,6 @@ public class RenaultBNR extends Canbox {
         super.parseACInfo(airData);
     }
 
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -139,9 +133,7 @@ public class RenaultBNR extends Canbox {
         byte sec = (byte) ((time) % 60);
         ++play;
 
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x8, (byte) ((total & 0xFF00) >> 8), (byte) ((total) & 0xFF), (byte) ((play & 0xFF00) >> 8), (byte) ((play) & 0xFF), h, min, sec
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x8, (byte) ((total & 0xFF00) >> 8), (byte) ((total) & 0xFF), (byte) ((play & 0xFF00) >> 8), (byte) ((play) & 0xFF), h, min, sec};
 
         // if (mPhoneStatus < HFP_INFO_CALLED) {
 

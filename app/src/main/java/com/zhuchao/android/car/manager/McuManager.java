@@ -39,7 +39,6 @@ import com.common.utils.Kernel;
 import com.common.utils.MachineConfig;
 import com.common.utils.MyCmd;
 import com.common.utils.ProtocolAk47;
-
 import com.common.utils.SettingProperties;
 import com.common.utils.Util;
 import com.common.utils.UtilCarKey;
@@ -85,6 +84,16 @@ public class McuManager {
     private long mSystemStartTime = 0;
     private int DEFAULT_VOLUME = 12;
     public static final int MAX_VOLUME = 30;
+    // some data store this
+    private byte mMute = 0;
+    private byte mVolume = -1;
+
+    // private byte mBrake = 0;
+    private byte mRearL = 0;
+    private byte mRearR = 0;
+    private byte mScreen0 = 0;
+    public byte mBrake = -1;
+    public byte mBrakeSwitch = 0;
 
     public static McuManager getInstance(Context c) {
         if (mThis == null && c != null) {
@@ -125,22 +134,11 @@ public class McuManager {
         startZlink();
     }
 
-    // some data store this
-    private byte mMute = 0;
-    private byte mVolume = -1;
-
-    // private byte mBrake = 0;
-    private byte mRearL = 0;
-    private byte mRearR = 0;
-    private byte mScreen0 = 0;
-    public byte mBrake = -1;
-    public byte mBrakeSwitch = 0;
-
     private void doMcuData(byte[] param) {
         ///if (!DebugMessage.updateText(param, true)) {
         ///}
-//        if(param[0] != ProtocolAk47.TYPE_RDS_RECEIVE)
-           MMLog.i(TAG, "DoMcuData:" + ByteUtils.BuffToHexStr(param));//Util.byteArrayToHex(param) +","+
+        ///if(param[0] != ProtocolAk47.TYPE_RDS_RECEIVE)
+        MMLog.i(TAG, "DoMcuData:" + ByteUtils.BuffToHexStr(param));//Util.byteArrayToHex(param) +","+
 
         if (GlobalDefinition.getTestingEx()) {
             Canbox canbox = CarUtil.getCanboxInstance();
@@ -305,7 +303,6 @@ public class McuManager {
                         }
                     }
                 case ProtocolAk47.TYPE_RDS_RECEIVE:
-
                     //				BroadcastUtil.sendByCarService(mContext,
                     //						AppConfig.PACKAGE_CAR_UI,
                     //						MyCmd.Cmd.MCU_RADIO_RECEIVE_DATA, param);
@@ -934,9 +931,7 @@ public class McuManager {
     }
 
     public int doKey(int key) {
-
         int ret = 0;
-
         if (mLockPower) {
             //if (key == MyCmd.Keycode.POWER) {
             Log.d(TAG, "doKeyPower lock");
@@ -1698,7 +1693,6 @@ public class McuManager {
 
     public void initModeKeyToast(boolean force) {
         if (mToastModeKey == null || force) {
-
             mToastModeKey = makeModeToast();
             // init mode key list
             mListModeKey.clear();

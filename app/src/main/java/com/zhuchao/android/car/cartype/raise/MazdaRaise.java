@@ -18,25 +18,12 @@ import java.util.Locale;
 
 public class MazdaRaise extends Canbox {
 
-    public MazdaRaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x6, KEY_SOURCE}, {0x5, KEY_MUTE}, {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x6, KEY_SOURCE}, {0x5, KEY_MUTE}, {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG},
 
             {0x10, MyCmd.Keycode.MULT_SPEECH_AND_BT},
 
     };
-
-    private final static byte[][] KEYS_PANNEL = {
-            {0x1, MyCmd.Keycode.NAVIGATION}, {0x3, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_MUTE},
+    private final static byte[][] KEYS_PANNEL = {{0x1, MyCmd.Keycode.NAVIGATION}, {0x3, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_MUTE},
 
             {0x5, MyCmd.Keycode.HOME}, {0x6, MyCmd.Keycode.BACK}, {0x7, MyCmd.Keycode.RADIO}, {0x8, MyCmd.Keycode.AUDIO},
 
@@ -46,6 +33,30 @@ public class MazdaRaise extends Canbox {
             {0xd, MyCmd.Keycode.KEY_TURN_D}, {0xe, MyCmd.Keycode.KEY_TURN_A}, {0xf, MyCmd.Keycode.PLAY_PAUSE},
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, KEY_FM}, {0x2, KEY_FM}, {0x3, KEY_FM}, {0x9, KEY_FM},
+
+            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
+
+            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
+
+            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
+
+            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},};
+    private final static int HIDE_RADAR = 0;
+    private final static int KEY_VOL = 1;
+    private final static int SHOW_VOLUME_STEP = 2;
+    private final static int TOUCH_MAX = 0x400;
+    byte[] mEQBuf = new byte[6];
+    private int mVolStep = 0;
+    private int mDoorStatus = 0;
+    private int widthScreen = 0;
+    private int heightScreen = 0;
+
+    public MazdaRaise() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+    }
 
     public void udpateLang() {
         int lang = -1;
@@ -159,46 +170,7 @@ public class MazdaRaise extends Canbox {
 
     public void setMediaSrc(int source, byte type, byte[] b) {
 
-    }
-
-    private void sendAVMKey() {
-        byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x2, 0x1};
-        sendDataToCanbox(data, data.length);
-    }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, KEY_FM}, {0x2, KEY_FM}, {0x3, KEY_FM}, {0x9, KEY_FM},
-
-            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
-
-            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
-
-            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
-
-            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},
-    };
-
-    private void checkHideRadar() {
-        mHandler.removeMessages(HIDE_RADAR);
-        mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
-    }
-
-    private final static int HIDE_RADAR = 0;
-    private final static int KEY_VOL = 1;
-    private final static int SHOW_VOLUME_STEP = 2;
-
-    private void doKeyStep(int key, int step) {
-        mHandler.removeMessages(SHOW_VOLUME_STEP);
-        doKey(key, 1);
-        doKey(key, 0);
-        --step;
-        if (step > 0) {
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
-        }
-    }
-
-    private int mVolStep = 0;
-    private final Handler mHandler = new Handler() {
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HIDE_RADAR:
@@ -219,140 +191,23 @@ public class MazdaRaise extends Canbox {
         }
     };
 
-    private byte getRadarData(byte i) {
-        byte data = 0;
-        switch (i) {
-            case 0:
-                data = 0;
-                break;
-            case 1:
-                data = 1;
-                break;
-            case 2:
-                data = 4;
-                break;
-            case 3:
-                data = 7;
-                break;
-            case 4:
-                data = 11;
-                break;
-        }
-        return data;
+    private void sendAVMKey() {
+        byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x2, 0x1};
+        sendDataToCanbox(data, data.length);
     }
 
-    private int mDoorStatus = 0;
+    private void checkHideRadar() {
+        mHandler.removeMessages(HIDE_RADAR);
+        mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
+    }
 
-    @Override
-    public void parseCanboxData(byte[] data, int len) {
-        // TODO Auto-generated method stub
-        switch (data[0]) {
-            case 0x21: {
-                parseWheelKey(data);
-            }
-
-            break;
-            case 0x22: {
-                parsePannelKey(data);
-            }
-
-            break;
-            case 0x28: {
-                int door = (data[2] & 0xfc);
-                door = (((door & 0x40) >> 6) | ((door & 0x80) >> 6) | ((door & 0x10) >> 2) | ((door & 0x20) >> 2) | ((door & 0x08) << 1) | ((door & 0x4) << 3));
-
-                if (mDoorStatus != door) {
-                    mDoorStatus = door;
-                    Handler handler = getHandler("CanService");
-                    if (null != handler) {
-                        handler.sendMessage(handler.obtainMessage(CANBOX_DOOR_STATUS, mDoorStatus, 0));
-
-                    }
-                }
-                sendCanboxInfo("com.canboxsetting", data);
-            }
-            break;
-
-            case 0x29: {
-                Handler handler = getHandler("Reverse");
-                if (null != handler) {
-                    int angle = ((data[3] & 0xff) | ((data[2]) << 8));
-                    angle = -(angle * 300 / 540);
-                    if (angle == 0) {
-                        angle = 5;
-                    }
-                    handler.sendMessage(handler.obtainMessage(CANBOX_STEER_ANGLE, angle, 10));
-                }
-            }
-            break;
-            case 0x23: {
-
-                mRadar[0] = getRadarData(data[2]);
-                mRadar[1] = getRadarData(data[3]);
-                mRadar[2] = getRadarData(data[4]);
-                mRadar[3] = getRadarData(data[5]);
-
-                boolean zero = Util.isZero(mRadar);
-                if (!zero) {
-                    RadarManager.start(mContext);
-                    checkHideRadar();
-                }
-                Handler handler = getHandler(RadarManager.TAG);
-                if (null != handler) {
-                    handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_BACK));
-                }
-            }
-            break;
-
-            case 0x24: {
-
-                mRadar[4] = getRadarData(data[2]);
-                mRadar[5] = getRadarData(data[3]);
-                mRadar[6] = getRadarData(data[4]);
-                mRadar[7] = getRadarData(data[5]);
-
-
-                boolean zero = Util.isZero(mRadar);
-                if (!zero) {
-                    RadarManager.start(mContext);
-                    checkHideRadar();
-                }
-                Handler handler = getHandler(RadarManager.TAG);
-                if (null != handler) {
-                    handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_BACK));
-                }
-            }
-            break;
-            case 0x7F: {
-                byte[] version = new byte[0x10];
-                Util.byteArrayCopy(version, data, 0, 2, version.length);
-
-                mVersion = (new String(version));
-                // version
-                break;
-            }
-            case 0x25:
-                sendTouch(((data[2] & 0xff) << 8) | (data[3] & 0xff), ((data[4] & 0xff) << 8) | (data[5] & 0xff));
-                break;
-            case 0x26:
-            case 0x40:
-            case 0x41:
-            case 0x50:
-            case 0x51:
-            case 0x74:
-            case 0x60:
-            case 0x61:
-            case 0x62:
-            case 0x71:
-            case 0x72:
-            case 0x73: {
-                sendCanboxInfo("com.canboxsetting", data);
-            }
-            break;
-            case 0x70:
-                returnEQData(data);
-                break;
-
+    private void doKeyStep(int key, int step) {
+        mHandler.removeMessages(SHOW_VOLUME_STEP);
+        doKey(key, 1);
+        doKey(key, 0);
+        --step;
+        if (step > 0) {
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
         }
     }
 
@@ -482,6 +337,141 @@ public class MazdaRaise extends Canbox {
     // sendDataToCanbox(buf, buf.length);
     // }
 
+    private byte getRadarData(byte i) {
+        byte data = 0;
+        switch (i) {
+            case 0:
+                data = 0;
+                break;
+            case 1:
+                data = 1;
+                break;
+            case 2:
+                data = 4;
+                break;
+            case 3:
+                data = 7;
+                break;
+            case 4:
+                data = 11;
+                break;
+        }
+        return data;
+    }
+
+    @Override
+    public void parseCanboxData(byte[] data, int len) {
+        // TODO Auto-generated method stub
+        switch (data[0]) {
+            case 0x21: {
+                parseWheelKey(data);
+            }
+
+            break;
+            case 0x22: {
+                parsePannelKey(data);
+            }
+
+            break;
+            case 0x28: {
+                int door = (data[2] & 0xfc);
+                door = (((door & 0x40) >> 6) | ((door & 0x80) >> 6) | ((door & 0x10) >> 2) | ((door & 0x20) >> 2) | ((door & 0x08) << 1) | ((door & 0x4) << 3));
+
+                if (mDoorStatus != door) {
+                    mDoorStatus = door;
+                    Handler handler = getHandler("CanService");
+                    if (null != handler) {
+                        handler.sendMessage(handler.obtainMessage(CANBOX_DOOR_STATUS, mDoorStatus, 0));
+
+                    }
+                }
+                sendCanboxInfo("com.canboxsetting", data);
+            }
+            break;
+
+            case 0x29: {
+                Handler handler = getHandler("Reverse");
+                if (null != handler) {
+                    int angle = ((data[3] & 0xff) | ((data[2]) << 8));
+                    angle = -(angle * 300 / 540);
+                    if (angle == 0) {
+                        angle = 5;
+                    }
+                    handler.sendMessage(handler.obtainMessage(CANBOX_STEER_ANGLE, angle, 10));
+                }
+            }
+            break;
+            case 0x23: {
+
+                mRadar[0] = getRadarData(data[2]);
+                mRadar[1] = getRadarData(data[3]);
+                mRadar[2] = getRadarData(data[4]);
+                mRadar[3] = getRadarData(data[5]);
+
+                boolean zero = Util.isZero(mRadar);
+                if (!zero) {
+                    RadarManager.start(mContext);
+                    checkHideRadar();
+                }
+                Handler handler = getHandler(RadarManager.TAG);
+                if (null != handler) {
+                    handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_BACK));
+                }
+            }
+            break;
+
+            case 0x24: {
+
+                mRadar[4] = getRadarData(data[2]);
+                mRadar[5] = getRadarData(data[3]);
+                mRadar[6] = getRadarData(data[4]);
+                mRadar[7] = getRadarData(data[5]);
+
+
+                boolean zero = Util.isZero(mRadar);
+                if (!zero) {
+                    RadarManager.start(mContext);
+                    checkHideRadar();
+                }
+                Handler handler = getHandler(RadarManager.TAG);
+                if (null != handler) {
+                    handler.sendMessage(handler.obtainMessage(CANBOX_RADAR_BACK));
+                }
+            }
+            break;
+            case 0x7F: {
+                byte[] version = new byte[0x10];
+                Util.byteArrayCopy(version, data, 0, 2, version.length);
+
+                mVersion = (new String(version));
+                // version
+                break;
+            }
+            case 0x25:
+                sendTouch(((data[2] & 0xff) << 8) | (data[3] & 0xff), ((data[4] & 0xff) << 8) | (data[5] & 0xff));
+                break;
+            case 0x26:
+            case 0x40:
+            case 0x41:
+            case 0x50:
+            case 0x51:
+            case 0x74:
+            case 0x60:
+            case 0x61:
+            case 0x62:
+            case 0x71:
+            case 0x72:
+            case 0x73: {
+                sendCanboxInfo("com.canboxsetting", data);
+            }
+            break;
+            case 0x70:
+                returnEQData(data);
+                break;
+
+        }
+    }
+
     protected void doKey(int value, int status) { // value 0 -> key up
 
         // Log.d("Mazda3", "doKey:" + value);
@@ -541,10 +531,6 @@ public class MazdaRaise extends Canbox {
         }
 
     }
-
-    private final static int TOUCH_MAX = 0x400;
-    private int widthScreen = 0;
-    private int heightScreen = 0;
 
     private void sendTouch(int x, int y) {
         if (mContext != null) {
@@ -615,9 +601,6 @@ public class MazdaRaise extends Canbox {
         return (byte) step;
     }
 
-
-    byte[] mEQBuf = new byte[6];
-
     private void returnEQData(byte[] buf) {
         //		byte[] data = new byte[5];
         mEQBuf[0] = buf[3];
@@ -631,4 +614,8 @@ public class MazdaRaise extends Canbox {
     public int getUpdateTime() {
         return 60000;
     }
+
+
+
+
 }

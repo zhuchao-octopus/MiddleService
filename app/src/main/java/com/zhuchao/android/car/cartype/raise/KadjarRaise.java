@@ -21,22 +21,7 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class KadjarRaise extends Canbox {
 
-    public KadjarRaise() {
-
-        buildCmdRepeatSendCarType(getCarTypeCmd());
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-        mIdKey = 0x20;
-        MAP_KEYS = KEYS_WHEEL;
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, MyCmd.Keycode.ROLL_PREV}, {0x4, MyCmd.Keycode.ROLL_NEXT},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, MyCmd.Keycode.ROLL_PREV}, {0x4, MyCmd.Keycode.ROLL_NEXT},
 
             {0x6, KEY_MUTE}, {0x7, KEY_SOURCE},
 
@@ -45,6 +30,34 @@ public class KadjarRaise extends Canbox {
             {0x12, KEY_MIC}, {0x15, KEY_BACK}, {0x16, KEY_PLAYPAUSE},
 
     };
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    public boolean isAddView = false;
+    byte[] data;
+    private int mOutTemp = -1;
+    private int mDoorStatus = 0;
+    private WindowManager mWindowManager;
+    private WindowManager.LayoutParams mLayoutParams;
+    private View mView;
+    private int mSource = MyCmd.SOURCE_NONE;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+    public KadjarRaise() {
+
+        buildCmdRepeatSendCarType(getCarTypeCmd());
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+        mIdKey = 0x20;
+        MAP_KEYS = KEYS_WHEEL;
+    }
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xee, 0x02, 0x10, 0};
@@ -69,7 +82,6 @@ public class KadjarRaise extends Canbox {
         }
         return cmd;
     }
-
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -295,11 +307,6 @@ public class KadjarRaise extends Canbox {
         // }
     }
 
-    private int mOutTemp = -1;
-    private int mDoorStatus = 0;
-
-    byte[] data;
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -325,9 +332,7 @@ public class KadjarRaise extends Canbox {
                 break;
         }
 
-        data = new byte[]{
-                (byte) 0xc0, 0x8, s, (byte) ((total & 0xFF00) >> 8), (byte) (total & 0xFF), (byte) ((play & 0xFF00) >> 8), (byte) ((play) & 0xFF), h, min, sec
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, s, (byte) ((total & 0xFF00) >> 8), (byte) (total & 0xFF), (byte) ((play & 0xFF00) >> 8), (byte) ((play) & 0xFF), h, min, sec};
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
 
@@ -343,11 +348,6 @@ public class KadjarRaise extends Canbox {
         data = new byte[]{(byte) 0xc0, 0x5, 0x1, b[0], b[1], b[2], 0};
         sendDataToCanbox(data, data.length);
     }
-
-    private WindowManager mWindowManager;
-    private WindowManager.LayoutParams mLayoutParams;
-    private View mView;
-    public boolean isAddView = false;
 
     private void showSOS(int show) {
 
@@ -381,8 +381,6 @@ public class KadjarRaise extends Canbox {
         }
     }
 
-    private int mSource = MyCmd.SOURCE_NONE;
-
     public void setMediaSrc(int source) {
         byte s = 0;
         switch (source) {
@@ -411,9 +409,7 @@ public class KadjarRaise extends Canbox {
             mSource = source;
             if (source == MyCmd.SOURCE_BT) {
 
-                data = new byte[]{
-                        (byte) 0xc0, 0x8, s, 0, 0, 0, 0, (byte) 0xff, (byte) 0xff, (byte) 0xff
-                };
+                data = new byte[]{(byte) 0xc0, 0x8, s, 0, 0, 0, 0, (byte) 0xff, (byte) 0xff, (byte) 0xff};
             } else {
 
                 data = new byte[]{(byte) 0xc0, 0x8, s, 0, 0, 0, 0, 0, 0, 0};
@@ -426,18 +422,6 @@ public class KadjarRaise extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 

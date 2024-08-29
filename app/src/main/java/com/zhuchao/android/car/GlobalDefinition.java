@@ -24,54 +24,50 @@ import java.io.File;
 public class GlobalDefinition {
 
     public static final String TAG = "GlobalConstant";
-
-    public static long mSystemBootStartTime = 0;
-    public static boolean mIsTesting = false;
-    private static boolean mIsTestingEx = false;
-    public static boolean mTopIsNeedCanboxInfo = false;
-    public static boolean mTopIsNoNeedBrakeControl = false;
     public static final String BRIGHTNESS_SCREEN1 = "/sys/class/backlight/ak-backlight/aux_bkl_lvl";//0~20 ?
-
-    public static boolean mIsUSBDvd = false; //
     public static final String BRIGHTNESS_CVBS_701 = "/sys/class/misc/mst701/device/b";  //0~244
     public static final String BRIGHTNESS_CVBS_7181 = "/sys/devices/virtual/ak/source/cvbs_brightness";  //0~244
-
-    public static String BRIGHTNESS_CVBS = BRIGHTNESS_CVBS_701;  //1~244
     public static final String BRIGHTNESS_CONTRAST = "/sys/class/ak/source/cvbs_contrast";  //1~244
-
-    public static int mMediaInfoToastBackground = 0;
-
     public static final int CVBS_DEFALUT_BRIGHTNESS_701 = 140;
     public static final int CVBS_DEFALUT_BRIGHTNESS_7181 = 128;
-
-    public static int CVBS_DEFALUT_BRIGHTNESS = CVBS_DEFALUT_BRIGHTNESS_701;
     public static final int CVBS_DEFALUT_CONTRAST = 128;
-
-    @SuppressLint("StaticFieldLeak")
-    private static Context mContext;
-
-    private static int mScreen1Source = MyCmd.SOURCE_NONE;
-
+    public static final String SCREEN_8600_MAIN = "/sys/class/misc/ak-lcd/device/main_area";
+    public static final String SCREEN_8600_ICON = "/sys/class/misc/ak-lcd/device/icon";
+    public static final String SCREEN_8600_ANIM = "/sys/class/misc/ak-lcd/device/anim";
+    public static final int SPEED_TO_QUIT_FRONT_CAMERA = 20;
+    private static final String DVD_CHECK = "/sys/module/ak_dvd/parameters/alive";
+    public static long mSystemBootStartTime = 0;
+    public static boolean mIsTesting = false;
+    public static boolean mTopIsNeedCanboxInfo = false;
+    public static boolean mTopIsNoNeedBrakeControl = false;
+    public static boolean mIsUSBDvd = false; //
+    public static String BRIGHTNESS_CVBS = BRIGHTNESS_CVBS_701;  //1~244
+    public static int mMediaInfoToastBackground = 0;
+    public static int CVBS_DEFALUT_BRIGHTNESS = CVBS_DEFALUT_BRIGHTNESS_701;
     public static int mPannelKeyType = 0;
-
     public static boolean mRudder = false;
-
     public static int mReverseBrightness = 0;
     public static int mReverseContrast = 0;
     public static int mTouchKeyType = 0;
-
     public static int mMcuBatteryCell = 0;
-
     public static String mSystemUI = null;
     public static int mSettingDoorVoice = 0;
     public static int mSettingRadarFrontCamera = 0;
     public static int mSettingGPSBrake = 0;
     public static float mGPSSpeed = -1;
-
-
     public static int mModeKeyDelayTime = 2000;
-
     public static int mScreenSaverStyle = 0;
+    //for 8600
+    public static boolean mIs8600 = false;
+    public static int mAutoFrontCameraStatus = 0;
+    public static int mPreGPSBrake = 0;
+    private static boolean mIsTestingEx = false;
+
+    ////for 7.1
+    @SuppressLint("StaticFieldLeak")
+    private static Context mContext;
+    private static int mScreen1Source = MyCmd.SOURCE_NONE;
+    private static WakeLock mWakeLock;
 
     public static Context getContext() {
         return mContext;
@@ -119,12 +115,12 @@ public class GlobalDefinition {
         mSettingRadarFrontCamera = SettingProperties.getIntProperty(c, SettingProperties.CANBOX_FRONT_RADAR_OPEN_CAMERA);
     }
 
-    public static void setScreen1Source(int i) {
-        mScreen1Source = i;
-    }
-
     public static int getScreen1Source() {
         return mScreen1Source;
+    }
+
+    public static void setScreen1Source(int i) {
+        mScreen1Source = i;
     }
 
     // no screen2 now by allen
@@ -134,8 +130,6 @@ public class GlobalDefinition {
         //		Display[] display = displayManager.getDisplays();
         return 1;//display.length;
     }
-
-    ////for 7.1
 
     public static void sendByCarServiceToSystemUI(Context context, String packageName, int cmd) {
         Intent it = new Intent(MyCmd.BROADCAST_CAR_SERVICE_SEND_SYSTEM_UI);
@@ -193,9 +187,6 @@ public class GlobalDefinition {
         }
     }
 
-
-    private static WakeLock mWakeLock;
-
     @SuppressLint("InvalidWakeLockTag")
     public static void wakeLock() {
         if (mContext != null) {
@@ -226,12 +217,6 @@ public class GlobalDefinition {
             mWakeLockOne.release();
         }
     }
-
-    //for 8600
-    public static boolean mIs8600 = false;
-    public static final String SCREEN_8600_MAIN = "/sys/class/misc/ak-lcd/device/main_area";
-    public static final String SCREEN_8600_ICON = "/sys/class/misc/ak-lcd/device/icon";
-    public static final String SCREEN_8600_ANIM = "/sys/class/misc/ak-lcd/device/anim";
 
     public static void setSmallLcd(String s) {
         Log.d(TAG, mIs8600 + "setSmallLcd:" + s);
@@ -267,8 +252,6 @@ public class GlobalDefinition {
         String top = AppConfig.getTopActivity();
         return top != null && top.contains("com.car.ui");
     }
-
-    private static final String DVD_CHECK = "/sys/module/ak_dvd/parameters/alive";
 
     public static void makeSureDVDExist(boolean exist) {
         //		Log.d(TAG, "makeSureDVDExist:"+exist+":"+GlobalDef.mIsUSBDvd+":"+AppConfig.isHidePackage("com.zhuchao.android.car.dvd.DVDPlayer"));
@@ -339,9 +322,6 @@ public class GlobalDefinition {
         }
     }
 
-    public static int mAutoFrontCameraStatus = 0;
-    public static final int SPEED_TO_QUIT_FRONT_CAMERA = 20;
-
     public static void autoCloseFrontByGpsSpeed() {
         if (mAutoFrontCameraStatus == 1 && AppConfig.CAR_UI_FRONT_CAMERA.equals(AppConfig.getTopActivity())) {
             Intent it = new Intent(Intent.ACTION_VIEW);
@@ -366,8 +346,6 @@ public class GlobalDefinition {
         }
     }
 
-    public static int mPreGPSBrake = 0;
-
     public static void beep(int i) {
         Log.d("aac", "beep=" + i);
         Util.setFileValue("/sys/class/ak/source/beep", i);
@@ -379,12 +357,11 @@ public class GlobalDefinition {
         Util.sudoExec(s);
     }
 
+    public static boolean getTestingEx() {
+        return mIsTestingEx;
+    }
 
     public static void setTestingEx(boolean b) {
         mIsTestingEx = b;
-    }
-
-    public static boolean getTestingEx() {
-        return mIsTestingEx;
     }
 }

@@ -16,13 +16,11 @@ import com.zhuchao.android.car.manager.OSProManager;
 
 public class RadarManager {
     public final static String TAG = "RadarManager";
+    public static boolean isShow = false;
+    public static boolean isAddView = false;
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams mLayoutParams;
     private static View mView;
-
-    public static boolean isShow = false;
-    public static boolean isAddView = false;
-
     private static RadarUI mRadarUI;
 
     private static Context mContext;

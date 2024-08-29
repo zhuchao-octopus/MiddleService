@@ -12,13 +12,14 @@ import java.io.FileInputStream;
 
 public class UpdateRaise extends Canbox {
 
+    UpdateDialog mUpdateDialog;
+    Toast mToast;
+    private byte[] buf;
+    private int mSendLen = -1;
+
     public UpdateRaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
     }
 
     @Override
@@ -28,9 +29,7 @@ public class UpdateRaise extends Canbox {
         mUpdateDialog = new UpdateDialog(mContext);
         mUpdateDialog.show();
         Util.doSleep(200);
-        byte[] data = new byte[]{
-                (byte) 0xD9, (byte) 0x05, (byte) 0x01, (byte) 0x5E, (byte) 0x6A, (byte) 0xEA, (byte) 0x87
-        };
+        byte[] data = new byte[]{(byte) 0xD9, (byte) 0x05, (byte) 0x01, (byte) 0x5E, (byte) 0x6A, (byte) 0xEA, (byte) 0x87};
         mSendLen = -1;
         sendDataToCanbox(data, data.length);
 
@@ -40,10 +39,6 @@ public class UpdateRaise extends Canbox {
     public int getReturnType() {
         return 0;
     }
-
-    private byte[] buf;
-    private int mSendLen = -1;
-    UpdateDialog mUpdateDialog;
 
     private void startUpdate() {
         if (CarUtil.mUpdateFile != null) {
@@ -98,8 +93,6 @@ public class UpdateRaise extends Canbox {
 
         }
     }
-
-    Toast mToast;
 
     private void continuUpdate(int len, int pos) {
         try {

@@ -41,53 +41,30 @@ import java.io.IOException;
  */
 public class CameraHolder {
     private static final String TAG = "CameraHolder";
+    private static final int RELEASE_CAMERA = 1;
+    // Use a singleton.
+    private static CameraHolder sHolder;
+    private final Handler mHandler;
     private android.hardware.Camera mCameraDevice;
     private long mKeepBeforeTime = 0;  // Keep the Camera before this time.
-    private final Handler mHandler;
     private int mUsers = 0;  // number of open() - number of release()
-
     // We store the camera parameters when we actually open the device,
     // so we can restore them in the subsequent open() requests by the user.
     // This prevents the parameters set by the Camera activity used by
     // the VideoCamera activity inadvertently.
     private Parameters mParameters;
 
-    // Use a singleton.
-    private static CameraHolder sHolder;
+    private CameraHolder() {
+        HandlerThread ht = new HandlerThread("CameraHolder");
+        ht.start();
+        mHandler = new MyHandler(ht.getLooper());
+    }
 
     public static synchronized CameraHolder instance() {
         if (sHolder == null) {
             sHolder = new CameraHolder();
         }
         return sHolder;
-    }
-
-    private static final int RELEASE_CAMERA = 1;
-
-    private class MyHandler extends Handler {
-        MyHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == RELEASE_CAMERA) {
-                synchronized (CameraHolder.this) {
-                    // In 'CameraHolder.open', the 'RELEASE_CAMERA' message
-                    // will be removed if it is found in the queue. However,
-                    // there is a chance that this message has been handled
-                    // before being removed. So, we need to add a check
-                    // here:
-                    if (CameraHolder.this.mUsers == 0) releaseCamera();
-                }
-            }
-        }
-    }
-
-    private CameraHolder() {
-        HandlerThread ht = new HandlerThread("CameraHolder");
-        ht.start();
-        mHandler = new MyHandler(ht.getLooper());
     }
 
     public synchronized android.hardware.Camera open() throws Exception {
@@ -167,5 +144,25 @@ public class CameraHolder {
         Assert(mUsers == 1 || mUsers == 0);
         // Keep the camera instance for 3 seconds.
         mKeepBeforeTime = System.currentTimeMillis() + 3000;
+    }
+
+    private class MyHandler extends Handler {
+        MyHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == RELEASE_CAMERA) {
+                synchronized (CameraHolder.this) {
+                    // In 'CameraHolder.open', the 'RELEASE_CAMERA' message
+                    // will be removed if it is found in the queue. However,
+                    // there is a chance that this message has been handled
+                    // before being removed. So, we need to add a check
+                    // here:
+                    if (CameraHolder.this.mUsers == 0) releaseCamera();
+                }
+            }
+        }
     }
 }

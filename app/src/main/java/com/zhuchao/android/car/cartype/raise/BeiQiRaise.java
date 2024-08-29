@@ -12,6 +12,18 @@ import java.util.Date;
 
 public class BeiQiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x39, 0x27};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x7, KEY_SOURCE}, {0x8, AK_KEYPAD_VOLUME_A}, {0x9, AK_KEYPAD_VOLUME_D}, {0xa, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x11, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x16, MyCmd.Keycode.MUTE}, {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.BACK}, {0x19, MyCmd.Keycode.NAVIGATION}, {0x20, MyCmd.Keycode.BACKLIGHT_OFF}, {0x21, MyCmd.Keycode.AUDIO}, {0x22, MyCmd.Keycode.SPEECH}, {0x23, MyCmd.Keycode.PLAY_PAUSE},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.NAVIGATION}, {0x6, MyCmd.Keycode.BACK},
+
+            {0x13, MyCmd.Keycode.PLAY_PAUSE}, {0x14, MyCmd.Keycode.BT}, {0x15, MyCmd.Keycode.AUDIO}, {0x16, MyCmd.Keycode.RADIO}, {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.SETUP}, {0x19, MyCmd.Keycode.MULT_MUTE_AND_POWER},
+
+
+            {0xa, KEY_NEXTSONG}, {0x9, KEY_PREVIOUSSONG}, {0xc, KEY_NEXTSONG}, {0xb, KEY_PREVIOUSSONG}, {0xe, KEY_NEXTSONG}, {0xd, KEY_PREVIOUSSONG}, {0x10, KEY_NEXTSONG}, {0xf, KEY_PREVIOUSSONG}, {0x12, KEY_NEXTSONG}, {0x11, KEY_PREVIOUSSONG},};
+    byte[] mData;
+    String mName = null;
+
+
     public BeiQiRaise() {
         mIdAC = 0x21;
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -44,27 +56,6 @@ public class BeiQiRaise extends Canbox {
         }
         return cmd;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x39, 0x27};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x7, KEY_SOURCE}, {0x8, AK_KEYPAD_VOLUME_A},
-            {0x9, AK_KEYPAD_VOLUME_D}, {0xa, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x11, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x16, MyCmd.Keycode.MUTE},
-            {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.BACK}, {0x19, MyCmd.Keycode.NAVIGATION}, {0x20, MyCmd.Keycode.BACKLIGHT_OFF}, {0x21, MyCmd.Keycode.AUDIO}, {0x22, MyCmd.Keycode.SPEECH},
-            {0x23, MyCmd.Keycode.PLAY_PAUSE},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.NAVIGATION}, {0x6, MyCmd.Keycode.BACK},
-
-            {0x13, MyCmd.Keycode.PLAY_PAUSE}, {0x14, MyCmd.Keycode.BT}, {0x15, MyCmd.Keycode.AUDIO}, {0x16, MyCmd.Keycode.RADIO}, {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.SETUP},
-            {0x19, MyCmd.Keycode.MULT_MUTE_AND_POWER},
-
-
-            {0xa, KEY_NEXTSONG}, {0x9, KEY_PREVIOUSSONG}, {0xc, KEY_NEXTSONG}, {0xb, KEY_PREVIOUSSONG}, {0xe, KEY_NEXTSONG}, {0xd, KEY_PREVIOUSSONG}, {0x10, KEY_NEXTSONG}, {0xf, KEY_PREVIOUSSONG},
-            {0x12, KEY_NEXTSONG}, {0x11, KEY_PREVIOUSSONG},
-    };
-
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -178,8 +169,6 @@ public class BeiQiRaise extends Canbox {
         super.parseACInfo(airData);
     }
 
-    byte[] mData;
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
     }
@@ -188,9 +177,7 @@ public class BeiQiRaise extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 
@@ -268,8 +255,6 @@ public class BeiQiRaise extends Canbox {
             Log.d("Nissan2013Simple", "sendId3" + e);
         }
     }
-
-    String mName = null;
 
     public void setSongName(String s) {
         sendId3((byte) 0x70, s);

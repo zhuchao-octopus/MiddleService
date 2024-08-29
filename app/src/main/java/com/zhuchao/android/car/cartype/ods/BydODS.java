@@ -9,25 +9,8 @@ import java.util.Calendar;
 
 public class BydODS extends Canbox {
 
-    public BydODS() {
-
-        //		buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
-        buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
-        buildCmdRadarFront((byte) 0x1d, (byte) 0x0, (byte) 0x4);
-        buildCmdRadarBack((byte) 0x1e, (byte) 0x0, (byte) 0x4);
-        buildCmdAngle((byte) 0x29, (byte) 0x0, 0x1e77);
-        buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
-        //		buildCmdOutTemp((byte) 0x41, (byte) 0x10);
-        //		buildCmdVersion((byte) 0x30, (byte) 0x0);
-        mIdAC = 0x28;
-        mIdKey = 0x20;
-        MAP_KEYS = KEYS_WHEEL;
-        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
-    }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x7, 0x14, 0x17, 0x19, 0x26, 0x27, 0x43, 0x32, 0x33, 0x34, 0x35
-    };
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x7, 0x14, 0x17, 0x19, 0x26, 0x27, 0x43, 0x32, 0x33, 0x34, 0x35};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x4, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.KEY_SEEK_PREV}, {0x8, MyCmd.Keycode.KEY_SEEK_PREV}, {0xa, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xb, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xc, MyCmd.Keycode.BT}, {0xd, MyCmd.Keycode.BT}, {0xe, MyCmd.Keycode.EQ}, {0xf, MyCmd.Keycode.EQ}, {0x10, MyCmd.Keycode.MODLE}, {0x11, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.SPEECH}, {0x14, MyCmd.Keycode.SPEECH}, {0x15, MyCmd.Keycode.HOME}, {0x16, MyCmd.Keycode.HOME}, {0x17, MyCmd.Keycode.BACK}, {0x18, MyCmd.Keycode.BACK}, {0x19, MyCmd.Keycode.MUTE}, {0x1a, MyCmd.Keycode.POWER}, {0x1d, MyCmd.Keycode.BT_HANG}, {0x1e, MyCmd.Keycode.BT_HANG}, {0x1f, MyCmd.Keycode.KEY_AIR_CONTROL},};
 
     //	private byte[] getCarTypeCmd() {
     //		byte[] cmd = null;
@@ -63,13 +46,21 @@ public class BydODS extends Canbox {
     //		return cmd;
     //	}
 
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x4, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.KEY_SEEK_PREV}, {0x8, MyCmd.Keycode.KEY_SEEK_PREV}, {0xa, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0xb, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xc, MyCmd.Keycode.BT}, {0xd, MyCmd.Keycode.BT}, {0xe, MyCmd.Keycode.EQ}, {0xf, MyCmd.Keycode.EQ}, {0x10, MyCmd.Keycode.MODLE},
-            {0x11, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.SPEECH}, {0x14, MyCmd.Keycode.SPEECH}, {0x15, MyCmd.Keycode.HOME}, {0x16, MyCmd.Keycode.HOME}, {0x17, MyCmd.Keycode.BACK},
-            {0x18, MyCmd.Keycode.BACK}, {0x19, MyCmd.Keycode.MUTE}, {0x1a, MyCmd.Keycode.POWER}, {0x1d, MyCmd.Keycode.BT_HANG}, {0x1e, MyCmd.Keycode.BT_HANG}, {0x1f, MyCmd.Keycode.KEY_AIR_CONTROL},
-    };
+    public BydODS() {
 
+        //		buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
+        buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
+        buildCmdRadarFront((byte) 0x1d, (byte) 0x0, (byte) 0x4);
+        buildCmdRadarBack((byte) 0x1e, (byte) 0x0, (byte) 0x4);
+        buildCmdAngle((byte) 0x29, (byte) 0x0, 0x1e77);
+        buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
+        //		buildCmdOutTemp((byte) 0x41, (byte) 0x10);
+        //		buildCmdVersion((byte) 0x30, (byte) 0x0);
+        mIdAC = 0x28;
+        mIdKey = 0x20;
+        MAP_KEYS = KEYS_WHEEL;
+        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
+    }
 
     @Override
     public int getACTemp(byte data) {

@@ -13,6 +13,35 @@ import java.util.Locale;
 
 public class Ford005Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x32, 0x13, 0x34, 0x67, (byte) 0xE8, 0x68, (byte) 0x85, 0x61, (byte) 0xA6};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+
+            {0x6, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x5, MyCmd.Keycode.MULT_PREV_AND_RECEIVE},
+
+
+            {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS},
+
+
+            {0xa, MyCmd.Keycode.BT_DIAL}, {0xb, MyCmd.Keycode.BT_HANG}, {0xc, MyCmd.Keycode.MODLE},
+
+            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
+
+            {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.AUDIO},
+
+            {0x28, MyCmd.Keycode.SPEECH}, {0x30, MyCmd.Keycode.SETUP}, {0x31, MyCmd.Keycode.HOME},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x11, MyCmd.Keycode.EJECT},
+
+
+            {0x2b, MyCmd.Keycode.HOME}, {0x39, MyCmd.Keycode.POWER}, {0x4b, MyCmd.Keycode.RADIO},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
+
+    };
+    private final byte[] mLcdInfo = new byte[16];
+    private final boolean mShowVolume = false;
+
     public Ford005Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -41,45 +70,11 @@ public class Ford005Hiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x32, 0x13, 0x34, 0x67, (byte) 0xE8, 0x68, (byte) 0x85, 0x61, (byte) 0xA6};
-
     @Override
     public int getAngleValue2(byte[] data) {
         int angle = (short) (((data[8] & 0xff) << 8) | (data[9] & 0xff));
         return -angle;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
-
-            {0x6, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x5, MyCmd.Keycode.MULT_PREV_AND_RECEIVE},
-
-
-            {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS},
-
-
-            {0xa, MyCmd.Keycode.BT_DIAL}, {0xb, MyCmd.Keycode.BT_HANG}, {0xc, MyCmd.Keycode.MODLE},
-
-            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
-
-            {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.AUDIO},
-
-            {0x28, MyCmd.Keycode.SPEECH}, {0x30, MyCmd.Keycode.SETUP}, {0x31, MyCmd.Keycode.HOME},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x11, MyCmd.Keycode.EJECT},
-
-
-            {0x2b, MyCmd.Keycode.HOME}, {0x39, MyCmd.Keycode.POWER}, {0x4b, MyCmd.Keycode.RADIO},
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-
-    };
 
     public void parseCanboxData(byte[] data, int len) {
         if (data[0] == 0x22) {
@@ -191,9 +186,6 @@ public class Ford005Hiworld extends Canbox {
         super.parseACInfo(airData);
     }
 
-
-    private final byte[] mLcdInfo = new byte[16];
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         switch (source) {
@@ -232,8 +224,6 @@ public class Ford005Hiworld extends Canbox {
             sendDataToCanbox(mLcdInfo, mLcdInfo.length);
         }
     }
-
-    private final boolean mShowVolume = false;
 
     public void setMediaSrc(int source) {// default is simple box
         String s = "";

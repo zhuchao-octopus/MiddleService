@@ -10,13 +10,19 @@ import com.zhuchao.android.car.canbox.RadarManager;
 
 public class CarX80 extends Canbox {
 
+    private final static int HIDE_RADAR = 0;
+    private final byte mDoorStatus = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+        }
+    };
+
     public CarX80() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x1, 0x1, 0x2, 0x0
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x1, 0x1, 0x2, 0x0});
 
     }
 
@@ -174,8 +180,6 @@ public class CarX80 extends Canbox {
         }
     }
 
-    private final byte mDoorStatus = 0;
-
     //	public void setReverseRadaVol(byte param) {
     //		byte[] data = new byte[] { (byte) 0xc6, 0x2, 0x0, param };
     //		sendDataToCanbox(data, data.length);
@@ -205,15 +209,6 @@ public class CarX80 extends Canbox {
 
         // }
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-        }
-    };
 
     public void setMediaSrc(int source) {
     }

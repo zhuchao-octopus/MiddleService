@@ -12,6 +12,16 @@ import java.util.Date;
 
 public class TeanaXinChi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0xb, 0x13, 0x30, 0x33};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x4, MyCmd.Keycode.KEY_SEEK_PREV}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.BT_DIAL}, {0x7, MyCmd.Keycode.BT_HANG},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.NUMBER1}, {0x2, MyCmd.Keycode.NUMBER2}, {0x3, MyCmd.Keycode.NUMBER3}, {0x4, MyCmd.Keycode.NUMBER4}, {0x5, MyCmd.Keycode.NUMBER5}, {0x6, MyCmd.Keycode.NUMBER6}, {0x7, MyCmd.Keycode.RADIO}, {0x8, MyCmd.Keycode.DVD}, {0x9, MyCmd.Keycode.AUDIO}, {0xa, MyCmd.Keycode.AS}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PLAY_PAUSE}, {0xe, MyCmd.Keycode.POWER}, {0xf, MyCmd.Keycode.AUDIO}, {0x10, MyCmd.Keycode.EJECT}, {0x11, MyCmd.Keycode.DVD}, {0x12, MyCmd.Keycode.HOME}, {0x20, MyCmd.Keycode.PLAY_PAUSE}, {0x21, MyCmd.Keycode.PREVIOUS}, {0x22, MyCmd.Keycode.NEXT}, {0x23, MyCmd.Keycode.PREVIOUS}, {0x24, MyCmd.Keycode.NEXT}, {0x25, MyCmd.Keycode.NAVIGATION}, {0x26, MyCmd.Keycode.NAVIGATION}, {0x27, MyCmd.Keycode.SETUP}, {0x28, MyCmd.Keycode.BACKLIGHT_OFF}, {0x29, MyCmd.Keycode.BRIGHTNESS}, {0x2a, MyCmd.Keycode.BRIGHTNESS}, {0x2b, MyCmd.Keycode.KEY_SEEK_PREV}, {0x2c, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x2d, MyCmd.Keycode.KEY_TURN_A}, {0x2e, MyCmd.Keycode.KEY_TURN_D}, {0x30, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x31, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x32, MyCmd.Keycode.ROLL_NEXT}, {0x33, MyCmd.Keycode.ROLL_PREV},
+
+    };
+    private final static int SET_EQ_STEP = 1;
+    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
+
     public TeanaXinChi() {
         buildCmdDoor((byte) 0x4, (byte) 0x2, (byte) 0xfc, (byte) 0x03);
         //		buildCmdRadarFront((byte) 0xc, (byte) 0x0, (byte) 0x4, (byte) 3);
@@ -27,25 +37,6 @@ public class TeanaXinChi extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0xb, 0x13, 0x30, 0x33};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x4, MyCmd.Keycode.KEY_SEEK_PREV}, {0x5, MyCmd.Keycode.MODLE},
-            {0x6, MyCmd.Keycode.BT_DIAL}, {0x7, MyCmd.Keycode.BT_HANG},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.NUMBER1}, {0x2, MyCmd.Keycode.NUMBER2}, {0x3, MyCmd.Keycode.NUMBER3}, {0x4, MyCmd.Keycode.NUMBER4}, {0x5, MyCmd.Keycode.NUMBER5}, {0x6, MyCmd.Keycode.NUMBER6},
-            {0x7, MyCmd.Keycode.RADIO}, {0x8, MyCmd.Keycode.DVD}, {0x9, MyCmd.Keycode.AUDIO}, {0xa, MyCmd.Keycode.AS}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT},
-            {0xd, MyCmd.Keycode.PLAY_PAUSE}, {0xe, MyCmd.Keycode.POWER}, {0xf, MyCmd.Keycode.AUDIO}, {0x10, MyCmd.Keycode.EJECT}, {0x11, MyCmd.Keycode.DVD}, {0x12, MyCmd.Keycode.HOME},
-            {0x20, MyCmd.Keycode.PLAY_PAUSE}, {0x21, MyCmd.Keycode.PREVIOUS}, {0x22, MyCmd.Keycode.NEXT}, {0x23, MyCmd.Keycode.PREVIOUS}, {0x24, MyCmd.Keycode.NEXT}, {0x25, MyCmd.Keycode.NAVIGATION},
-            {0x26, MyCmd.Keycode.NAVIGATION}, {0x27, MyCmd.Keycode.SETUP}, {0x28, MyCmd.Keycode.BACKLIGHT_OFF}, {0x29, MyCmd.Keycode.BRIGHTNESS}, {0x2a, MyCmd.Keycode.BRIGHTNESS},
-            {0x2b, MyCmd.Keycode.KEY_SEEK_PREV}, {0x2c, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x2d, MyCmd.Keycode.KEY_TURN_A}, {0x2e, MyCmd.Keycode.KEY_TURN_D}, {0x30, MyCmd.Keycode.VOLUME_ROLL_UP},
-            {0x31, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x32, MyCmd.Keycode.ROLL_NEXT}, {0x33, MyCmd.Keycode.ROLL_PREV},
-
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -113,9 +104,7 @@ public class TeanaXinChi extends Canbox {
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
-        byte[] mData = new byte[]{
-                (byte) 0x88, 0x4, 4, 0, 0, 0
-        };
+        byte[] mData = new byte[]{(byte) 0x88, 0x4, 4, 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
 
     }
@@ -199,18 +188,6 @@ public class TeanaXinChi extends Canbox {
         }
     }
 
-    private final static int SET_EQ_STEP = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == SET_EQ_STEP) {
-                sendEQCmd((byte) msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
-
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
         if (cmd == EQ_REQUEST_ALL_MAX) {
@@ -271,7 +248,14 @@ public class TeanaXinChi extends Canbox {
 
         }
         return ret;
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SET_EQ_STEP) {
+                sendEQCmd((byte) msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void parseEQ(int id, byte[] buf) {
 
@@ -283,4 +267,8 @@ public class TeanaXinChi extends Canbox {
 
         super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQBuf);
     }
+
+
+
+
 }

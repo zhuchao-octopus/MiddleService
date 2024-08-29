@@ -4,22 +4,7 @@ import com.common.utils.MyCmd;
 import com.zhuchao.android.car.canbox.Canbox;
 
 public class IVT001Hiworld extends Canbox {
-    public IVT001Hiworld() {
-        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
-        buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-
-        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 2, KEYS_WHEEL);
-    }
-
-
-    @Override
-    public void stopConnect() {
-
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
 
             {0x5, MyCmd.Keycode.BT},
 
@@ -29,6 +14,20 @@ public class IVT001Hiworld extends Canbox {
             {0xb, MyCmd.Keycode.MODLE},
 
     };
+
+
+    public IVT001Hiworld() {
+        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
+        buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+
+        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 2, KEYS_WHEEL);
+    }
+
+    @Override
+    public void stopConnect() {
+
+    }
 
     @Override
     public int getAngleValue2(byte[] data) {

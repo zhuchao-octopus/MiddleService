@@ -14,6 +14,22 @@ import java.util.Locale;
 
 public class Infiniti001Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x16, 0x17, 0x35, 0x48, 0x32, 0x61, (byte) 0xe8, (byte) 0xa6, 0x62, (byte) 0xa9, (byte) 0xa8};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH},
+
+            {0x5, MyCmd.Keycode.BT_DIAL},
+
+
+            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
+
+            {0xc, MyCmd.Keycode.MODLE}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x11, MyCmd.Keycode.EJECT}, {0x12, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.PREVIOUS}, {0x18, MyCmd.Keycode.NEXT}, {0x19, MyCmd.Keycode.PREVIOUS}, {0x1a, MyCmd.Keycode.NEXT}, {0x1b, MyCmd.Keycode.PREVIOUS}, {0x1c, MyCmd.Keycode.NEXT}, {0x1d, MyCmd.Keycode.PREVIOUS}, {0x1e, MyCmd.Keycode.NEXT}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x21, MyCmd.Keycode.NAVIGATION}, {0x25, MyCmd.Keycode.NAVIGATION}, {0x2c, MyCmd.Keycode.MODLE}, {0x31, MyCmd.Keycode.KEY_DISPLAY}, {0x37, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.KEY_DISPLAY}, {0x3f, MyCmd.Keycode.SPEECH}, {0x40, MyCmd.Keycode.EQ}, {0x41, MyCmd.Keycode.AS}, {0x43, MyCmd.Keycode.KEYAMS_RPT}, {0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN}, {0x4b, MyCmd.Keycode.RADIO}, {0x4d, MyCmd.Keycode.KEY_SEEK_PREV}, {0x4e, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x56, MyCmd.Keycode.DVD}, {0x57, MyCmd.Keycode.KEY_TURN_A}, {0x58, MyCmd.Keycode.KEY_TURN_D},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+    private final static int SET_EQ_STEP = 1;
+    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
+
     public Infiniti001Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -34,41 +50,10 @@ public class Infiniti001Hiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x16, 0x17, 0x35, 0x48, 0x32, 0x61, (byte) 0xe8, (byte) 0xa6, 0x62, (byte) 0xa9, (byte) 0xa8
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH},
-
-            {0x5, MyCmd.Keycode.BT_DIAL},
-
-
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-
-            {0xc, MyCmd.Keycode.MODLE}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK},
-
-    };
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4},
-            {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x11, MyCmd.Keycode.EJECT}, {0x12, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.PREVIOUS},
-            {0x18, MyCmd.Keycode.NEXT}, {0x19, MyCmd.Keycode.PREVIOUS}, {0x1a, MyCmd.Keycode.NEXT}, {0x1b, MyCmd.Keycode.PREVIOUS}, {0x1c, MyCmd.Keycode.NEXT}, {0x1d, MyCmd.Keycode.PREVIOUS},
-            {0x1e, MyCmd.Keycode.NEXT}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x21, MyCmd.Keycode.NAVIGATION}, {0x25, MyCmd.Keycode.NAVIGATION}, {0x2c, MyCmd.Keycode.MODLE},
-            {0x31, MyCmd.Keycode.KEY_DISPLAY}, {0x37, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.KEY_DISPLAY}, {0x3f, MyCmd.Keycode.SPEECH}, {0x40, MyCmd.Keycode.EQ}, {0x41, MyCmd.Keycode.AS},
-            {0x43, MyCmd.Keycode.KEYAMS_RPT}, {0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN}, {0x4b, MyCmd.Keycode.RADIO}, {0x4d, MyCmd.Keycode.KEY_SEEK_PREV},
-            {0x4e, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x56, MyCmd.Keycode.DVD}, {0x57, MyCmd.Keycode.KEY_TURN_A}, {0x58, MyCmd.Keycode.KEY_TURN_D},
-    };
-
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0xc};
@@ -185,7 +170,6 @@ public class Infiniti001Hiworld extends Canbox {
         super.parseACInfo(airData);
     }
 
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         byte type = 7;
         switch (source) {
@@ -300,8 +284,6 @@ public class Infiniti001Hiworld extends Canbox {
         sendDataToCanbox(buf, buf.length);
     }
 
-    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
-
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
         if (cmd == EQ_REQUEST_ALL_MAX) {
@@ -366,16 +348,6 @@ public class Infiniti001Hiworld extends Canbox {
         }
     }
 
-    private final static int SET_EQ_STEP = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == SET_EQ_STEP) {
-                sendEQCmd((byte) msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-
     public void parseEQ(int id, byte[] buf) {
 
         mEQBuf[0] = (byte) (buf[7] + 5);
@@ -391,7 +363,14 @@ public class Infiniti001Hiworld extends Canbox {
 
     public int getUpdateTime() {
         return 60000;
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SET_EQ_STEP) {
+                sendEQCmd((byte) msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void updateTime() {
         if (mContext == null) {
@@ -416,9 +395,7 @@ public class Infiniti001Hiworld extends Canbox {
 
         byte m = (byte) curDate.getMinutes();
 
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, 0, 0, h, m, format, ampm, 0, 0, 0
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, 0, 0, h, m, format, ampm, 0, 0, 0};
 
         sendDataToCanbox(buf, buf.length);
 
@@ -454,4 +431,8 @@ public class Infiniti001Hiworld extends Canbox {
             sendDataToCanbox(buf, buf.length);
         }
     }
+
+
+
+
 }

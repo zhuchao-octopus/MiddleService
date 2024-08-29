@@ -18,22 +18,27 @@ import java.util.Date;
 
 public class PorscheUnionSimple extends Canbox {
 
-    public PorscheUnionSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-    }
-
     private final static byte[][] KEYS_WHEEL = {
 
-            {0x1, KEY_SOURCE}, {0x2, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x4, AK_KEYPAD_VOLUME_A}, {0x5, AK_KEYPAD_VOLUME_D}, {0x6, KEY_MUTE}, {0x7, KEY_BT_DIAL}, {0x8, KEY_BT_HANG},
-            {0x9, KEY_GPS}, {0xa, KEY_FM}
+            {0x1, KEY_SOURCE}, {0x2, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x4, AK_KEYPAD_VOLUME_A}, {0x5, AK_KEYPAD_VOLUME_D}, {0x6, KEY_MUTE}, {0x7, KEY_BT_DIAL}, {0x8, KEY_BT_HANG}, {0x9, KEY_GPS}, {0xa, KEY_FM}
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, KEY_FM}, {0x2, KEY_FM}, {0x3, KEY_FM}, {0x9, KEY_FM},
+
+            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
+
+            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
+
+            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
+
+            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},};
+    byte[] data = new byte[6];
+
+    public PorscheUnionSimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -77,9 +82,7 @@ public class PorscheUnionSimple extends Canbox {
     public void stopConnect() {// default is simple box
         super.stopConnect();
         mHandler.removeMessages(0);
-    }
-
-    private final Handler mHandler = new Handler() {
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 startConnect();
@@ -92,19 +95,6 @@ public class PorscheUnionSimple extends Canbox {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x2, 0x1};
         sendDataToCanbox(data, data.length);
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, KEY_FM}, {0x2, KEY_FM}, {0x3, KEY_FM}, {0x9, KEY_FM},
-
-            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
-
-            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
-
-            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
-
-            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},
-    };
-
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -168,8 +158,6 @@ public class PorscheUnionSimple extends Canbox {
             }
         }
     }
-
-    byte[] data = new byte[6];
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         //		byte min = (byte) ((time / 60) % 60);
@@ -343,4 +331,8 @@ public class PorscheUnionSimple extends Canbox {
     public int getUpdateTime() {
         return 60000;
     }
+
+
+
+
 }

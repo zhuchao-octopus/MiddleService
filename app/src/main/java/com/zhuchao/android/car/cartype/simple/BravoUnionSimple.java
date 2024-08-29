@@ -12,17 +12,7 @@ import java.util.Date;
 
 public class BravoUnionSimple extends Canbox {
 
-    public BravoUnionSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x2, KEY_BT}, {0x3, KEY_MODE}, {0x4, AK_KEYPAD_VOLUME_A}, {0x5, AK_KEYPAD_VOLUME_D},
+    private final static byte[][] KEYS_WHEEL = {{0x2, KEY_BT}, {0x3, KEY_MODE}, {0x4, AK_KEYPAD_VOLUME_A}, {0x5, AK_KEYPAD_VOLUME_D},
 
             {0x6, KEY_MUTE},
 
@@ -30,6 +20,16 @@ public class BravoUnionSimple extends Canbox {
             {0x9, KEY_NEXTSONG}, {0x8, KEY_PREVIOUSSONG},
 
     };
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+    public BravoUnionSimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -53,7 +53,6 @@ public class BravoUnionSimple extends Canbox {
         }
     }
 
-
     @Override
     public void parseCanboxData(byte[] data, int len) {
         // TODO Auto-generated method stub
@@ -72,8 +71,6 @@ public class BravoUnionSimple extends Canbox {
             }
         }
     }
-
-    byte[] data;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -106,14 +103,10 @@ public class BravoUnionSimple extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         }
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -142,9 +135,7 @@ public class BravoUnionSimple extends Canbox {
                 mediaType = 0x30;
                 break;
         }
-        byte[] data = new byte[]{
-                (byte) 0xc0, 0x8, s, mediaType, 0, 0, 0, 0, 0, 0
-        };
+        byte[] data = new byte[]{(byte) 0xc0, 0x8, s, mediaType, 0, 0, 0, 0, 0, 0};
         if (mediaType != 0) {
             sendDataToCanbox(data, data.length);
         }
@@ -160,11 +151,13 @@ public class BravoUnionSimple extends Canbox {
         } else {
             b[3] = 0;
         }
-        data = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], b[3], 0, 0
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], b[3], 0, 0};
         sendDataToCanbox(data, data.length);
     }
+
+    // public void setPhone(int status, String num) {
+    // sendId3((byte)0x1, num);
+    // }
 
     public void sendId3(byte index, String num) {
 
@@ -198,14 +191,6 @@ public class BravoUnionSimple extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
-    // public void setPhone(int status, String num) {
-    // sendId3((byte)0x1, num);
-    // }
-
     public void setSongName(String s) {
         sendId3((byte) 0x2, s);
         mName = s;
@@ -220,8 +205,6 @@ public class BravoUnionSimple extends Canbox {
         sendId3((byte) 0x3, s);
         mAlbum = s;
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 

@@ -7,9 +7,7 @@ import com.zhuchao.android.car.aidl.IMyAidlInterface;
 import com.zhuchao.android.car.aidl.IMyAidlInterfaceListener;
 import com.zhuchao.android.car.aidl.PEventCourier;
 import com.zhuchao.android.fbase.MMLog;
-import com.zhuchao.android.fbase.PlayerStatusInfo;
 import com.zhuchao.android.session.Cabinet;
-import com.zhuchao.android.video.OMedia;
 
 public class IBinderProxy extends IMyAidlInterface.Stub {
     private static final String TAG = "IBinderProxy";

@@ -10,6 +10,27 @@ import java.util.Date;
 
 public class FutianOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x40};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS},
+
+
+            {0x6, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {
+
+            {0x1, MyCmd.Keycode.PREVIOUS}, {0x2, MyCmd.Keycode.NEXT},
+
+            {0x6, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.VOLUME_UP}, {0x8, MyCmd.Keycode.POWER},
+
+            {0x10, MyCmd.Keycode.PLAY_PAUSE},
+
+
+    };
+
     public FutianOD() {
         mIdAC = 0x24;
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -25,32 +46,6 @@ public class FutianOD extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x40};
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS},
-
-
-            {0x6, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-
-            {0x1, MyCmd.Keycode.PREVIOUS}, {0x2, MyCmd.Keycode.NEXT},
-
-            {0x6, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.VOLUME_UP}, {0x8, MyCmd.Keycode.POWER},
-
-            {0x10, MyCmd.Keycode.PLAY_PAUSE},
-
-
-    };
-
 
     public int getAngleValue2(byte[] data) {
 
@@ -142,9 +137,7 @@ public class FutianOD extends Canbox {
             ampm = 0;
         }
 
-        byte[] buf = new byte[]{
-                (byte) 0xc9, 0x03, m, h, ampm
-        };
+        byte[] buf = new byte[]{(byte) 0xc9, 0x03, m, h, ampm};
 
         sendDataToCanbox(buf, buf.length);
     }

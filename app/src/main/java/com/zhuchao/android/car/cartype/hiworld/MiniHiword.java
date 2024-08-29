@@ -8,17 +8,7 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class MiniHiword extends Canbox {
 
-    public MiniHiword() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x3, 0x0, 0x4, 0x0
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
 
             {0x5, KEY_BT},
 
@@ -27,6 +17,12 @@ public class MiniHiword extends Canbox {
             {0x18, KEY_MIC},
 
     };
+    private int mDoorStatus = 0;
+
+    public MiniHiword() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x3, 0x0, 0x4, 0x0});
+    }
 
     public void startConnect() {
 
@@ -94,7 +90,5 @@ public class MiniHiword extends Canbox {
         }
 
     }
-
-    private int mDoorStatus = 0;
 
 }

@@ -8,6 +8,16 @@ import java.util.Date;
 
 public class DongFengXinNengYuanOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x31};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS},
+
+
+            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.MUTE},
+
+            {0x7, KEY_SOURCE}, {0x8, MyCmd.Keycode.BT_HANG}, {0x9, KEY_SOURCE}, {0xa, MyCmd.Keycode.BT_HANG}, {0x14, MyCmd.Keycode.SPEECH},};
+
     public DongFengXinNengYuanOD() {
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xf8, (byte) 0x02);
         buildCmdAngle((byte) 0x29, (byte) 0x0, 0x1e77);
@@ -16,20 +26,6 @@ public class DongFengXinNengYuanOD extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x31};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS},
-
-
-            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.MUTE},
-
-            {0x7, KEY_SOURCE}, {0x8, MyCmd.Keycode.BT_HANG}, {0x9, KEY_SOURCE}, {0xa, MyCmd.Keycode.BT_HANG}, {0x14, MyCmd.Keycode.SPEECH},
-    };
-
 
     @Override
     public int getAngleValue2(byte[] data) {

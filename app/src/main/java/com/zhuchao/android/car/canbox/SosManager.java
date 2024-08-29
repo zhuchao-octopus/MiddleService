@@ -18,12 +18,11 @@ import java.util.Locale;
 
 public class SosManager {
 
+    public static int mPreCmd = 0;
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams mLayoutParams;
     private static View mView;
-
     private static Context mContext;
-
     private static ImageView mSOS;
 
     private static void init(Context context) {
@@ -38,8 +37,6 @@ public class SosManager {
         }
 
     }
-
-    public static int mPreCmd = 0;
 
     public static void start(Context context, int cmd) {
         init(context);

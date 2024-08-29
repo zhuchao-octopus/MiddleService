@@ -12,6 +12,24 @@ import java.util.Locale;
 
 public class BeiQiBAP003Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x32, 0x66, 0x67, 0x68, (byte) 0xe8};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
+
+            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
+
+
+            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
+
+            {0xa, MyCmd.Keycode.MODLE},
+
+
+            {0xb, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MODLE}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK}, {0x65, MyCmd.Keycode.KEY_360},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+
     public BeiQiBAP003Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -28,38 +46,10 @@ public class BeiQiBAP003Hiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x32, 0x66, 0x67, 0x68, (byte) 0xe8};
-
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
-
-            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
-
-
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-
-            {0xa, MyCmd.Keycode.MODLE},
-
-
-            {0xb, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MODLE}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK},
-            {0x65, MyCmd.Keycode.KEY_360},
-
-
-    };
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER},
-    };
-
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x4, 0xc};
@@ -341,9 +331,7 @@ public class BeiQiBAP003Hiworld extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, format
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, format};
 
         sendDataToCanbox(buf, buf.length);
 

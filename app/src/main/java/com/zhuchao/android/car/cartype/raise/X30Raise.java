@@ -21,21 +21,65 @@ import java.util.Date;
 
 public class X30Raise extends Canbox {
 
-    public X30Raise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG},
 
             {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x9, KEY_BT_DIAL}, {0xA, KEY_BT_HANG},
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, KEY_POWER}, {0x2, AK_KEYPAD_VOLUME_A}, {0x3, AK_KEYPAD_VOLUME_D}, {0x4, KEY_MUTE}, {0x5, MyCmd.Keycode.AS}, {0x6, MyCmd.Keycode.KEY_SEEK_PREV}, {0x7, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, MyCmd.Keycode.KEY_TURN_A}, {0xa, MyCmd.Keycode.KEY_TURN_D},
+
+            {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x10, MyCmd.Keycode.NUMBER1},
+
+            {0x11, MyCmd.Keycode.KEY_SEEK_PREV}, {0x12, MyCmd.Keycode.KEY_SEEK_NEXT},
+
+            {0x13, KEY_FM}, {0x14, KEY_MEDIA}, {0x15, MyCmd.Keycode.KEY_SHUFFLE}, {0x16, MyCmd.Keycode.KEY_REPEAT},
+
+            {0x17, KEY_GPS}, {0x18, KEY_MEDIA}, {0x19, KEY_MIC}, {0x1a, KEY_BT}, {0x1b, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x1c, MyCmd.Keycode.SCREEN_BRIGHTNESS},
+
+            {0x1d, MyCmd.Keycode.BT_DIAL}, {0x1e, MyCmd.Keycode.BT_HANG}, {0x1F, KEY_BACK}, {0x20, KEY_HOME}, {0x21, KEY_HOME},
+
+            {0x22, KEY_MEDIA},
+
+    };
+    private final static byte[][] KEYS_WHEEL2_B50 = {{0x1, KEY_POWER}, {0x2, AK_KEYPAD_VOLUME_A}, {0x3, AK_KEYPAD_VOLUME_D}, {0x4, KEY_MUTE}, {0x5, KEY_BACK}, {0x6, MyCmd.Keycode.KEY_SEEK_PREV}, {0x7, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, MyCmd.Keycode.KEY_TURN_A}, {0xa, MyCmd.Keycode.KEY_TURN_D},
+
+            {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x10, MyCmd.Keycode.NUMBER1},
+
+            {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG},
+
+            {0x13, KEY_FM}, {0x14, KEY_BT}, {0x15, KEY_MODE}, {0x16, KEY_MIC},
+
+            {0x17, KEY_GPS}, {0x18, KEY_MEDIA}, {0x19, KEY_MIC}, {0x1a, KEY_BT}, {0x1b, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x1c, MyCmd.Keycode.SCREEN_BRIGHTNESS},
+
+            {0x1d, MyCmd.Keycode.BT_DIAL}, {0x1e, MyCmd.Keycode.BT_HANG}, {0x1F, KEY_BACK}, {0x20, KEY_HOME}, {0x21, KEY_HOME},
+
+            {0x22, KEY_MEDIA},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final byte mRadarSwitch = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+    private byte[] mData;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+    public X30Raise() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
 
@@ -59,44 +103,6 @@ public class X30Raise extends Canbox {
             }
         }
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, KEY_POWER}, {0x2, AK_KEYPAD_VOLUME_A}, {0x3, AK_KEYPAD_VOLUME_D}, {0x4, KEY_MUTE}, {0x5, MyCmd.Keycode.AS}, {0x6, MyCmd.Keycode.KEY_SEEK_PREV}, {0x7, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, MyCmd.Keycode.KEY_TURN_A}, {0xa, MyCmd.Keycode.KEY_TURN_D},
-
-            {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6},
-            {0x10, MyCmd.Keycode.NUMBER1},
-
-            {0x11, MyCmd.Keycode.KEY_SEEK_PREV}, {0x12, MyCmd.Keycode.KEY_SEEK_NEXT},
-
-            {0x13, KEY_FM}, {0x14, KEY_MEDIA}, {0x15, MyCmd.Keycode.KEY_SHUFFLE}, {0x16, MyCmd.Keycode.KEY_REPEAT},
-
-            {0x17, KEY_GPS}, {0x18, KEY_MEDIA}, {0x19, KEY_MIC}, {0x1a, KEY_BT}, {0x1b, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x1c, MyCmd.Keycode.SCREEN_BRIGHTNESS},
-
-            {0x1d, MyCmd.Keycode.BT_DIAL}, {0x1e, MyCmd.Keycode.BT_HANG}, {0x1F, KEY_BACK}, {0x20, KEY_HOME}, {0x21, KEY_HOME},
-
-            {0x22, KEY_MEDIA},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2_B50 = {
-            {0x1, KEY_POWER}, {0x2, AK_KEYPAD_VOLUME_A}, {0x3, AK_KEYPAD_VOLUME_D}, {0x4, KEY_MUTE}, {0x5, KEY_BACK}, {0x6, MyCmd.Keycode.KEY_SEEK_PREV}, {0x7, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, MyCmd.Keycode.KEY_TURN_A}, {0xa, MyCmd.Keycode.KEY_TURN_D},
-
-            {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6},
-            {0x10, MyCmd.Keycode.NUMBER1},
-
-            {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG},
-
-            {0x13, KEY_FM}, {0x14, KEY_BT}, {0x15, KEY_MODE}, {0x16, KEY_MIC},
-
-            {0x17, KEY_GPS}, {0x18, KEY_MEDIA}, {0x19, KEY_MIC}, {0x1a, KEY_BT}, {0x1b, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x1c, MyCmd.Keycode.SCREEN_BRIGHTNESS},
-
-            {0x1d, MyCmd.Keycode.BT_DIAL}, {0x1e, MyCmd.Keycode.BT_HANG}, {0x1F, KEY_BACK}, {0x20, KEY_HOME}, {0x21, KEY_HOME},
-
-            {0x22, KEY_MEDIA},
-
-    };
 
     private void parseWheelKey2(byte[] data) {
         byte[][] keys;
@@ -338,9 +344,6 @@ public class X30Raise extends Canbox {
 
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -382,9 +385,6 @@ public class X30Raise extends Canbox {
 
     }
 
-    private final byte mRadarSwitch = 0;
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -399,8 +399,6 @@ public class X30Raise extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] data;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -448,7 +446,9 @@ public class X30Raise extends Canbox {
         // }
     }
 
-    private byte[] mData;
+    // public void setPhone(int status, String num) {
+    // sendId3((byte)0x1, num);
+    // }
 
     public void setMediaSrc(int source) {
         byte s = 0;
@@ -544,14 +544,6 @@ public class X30Raise extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
-    // public void setPhone(int status, String num) {
-    // sendId3((byte)0x1, num);
-    // }
-
     public void setSongName(String s) {
         sendId3((byte) 0x2, s);
         mName = s;
@@ -566,8 +558,6 @@ public class X30Raise extends Canbox {
         // sendId3((byte) 0x3, s);
         // mAlbum = s;
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int phone_status, String num) {// default is simple box
 
@@ -687,16 +677,6 @@ public class X30Raise extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
 
 
     //

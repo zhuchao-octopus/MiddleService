@@ -6,6 +6,16 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class HanTengRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x60};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x2, MyCmd.Keycode.NEXT}, {0x1, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.AUDIO}, {0x5, MyCmd.Keycode.MUTE}, {0x6, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.VOLUME_UP}, {0x8, MyCmd.Keycode.MULT_MUTE_AND_POWER}, {0x9, MyCmd.Keycode.HOME}, {0xa, MyCmd.Keycode.BACK}, {0xb, MyCmd.Keycode.SETUP}, {0xc, MyCmd.Keycode.BT}, {0xd, MyCmd.Keycode.NAVIGATION}, {0xe, MyCmd.Keycode.RADIO}, {0x11, MyCmd.Keycode.PLAY_PAUSE},
+            //		{ 0x12, MyCmd.Keycode. },
+            {0x13, MyCmd.Keycode.KEY_REPEAT}, {0x14, MyCmd.Keycode.KEY_SHUFFLE}, {0x15, MyCmd.Keycode.KEY_TURN_D}, {0x16, MyCmd.Keycode.KEY_TURN_A},
+
+            //this for OD jingyiX5 low config
+
+            {0x31, MyCmd.Keycode.VOLUME_UP}, {0x32, MyCmd.Keycode.VOLUME_DOWN}, {0x33, MyCmd.Keycode.PREVIOUS}, {0x34, MyCmd.Keycode.NEXT}, {0x35, MyCmd.Keycode.KEY_SEEK_PREV}, {0x36, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x37, MyCmd.Keycode.EQ}, {0x38, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.AS},};
+
     public HanTengRaise() {
         //		buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xf0, (byte) 0x02);
@@ -22,26 +32,6 @@ public class HanTengRaise extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x60};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x2, MyCmd.Keycode.NEXT}, {0x1, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.AUDIO}, {0x5, MyCmd.Keycode.MUTE}, {0x6, MyCmd.Keycode.VOLUME_DOWN},
-            {0x7, MyCmd.Keycode.VOLUME_UP}, {0x8, MyCmd.Keycode.MULT_MUTE_AND_POWER}, {0x9, MyCmd.Keycode.HOME}, {0xa, MyCmd.Keycode.BACK}, {0xb, MyCmd.Keycode.SETUP}, {0xc, MyCmd.Keycode.BT},
-            {0xd, MyCmd.Keycode.NAVIGATION}, {0xe, MyCmd.Keycode.RADIO}, {0x11, MyCmd.Keycode.PLAY_PAUSE},
-            //		{ 0x12, MyCmd.Keycode. },
-            {0x13, MyCmd.Keycode.KEY_REPEAT}, {0x14, MyCmd.Keycode.KEY_SHUFFLE}, {0x15, MyCmd.Keycode.KEY_TURN_D}, {0x16, MyCmd.Keycode.KEY_TURN_A},
-
-            //this for OD jingyiX5 low config
-
-            {0x31, MyCmd.Keycode.VOLUME_UP}, {0x32, MyCmd.Keycode.VOLUME_DOWN}, {0x33, MyCmd.Keycode.PREVIOUS}, {0x34, MyCmd.Keycode.NEXT}, {0x35, MyCmd.Keycode.KEY_SEEK_PREV},
-            {0x36, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x37, MyCmd.Keycode.EQ}, {0x38, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.AS},
-    };
 
     public byte getACTemp1(byte data) {
         // TODO Auto-generated method stub

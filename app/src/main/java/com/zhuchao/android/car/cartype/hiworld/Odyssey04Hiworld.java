@@ -17,14 +17,30 @@ import com.zhuchao.android.car.view.LedView;
 
 public class Odyssey04Hiworld extends Canbox {
 
-    public Odyssey04Hiworld() {
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-    }
+    private static final Node[] NODES = {new Node(0x0008, R.id.number1), new Node(0x0108, R.id.number2), new Node(0x0508, R.id.number3), new Node(0x0504, R.id.number4), new Node(0x0610, R.id.number5), new Node(0x0640, R.id.number6), new Node(0x0680, R.id.number7), new Node(0x0780, R.id.number8), new Node(0x0908, R.id.number9), new Node(0x1408, R.id.number10), new Node(0x0180, R.id.number11), new Node(0x0280, R.id.number12), new Node(0x0308, R.id.number13), new Node(0x0580, R.id.number14), new Node(0x0502, R.id.number15), new Node(0x0620, R.id.number16), new Node(0x0c08, R.id.number17_1), new Node(0x0c08, R.id.number17_3), new Node(0x0f80, R.id.number17_2), new Node(0x1108, R.id.number18),
 
+            new Node(0x0708, R.id.number24_st), new Node(0x0704, R.id.number24_zhong1), new Node(0x0702, R.id.number24_zhong2), new Node(0x0701, R.id.number24_ch),
+
+
+    };
+    private final byte[] mData0x80 = new byte[0x19];
     private WindowManager mWindowManager;
     private WindowManager.LayoutParams mLayoutParams;
     private View mMainView;
     private boolean mIsShow;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                hide();
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+
+    public Odyssey04Hiworld() {
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+    }
 
     private void initView() {
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -38,7 +54,6 @@ public class Odyssey04Hiworld extends Canbox {
     public void startConnect() {
 
     }
-
 
     private void show() {
         if (!mIsShow) {
@@ -60,15 +75,6 @@ public class Odyssey04Hiworld extends Canbox {
         }
     }
 
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                hide();
-            }
-            super.handleMessage(msg);
-        }
-    };
-
     @Override
     public void stopConnect() {
         hide();
@@ -81,27 +87,6 @@ public class Odyssey04Hiworld extends Canbox {
         initView();
     }
 
-    public static class Node {
-        public int mShow;
-        public int mId;
-
-        public Node(int show, int id) {
-            mShow = show;
-            mId = id;
-        }
-    }
-
-    private static final Node[] NODES = {
-            new Node(0x0008, R.id.number1), new Node(0x0108, R.id.number2), new Node(0x0508, R.id.number3), new Node(0x0504, R.id.number4), new Node(0x0610, R.id.number5),
-            new Node(0x0640, R.id.number6), new Node(0x0680, R.id.number7), new Node(0x0780, R.id.number8), new Node(0x0908, R.id.number9), new Node(0x1408, R.id.number10),
-            new Node(0x0180, R.id.number11), new Node(0x0280, R.id.number12), new Node(0x0308, R.id.number13), new Node(0x0580, R.id.number14), new Node(0x0502, R.id.number15),
-            new Node(0x0620, R.id.number16), new Node(0x0c08, R.id.number17_1), new Node(0x0c08, R.id.number17_3), new Node(0x0f80, R.id.number17_2), new Node(0x1108, R.id.number18),
-
-            new Node(0x0708, R.id.number24_st), new Node(0x0704, R.id.number24_zhong1), new Node(0x0702, R.id.number24_zhong2), new Node(0x0701, R.id.number24_ch),
-
-
-    };
-
     private int buildNumber(int cmd, int mask, char c) {
         if ((cmd & (0x1 << mask)) != 0) {
             int index = c - 'a';
@@ -109,8 +94,6 @@ public class Odyssey04Hiworld extends Canbox {
         }
         return 0;
     }
-
-    private final byte[] mData0x80 = new byte[0x19];
 
     private void do0x80(byte[] data) {
         if (!Util.isBufEquals(mData0x80, data)) {
@@ -389,6 +372,16 @@ public class Odyssey04Hiworld extends Canbox {
 
     public void setMediaSrc(int source) {
 
+    }
+
+    public static class Node {
+        public int mShow;
+        public int mId;
+
+        public Node(int show, int id) {
+            mShow = show;
+            mId = id;
+        }
     }
 
 }

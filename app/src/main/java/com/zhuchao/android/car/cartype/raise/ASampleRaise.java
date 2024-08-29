@@ -7,6 +7,9 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class ASampleRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x41, 0x25};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.BT_HANG},};
+
     public ASampleRaise() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -21,12 +24,6 @@ public class ASampleRaise extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x41, 0x25};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.BT_HANG},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0x85, 0x01, 0};

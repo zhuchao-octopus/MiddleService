@@ -35,14 +35,30 @@ public class RecordService extends Service {
     private static final boolean DEBUG = true;
     private static final String ACTION_RECORD_START = MESSAGE_EVENT_OCTOPUS_ACTION_RECORDER_START;
     private static final String ACTION_RECORD_STOP = MESSAGE_EVENT_OCTOPUS_ACTION_RECORDER_STOP;
-    private RecordVideoServiceImp mRecordVideoServiceImp;
-    private Camera2Recorder mRecordVideoMode;
-    private LinearLayout mLinearLayout;
-    private WindowManager mWindowManager;
     ///private SurfaceView mSurfaceView;
     ///private SurfaceHolder mSurfaceHolder;
     private static final int MSG_START_RECORD = 1;
     private static final int MSG_STOP_RECORD = 1 << 1;
+    private RecordVideoServiceImp mRecordVideoServiceImp;
+    private Camera2Recorder mRecordVideoMode;
+    private final Runnable mStartRecordRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (null != mRecordVideoMode) {
+                mRecordVideoMode.startVideoRecording();
+            }
+        }
+    };
+    private final Runnable mStopRecordRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (null != mRecordVideoMode) {
+                mRecordVideoMode.stopRecorder();
+            }
+        }
+    };
+    private LinearLayout mLinearLayout;
+    private WindowManager mWindowManager;
     private List<Camera2Config> mCameraConfigList;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -92,24 +108,7 @@ public class RecordService extends Service {
     private void publish() {
         ///if (DEBUG) Log.d(TAG, "publish: " + mRecordVideoServiceImp);
         ///ServiceManager.addService(Context.RECORDVIDEO_SERVICE, mRecordVideoServiceImp);
-    }
-
-
-    private final class RecordVideoServiceImp extends IRecordVideoService.Stub {
-        @Override
-        public void startRecordVideo() throws RemoteException {
-            if (DEBUG) MMLog.w(TAG, "startRecordVideo");
-            mHandler.sendEmptyMessage(MSG_START_RECORD);
-        }
-
-        @Override
-        public void stopRecordVideo() throws RemoteException {
-            if (DEBUG) MMLog.w(TAG, "stopRecordVideo");
-            mHandler.sendEmptyMessage(MSG_STOP_RECORD);
-        }
-    }
-
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    }    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -167,7 +166,17 @@ public class RecordService extends Service {
         }
     }
 
-    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+    private void startRecordVideo(boolean enable) {
+        if (DEBUG) MMLog.d(TAG, "startRecordVideo enable : " + enable);
+        if (enable) {
+            mHandler.removeCallbacks(mStartRecordRunnable);
+            mHandler.post(mStartRecordRunnable);
+        } else {
+            mHandler.removeCallbacks(mStartRecordRunnable);
+            mHandler.removeCallbacks(mStopRecordRunnable);
+            mHandler.post(mStopRecordRunnable);
+        }
+    }    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         @Override
         public void handleMessage(Message msg) {
             int what = msg.what;
@@ -185,33 +194,21 @@ public class RecordService extends Service {
         }
     };
 
-    private void startRecordVideo(boolean enable) {
-        if (DEBUG) MMLog.d(TAG, "startRecordVideo enable : " + enable);
-        if (enable) {
-            mHandler.removeCallbacks(mStartRecordRunnable);
-            mHandler.post(mStartRecordRunnable);
-        } else {
-            mHandler.removeCallbacks(mStartRecordRunnable);
-            mHandler.removeCallbacks(mStopRecordRunnable);
-            mHandler.post(mStopRecordRunnable);
+    private final class RecordVideoServiceImp extends IRecordVideoService.Stub {
+        @Override
+        public void startRecordVideo() throws RemoteException {
+            if (DEBUG) MMLog.w(TAG, "startRecordVideo");
+            mHandler.sendEmptyMessage(MSG_START_RECORD);
+        }
+
+        @Override
+        public void stopRecordVideo() throws RemoteException {
+            if (DEBUG) MMLog.w(TAG, "stopRecordVideo");
+            mHandler.sendEmptyMessage(MSG_STOP_RECORD);
         }
     }
 
-    private final Runnable mStartRecordRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (null != mRecordVideoMode) {
-                mRecordVideoMode.startVideoRecording();
-            }
-        }
-    };
 
-    private final Runnable mStopRecordRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (null != mRecordVideoMode) {
-                mRecordVideoMode.stopRecorder();
-            }
-        }
-    };
+
+
 }

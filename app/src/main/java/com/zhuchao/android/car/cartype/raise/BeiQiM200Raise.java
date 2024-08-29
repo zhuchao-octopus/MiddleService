@@ -13,6 +13,18 @@ import java.util.Date;
 
 public class BeiQiM200Raise extends Canbox {
 
+    private final byte[] mLcdInfo = new byte[16];
+    private final byte[] mLcdInfoVol = new byte[16];
+    private boolean mShowVolume = false;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                mShowVolume = false;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
     public BeiQiM200Raise() {
         buildCmdVersion((byte) 0xFF, (byte) 0x0);
     }
@@ -36,10 +48,6 @@ public class BeiQiM200Raise extends Canbox {
     public int getUpdateTime() {
         return 1000;
     }
-
-    private final byte[] mLcdInfo = new byte[16];
-    private final byte[] mLcdInfoVol = new byte[16];
-    private boolean mShowVolume = false;
 
     public void updateTime() {
         if (mContext == null) {
@@ -68,15 +76,6 @@ public class BeiQiM200Raise extends Canbox {
         buf[10] = (byte) curDate.getMinutes();
         sendDataToCanbox(buf, buf.length);
     }
-
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                mShowVolume = false;
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     private void copyLcdInfo(byte[] lcd, String s) {
         byte[] b = s.getBytes();

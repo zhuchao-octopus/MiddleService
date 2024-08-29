@@ -34,10 +34,6 @@ import java.util.HashMap;
 public class Canbox {
 
     public final static String TAG = "Canbox";
-    public Context mContext;
-    public String mVersion;
-    public String mVersionEx;
-
     public static final int HFP_INFO_INITIAL = 0;
     public static final int HFP_INFO_READY = 1;
     public static final int HFP_INFO_CONNECTING = 2;
@@ -45,16 +41,12 @@ public class Canbox {
     public static final int HFP_INFO_CALLED = 4;
     public static final int HFP_INFO_INCOMING = 5;
     public static final int HFP_INFO_CALLING = 6;
-
     public static final int CANBOX_OPEN = 0x00;
     public static final int CANBOX_CLOSE = 0x01;
-
     public static final int CANBOX_SET_KEY = 0x02;
     public static final int CANBOX_WRITE_COMMON_DATA = 0x03;
     public static final int CANBOX_WRITE_MCU_DATA = 0x04;
-
     public static final int REVSRSE_OPEN = 0x08;
-
     public static final int CANBOX_RETURN_AIR = 0x81;
     public static final int CANBOX_RADAR_FRONT = 0x82;
     public static final int CANBOX_RADAR_BACK = 0x83;
@@ -62,34 +54,22 @@ public class Canbox {
     public static final int CANBOX_DOOR_STATUS = 0x85;
     public static final int CANBOX_STEER_ANGLE = 0x86;
     public static final int CANBOX_OUT_DOOR_TEMP = 0x87;
-
     public static final int CANBOX_RADAR_SWITCH = 0x88;
-
     public static final int CANBOX_HIDE_RADAR = 0x89;
     public static final int CANBOX_HIDE_AIR = 0x8a;
-
     public static final int CANBOX_RADAR_LEFT = 0x8b;
     public static final int CANBOX_RADAR_RIGHT = 0x8c;
-
     public static final int CANBOX_NISSIAN_UI_DATA = 0x8d;
-
     public static final int CANBOX_NISSIAN_REQUEST_INFO = 0x8e;
-
     public static final int CANBOX_HY_UI_DATA = 0x8f;
-
     public static final int CANBOX_HY_REQUEST_INFO = 0x90;
-
     public static final int CANBOX_DACIA_UI_DATA = 0x91;
-
     public static final int CANBOX_SUBARU_UI_DATA = 0x92;
-
     public static final int CANBOX_MAZDA_RAISE_UI_DATA = 0x93;
     public static final int CANBOX_VW_RAISE_UI_DATA = 0x94;
-
     public final static int RADAR_DISTANCE_WANRING = 4;
     public final static int RADAR_DISTANCE_NORMAL = 7;
     public final static int RADAR_DISTANCE_LONG = 9;
-
     /*
      * key
      */
@@ -112,7 +92,6 @@ public class Canbox {
     public final static int KEY_SCCW = 16; // <^
     public final static int KEY_TV = 17; // TV
     public final static int KEY_EQ = MyCmd.Keycode.EQ;// EQ
-
     public final static int KEY_BT_DIAL = MyCmd.Keycode.BT_DIAL; // BT dial
     public final static int KEY_BT_HANG = MyCmd.Keycode.BT_HANG; // BT hang
     public final static int KEY_MODE = MyCmd.Keycode.MODLE; // MODE
@@ -123,7 +102,6 @@ public class Canbox {
     public final static int KEY_CH_DOWN = MyCmd.Keycode.CH_DOWN; //
     public final static int KEY_SEEK_NEXT = MyCmd.Keycode.KEY_SEEK_NEXT;//
     public final static int KEY_SEEK_PREV = MyCmd.Keycode.KEY_SEEK_PREV; //
-
     public final static int KEY_APP = MyCmd.Keycode.ALL_APP; // APP
     public final static int KEY_SET = MyCmd.Keycode.SETUP; // SET
     public final static int KEY_UP = MyCmd.Keycode.UP;
@@ -131,7 +109,6 @@ public class Canbox {
     public final static int KEY_LEFT = MyCmd.Keycode.LEFT;
     public final static int KEY_RIGHT = MyCmd.Keycode.RIGHT;
     public final static int KEY_ENTER = MyCmd.Keycode.ENTER;
-
     public final static int KEY_NUM_1 = MyCmd.Keycode.NUMBER1;
     public final static int KEY_NUM_2 = MyCmd.Keycode.NUMBER2;
     public final static int KEY_NUM_3 = MyCmd.Keycode.NUMBER3;
@@ -139,45 +116,30 @@ public class Canbox {
     public final static int KEY_NUM_5 = MyCmd.Keycode.NUMBER5;
     public final static int KEY_NUM_6 = MyCmd.Keycode.NUMBER6;
     public final static int KEY_POWER = MyCmd.Keycode.POWER;
-
     public final static int KEY_NUM_7 = MyCmd.Keycode.NUMBER7;
     public final static int KEY_NUM_8 = MyCmd.Keycode.NUMBER8;
     public final static int KEY_NUM_9 = MyCmd.Keycode.NUMBER9;
     public final static int KEY_NUM_0 = MyCmd.Keycode.NUMBER0;
-
     public final static int KEY_NUM_J = MyCmd.Keycode.NUMBER_POUND;
     public final static int KEY_NUM_X = MyCmd.Keycode.NUMBER_STAR;
-
     public static final int AK_KEYPAD_FF = MyCmd.Keycode.FAST_F;
     public static final int AK_KEYPAD_FR = MyCmd.Keycode.FAST_R;
-
     public static final int AK_KEYPAD_VOLUME_A = MyCmd.Keycode.VOLUME_UP;
     public static final int AK_KEYPAD_VOLUME_D = MyCmd.Keycode.VOLUME_DOWN;
     public static final int AK_KEYPAD_POWER_KEY_FATE = MyCmd.Keycode.POWER;
-
     public static final int AK_KEYPAD_MUTE_FAKE = MyCmd.Keycode.MUTE;
     // > 100 is phy
     public final static int KEY_PHY_BUTTON_KEY = 100;
-
     public final static int KEY_HOME = MyCmd.Keycode.HOME;
     public final static int KEY_HOMEPAGE = MyCmd.Keycode.HOME;
     public final static int KEY_MENU = MyCmd.Keycode.MENU;
     public final static int KEY_BACK = MyCmd.Keycode.BACK;
-
     public final static int KEY_MEDIA = MyCmd.Keycode.AUDIO;
-
-    public byte[] mRadar = new byte[8];
-    public byte[] mRadarFontEx = new byte[2];
-
-    public byte[] mRadarLeft = new byte[4];
-    public byte[] mRadarRight = new byte[4];
-
     /*
      * new eq set
      */
     public final static int CMD_GROUP_EQ = 0x100;
     public final static int CMD_GROUP_AC = 0x200;
-
     public final static int AC_CMD_REQUEST_INFO = 1;
     // sub cmd <= 0xff
     public final static int EQ_CMD_SET_HIGH = 1;
@@ -187,12 +149,113 @@ public class Canbox {
     public final static int EQ_CMD_SET_ZONE_LR = 5;
     public final static int EQ_CMD_SET_VOLUME = 6;
     public final static int EQ_CMD_SET_OTHER = 7;
-
     public final static int EQ_CMD_SET_ALL_DATA = 0xf0;
     public final static int EQ_REQUEST_ALL_MAX = 0xff;
+    public static final int LONG_CLICK_TIME = 1000;
+    public final static int VOICE_RAISE = 1;
+    public final static int RADAR_STEP_MAX = 11;
+    //ac set
+    public final static int MASK_AC_MAX = 0x0402;
+    private static final HashMap mHandlerMap = new HashMap();
+    private final static int SPEED_CLOSE_RADAR = 25;
+    private final static int HIDE_RADAR = 0;
+    private final static int REPEAT_SEND_LCD = 1;
+    private final static int REPEAT_SEND_CAR_TYPE = 100;
+    private final static int REPEAT_SEND_ROLL_KEY = 101;
 
-    static {
-        // System.loadLibrary("Canbox");
+    /*
+    EQ_REQUEST_ALL_MAX
+    mEQMax = (data & 0xff);
+    mZoneMax = ((data & 0xff00) >> 8);
+    mVolumeMax = ((data & 0xff0000) >> 16);
+    */
+    private final static String SYSTEM_CONFIG = MachineConfig.VENDOR_DIR + ".canbox_key_mapping_";
+    /*
+     * 0 单位
+     *
+     * Bit0: 单位units ==0 美制/英制US/Imperial ==1 公制Metric Bit2- Bit1: Fuel*
+     * Consumption/油耗 00b L/100KM 01b KM/L 10b MPG（US） 11b MPG（UK）③V1.19.000
+     * Bit3: Distance/距离 ==0 km ==1 mi Bit4: Temperature/温度 ==0 摄氏度 ==1 华氏度
+     * Bit6-Bit5 Pressure/压力 00b psi 01b kPa 10b bar Bit7 Speed ==0 km/h ==1 MPH
+     *
+     * 0xff 为无效值
+     *
+     * 低字节在前 1-2车速, 3-4转速, 5-7总里程, 显示值= distance *0.1 (如456KM，显示45.6KM) 8-9续航里程,
+     * 10 档位 bit0~3: 0:未知 1:r 2:n 3:p 4:d bit4:手刹状态 0：手刹放下 1:手刹拉起 11 报警项 安全带
+     * bit0~1: 0:未知 1, 扣 2, 未扣 。 12 油量 13 水温 x-40
+     *
+     * 14 灯光
+     *
+     * Bit7: 倒车灯 0：关 1：开 Bit6: 刹车灯 0：关 1：开 Bit5: 右转向灯 0：关 1：开 Bit4: 左转向灯 0：关 1：开
+     * Bit3: 警示灯（双闪灯）0：关 1：开 Bit2: 近光灯 0：关 1：开 Bit1: 远光灯 0：关 1：开 Bit0: 示宽灯 0：关
+     * 1：开
+     */
+    private final static int NUM_DRIVE_DATA = 15;
+    private final static byte[][] ROLL_KEYS = {{MyCmd.Keycode.SMART_CW, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.SMART_CCW, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.ROLL_NEXT, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.ROLL_PREV, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.VOLUME_ROLL_UP, MyCmd.Keycode.VOLUME_UP}, {MyCmd.Keycode.VOLUME_ROLL_DOWN, MyCmd.Keycode.VOLUME_DOWN},};
+
+    private final int mCarSpeed = 0;
+    public Context mContext;
+    public String mVersion;
+    public String mVersionEx;
+    public byte[] mRadar = new byte[8];
+    public byte[] mRadarFontEx = new byte[2];
+    public byte[] mRadarLeft = new byte[4];
+    public byte[] mRadarRight = new byte[4];
+    public int mKeyDown = 0;
+    public long mClickTime = 0;
+    public boolean longClick = false;
+
+    // virtual function
+    public int mWindMaxStep = 0;
+    public byte[] mDriveData;// = new byte[NUM_DRIVE_DATA];
+    public int mRequestDriveData = 0;
+    public boolean mSupportRaise0x7d = false;
+    public int mIdAC = 0;
+    public int mIdRadarFront = 0;
+    public int mIdRadarBack = 0;
+    public int mIdRadarFrontEx = 0;
+    public int mIdRadarBackEx = 0;
+    public int mIdAngle = 0;
+    public int mIdDoor = 0;
+    public int mIdEQ = 0;
+    public int mIdOutTemp = 0;
+    public int mIdKey = 0;
+    public int mIdKey2 = 0;
+    public int mIdKey3 = 0;
+    public int mIdVersion = 0;
+    public int mIdBrake = 0;
+    public byte[][] MAP_KEYS;
+    public byte[][] MAP_KEYS2;
+    public byte[][] MAP_KEYS3;
+    public byte[] IDS_TO_CANBOXSETTINGS;
+    public byte[] mEQData = null;
+    public byte mDoorStatus;
+    private Mcu mMcu;
+    private int mSupportVoiceControl = 0;
+    private int mKeyDownMap = 0;
+    private ArrayList<Integer> mMapKey = null;
+    private ArrayList<Integer> mMapKeyStudy = null;
+
+    private BroadcastReceiver mReceiver = null;
+    private byte[] mRepeatSendCarType;
+    private int mRepeatCmdTime = -1;
+    private byte[] mAirData = null;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+
+
+    public static void addHandler(String kTag, Handler vHandler) {
+        if (!mHandlerMap.containsKey(kTag)) {
+            mHandlerMap.put(kTag, vHandler);
+        }
+    }
+
+    public static void removeHandler(String kTag) {
+        mHandlerMap.remove(kTag);
+    }
+
+    public static Handler getHandler(String kTag) {
+        return (Handler) mHandlerMap.get(kTag);
     }
 
     public Canbox() {
@@ -217,7 +280,6 @@ public class Canbox {
 
             if (mcuBaud != null && mcuConfig != null) {
                 try {
-
                     byte[] data = new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0};
                     data[2] = (byte) (Integer.parseInt(mcuBaud.substring(0, 2), 16));
                     data[3] = (byte) (Integer.parseInt(mcuBaud.substring(2, 4), 16));
@@ -237,18 +299,10 @@ public class Canbox {
         startRepeatSendLcdMsg(false);
     }
 
-
     public void setContext(Context c) {
         mContext = c;
         registerListener();
     }
-
-    /*
-    EQ_REQUEST_ALL_MAX
-    mEQMax = (data & 0xff);
-    mZoneMax = ((data & 0xff00) >> 8);
-    mVolumeMax = ((data & 0xff0000) >> 16);
-    */
 
     public int doCmd(int cmd, int data) {
         int ret = 0;
@@ -309,11 +363,6 @@ public class Canbox {
         }
     }
 
-    // private native final int nativeSendCommand(int cmd, int param1,
-    // byte[] param2);
-
-    private Mcu mMcu;
-
     public int sendCanboxData(byte[] buf) {
         int can_len = buf.length;
         byte[] protocol = new byte[2 + can_len];
@@ -351,25 +400,6 @@ public class Canbox {
     public void sendCmd(int cmd, int param) {
         nativeSendCommand(cmd, param, null);
     }
-
-    private static final HashMap mHandlerMap = new HashMap();
-
-    public static void addHandler(String kTag, Handler vHandler) {
-        if (!mHandlerMap.containsKey(kTag)) {
-            mHandlerMap.put(kTag, vHandler);
-        }
-    }
-
-    public static void removeHandler(String kTag) {
-        mHandlerMap.remove(kTag);
-    }
-
-    public static Handler getHandler(String kTag) {
-        return (Handler) mHandlerMap.get(kTag);
-    }
-
-    // virtual function
-
 
     public void setReverseRadaVol(byte param) {
     }
@@ -430,11 +460,7 @@ public class Canbox {
     }
 
     public void requestVersion() {
-
     }
-    // public void poweroff() {
-    //
-    // }
 
     public void setMediaSrc(int source) {// default is simple box
         byte s;
@@ -488,15 +514,26 @@ public class Canbox {
         return sum;
     }
 
-    //	public byte hiworldSum2(byte[] data, int len) {
-    //		byte sum = 0;
-    //		for (int i = 0; i < len; ++i) {
-    //			sum += data[i];
-    //		}
-    //		sum = (byte) ((sum & 0xFF) - 1);
-    //		return sum;
-    //	}
-
+    private final Handler mHandlerRadar = new Handler(Looper.myLooper()) {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HIDE_RADAR:
+                    RadarManager.stop();
+                    hideRadar();
+                    break;
+                case REPEAT_SEND_CAR_TYPE:
+                    autoUpdateCarType();
+                    break;
+                case REPEAT_SEND_ROLL_KEY:
+                    doKeyRoll(msg.arg1, msg.arg2);
+                    break;
+                case REPEAT_SEND_LCD:
+                    repeatSendLcdMsg();
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void sendDataToCanboxHiword1(byte[] data, int len) {
         // canbox
@@ -539,11 +576,6 @@ public class Canbox {
         nativeSendCommand(CANBOX_WRITE_COMMON_DATA, 0, send);
     }
 
-    public int mKeyDown = 0;
-    public long mClickTime = 0;
-    public boolean longClick = false;
-    public static final int LONG_CLICK_TIME = 1000;
-
     public int getLongKey(int key) {
         int ret = 0;
         switch (key) {
@@ -575,64 +607,11 @@ public class Canbox {
         return ret;
     }
 
-    // protected void doKey(int value, int status) { // value 0 -> key up
-    //
-    // if (CarUtil.getChangeKey() == 1) {
-    // value = changeKey(value);
-    // }
-    //
-    // switch (status) {
-    // case 0:
-    // break;
-    // case 1:
-    // // if(mKeyDown!=value){
-    // mKeyDown = value;
-    // mClickTime = System.currentTimeMillis();
-    // doKey(value);
-    // // }
-    // break;
-    // case 2:
-    // mKeyDown = value;
-    // // longClick = true; //no do longClickNow
-    // break;
-    // case 3:
-    // mKeyDown = value;
-    // break;
-    // }
-    //
-    // if (status == 0 && mKeyDown != 0) {
-    // if (value != 0 && value != mKeyDown) {
-    // doKey(value);
-    // }
-    // // if (longClick) {
-    // // // sendCmd(CANBOX_SET_KEY, value | 0x80000000);
-    // // } else {
-    // // if (CarUtil.getChangeKey() == 1) {
-    // // value = changeKey(value);
-    // // }
-    // // doKey(value);
-    // //
-    // // mKeyDown = 0;
-    // // }
-    // // longClick = false;
-    // } else if (mKeyDown == AK_KEYPAD_VOLUME_A
-    // || mKeyDown == AK_KEYPAD_VOLUME_D) {
-    // // volme for long press
-    // if ((System.currentTimeMillis() - mClickTime) > 500) {
-    // doKey(value);
-    // longClick = true;
-    // }
-    // }
-    // }
-
-
+    // for canbox study key
     protected void doKey(int value, int status) { // all long key to this. is
         // good?
-        // Log.d("Nissan2013Simple", "doKey:"+value);
-        // if (CarUtil.getChangeKey() == 1) {
+        // if (CarUtil.getChangeKey() == 1)
         value = changeKey(value);
-        // }
-
         switch (status) {
             case 0:
                 if (mKeyDown != 0) {
@@ -674,7 +653,6 @@ public class Canbox {
                 }
                 break;
         }
-
     }
 
     public int changeKey(int value) {
@@ -753,7 +731,6 @@ public class Canbox {
         return true;
     }
 
-
     protected void sendCanboxInfo(String packageName, byte[] buf) {
         if (!GlobalDefinition.mTopIsNeedCanboxInfo && packageName != null) {
             return;
@@ -781,10 +758,6 @@ public class Canbox {
 
     }
 
-    //	public void updateCompass(int direction, int compass) {
-    //
-    //	}
-
     public void updateCompass(int compass) {
 
     }
@@ -793,13 +766,9 @@ public class Canbox {
 
     }
 
-    private final int mCarSpeed = 0;
-    private final static int SPEED_CLOSE_RADAR = 25;
-
     public void updateExtRadar(int speed) {
         //use can speed now for pro 290.
         Log.d(TAG, "updateExtRadar:" + speed);
-
         //		if ((mCarSpeed < SPEED_CLOSE_RADAR && speed >= SPEED_CLOSE_RADAR)
         //				|| (mCarSpeed >= SPEED_CLOSE_RADAR && speed < SPEED_CLOSE_RADAR)) {
         //
@@ -814,7 +783,6 @@ public class Canbox {
         //			Util.setFileValue(CarUtil.PG, cmd);
         //
         //		}
-
     }
 
     public boolean isSupportCompass() {
@@ -890,6 +858,16 @@ public class Canbox {
         return 0;
     }
 
+    //	public boolean isShowAirEx() {
+    //		// if (isAirtContolCar()) {
+    ////		if ("com.canboxsetting/com.canboxsetting.CanAirControlActivity"
+    ////				.equals(AppConfig.getTopActivity())) {
+    //			return false;
+    ////		}
+    //		// }
+    ////		return true;
+    //	}
+
     public int getUpdateTime() {
         return Integer.MAX_VALUE;
     }
@@ -906,7 +884,6 @@ public class Canbox {
 
     }
 
-
     public void udpateLang() {
 
     }
@@ -915,8 +892,12 @@ public class Canbox {
 
     }
 
-    private int mSupportVoiceControl = 0;
-    public final static int VOICE_RAISE = 1;
+    /*==============new version ========================*/
+    /*
+     *byte 1: ID
+     *byte 2: style
+     *byte 3: mask id door. max num in Radar.
+     *byte 4: index in array.only door need*/
 
     public void setVoiceSupportRaise() {
         mSupportVoiceControl = VOICE_RAISE;
@@ -977,36 +958,9 @@ public class Canbox {
 
     }
 
-    public int mWindMaxStep = 0;
-
     public void hideRadar() {
 
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final static int REPEAT_SEND_LCD = 1;
-    private final static int REPEAT_SEND_CAR_TYPE = 100;
-    private final static int REPEAT_SEND_ROLL_KEY = 101;
-    private final Handler mHandlerRadar = new Handler(Looper.myLooper()) {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_RADAR:
-                    RadarManager.stop();
-                    hideRadar();
-                    break;
-                case REPEAT_SEND_CAR_TYPE:
-                    autoUpdateCarType();
-                    break;
-                case REPEAT_SEND_ROLL_KEY:
-                    doKeyRoll(msg.arg1, msg.arg2);
-                    break;
-                case REPEAT_SEND_LCD:
-                    repeatSendLcdMsg();
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     public void autoUpdateCarType() {
         if (mRepeatSendCarType != null) {
@@ -1042,10 +996,6 @@ public class Canbox {
         }
         return true;
     }
-
-    // for canbox study key
-
-    private int mKeyDownMap = 0;
 
     protected boolean doKeyStudy(int groundId, int value, int status) {
 
@@ -1130,17 +1080,13 @@ public class Canbox {
         return 0;
     }
 
-    private final static String SYSTEM_CONFIG = MachineConfig.VENDOR_DIR + ".canbox_key_mapping_";
-    private ArrayList<Integer> mMapKey = null;
-    private ArrayList<Integer> mMapKeyStudy = null;
-
     private String getKeyMapFile() {
         return SYSTEM_CONFIG + CarUtil.getCanboxType();
     }
 
     private void saveMapping() {
         String value = "";
-        if (mMapKey != null && mMapKey.size() > 0) {
+        if (mMapKey != null && !mMapKey.isEmpty()) {
             for (int i = 0; i < mMapKey.size(); ++i) {
                 if (i != 0) {
                     value += ",";
@@ -1158,7 +1104,6 @@ public class Canbox {
 
                 Util.sudoExec("chmod:666:" + getKeyMapFile());
             } else {
-
             }
 
             FileOutputStream is = new FileOutputStream(file);
@@ -1185,24 +1130,20 @@ public class Canbox {
                 mMapKey.clear();
             }
             String[] ss = s.split(",");
-            for (int i = 0; i < ss.length; ++i) {
+            for (String string : ss) {
                 try {
-                    int v = Integer.valueOf(ss[i]);
-
+                    int v = Integer.parseInt(string);
                     mMapKey.add(v);
-                } catch (Exception e) {
-
+                } catch (Exception ignored) {
                 }
             }
         }
-
         if (mMapKey != null && mMapKey.size() <= 0) {
             mMapKey = null;
         }
     }
 
-    private BroadcastReceiver mReceiver = null;
-
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     private void registerListener() {
         if (mReceiver == null) {
             intKeyStudyMap();
@@ -1314,39 +1255,6 @@ public class Canbox {
         // }
     }
 
-    //	public boolean isShowAirEx() {
-    //		// if (isAirtContolCar()) {
-    ////		if ("com.canboxsetting/com.canboxsetting.CanAirControlActivity"
-    ////				.equals(AppConfig.getTopActivity())) {
-    //			return false;
-    ////		}
-    //		// }
-    ////		return true;
-    //	}
-
-    /*
-     * 0 单位
-     *
-     * Bit0: 单位units ==0 美制/英制US/Imperial ==1 公制Metric Bit2- Bit1: Fuel*
-     * Consumption/油耗 00b L/100KM 01b KM/L 10b MPG（US） 11b MPG（UK）③V1.19.000
-     * Bit3: Distance/距离 ==0 km ==1 mi Bit4: Temperature/温度 ==0 摄氏度 ==1 华氏度
-     * Bit6-Bit5 Pressure/压力 00b psi 01b kPa 10b bar Bit7 Speed ==0 km/h ==1 MPH
-     *
-     * 0xff 为无效值
-     *
-     * 低字节在前 1-2车速, 3-4转速, 5-7总里程, 显示值= distance *0.1 (如456KM，显示45.6KM) 8-9续航里程,
-     * 10 档位 bit0~3: 0:未知 1:r 2:n 3:p 4:d bit4:手刹状态 0：手刹放下 1:手刹拉起 11 报警项 安全带
-     * bit0~1: 0:未知 1, 扣 2, 未扣 。 12 油量 13 水温 x-40
-     *
-     * 14 灯光
-     *
-     * Bit7: 倒车灯 0：关 1：开 Bit6: 刹车灯 0：关 1：开 Bit5: 右转向灯 0：关 1：开 Bit4: 左转向灯 0：关 1：开
-     * Bit3: 警示灯（双闪灯）0：关 1：开 Bit2: 近光灯 0：关 1：开 Bit1: 远光灯 0：关 1：开 Bit0: 示宽灯 0：关
-     * 1：开
-     */
-    private final static int NUM_DRIVE_DATA = 15;
-    public byte[] mDriveData;// = new byte[NUM_DRIVE_DATA];
-
     public void returnDriveData() {
         if (mRequestDriveData > 0) {
             if (mContext != null) {
@@ -1358,8 +1266,6 @@ public class Canbox {
             }
         }
     }
-
-    public int mRequestDriveData = 0;
 
     public void requestDriveData(int on) {
         if (on == 0x1) {
@@ -1376,42 +1282,9 @@ public class Canbox {
         }
     }
 
-
     public boolean isNeedRepeatCmd() { //pg is repeat in bin
         return true;
     }
-
-    /*==============new version ========================*/
-
-    /*
-     *byte 1: ID
-     *byte 2: style
-     *byte 3: mask id door. max num in Radar.
-     *byte 4: index in array.only door need*/
-
-    public boolean mSupportRaise0x7d = false;
-    public int mIdAC = 0;
-    public int mIdRadarFront = 0;
-    public int mIdRadarBack = 0;
-    public int mIdRadarFrontEx = 0;
-    public int mIdRadarBackEx = 0;
-    public int mIdAngle = 0;
-    public int mIdDoor = 0;
-    public int mIdEQ = 0;
-    public int mIdOutTemp = 0;
-    public int mIdKey = 0;
-    public int mIdKey2 = 0;
-    public int mIdKey3 = 0;
-    public int mIdVersion = 0;
-    public int mIdBrake = 0;
-
-    public byte[][] MAP_KEYS;
-    public byte[][] MAP_KEYS2;
-    public byte[][] MAP_KEYS3;
-
-    public byte[] IDS_TO_CANBOXSETTINGS;
-
-    public final static int RADAR_STEP_MAX = 11;
 
     public void buildBrake(byte cmd, byte arrayIndex, byte mask, byte style) {
         mIdBrake = (cmd & 0xff) | ((arrayIndex & 0xff) << 8) | ((style & 0xff) << 24) | ((mask & 0xff) << 16);
@@ -1530,9 +1403,6 @@ public class Canbox {
         }
     }
 
-    private byte[] mRepeatSendCarType;
-    private int mRepeatCmdTime = -1;
-
     public void parseCanboxData(byte[] data, int len) {
         if ((data[0] & 0xff) == (mIdAC & 0xff)) {
             parseACInfo(data);
@@ -1588,7 +1458,6 @@ public class Canbox {
 
     private void parse0x7D(byte[] data) {
         switch (data[2]) {
-
             case 5:
                 byte door = doorChangeStyle1(data[3]);
                 if (mDoorStatus != door) {
@@ -1623,8 +1492,6 @@ public class Canbox {
             }
         }
     }
-
-    public byte[] mEQData = null;
 
     public void parseEQ(int id, byte[] buf) {
         int style = ((id & 0xff00) >> 8);
@@ -1865,8 +1732,6 @@ public class Canbox {
         }
     }
 
-    public byte mDoorStatus;
-
     public void parseDoor(byte[] data) {
         int style = ((mIdDoor & 0xff00) >> 8);
         byte mask = (byte) ((mIdDoor & 0xff0000) >> 16);
@@ -1908,63 +1773,61 @@ public class Canbox {
         }
     }
 
-
     public byte doorChangeStyle1(byte door) {
-		/*Bit7
-：右前门
-Bit6
-：左前门
-Bit5
-：右后门
-Bit4
-：左后门
-Bit3
-：后尾箱
-Bit2
-：引擎盖*/
+        //Bit7
+        //：右前门
+        //Bit6
+        //：左前门
+        //Bit5
+        //：右后门
+        //Bit4
+        //：左后门
+        //Bit3
+        //：后尾箱
+        //Bit2
+        //：引擎盖
         return (byte) (((door & 0x40) >> 6) | ((door & 0x80) >> 6) | ((door & 0x10) >> 2) | ((door & 0x20) >> 2) | ((door & 0x08) << 1) | ((door & 0x4) << 3));
     }
 
     public byte doorChangeStyle2(byte door) {
-		/*
-Bit7:左前门
-Bit6:右前门
-Bit5:左后门
-Bit4:右后门
-Bit3:尾箱*/
+
+        //Bit7:左前门
+        //Bit6:右前门
+        //Bit5:左后门
+        //Bit4:右后门
+        //Bit3:尾箱
         return (byte) (((door & 0x40) >> 5) | ((door & 0x80) >> 7) | ((door & 0x10) >> 1) | ((door & 0x20) >> 3) | ((door & 0x08) << 1) | ((door & 0x4) << 3));
     }
 
-
     public byte doorChangeStyle3(byte door) {
-		/*Bit7
-：右前门
-Bit6
-：左前门
-Bit5
-：左后门
-Bit4
-：右后门
-Bit3
-：后尾箱
-Bit2
-：引擎盖*/
+        //Bit7
+        //：右前门
+        //Bit6
+        //：左前门
+        //Bit5
+        //：左后门
+        //Bit4
+        //：右后门
+        //Bit3
+        //：后尾箱
+        //Bit2
+        //：引擎盖
         return (byte) (((door & 0x40) >> 6) | ((door & 0x80) >> 6) | ((door & 0x10) >> 1) | ((door & 0x20) >> 3) | ((door & 0x08) << 1) | ((door & 0x4) << 3));
     }
 
     public byte doorChangeStyle4(byte door) {
-		/*Bit5
-：左前门
-Bit4
-：右前门
-Bit3
-：左后门
-Bit2
-：右后门
-Bit1
-：后尾箱
-Bit0
-：引擎盖*/
+        //Bit5
+        //：左前门
+        //Bit4
+        //：右前门
+        //Bit3
+        //：左后门
+        //Bit2
+        //：右后门
+        //Bit1
+        //：后尾箱
+        //Bit0
+        //：引擎盖
         return (byte) (((door & 0x20) >> 5) | ((door & 0x10) >> 3) | ((door & 0x08) >> 1) | ((door & 0x04) << 1) | ((door & 0x02) << 3) | ((door & 0x1) << 5));
     }
 
@@ -2034,8 +1897,6 @@ Bit0
                 break;
         }
     }
-
-    private final static byte[][] ROLL_KEYS = {{MyCmd.Keycode.SMART_CW, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.SMART_CCW, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.ROLL_NEXT, MyCmd.Keycode.NEXT}, {MyCmd.Keycode.ROLL_PREV, MyCmd.Keycode.PREVIOUS}, {MyCmd.Keycode.VOLUME_ROLL_UP, MyCmd.Keycode.VOLUME_UP}, {MyCmd.Keycode.VOLUME_ROLL_DOWN, MyCmd.Keycode.VOLUME_DOWN},};
 
     private void doKeyRoll(int key, int step) {
         mHandlerRadar.removeMessages(REPEAT_SEND_ROLL_KEY);
@@ -2233,8 +2094,6 @@ Bit0
         return Integer.MAX_VALUE;
     }
 
-    private byte[] mAirData = null;
-
     public void updateCommonAirData(byte[] data) {
         if (mAirData != null && data != null) {
             for (int i = 0; (i < data.length) && (i < mAirData.length); ++i) {
@@ -2261,19 +2120,16 @@ Bit0
         int msg = 0;
         if ((data[0] & 0x80) == 0) {
             msg = CANBOX_HIDE_AIR;
-        }
-        else
-        {
+        } else {
             msg = CANBOX_RETURN_AIR;
         }
 
-        if (!Arrays.equals(mAirData, data))
-        {
+        if (!Arrays.equals(mAirData, data)) {
             Util.byteArrayCopy(mAirData, data, 0, 0, data.length);
             msg = CANBOX_RETURN_AIR;
         }
 
-        if (!sendCanboxAir(data) && msg != 0) {
+        if (!sendCanboxAir(data)) {
             Handler handler = getHandler("CanService");
             if (null != handler) {
                 handler.sendMessage(handler.obtainMessage(msg, data));
@@ -2304,15 +2160,11 @@ Bit0
         }
     }
 
-
     public void parseSeatHeat() {
         //		if (AppConfig.getTopActivity().contains("com.canboxsetting.SeatHeatActivity")){
         //			return false;
         //		}
     }
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
 
     public int getOutTemp(byte[] data) {//
         return CarUtil.INVALID_OUT_DOOR_TEMP;
@@ -2467,9 +2319,6 @@ Bit0
         startRepeatSendLcdMsg(true);
     }
 
-    //ac set
-    public final static int MASK_AC_MAX = 0x0402;
-
     public void setACData(byte[] airData, byte[] buf, int index, int bit, int mask) {
         int ac_index = (mask & 0xff00) >> 8;
         int ac_mask = (mask & 0xff);
@@ -2484,4 +2333,6 @@ Bit0
         }
 
     }
+
+
 }

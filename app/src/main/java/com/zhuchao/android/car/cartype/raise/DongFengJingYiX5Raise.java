@@ -10,6 +10,14 @@ import java.util.Date;
 
 public class DongFengJingYiX5Raise extends Canbox {
 
+    //	private int mRadarBack2;
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x40};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.BT}, {0x8, MyCmd.Keycode.SPEECH},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.EASY_CONNECT}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.BT}, {0x5, MyCmd.Keycode.KEY_DISPLAY}, {0x6, MyCmd.Keycode.MENU}, {0x7, MyCmd.Keycode.BACK}, {0x8, MyCmd.Keycode.RADIO}, {0x9, MyCmd.Keycode.AUDIO}, {0xa, MyCmd.Keycode.PLAY}, {0xb, MyCmd.Keycode.ROLL_PREV}, {0xc, MyCmd.Keycode.ROLL_NEXT}, {0xd, MyCmd.Keycode.EQ}, {0xe, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0xf, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x10, MyCmd.Keycode.SETUP}, {0x11, MyCmd.Keycode.PREVIOUS}, {0x12, MyCmd.Keycode.NEXT}, {0x13, MyCmd.Keycode.NAVIGATION}, {0x14, MyCmd.Keycode.BT}, {0x15, MyCmd.Keycode.BT_DIAL}, {0x16, MyCmd.Keycode.AUDIO}, {0x17, MyCmd.Keycode.AS}, {0x18, MyCmd.Keycode.TIME_SETTING}, {0x19, MyCmd.Keycode.EQ}, {0x1a, MyCmd.Keycode.PLAY_PAUSE}, {0x1b, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x1c, MyCmd.Keycode.KEY_REPEAT}, {0x1d, MyCmd.Keycode.KEY_SHUFFLE}, {0x1e, MyCmd.Keycode.KEY_TURN_D}, {0x1f, MyCmd.Keycode.KEY_TURN_A},
+
+    };
+    byte[] mLcdInfo = new byte[]{(byte) 0x75, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public DongFengJingYiX5Raise() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -29,23 +37,6 @@ public class DongFengJingYiX5Raise extends Canbox {
         //		mRadarBack2 = buildCmdRadar((byte) 0x24, (byte) 0x0, (byte) 255,
         //				(byte) 2);
     }
-
-    //	private int mRadarBack2;
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x40};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.BT}, {0x8, MyCmd.Keycode.SPEECH},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.EASY_CONNECT}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.BT}, {0x5, MyCmd.Keycode.KEY_DISPLAY}, {0x6, MyCmd.Keycode.MENU},
-            {0x7, MyCmd.Keycode.BACK}, {0x8, MyCmd.Keycode.RADIO}, {0x9, MyCmd.Keycode.AUDIO}, {0xa, MyCmd.Keycode.PLAY}, {0xb, MyCmd.Keycode.ROLL_PREV}, {0xc, MyCmd.Keycode.ROLL_NEXT},
-            {0xd, MyCmd.Keycode.EQ}, {0xe, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0xf, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x10, MyCmd.Keycode.SETUP}, {0x11, MyCmd.Keycode.PREVIOUS},
-            {0x12, MyCmd.Keycode.NEXT}, {0x13, MyCmd.Keycode.NAVIGATION}, {0x14, MyCmd.Keycode.BT}, {0x15, MyCmd.Keycode.BT_DIAL}, {0x16, MyCmd.Keycode.AUDIO}, {0x17, MyCmd.Keycode.AS},
-            {0x18, MyCmd.Keycode.TIME_SETTING}, {0x19, MyCmd.Keycode.EQ}, {0x1a, MyCmd.Keycode.PLAY_PAUSE}, {0x1b, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x1c, MyCmd.Keycode.KEY_REPEAT},
-            {0x1d, MyCmd.Keycode.KEY_SHUFFLE}, {0x1e, MyCmd.Keycode.KEY_TURN_D}, {0x1f, MyCmd.Keycode.KEY_TURN_A},
-
-    };
 
     private byte[] getCarTypeCmd() {
         if (CarUtil.getCatelId() == 25) {
@@ -172,8 +163,6 @@ public class DongFengJingYiX5Raise extends Canbox {
 
         sendDataToCanbox(mLcdInfo, mLcdInfo.length);
     }
-
-    byte[] mLcdInfo = new byte[]{(byte) 0x75, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
 
     public void setMediaSrc(int source) {// default is simple box
         byte s = 0;

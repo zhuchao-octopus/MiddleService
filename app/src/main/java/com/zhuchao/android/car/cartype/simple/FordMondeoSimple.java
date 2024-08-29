@@ -14,25 +14,29 @@ import com.zhuchao.android.car.canbox.RadarManager;
 
 public class FordMondeoSimple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0xa, KEY_BT_HANG}, {0xb, KEY_MIC},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x0, KEY_FM}, {0x1, KEY_DVD}, {0x2, KEY_AUX},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    private int mDoorStatus = 0;
+    private int mSource = MyCmd.SOURCE_NONE;
+
+
     public FordMondeoSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0xa, KEY_BT_HANG},
-            {0xb, KEY_MIC},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x0, KEY_FM}, {0x1, KEY_DVD}, {0x2, KEY_AUX},
-
-    };
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -75,7 +79,6 @@ public class FordMondeoSimple extends Canbox {
         }
     }
 
-
     private void parseACInfo(byte[] data, int len) {
 
         if (data[4] >= 0x39) {
@@ -116,7 +119,6 @@ public class FordMondeoSimple extends Canbox {
             handler.sendMessage(handler.obtainMessage(msg, airData));
         }
     }
-
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -318,8 +320,6 @@ public class FordMondeoSimple extends Canbox {
         }
     }
 
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -348,9 +348,7 @@ public class FordMondeoSimple extends Canbox {
 
             //			data = new byte[] { (byte) 0xc0, 0x2, 0x7, 0x0 };
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
             sendDataToCanbox(data, data.length);
         }
 
@@ -364,8 +362,6 @@ public class FordMondeoSimple extends Canbox {
         byte[] data = new byte[]{(byte) 0xc2, 0x4, b[0], b[1], b[2], 0};
         sendDataToCanbox(data, data.length);
     }
-
-    private int mSource = MyCmd.SOURCE_NONE;
 
     public void setMediaSrc(int source) {// default is simple box
         byte s = 0;
@@ -406,16 +402,6 @@ public class FordMondeoSimple extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     public void setPhone(int status, String num) {// default is simple box
         switch (status) {

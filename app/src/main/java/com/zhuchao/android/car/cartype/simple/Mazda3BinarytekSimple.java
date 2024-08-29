@@ -13,19 +13,7 @@ import com.zhuchao.android.car.manager.McuManager;
 
 public class Mazda3BinarytekSimple extends Canbox {
 
-    public Mazda3BinarytekSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MUTE}, {0x9, MyCmd.Keycode.KEY_MIC}, {0xa, KEY_BT_DIAL},
-            {0xb, KEY_BT_HANG},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MUTE}, {0x9, MyCmd.Keycode.KEY_MIC}, {0xa, KEY_BT_DIAL}, {0xb, KEY_BT_HANG},
 
             {0x20, KEY_MEDIA}, {0x21, KEY_HOME}, {0x22, KEY_GPS}, {0x23, KEY_FM}, {0x24, KEY_UP}, {0x25, KEY_DOWN}, {0x26, KEY_LEFT}, {0x27, KEY_RIGHT}, {0x28, KEY_ENTER},
 
@@ -35,6 +23,27 @@ public class Mazda3BinarytekSimple extends Canbox {
 
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, KEY_FM}, {0x2, KEY_FM}, {0x3, KEY_FM}, {0x9, KEY_FM},
+
+            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
+
+            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
+
+            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
+
+            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},};
+    private final static int HIDE_RADAR = 0;
+    private final static int KEY_VOL = 1;
+    private final static int SHOW_VOLUME_STEP = 2;
+    private int mVolStep = 0;
+    private int mDoorStatus = 0;
+
+
+    public Mazda3BinarytekSimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+    }
 
     private boolean isOneKey(byte b) {
         return ((b & 0xff) == 0xf0) || ((b & 0xff) == 0xf1) || ((b & 0xff) == 0xf3) || ((b & 0xff) == 0xf2);
@@ -124,27 +133,10 @@ public class Mazda3BinarytekSimple extends Canbox {
         sendDataToCanbox(data, data.length);
     }
 
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, KEY_FM}, {0x2, KEY_FM}, {0x3, KEY_FM}, {0x9, KEY_FM},
-
-            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
-
-            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
-
-            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
-
-            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},
-    };
-
-
     private void checkHideRadar() {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final static int KEY_VOL = 1;
-    private final static int SHOW_VOLUME_STEP = 2;
 
     private void doKeyStep(int key, int step) {
         mHandler.removeMessages(SHOW_VOLUME_STEP);
@@ -155,28 +147,6 @@ public class Mazda3BinarytekSimple extends Canbox {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
         }
     }
-
-    private int mVolStep = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_RADAR:
-                    RadarManager.stop();
-                    break;
-                case KEY_VOL:
-                    if (mVolStep < 30) {
-                        mVolStep++;
-                        doKey(mKeyDown);
-                        mHandler.sendEmptyMessageDelayed(KEY_VOL, 200);
-                    }
-                    break;
-                case SHOW_VOLUME_STEP:
-                    doKeyStep(msg.arg1, msg.arg2);
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -198,9 +168,26 @@ public class Mazda3BinarytekSimple extends Canbox {
                 break;
         }
         return data;
-    }
-
-    private int mDoorStatus = 0;
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HIDE_RADAR:
+                    RadarManager.stop();
+                    break;
+                case KEY_VOL:
+                    if (mVolStep < 30) {
+                        mVolStep++;
+                        doKey(mKeyDown);
+                        mHandler.sendEmptyMessageDelayed(KEY_VOL, 200);
+                    }
+                    break;
+                case SHOW_VOLUME_STEP:
+                    doKeyStep(msg.arg1, msg.arg2);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -288,6 +275,68 @@ public class Mazda3BinarytekSimple extends Canbox {
 
         }
     }
+
+    protected void doKey(int value, int status) { // value 0 -> key up
+
+        //		Log.d("Mazda3", "doKey:" + value);
+        //		if (CarUtil.getChangeKey() == 1) {
+        value = changeKey(value);
+        //		}
+
+        switch (status) {
+            case 0:
+                mHandler.removeMessages(KEY_VOL);
+                if (mKeyDown != 0) {
+                    if ((System.currentTimeMillis() - mClickTime) > LONG_CLICK_TIME) {
+                        if (mKeyDown == AK_KEYPAD_VOLUME_A || mKeyDown == AK_KEYPAD_VOLUME_D) {
+                            mKeyDown = 0;
+                        } else {
+                            int ret = getLongKey(value);
+                            if (ret != 0) {
+                                mKeyDown = ret;
+                            }
+                        }
+                    }
+                    if (mKeyDown != 0) {
+                        doKey(mKeyDown);
+                    }
+                    mKeyDown = 0;
+                    longClick = false;
+                }
+                break;
+            case 1:
+                mKeyDown = value;
+                mClickTime = System.currentTimeMillis();
+                longClick = false;
+
+                mHandler.removeMessages(KEY_VOL);
+                if (value == AK_KEYPAD_VOLUME_A || value == AK_KEYPAD_VOLUME_D) {
+                    mVolStep = 0;
+                    mHandler.sendEmptyMessageDelayed(KEY_VOL, LONG_CLICK_TIME);
+                }
+                break;
+            //		case 2:
+            //			if (value == AK_KEYPAD_VOLUME_A || value == AK_KEYPAD_VOLUME_D) {
+            //				doKey(value);
+            //				mKeyDown = 0;
+            //			} else {
+            //				if ((System.currentTimeMillis() - mClickTime) > LONG_CLICK_TIME) {
+            //					if (mKeyDown != 0) {
+            //						longClick = true;
+            //						int ret = getLongKey(value);
+            //						if (ret != 0) {
+            //							doKey(ret);
+            //							mKeyDown = 0;
+            //						}
+            //					}
+            //				}
+            //			}
+            //			break;
+        }
+
+    }
+
+
 
     //	byte[] data = new byte[6];
     //
@@ -384,63 +433,4 @@ public class Mazda3BinarytekSimple extends Canbox {
     //	}
 
 
-    protected void doKey(int value, int status) { // value 0 -> key up
-
-        //		Log.d("Mazda3", "doKey:" + value);
-        //		if (CarUtil.getChangeKey() == 1) {
-        value = changeKey(value);
-        //		}
-
-        switch (status) {
-            case 0:
-                mHandler.removeMessages(KEY_VOL);
-                if (mKeyDown != 0) {
-                    if ((System.currentTimeMillis() - mClickTime) > LONG_CLICK_TIME) {
-                        if (mKeyDown == AK_KEYPAD_VOLUME_A || mKeyDown == AK_KEYPAD_VOLUME_D) {
-                            mKeyDown = 0;
-                        } else {
-                            int ret = getLongKey(value);
-                            if (ret != 0) {
-                                mKeyDown = ret;
-                            }
-                        }
-                    }
-                    if (mKeyDown != 0) {
-                        doKey(mKeyDown);
-                    }
-                    mKeyDown = 0;
-                    longClick = false;
-                }
-                break;
-            case 1:
-                mKeyDown = value;
-                mClickTime = System.currentTimeMillis();
-                longClick = false;
-
-                mHandler.removeMessages(KEY_VOL);
-                if (value == AK_KEYPAD_VOLUME_A || value == AK_KEYPAD_VOLUME_D) {
-                    mVolStep = 0;
-                    mHandler.sendEmptyMessageDelayed(KEY_VOL, LONG_CLICK_TIME);
-                }
-                break;
-            //		case 2:
-            //			if (value == AK_KEYPAD_VOLUME_A || value == AK_KEYPAD_VOLUME_D) {
-            //				doKey(value);
-            //				mKeyDown = 0;
-            //			} else {
-            //				if ((System.currentTimeMillis() - mClickTime) > LONG_CLICK_TIME) {
-            //					if (mKeyDown != 0) {
-            //						longClick = true;
-            //						int ret = getLongKey(value);
-            //						if (ret != 0) {
-            //							doKey(ret);
-            //							mKeyDown = 0;
-            //						}
-            //					}
-            //				}
-            //			}
-            //			break;
-        }
-
-    }
 }

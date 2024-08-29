@@ -5,6 +5,21 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BentengFWP00AHiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+
+
+            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
+
+            {0xc, MyCmd.Keycode.MODLE},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK}, {0x9, MyCmd.Keycode.MUTE},
+
+            {0x15, MyCmd.Keycode.AS}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x24, MyCmd.Keycode.AUDIO}, {0x28, MyCmd.Keycode.BT}, {0x33, MyCmd.Keycode.RADIO}, {0x34, MyCmd.Keycode.BT_DIAL}, {0x35, MyCmd.Keycode.BT_HANG}, {0x3e, MyCmd.Keycode.EASY_CONNECT},
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+
     public BentengFWP00AHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdVersion((byte) 0xf0, (byte) 0x0);
@@ -18,33 +33,10 @@ public class BentengFWP00AHiworld extends Canbox {
 
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
-
-
-            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
-
-            {0xc, MyCmd.Keycode.MODLE},
-
-    };
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK}, {0x9, MyCmd.Keycode.MUTE},
-
-            {0x15, MyCmd.Keycode.AS}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x24, MyCmd.Keycode.AUDIO}, {0x28, MyCmd.Keycode.BT}, {0x33, MyCmd.Keycode.RADIO}, {0x34, MyCmd.Keycode.BT_DIAL},
-            {0x35, MyCmd.Keycode.BT_HANG}, {0x3e, MyCmd.Keycode.EASY_CONNECT},
-
-    };
-
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0xa, 0xf};

@@ -5,6 +5,21 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class RenaultXinFeiYang extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, MyCmd.Keycode.ROLL_PREV}, {0x4, MyCmd.Keycode.ROLL_NEXT},
+
+
+            {0x9, KEY_BT}, {0xb, KEY_BT},
+
+            {0x6, KEY_MIC},
+
+            {0x16, KEY_PLAYPAUSE},
+
+            {0x17, KEY_MUTE}, {(byte) 0x88, KEY_SOURCE},
+
+
+    };
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public RenaultXinFeiYang() {
 
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -18,21 +33,6 @@ public class RenaultXinFeiYang extends Canbox {
         mIdKey = 0x20;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, MyCmd.Keycode.ROLL_PREV}, {0x4, MyCmd.Keycode.ROLL_NEXT},
-
-
-            {0x9, KEY_BT}, {0xb, KEY_BT},
-
-            {0x6, KEY_MIC},
-
-            {0x16, KEY_PLAYPAUSE},
-
-            {0x17, KEY_MUTE}, {(byte) 0x88, KEY_SOURCE},
-
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -117,11 +117,6 @@ public class RenaultXinFeiYang extends Canbox {
         super.parseACInfo(airData);
     }
 
-
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -153,14 +148,10 @@ public class RenaultXinFeiYang extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec};
         }
 
         // if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -174,9 +165,7 @@ public class RenaultXinFeiYang extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 

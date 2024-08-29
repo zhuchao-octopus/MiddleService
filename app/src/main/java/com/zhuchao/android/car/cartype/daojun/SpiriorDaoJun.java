@@ -12,6 +12,15 @@ import java.util.Date;
 
 public class SpiriorDaoJun extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x16, 0x17, 0x65, 0x66, 0x67, 0x68, 0x69, 0x75, 0x76, (byte) 0x84, (byte) 0x85};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.MULT_BACK_AND_HANG}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.SPEECH}, {0xc, MyCmd.Keycode.KEY_DISPLAY}, {0xd, MyCmd.Keycode.HOME},
+
+
+    };
+    byte[] data0x84 = new byte[8];
+    byte[] data0x85 = new byte[28];
+    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
+
     public SpiriorDaoJun() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -29,19 +38,6 @@ public class SpiriorDaoJun extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x16, 0x17, 0x65, 0x66, 0x67, 0x68, 0x69, 0x75, 0x76, (byte) 0x84, (byte) 0x85
-    };
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL},
-            {0x6, MyCmd.Keycode.MULT_BACK_AND_HANG}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.SPEECH},
-            {0xc, MyCmd.Keycode.KEY_DISPLAY}, {0xd, MyCmd.Keycode.HOME},
-
-
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x01, 0x2};
@@ -148,9 +144,6 @@ public class SpiriorDaoJun extends Canbox {
     public void setMediaSrc(int source, byte type, byte[] b) {
     }
 
-    byte[] data0x84 = new byte[8];
-    byte[] data0x85 = new byte[28];
-
     @Override
     public void parseCanboxData(byte[] data, int len) {
         // TODO Auto-generated method stub
@@ -208,16 +201,6 @@ public class SpiriorDaoJun extends Canbox {
 
     }
 
-    private final Handler mHandlerRepeat = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                sendEQCmd(msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
-
     private void sendEQCmd(int style, int step) {
         mHandlerRepeat.removeMessages(0);
         if (step == 0) {
@@ -251,7 +234,14 @@ public class SpiriorDaoJun extends Canbox {
             mHandlerRepeat.sendMessageDelayed(mHandlerRepeat.obtainMessage(0, style, step), 100);
         }
 
-    }
+    }    private final Handler mHandlerRepeat = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                sendEQCmd(msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -337,4 +327,8 @@ public class SpiriorDaoJun extends Canbox {
 
         sendDataToCanbox(buf, buf.length);
     }
+
+
+
+
 }

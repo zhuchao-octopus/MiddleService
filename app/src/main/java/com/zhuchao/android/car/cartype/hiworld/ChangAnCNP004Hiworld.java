@@ -6,6 +6,29 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class ChangAnCNP004Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x48, (byte) 0x87, (byte) 0x78};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+
+            {0xc, MyCmd.Keycode.MODLE},
+
+
+            {0xe, MyCmd.Keycode.MULT_PREV_AND_HANG}, {0xd, MyCmd.Keycode.MULT_NEXT_AND_RECEIVE},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.EQ}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6},
+
+            {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x2b, MyCmd.Keycode.HOME}, {0x37, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.KEY_DISPLAY}, {0x43, MyCmd.Keycode.AS}, {0x47, MyCmd.Keycode.KEY_FM}, {0x48, MyCmd.Keycode.KEY_AM}, {0x4b, MyCmd.Keycode.RADIO}, {0x4c, MyCmd.Keycode.BT}, {0x55, MyCmd.Keycode.KEY_360},
+
+
+            //		{ 0x2b, MyCmd.Keycode.HOME },
+            //		{ 0x2d, MyCmd.Keycode.AUDIO },
+            //		{ 0x45, MyCmd.Keycode.VOLUME_UP },
+            //		{ 0x46, MyCmd.Keycode.VOLUME_DOWN },
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x3, MyCmd.Keycode.ROLL_NEXT, 0}, {0x13, MyCmd.Keycode.ROLL_PREV, 0}, {0x2, MyCmd.Keycode.SMART_CW, 0}, {0x12, MyCmd.Keycode.SMART_CCW, 0},};
+
     public ChangAnCNP004Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -24,43 +47,10 @@ public class ChangAnCNP004Hiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x48, (byte) 0x87, (byte) 0x78};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
-
-            {0xc, MyCmd.Keycode.MODLE},
-
-
-            {0xe, MyCmd.Keycode.MULT_PREV_AND_HANG}, {0xd, MyCmd.Keycode.MULT_NEXT_AND_RECEIVE},
-
-
-    };
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.EQ}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.NUMBER1},
-            {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6},
-
-            {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x2b, MyCmd.Keycode.HOME}, {0x37, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
-            {0x43, MyCmd.Keycode.AS}, {0x47, MyCmd.Keycode.KEY_FM}, {0x48, MyCmd.Keycode.KEY_AM}, {0x4b, MyCmd.Keycode.RADIO}, {0x4c, MyCmd.Keycode.BT}, {0x55, MyCmd.Keycode.KEY_360},
-
-
-            //		{ 0x2b, MyCmd.Keycode.HOME },
-            //		{ 0x2d, MyCmd.Keycode.AUDIO },
-            //		{ 0x45, MyCmd.Keycode.VOLUME_UP },
-            //		{ 0x46, MyCmd.Keycode.VOLUME_DOWN },
-
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x3, MyCmd.Keycode.ROLL_NEXT, 0}, {0x13, MyCmd.Keycode.ROLL_PREV, 0}, {0x2, MyCmd.Keycode.SMART_CW, 0},
-            {0x12, MyCmd.Keycode.SMART_CCW, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x13};

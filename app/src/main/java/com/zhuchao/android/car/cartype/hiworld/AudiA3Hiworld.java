@@ -7,6 +7,22 @@ import java.util.Locale;
 
 public class AudiA3Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+            {0x3, MyCmd.Keycode.MUTE},
+
+
+            {0x5, MyCmd.Keycode.BT_DIAL},
+
+            {0x6, MyCmd.Keycode.BT_HANG},
+
+            {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS},
+
+
+    };
+    private final byte[] mLcdInfo = new byte[14];
+    private final boolean mShowVolume = false;
+
     public AudiA3Hiworld() {
         buildCmdDoor((byte) 0x73, (byte) 0x2, (byte) 0xf8, (byte) 0x09);
         buildCmdAngle((byte) 0x72, (byte) 0x0, 0xfe);
@@ -21,23 +37,6 @@ public class AudiA3Hiworld extends Canbox {
 
         buildCmdKey((byte) 0x72, (byte) 5, (byte) 4, (byte) 0, KEYS_WHEEL);
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-            {0x3, MyCmd.Keycode.MUTE},
-
-
-            {0x5, MyCmd.Keycode.BT_DIAL},
-
-            {0x6, MyCmd.Keycode.BT_HANG},
-
-            {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS},
-
-
-    };
-
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -96,7 +95,6 @@ public class AudiA3Hiworld extends Canbox {
         super.parseACInfo(airData);
     }
 
-
     public void startConnect() {
 
         copyLcdInfo(mLcdInfo, "");
@@ -106,13 +104,10 @@ public class AudiA3Hiworld extends Canbox {
         sendDataToCanbox(mLcdInfo, mLcdInfo.length);
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final byte[] mLcdInfo = new byte[14];
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -152,8 +147,6 @@ public class AudiA3Hiworld extends Canbox {
             sendDataToCanbox(mLcdInfo, mLcdInfo.length);
         }
     }
-
-    private final boolean mShowVolume = false;
 
     public void setMediaSrc(int source) {// default is simple box
         String s = "";

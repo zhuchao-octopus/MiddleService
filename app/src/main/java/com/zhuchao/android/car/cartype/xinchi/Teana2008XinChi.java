@@ -12,6 +12,13 @@ import java.util.Date;
 
 public class Teana2008XinChi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.PREVIOUS}, {0x2, MyCmd.Keycode.NEXT},
+
+    };
+    private final static int SET_EQ_STEP = 1;
+    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
+
     public Teana2008XinChi() {
         buildCmdDoor((byte) 0x24, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
         //		buildCmdRadarFront((byte) 0xc, (byte) 0x0, (byte) 0x4, (byte) 3);
@@ -26,13 +33,6 @@ public class Teana2008XinChi extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.PREVIOUS}, {0x2, MyCmd.Keycode.NEXT},
-
-    };
 
     @Override
     public int getACTemp(byte data) {
@@ -85,9 +85,7 @@ public class Teana2008XinChi extends Canbox {
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
-        byte[] mData = new byte[]{
-                (byte) 0x88, 0x4, 4, 0, 0, 0
-        };
+        byte[] mData = new byte[]{(byte) 0x88, 0x4, 4, 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
 
     }
@@ -171,18 +169,6 @@ public class Teana2008XinChi extends Canbox {
         }
     }
 
-    private final static int SET_EQ_STEP = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == SET_EQ_STEP) {
-                sendEQCmd((byte) msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
-
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
         if (cmd == EQ_REQUEST_ALL_MAX) {
@@ -243,7 +229,14 @@ public class Teana2008XinChi extends Canbox {
 
         }
         return ret;
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SET_EQ_STEP) {
+                sendEQCmd((byte) msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void parseEQ(int id, byte[] buf) {
 
@@ -255,4 +248,8 @@ public class Teana2008XinChi extends Canbox {
 
         super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQBuf);
     }
+
+
+
+
 }

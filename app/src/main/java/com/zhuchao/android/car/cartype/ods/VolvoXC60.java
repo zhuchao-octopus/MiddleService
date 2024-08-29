@@ -12,20 +12,9 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class VolvoXC60 extends Canbox {
 
-    public VolvoXC60() {
-
-        buildCmdVersion((byte) 0x30, (byte) 0x0);
-        buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
-
-        buildCmdAngle((byte) 0x26, (byte) 0x0, 0x2710);
-        mIdAC = 0x21;
-    }
-
-
     private final static byte[][] KEYS_WHEEL_NORMAL = {
 
-            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8},
-            {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
 
             {0x33, KEY_FM}, {0x34, KEY_AUX}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER},
 
@@ -57,9 +46,20 @@ public class VolvoXC60 extends Canbox {
             //			{ (byte) 0xF3, MyCmd.Keycode.KEY_TURN_D },
 
     };
-
-
     private final byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
+    byte[] airData = new byte[8];
+    private byte mOutDoorTempUnit;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mSource = MyCmd.SOURCE_NONE;
+
+    public VolvoXC60() {
+
+        buildCmdVersion((byte) 0x30, (byte) 0x0);
+        buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
+
+        buildCmdAngle((byte) 0x26, (byte) 0x0, 0x2710);
+        mIdAC = 0x21;
+    }
 
     private void parseWheelKey(byte[] data, int len) {
         if (doKeyStudy(data[2], data[3])) {
@@ -131,10 +131,6 @@ public class VolvoXC60 extends Canbox {
         }
     }
 
-    byte[] airData = new byte[8];
-
-    private byte mOutDoorTempUnit;
-
     public void parseACInfo(byte[] data) {
         if (data[4] >= 0x7f) {
             data[4] = (byte) 0xff;
@@ -166,8 +162,6 @@ public class VolvoXC60 extends Canbox {
         super.parseACInfo(airData);
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
     public void updateOutDoorTemp(int temp) {
 
         if ((temp < -40) || (temp > 86)) {
@@ -195,7 +189,6 @@ public class VolvoXC60 extends Canbox {
         }
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
     }
-
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -370,16 +363,12 @@ public class VolvoXC60 extends Canbox {
 
     }
 
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
     }
-
 
     public void setMediaSrc(int source, byte type, byte[] b) {
 
     }
-
-    private int mSource = MyCmd.SOURCE_NONE;
 
     public void setMediaSrc(int source) {
         mSource = source;

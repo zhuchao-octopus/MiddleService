@@ -16,20 +16,45 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class FiestaDaojun extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.DVD}, {0x3, MyCmd.Keycode.RADIO}, {0x4, MyCmd.Keycode.AUX_IN}, {0x5, MyCmd.Keycode.MUTE},//yihu
+            {0x8, MyCmd.Keycode.EJECT}, {0x9, MyCmd.Keycode.AS}, {0xa, MyCmd.Keycode.AUDIO}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PLAY_PAUSE}, {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.NEXT}, {0x10, MyCmd.Keycode.PREVIOUS}, {0x11, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.PREVIOUS}, {0x13, MyCmd.Keycode.NEXT}, {0x14, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.NEXT},
+
+            {0x16, MyCmd.Keycode.NUMBER0}, {0x17, MyCmd.Keycode.NUMBER1}, {0x18, MyCmd.Keycode.NUMBER2}, {0x19, MyCmd.Keycode.NUMBER3}, {0x1a, MyCmd.Keycode.NUMBER4}, {0x1b, MyCmd.Keycode.NUMBER5}, {0x1c, MyCmd.Keycode.NUMBER6}, {0x1d, MyCmd.Keycode.NUMBER7}, {0x1e, MyCmd.Keycode.NUMBER8}, {0x1f, MyCmd.Keycode.NUMBER9}, {0x20, MyCmd.Keycode.NUMBER_STAR}, {0x21, MyCmd.Keycode.NUMBER_POUND}, {(byte) 0x23, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x22, MyCmd.Keycode.VOLUME_ROLL_DOWN},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x4, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x5, MyCmd.Keycode.SPEECH},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final byte[] mAirData = new byte[8];
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+
     public FiestaDaojun() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
 
 
         buildCmdAngle((byte) 0x26, (byte) 0x0, 22016);
         mIdKey = 0x1;
         MAP_KEYS = KEYS_WHEEL2;
     }
-
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -59,24 +84,6 @@ public class FiestaDaojun extends Canbox {
 
     }
 
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.DVD}, {0x3, MyCmd.Keycode.RADIO}, {0x4, MyCmd.Keycode.AUX_IN}, {0x5, MyCmd.Keycode.MUTE},//yihu
-            {0x8, MyCmd.Keycode.EJECT}, {0x9, MyCmd.Keycode.AS}, {0xa, MyCmd.Keycode.AUDIO}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PLAY_PAUSE},
-            {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.NEXT}, {0x10, MyCmd.Keycode.PREVIOUS}, {0x11, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.PREVIOUS}, {0x13, MyCmd.Keycode.NEXT},
-            {0x14, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.NEXT},
-
-            {0x16, MyCmd.Keycode.NUMBER0}, {0x17, MyCmd.Keycode.NUMBER1}, {0x18, MyCmd.Keycode.NUMBER2}, {0x19, MyCmd.Keycode.NUMBER3}, {0x1a, MyCmd.Keycode.NUMBER4}, {0x1b, MyCmd.Keycode.NUMBER5},
-            {0x1c, MyCmd.Keycode.NUMBER6}, {0x1d, MyCmd.Keycode.NUMBER7}, {0x1e, MyCmd.Keycode.NUMBER8}, {0x1f, MyCmd.Keycode.NUMBER9}, {0x20, MyCmd.Keycode.NUMBER_STAR},
-            {0x21, MyCmd.Keycode.NUMBER_POUND}, {(byte) 0x23, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x22, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x4, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x5, MyCmd.Keycode.SPEECH},
-
-    };
-
     private void parseWheelKey(byte[] data) {
 
         if (doKeyStudy(data[2], data[3])) {
@@ -99,8 +106,6 @@ public class FiestaDaojun extends Canbox {
             }
         }
     }
-
-    private final byte[] mAirData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -239,10 +244,6 @@ public class FiestaDaojun extends Canbox {
 
     }
 
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -284,11 +285,9 @@ public class FiestaDaojun extends Canbox {
         }
 
     }
-
-    private int mDoorStatus = 0;
-
-
-    byte[] data;
+    //	public void setPhone(int status, String num) {
+    //		sendId3((byte)0x1, num);
+    //	}
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -321,14 +320,10 @@ public class FiestaDaojun extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         }
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -342,12 +337,9 @@ public class FiestaDaojun extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        data = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(data, data.length);
     }
-
 
     public void sendId3(byte index, String num) {
 
@@ -382,13 +374,6 @@ public class FiestaDaojun extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-    //	public void setPhone(int status, String num) {
-    //		sendId3((byte)0x1, num);
-    //	}
-
     public void setSongName(String s) {
         sendId3((byte) 0x2, s);
         mName = s;
@@ -403,8 +388,6 @@ public class FiestaDaojun extends Canbox {
         sendId3((byte) 0x3, s);
         mAlbum = s;
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 
@@ -475,16 +458,6 @@ public class FiestaDaojun extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
     //
     // public void setPhone(int status, String num) {// default is simple box
     // switch (status) {

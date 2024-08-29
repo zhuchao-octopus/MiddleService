@@ -11,6 +11,18 @@ import java.util.Date;
 
 public class NissanDaoJun extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.KEY_AM}, {0x5, MyCmd.Keycode.KEY_FM}, {0x6, MyCmd.Keycode.MODLE}, {0x7, MyCmd.Keycode.DVD}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0x10, MyCmd.Keycode.MUTE}, {0x11, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.PREVIOUS}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.FAST_R}, {0x15, MyCmd.Keycode.KEY_SHUFFLE}, {0x16, MyCmd.Keycode.NEXT}, {0x17, MyCmd.Keycode.FAST_F}, {0x18, MyCmd.Keycode.KEY_REPEAT},
+            //		{ 0x19, MyCmd.Keycode.NAVIGATION },
+            //		{ 0x20, MyCmd.Keycode.AUDIO },
+            //		{ 0x21, MyCmd.Keycode. },
+            //		{ 0x22, MyCmd.Keycode. },
+            {0x23, MyCmd.Keycode.AUDIO}, {0x24, MyCmd.Keycode.MODLE},
+            //		{ 0x25, MyCmd.Keycode. },
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x87, MyCmd.Keycode.POWER},
+
+    };
+
     public NissanDaoJun() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -23,30 +35,8 @@ public class NissanDaoJun extends Canbox {
 
     }
 
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.KEY_AM}, {0x5, MyCmd.Keycode.KEY_FM},
-            {0x6, MyCmd.Keycode.MODLE}, {0x7, MyCmd.Keycode.DVD}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0x10, MyCmd.Keycode.MUTE}, {0x11, MyCmd.Keycode.NEXT},
-            {0x12, MyCmd.Keycode.PREVIOUS}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.FAST_R}, {0x15, MyCmd.Keycode.KEY_SHUFFLE}, {0x16, MyCmd.Keycode.NEXT}, {0x17, MyCmd.Keycode.FAST_F},
-            {0x18, MyCmd.Keycode.KEY_REPEAT},
-            //		{ 0x19, MyCmd.Keycode.NAVIGATION },
-            //		{ 0x20, MyCmd.Keycode.AUDIO },
-            //		{ 0x21, MyCmd.Keycode. },
-            //		{ 0x22, MyCmd.Keycode. },
-            {0x23, MyCmd.Keycode.AUDIO}, {0x24, MyCmd.Keycode.MODLE},
-            //		{ 0x25, MyCmd.Keycode. },
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL},
-            {0xa, MyCmd.Keycode.BT_HANG}, {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x87, MyCmd.Keycode.POWER},
-
-    };
-
     private byte[] getCarTypeCmd() {
-        byte[] cmd = new byte[]{
-                (byte) 0x72, 0x09, 0x7, 0x3, 0x1, 0x1, 0x3, (byte) 0xe3, (byte) 0xf3, (byte) 0xfb, (byte) 0xfb
-        };
+        byte[] cmd = new byte[]{(byte) 0x72, 0x09, 0x7, 0x3, 0x1, 0x1, 0x3, (byte) 0xe3, (byte) 0xf3, (byte) 0xfb, (byte) 0xfb};
         if (CarUtil.getCarTypeConfig() == 0) {
             cmd[4] = 0x2;
             cmd[9] = (byte) 0xf7;

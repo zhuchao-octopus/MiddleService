@@ -62,6 +62,7 @@ Bit1~Bit0:保留 */
     public static final int DATA_MAX = 10;
 
     private static final byte[] mData = new byte[DATA_MAX];
+    public static boolean mNeedData = false;
 
     private static void copyData(int id, byte[] data) {
 
@@ -97,8 +98,6 @@ Bit1~Bit0:保留 */
 
         }
     }
-
-    public static boolean mNeedData = false;
 
     public static void updateScreenSave(Context c, int data) {
         Canbox canbox = CarUtil.getCanboxInstance();

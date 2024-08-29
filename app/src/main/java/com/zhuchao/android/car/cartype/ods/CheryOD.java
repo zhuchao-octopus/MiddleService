@@ -15,17 +15,7 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class CheryOD extends Canbox {
 
-    public CheryOD() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
 
             {0x5, KEY_BT_DIAL}, {0x6, KEY_BT_HANG},
 
@@ -37,10 +27,27 @@ public class CheryOD extends Canbox {
             {0x17, KEY_MODE}, {0x18, MyCmd.Keycode.KEY_RADIO_PS}, {0x19, MyCmd.Keycode.SETUP}, {0x20, AK_KEYPAD_VOLUME_A}, {0x21, AK_KEYPAD_VOLUME_D},
 
 
-            {0x22, MyCmd.Keycode.EQ}, {0x23, MyCmd.Keycode.MENU}, {0x24, MyCmd.Keycode.BT}, {0x25, MyCmd.Keycode.RADIO}, {0x26, MyCmd.Keycode.HOME}, {0x27, MyCmd.Keycode.BT},
-            {0x28, MyCmd.Keycode.NAVIGATION},
+            {0x22, MyCmd.Keycode.EQ}, {0x23, MyCmd.Keycode.MENU}, {0x24, MyCmd.Keycode.BT}, {0x25, MyCmd.Keycode.RADIO}, {0x26, MyCmd.Keycode.HOME}, {0x27, MyCmd.Keycode.BT}, {0x28, MyCmd.Keycode.NAVIGATION},
 
     };
+    byte[] data;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (data != null) {
+                sendDataToCanbox(data, data.length);
+            }
+            super.handleMessage(msg);
+        }
+    };
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+    private int mSource = MyCmd.SOURCE_NONE;
+
+    public CheryOD() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -140,7 +147,6 @@ public class CheryOD extends Canbox {
         }
     }
 
-
     @Override
     public void parseCanboxData(byte[] data, int len) {
         // TODO Auto-generated method stub
@@ -223,9 +229,6 @@ public class CheryOD extends Canbox {
         // }
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -266,10 +269,6 @@ public class CheryOD extends Canbox {
         }
 
     }
-
-    private int mDoorStatus = 0;
-
-    byte[] data;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -318,8 +317,6 @@ public class CheryOD extends Canbox {
         sendDataToCanbox(data, data.length);
     }
 
-    private int mSource = MyCmd.SOURCE_NONE;
-
     public void setMediaSrc(int source) {
 
         mHandler.removeMessages(0);
@@ -353,9 +350,7 @@ public class CheryOD extends Canbox {
             mSource = source;
             if (source == MyCmd.SOURCE_BT) {
 
-                data = new byte[]{
-                        (byte) 0xc0, 0x8, s, 0, 0, 0, 0, (byte) 0xff, (byte) 0xff, (byte) 0xff
-                };
+                data = new byte[]{(byte) 0xc0, 0x8, s, 0, 0, 0, 0, (byte) 0xff, (byte) 0xff, (byte) 0xff};
             } else {
 
                 data = new byte[]{(byte) 0xc0, 0x8, s, format, 0, 0, 0, 0, 0, 0};
@@ -373,15 +368,6 @@ public class CheryOD extends Canbox {
         mHandler.removeMessages(0);
         mHandler.sendEmptyMessageDelayed(0, 4000);
     }
-
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (data != null) {
-                sendDataToCanbox(data, data.length);
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     //	public void udpateLang() {
     //		int lang = 1;

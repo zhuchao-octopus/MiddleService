@@ -17,7 +17,21 @@ import java.util.Objects;
 
 
 public class ToyotaHiworld extends Canbox {
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x12, 0x13, 0x16, 0x17, 0x1f, 0x48, 0x62, 0x32, (byte) 0xa6};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.MODLE},
+
+            {0xe, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PREVIOUS},
+
+            {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK},
+            //		{ 0xd, MyCmd.Keycode },
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.PLAY_PAUSE}, {0x2b, MyCmd.Keycode.HOME}, {0x2c, MyCmd.Keycode.MODLE}, {0x2f, MyCmd.Keycode.MENU}, {0x30, MyCmd.Keycode.BT}, {0x33, MyCmd.Keycode.RADIO}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
+
+
+            {0x4b, MyCmd.Keycode.RADIO}, {0x3, MyCmd.Keycode.NEXT}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x28, MyCmd.Keycode.BT},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
     private final String TAG = "ToyotaHiworld";
+    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
 
     public ToyotaHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -41,28 +55,10 @@ public class ToyotaHiworld extends Canbox {
         MMLog.d(TAG, "NEW ToyotaHiworld CANBOX");
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x12, 0x13, 0x16, 0x17, 0x1f, 0x48, 0x62, 0x32, (byte) 0xa6};
-
-    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.MODLE},
-
-            {0xe, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PREVIOUS},
-
-            {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK},
-            //		{ 0xd, MyCmd.Keycode },
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.PLAY_PAUSE}, {0x2b, MyCmd.Keycode.HOME}, {0x2c, MyCmd.Keycode.MODLE}, {0x2f, MyCmd.Keycode.MENU}, {0x30, MyCmd.Keycode.BT}, {0x33, MyCmd.Keycode.RADIO}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
-
-
-            {0x4b, MyCmd.Keycode.RADIO}, {0x3, MyCmd.Keycode.NEXT}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x28, MyCmd.Keycode.BT},};
-
-    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
 
     public void parseCanboxData(byte[] data, int len) {
         switch (data[0]) {
@@ -216,7 +212,6 @@ public class ToyotaHiworld extends Canbox {
         airData[5] |= 0x80;
         super.parseACInfo(airData);
     }
-
 
     public void parseACInfo2(byte[] data) {
         byte[] airData = new byte[12];
@@ -411,16 +406,6 @@ public class ToyotaHiworld extends Canbox {
         super.sendDataToCanboxHiword1(data, len);
     }
 
-    private final Handler mHandlerRepeat = new Handler(Objects.requireNonNull(Looper.myLooper())) {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                sendEQCmd(msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
-
     private void sendEQCmd(int style, int step) {
         mHandlerRepeat.removeMessages(0);
         if (step == 0) {
@@ -454,7 +439,14 @@ public class ToyotaHiworld extends Canbox {
             mHandlerRepeat.sendMessageDelayed(mHandlerRepeat.obtainMessage(0, style, step), 100);
         }
 
-    }
+    }    private final Handler mHandlerRepeat = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                sendEQCmd(msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -514,23 +506,6 @@ public class ToyotaHiworld extends Canbox {
     public void startConnect() {
 
     }
-    //	private void returnEQData(byte[] buf) {
-    //		byte[] data = new byte[6];
-    //
-    //		data[0] = (byte) (buf[3] & 0x0f);
-    //		data[1] = (byte) ((buf[4] & 0xf0) >> 4);
-    //		data[2] = (byte) ((buf[3] & 0xf0) >> 4);
-    //		data[3] = (byte) ((buf[2] & 0xf0) >> 4);
-    //		data[4] = (byte) (buf[2] & 0x0f);
-    //
-    //		data[5] = buf[5];
-    //
-    //		data[0] -= 2;
-    //		data[1] -= 2;
-    //		data[2] -= 2;
-    //
-    //		super.returnEQData(EQ_CMD_SET_ALL_DATA, data);
-    //	}
 
     public int getUpdateTime() {
         return 60000;
@@ -561,6 +536,23 @@ public class ToyotaHiworld extends Canbox {
         byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 0};
         sendDataToCanbox(buf, buf.length);
     }
+    //	private void returnEQData(byte[] buf) {
+    //		byte[] data = new byte[6];
+    //
+    //		data[0] = (byte) (buf[3] & 0x0f);
+    //		data[1] = (byte) ((buf[4] & 0xf0) >> 4);
+    //		data[2] = (byte) ((buf[3] & 0xf0) >> 4);
+    //		data[3] = (byte) ((buf[2] & 0xf0) >> 4);
+    //		data[4] = (byte) (buf[2] & 0x0f);
+    //
+    //		data[5] = buf[5];
+    //
+    //		data[0] -= 2;
+    //		data[1] -= 2;
+    //		data[2] -= 2;
+    //
+    //		super.returnEQData(EQ_CMD_SET_ALL_DATA, data);
+    //	}
 
     @Override
     public void touchInReverse(int x, int y, int w, int h) {
@@ -617,4 +609,8 @@ public class ToyotaHiworld extends Canbox {
             sendDataToCanbox(buf, buf.length);
         }
     }
+
+
+
+
 }

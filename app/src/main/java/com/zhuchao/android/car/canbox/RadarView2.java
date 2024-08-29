@@ -9,20 +9,32 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class RadarView2 extends ImageView {
-    private final byte[] mRadarDataFront = new byte[4];
-    private final byte[] mRadarDataBack = new byte[4];
-
-    private final int[] mRadarBackStartX = new int[4];
-    private final int[] mRadarBackStartY = new int[4];
-
-    private final int[] mRadarFrontStartX = new int[4];
-    private final int[] mRadarFrontStartY = new int[4];
-
     private final static int RADAR_BAR_NUM = 10;
     private final static int RADAR_BAR_INTERVAL = 10;
     private final static int RADAR_BAR_HEIGHT = 25;
-
+    private final byte[] mRadarDataFront = new byte[4];
+    private final byte[] mRadarDataBack = new byte[4];
+    private final int[] mRadarBackStartX = new int[4];
+    private final int[] mRadarBackStartY = new int[4];
+    private final int[] mRadarFrontStartX = new int[4];
+    private final int[] mRadarFrontStartY = new int[4];
     private Paint mPaint;
+
+    public RadarView2(Context context) {
+        super(context);
+        initRadarData();
+    }
+
+    public RadarView2(Context context, AttributeSet attrs) {
+
+        super(context, attrs);
+        initRadarData();
+    }
+
+    public RadarView2(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initRadarData();
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -142,21 +154,5 @@ public class RadarView2 extends ImageView {
         //		mRadarDataFront[1] = 5;
         //		mRadarDataFront[2] = 5;
         //		mRadarDataFront[3] = 10;
-    }
-
-    public RadarView2(Context context) {
-        super(context);
-        initRadarData();
-    }
-
-    public RadarView2(Context context, AttributeSet attrs) {
-
-        super(context, attrs);
-        initRadarData();
-    }
-
-    public RadarView2(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        initRadarData();
     }
 }

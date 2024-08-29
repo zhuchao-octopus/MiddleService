@@ -10,6 +10,15 @@ import java.util.Date;
 
 public class DongFengOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x29, 0x27};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT},
+
+            {0x10, MyCmd.Keycode.HOME}, {0x11, MyCmd.Keycode.BACK}, {0x12, MyCmd.Keycode.AUDIO}, {0x13, MyCmd.Keycode.KEY_DISPLAY}, {0x14, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.NEXT}, {0x16, MyCmd.Keycode.KEY_FM}, {0x17, MyCmd.Keycode.POWER}, {0x18, MyCmd.Keycode.KEY_AM}, {0x19, MyCmd.Keycode.AUDIO}, {0x1a, MyCmd.Keycode.BT}, {0x1b, MyCmd.Keycode.SETUP}, {0x1c, MyCmd.Keycode.EQ}, {0x1d, MyCmd.Keycode.PREVIOUS}, {0x1e, MyCmd.Keycode.NEXT}, {0x1f, MyCmd.Keycode.PREVIOUS}, {0x20, MyCmd.Keycode.NEXT}, {0x21, MyCmd.Keycode.PLAY_PAUSE}, {0x22, MyCmd.Keycode.ROLL_PREV}, {0x23, MyCmd.Keycode.ROLL_NEXT}, {0x24, MyCmd.Keycode.KEY_360}, {0x32, MyCmd.Keycode.NAVIGATION},
+
+
+    };
+    private final int mRadarBack2;
+
     public DongFengOD() {
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
         if (CarUtil.getModelId() == 0 || CarUtil.getModelId() == 1 || CarUtil.getModelId() == 15 || CarUtil.getModelId() == 8) {
@@ -28,22 +37,6 @@ public class DongFengOD extends Canbox {
 
         mRadarBack2 = buildCmdRadar((byte) 0x24, (byte) 0x0, (byte) 255, (byte) 2);
     }
-
-    private final int mRadarBack2;
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x29, 0x27};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
-            {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT},
-
-            {0x10, MyCmd.Keycode.HOME}, {0x11, MyCmd.Keycode.BACK}, {0x12, MyCmd.Keycode.AUDIO}, {0x13, MyCmd.Keycode.KEY_DISPLAY}, {0x14, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.NEXT},
-            {0x16, MyCmd.Keycode.KEY_FM}, {0x17, MyCmd.Keycode.POWER}, {0x18, MyCmd.Keycode.KEY_AM}, {0x19, MyCmd.Keycode.AUDIO}, {0x1a, MyCmd.Keycode.BT}, {0x1b, MyCmd.Keycode.SETUP},
-            {0x1c, MyCmd.Keycode.EQ}, {0x1d, MyCmd.Keycode.PREVIOUS}, {0x1e, MyCmd.Keycode.NEXT}, {0x1f, MyCmd.Keycode.PREVIOUS}, {0x20, MyCmd.Keycode.NEXT}, {0x21, MyCmd.Keycode.PLAY_PAUSE},
-            {0x22, MyCmd.Keycode.ROLL_PREV}, {0x23, MyCmd.Keycode.ROLL_NEXT}, {0x24, MyCmd.Keycode.KEY_360}, {0x32, MyCmd.Keycode.NAVIGATION},
-
-
-    };
-
 
     @Override
     public int getAngleValue(byte[] data) {

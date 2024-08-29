@@ -19,13 +19,33 @@ import java.util.Locale;
 
 public class LandRoverHaozheng extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_MODE}, {0x6, KEY_MUTE}, {0x7, KEY_BT}, {0x8, KEY_BT_DIAL}, {0x9, KEY_BT_HANG},
+
+            {0xb, KEY_NEXTSONG}, {0xa, KEY_PREVIOUSSONG}, {0xd, KEY_PLAYPAUSE}, {0x19, KEY_MIC},
+
+
+            {0x11, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x12, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x13, MyCmd.Keycode.ROLL_NEXT}, {0x14, MyCmd.Keycode.ROLL_PREV}, {0x16, MyCmd.Keycode.NAVIGATION}, {0x17, MyCmd.Keycode.AUDIO}, {0x18, MyCmd.Keycode.POWER}, {0x1b, MyCmd.Keycode.HOME}, {0x20, MyCmd.Keycode.SETUP}, {0x21, MyCmd.Keycode.EQ}, {0x22, MyCmd.Keycode.EJECT},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {
+
+            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.RADIO}, {0x5, MyCmd.Keycode.AUDIO}, {0x6, MyCmd.Keycode.BT},
+            //		{ 0x7, MyCmd.Keycode. },
+            {0x8, MyCmd.Keycode.NAVIGATION}, {0x9, MyCmd.Keycode.KEY_CAR_INFO}, {0xa, MyCmd.Keycode.AS}, {0xb, MyCmd.Keycode.SETUP}, {0xc, MyCmd.Keycode.PLAY_PAUSE}, {0xd, MyCmd.Keycode.ROLL_NEXT}, {0xe, MyCmd.Keycode.ROLL_PREV},
+
+
+    };
+    byte mAmpm = -1;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+
     public LandRoverHaozheng() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
 
         if (CarUtil.getModelId() == 1) {
             buildCmdRadarFront((byte) 0x5, (byte) 0x1, (byte) 0x1f);
@@ -39,29 +59,6 @@ public class LandRoverHaozheng extends Canbox {
         mIdKey = (byte) 0xa8;
         MAP_KEYS = KEYS_WHEEL2;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_MODE}, {0x6, KEY_MUTE}, {0x7, KEY_BT}, {0x8, KEY_BT_DIAL}, {0x9, KEY_BT_HANG},
-
-            {0xb, KEY_NEXTSONG}, {0xa, KEY_PREVIOUSSONG}, {0xd, KEY_PLAYPAUSE}, {0x19, KEY_MIC},
-
-
-            {0x11, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x12, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x13, MyCmd.Keycode.ROLL_NEXT}, {0x14, MyCmd.Keycode.ROLL_PREV}, {0x16, MyCmd.Keycode.NAVIGATION},
-            {0x17, MyCmd.Keycode.AUDIO}, {0x18, MyCmd.Keycode.POWER}, {0x1b, MyCmd.Keycode.HOME}, {0x20, MyCmd.Keycode.SETUP}, {0x21, MyCmd.Keycode.EQ}, {0x22, MyCmd.Keycode.EJECT},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.RADIO}, {0x5, MyCmd.Keycode.AUDIO}, {0x6, MyCmd.Keycode.BT},
-            //		{ 0x7, MyCmd.Keycode. },
-            {0x8, MyCmd.Keycode.NAVIGATION}, {0x9, MyCmd.Keycode.KEY_CAR_INFO}, {0xa, MyCmd.Keycode.AS}, {0xb, MyCmd.Keycode.SETUP}, {0xc, MyCmd.Keycode.PLAY_PAUSE}, {0xd, MyCmd.Keycode.ROLL_NEXT},
-            {0xe, MyCmd.Keycode.ROLL_PREV},
-
-
-    };
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -83,7 +80,6 @@ public class LandRoverHaozheng extends Canbox {
             }
         }
     }
-
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -149,9 +145,6 @@ public class LandRoverHaozheng extends Canbox {
         }
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -197,10 +190,6 @@ public class LandRoverHaozheng extends Canbox {
         }
 
     }
-
-    private int mDoorStatus = 0;
-
-    byte mAmpm = -1;
 
     public void updateTime() {
         if (mContext == null) {

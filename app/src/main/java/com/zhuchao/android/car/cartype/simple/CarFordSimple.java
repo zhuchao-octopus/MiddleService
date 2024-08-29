@@ -20,26 +20,9 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class CarFordSimple extends Canbox {
 
-    public CarFordSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-        // updateCanboxSettings();
-
-        if (CarUtil.getKeyType() == 1) {
-            KEYS_WHEEL = KEYS_WHEEL_KUGA;
-        }
-    }
-
-
     private final static byte[][] KEYS_WHEEL_NORMAL = {
 
-            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8},
-            {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
 
             {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER},
 
@@ -62,11 +45,9 @@ public class CarFordSimple extends Canbox {
             {(byte) 0x86, KEY_PLAYPAUSE}, {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D}, {(byte) 0xF2, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0xF3, MyCmd.Keycode.KEY_TURN_D},
 
     };
-
     private final static byte[][] KEYS_WHEEL_KUGA = {
 
-            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8},
-            {0x29, KEY_NUM_9}, {0x2a, KEY_GPS}, {0x2b, KEY_NUM_J},
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_GPS}, {0x2b, KEY_NUM_J},
 
             {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_MUTE},
 
@@ -86,9 +67,26 @@ public class CarFordSimple extends Canbox {
             {(byte) 0x86, KEY_PLAYPAUSE}, {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D}, {(byte) 0xF2, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0xF3, MyCmd.Keycode.KEY_TURN_D},
 
     };
-
-
+    byte[] airData = new byte[8];
     private byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
+    private byte mOutDoorTempUnit;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int showWarningMsg = -1;
+    private int mDoorStatus = 0;
+    private int mSource = MyCmd.SOURCE_NONE;
+    private int mBaud = 0;
+
+
+    public CarFordSimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+        // updateCanboxSettings();
+
+        if (CarUtil.getKeyType() == 1) {
+            KEYS_WHEEL = KEYS_WHEEL_KUGA;
+        }
+    }
 
     private void parseWheelKey(byte[] data, int len) {
         if (doKeyStudy(data[2], data[3])) {
@@ -160,10 +158,6 @@ public class CarFordSimple extends Canbox {
         }
     }
 
-    byte[] airData = new byte[8];
-
-    private byte mOutDoorTempUnit;
-
     private void parseACInfo(byte[] data, int len) {
         if (data[4] >= 0x7f) {
             data[4] = (byte) 0xff;
@@ -233,8 +227,6 @@ public class CarFordSimple extends Canbox {
 
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
     public void updateOutDoorTemp(int temp) {
 
         if ((temp < -40) || (temp > 86)) {
@@ -262,7 +254,6 @@ public class CarFordSimple extends Canbox {
         }
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
     }
-
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -532,8 +523,6 @@ public class CarFordSimple extends Canbox {
 
         returnDriveData(data);
     }
-
-    private int showWarningMsg = -1;
 
     public void updateCanboxSettings() {
 
@@ -1111,8 +1100,6 @@ public class CarFordSimple extends Canbox {
         }
     }
 
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -1130,9 +1117,6 @@ public class CarFordSimple extends Canbox {
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
     }
-
-    private int mSource = MyCmd.SOURCE_NONE;
-    private int mBaud = 0;
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         mSource = source;

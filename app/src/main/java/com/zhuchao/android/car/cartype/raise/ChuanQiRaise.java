@@ -10,6 +10,18 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class ChuanQiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x52, 0x53, 0x54};
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x11, MyCmd.Keycode.MODLE}, {0x12, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x13, MyCmd.Keycode.KEY_SEEK_PREV}, {0x14, MyCmd.Keycode.VOLUME_UP}, {0x15, MyCmd.Keycode.VOLUME_DOWN}, {0x16, MyCmd.Keycode.MUTE}, {0x17, MyCmd.Keycode.PLAY_PAUSE}, {0x18, MyCmd.Keycode.BACK}, {0x30, MyCmd.Keycode.BT_DIAL}, {0x31, MyCmd.Keycode.BT_HANG}, {0x32, MyCmd.Keycode.SPEECH},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.EJECT}, {0x3, MyCmd.Keycode.HOME}, {0x4, MyCmd.Keycode.MODLE}, {0x5, MyCmd.Keycode.RADIO}, {0x6, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.SETUP}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.NAVIGATION}, {0xb, MyCmd.Keycode.PLAY_PAUSE}, {0xc, MyCmd.Keycode.BACK}, {0xd, MyCmd.Keycode.BT_DIAL}, {0xe, MyCmd.Keycode.SPEECH}, {0x10, MyCmd.Keycode.VOLUME_UP}, {0x11, MyCmd.Keycode.VOLUME_DOWN}, {0x12, MyCmd.Keycode.KEY_TURN_A}, {0x13, MyCmd.Keycode.KEY_TURN_D}, {0x21, MyCmd.Keycode.NUMBER1}, {0x22, MyCmd.Keycode.NUMBER2}, {0x23, MyCmd.Keycode.NUMBER3}, {0x24, MyCmd.Keycode.NUMBER4}, {0x25, MyCmd.Keycode.NUMBER5}, {0x26, MyCmd.Keycode.NUMBER6}, {0x27, MyCmd.Keycode.KEY_RADIO_PS}, {0x28, MyCmd.Keycode.AS}, {0x29, MyCmd.Keycode.BT_DIAL}, {0x2a, MyCmd.Keycode.SPEECH}, {0x2b, MyCmd.Keycode.BACKLIGHT_OFF}, {0x2c, MyCmd.Keycode.PLAY_PAUSE}, {0x2d, MyCmd.Keycode.KEY_SHUFFLE}, {0x2e, MyCmd.Keycode.KEY_REPEAT},};
+    private final byte[] airData = new byte[10];
+    byte[] mLcdInfo;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+    private byte[] mLcdBTInfo;
+    private int mCallingTime;
+
+
     public ChuanQiRaise() {
         mIdAC = 0x10;
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -84,24 +96,6 @@ public class ChuanQiRaise extends Canbox {
         return cmd;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x52, 0x53, 0x54};
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x11, MyCmd.Keycode.MODLE}, {0x12, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x13, MyCmd.Keycode.KEY_SEEK_PREV}, {0x14, MyCmd.Keycode.VOLUME_UP}, {0x15, MyCmd.Keycode.VOLUME_DOWN},
-            {0x16, MyCmd.Keycode.MUTE}, {0x17, MyCmd.Keycode.PLAY_PAUSE}, {0x18, MyCmd.Keycode.BACK}, {0x30, MyCmd.Keycode.BT_DIAL}, {0x31, MyCmd.Keycode.BT_HANG}, {0x32, MyCmd.Keycode.SPEECH},
-    };
-
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.EJECT}, {0x3, MyCmd.Keycode.HOME}, {0x4, MyCmd.Keycode.MODLE}, {0x5, MyCmd.Keycode.RADIO}, {0x6, MyCmd.Keycode.PREVIOUS},
-            {0x7, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.SETUP}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.NAVIGATION}, {0xb, MyCmd.Keycode.PLAY_PAUSE}, {0xc, MyCmd.Keycode.BACK},
-            {0xd, MyCmd.Keycode.BT_DIAL}, {0xe, MyCmd.Keycode.SPEECH}, {0x10, MyCmd.Keycode.VOLUME_UP}, {0x11, MyCmd.Keycode.VOLUME_DOWN}, {0x12, MyCmd.Keycode.KEY_TURN_A},
-            {0x13, MyCmd.Keycode.KEY_TURN_D}, {0x21, MyCmd.Keycode.NUMBER1}, {0x22, MyCmd.Keycode.NUMBER2}, {0x23, MyCmd.Keycode.NUMBER3}, {0x24, MyCmd.Keycode.NUMBER4}, {0x25, MyCmd.Keycode.NUMBER5},
-            {0x26, MyCmd.Keycode.NUMBER6}, {0x27, MyCmd.Keycode.KEY_RADIO_PS}, {0x28, MyCmd.Keycode.AS}, {0x29, MyCmd.Keycode.BT_DIAL}, {0x2a, MyCmd.Keycode.SPEECH},
-            {0x2b, MyCmd.Keycode.BACKLIGHT_OFF}, {0x2c, MyCmd.Keycode.PLAY_PAUSE}, {0x2d, MyCmd.Keycode.KEY_SHUFFLE}, {0x2e, MyCmd.Keycode.KEY_REPEAT},
-    };
-
     private byte radarChangeStylePriv(byte data) {
         byte ret = 0;
 
@@ -133,6 +127,12 @@ public class ChuanQiRaise extends Canbox {
         }
         parseRadar();
     }
+    //	private int getACStyle() {
+    //		if (CarUtil.getModelId() == 10) {
+    //			return false;
+    //		}
+    //		return true;
+    //	}
 
     public void parseRadarFront(int id, byte[] data) {
         int max;
@@ -154,7 +154,6 @@ public class ChuanQiRaise extends Canbox {
         }
         parseRadar();
     }
-
 
     public int getAngleValue(byte[] data) {
 
@@ -204,12 +203,6 @@ public class ChuanQiRaise extends Canbox {
         }
         return t;
     }
-    //	private int getACStyle() {
-    //		if (CarUtil.getModelId() == 10) {
-    //			return false;
-    //		}
-    //		return true;
-    //	}
 
     private int getACTempPriv(byte data) {//
         if ((data & 0xff) >= 0x3 && (data & 0xff) <= 0x37) {
@@ -223,8 +216,6 @@ public class ChuanQiRaise extends Canbox {
         }
         return data & 0xff;
     }
-
-    private final byte[] airData = new byte[10];
 
     public void parseACInfo(byte[] data) {
 
@@ -257,7 +248,6 @@ public class ChuanQiRaise extends Canbox {
         super.parseACInfo(airData);
     }
 
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte s = 0;
@@ -273,15 +263,10 @@ public class ChuanQiRaise extends Canbox {
         }
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
-            mLcdInfo = new byte[]{
-                    (byte) 0xc0, 0xa, s, 0, (byte) ((total & 0xff00) >> 8), (byte) ((total & 0xff) >> 0), (byte) ((play & 0xff00) >> 8), (byte) ((play & 0xff) >> 0),
-                    (byte) ((total_time & 0xff00) >> 8), (byte) ((total_time & 0xff) >> 0), (byte) ((time & 0xff00) >> 8), (byte) ((time & 0xff) >> 0),
-            };
+            mLcdInfo = new byte[]{(byte) 0xc0, 0xa, s, 0, (byte) ((total & 0xff00) >> 8), (byte) ((total & 0xff) >> 0), (byte) ((play & 0xff00) >> 8), (byte) ((play & 0xff) >> 0), (byte) ((total_time & 0xff00) >> 8), (byte) ((total_time & 0xff) >> 0), (byte) ((time & 0xff00) >> 8), (byte) ((time & 0xff) >> 0),};
             sendDataToCanbox(mLcdInfo, mLcdInfo.length);
         }
     }
-
-    byte[] mLcdInfo;
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         mLcdInfo = new byte[]{(byte) 0xc0, 0x5, 0x1, b[0], b[1], b[2], (byte) (b[3] + 1)};
@@ -309,13 +294,6 @@ public class ChuanQiRaise extends Canbox {
             sendDataToCanbox(data, data.length);
         }
     }
-
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
-
-    private byte[] mLcdBTInfo;
-
-    private int mCallingTime;
 
     public void setPhone(int status, String num) {// default is simple box
 
@@ -395,7 +373,17 @@ public class ChuanQiRaise extends Canbox {
         mPhoneStatus = 0;
     }
 
-    private final Handler mHandler = new Handler() {
+    public boolean isSupportCompass() {
+        return true;
+    }
+
+    public void updateCompass(int compass) {
+        int direction = compassAngleToDirectStep(compass, 32);
+
+        byte[] buf = new byte[]{(byte) (0x86), 0x2, (byte) (direction & 0xff), 0};
+
+        sendDataToCanbox(buf, buf.length);
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 if (mPhoneStatus == HFP_INFO_CALLING && mLcdBTInfo != null) {
@@ -410,15 +398,7 @@ public class ChuanQiRaise extends Canbox {
         }
     };
 
-    public boolean isSupportCompass() {
-        return true;
-    }
 
-    public void updateCompass(int compass) {
-        int direction = compassAngleToDirectStep(compass, 32);
 
-        byte[] buf = new byte[]{(byte) (0x86), 0x2, (byte) (direction & 0xff), 0};
 
-        sendDataToCanbox(buf, buf.length);
-    }
 }

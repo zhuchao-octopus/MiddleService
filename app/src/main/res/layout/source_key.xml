@@ -17,17 +17,17 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/panel_background"
-    android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/mode_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/mode_text"
-        android:textSize="30sp"
         android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#ffffff"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textSize="30sp" />
 
 </LinearLayout>
 

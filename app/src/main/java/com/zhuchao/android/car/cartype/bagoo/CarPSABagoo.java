@@ -14,6 +14,16 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class CarPSABagoo extends Canbox {
 
+    private final static byte[] RADAR_CHANGE = new byte[]{1, 5, 7, 9, 11, 14};
+    private final boolean mRequestOurdoorTemp = false;
+    byte[] airData = new byte[8];
+    byte eco = 0;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mDoorStatus = 0;
+    private byte[] mEq = null;
+    private byte mVolume;
+    private byte mSource = 0x6;
+
     public CarPSABagoo() {
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
@@ -214,10 +224,14 @@ public class CarPSABagoo extends Canbox {
                 doKey(MyCmd.Keycode.SETUP, data[3]);
                 break;
         }
-    }
-
-    byte[] airData = new byte[8];
-    byte eco = 0;
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                startConnect2();
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -299,8 +313,6 @@ public class CarPSABagoo extends Canbox {
         }
     }
 
-    private final boolean mRequestOurdoorTemp = false;
-
     public void startConnect() {// default is simple box
 
         super.startConnect();
@@ -330,17 +342,6 @@ public class CarPSABagoo extends Canbox {
         super.stopConnect();
         mHandler.removeMessages(0);
     }
-
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                startConnect2();
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    private final static byte[] RADAR_CHANGE = new byte[]{1, 5, 7, 9, 11, 14};
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -499,8 +500,6 @@ public class CarPSABagoo extends Canbox {
         }
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
     public void updateOutDoorTemp(int temp) {
 
         if (temp == CarUtil.INVALID_OUT_DOOR_TEMP) {
@@ -528,8 +527,6 @@ public class CarPSABagoo extends Canbox {
         }
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
     }
-
-    private int mDoorStatus = 0;
 
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
@@ -588,8 +585,6 @@ public class CarPSABagoo extends Canbox {
         byte[] data = new byte[]{(byte) 0x99, 0x2, mSource, mVolume};
         sendDataToCanbox(data, data.length);
     }
-
-    private byte[] mEq = null;
 
     public void sendEqToCanbox(byte[] eq) {
         if (eq != null && eq.length >= 13) {
@@ -667,9 +662,6 @@ public class CarPSABagoo extends Canbox {
         }
     }
 
-    private byte mVolume;
-    private byte mSource = 0x6;
-
     public void setVolume(int volume) {
         mVolume = (byte) volume;
         if (mVolume == 0) {
@@ -679,4 +671,8 @@ public class CarPSABagoo extends Canbox {
         byte[] data = new byte[]{(byte) 0x99, 0x2, mSource, (byte) volume};
         sendDataToCanbox(data, data.length);
     }
+
+
+
+
 }

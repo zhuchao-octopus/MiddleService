@@ -12,6 +12,14 @@ import java.util.Date;
 
 public class FordXinChi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x3, 0x7, 0x21, 0x22, 0x23, 0x40, 0x50, 0x60};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MULT_SEEK_PRE_HANG}, {0x4, MyCmd.Keycode.MULT_SEEK_NEXT_RECV}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.SPEECH}, {0x7, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.BT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PLAY_PAUSE},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x9, MyCmd.Keycode.POWER}, {0xa, MyCmd.Keycode.MODLE}, {0xe, MyCmd.Keycode.KEY_SEEK_PREV}, {0xf, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x2f, MyCmd.Keycode.KEY_DISPLAY}, {0x30, MyCmd.Keycode.EQ}, {0x31, MyCmd.Keycode.KEY_TURN_A}, {0x32, MyCmd.Keycode.KEY_TURN_D}, {0x33, MyCmd.Keycode.EJECT},
+
+
+            {0x50, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x51, MyCmd.Keycode.VOLUME_ROLL_DOWN},};
+    byte[] airData = new byte[13];
+
     public FordXinChi() {
         buildCmdDoor((byte) 0x4, (byte) 0x2, (byte) 0xfc, (byte) 0x03);
         //		buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0xa);
@@ -27,22 +35,6 @@ public class FordXinChi extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x3, 0x7, 0x21, 0x22, 0x23, 0x40, 0x50, 0x60};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MULT_SEEK_PRE_HANG}, {0x4, MyCmd.Keycode.MULT_SEEK_NEXT_RECV}, {0x5, MyCmd.Keycode.MODLE},
-            {0x6, MyCmd.Keycode.SPEECH}, {0x7, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.BT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.PREVIOUS},
-            {0xc, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PLAY_PAUSE},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x9, MyCmd.Keycode.POWER}, {0xa, MyCmd.Keycode.MODLE}, {0xe, MyCmd.Keycode.KEY_SEEK_PREV}, {0xf, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x2f, MyCmd.Keycode.KEY_DISPLAY}, {0x30, MyCmd.Keycode.EQ},
-            {0x31, MyCmd.Keycode.KEY_TURN_A}, {0x32, MyCmd.Keycode.KEY_TURN_D}, {0x33, MyCmd.Keycode.EJECT},
-
-
-            {0x50, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x51, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-    };
 
     @Override
     public void startConnect() {
@@ -89,8 +81,6 @@ public class FordXinChi extends Canbox {
         }
         return data;
     }
-
-    byte[] airData = new byte[13];
 
     public void parseACInfo(byte[] data) {
 
@@ -342,9 +332,7 @@ public class FordXinChi extends Canbox {
             if (mEQData == null) {
                 mEQData = new byte[6];
             }
-            byte[] buf = new byte[]{
-                    (byte) 0x93, 0x7, mEQData[5], mEQData[4], mEQData[3], mEQData[2], mEQData[1], mEQData[0], 0
-            };
+            byte[] buf = new byte[]{(byte) 0x93, 0x7, mEQData[5], mEQData[4], mEQData[3], mEQData[2], mEQData[1], mEQData[0], 0};
             switch (cmd) {
                 case EQ_CMD_SET_HIGH:
                     buf[7] = (byte) (data + 3);
@@ -422,9 +410,7 @@ public class FordXinChi extends Canbox {
         byte m = (byte) curDate.getMinutes();
         byte s = (byte) curDate.getSeconds();
 
-        byte[] buf = new byte[]{
-                (byte) 0x98, 0x04, ampm, h, m, s
-        };
+        byte[] buf = new byte[]{(byte) 0x98, 0x04, ampm, h, m, s};
 
         sendDataToCanbox(buf, buf.length);
     }

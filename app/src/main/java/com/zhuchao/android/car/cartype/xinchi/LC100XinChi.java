@@ -5,6 +5,19 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class LC100XinChi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x21, 0x22, 0x23, 0x1c, 0x1d, 0x24, 0x5a, 0x65, 0x10};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.BT_DIAL}, {0x7, MyCmd.Keycode.BT_HANG},
+
+
+            {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.BACK}, {0xb, MyCmd.Keycode.HOME}, {0xc, MyCmd.Keycode.PLAY_PAUSE}, {0xd, MyCmd.Keycode.BT},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.KEY_AM}, {0x5, MyCmd.Keycode.KEY_FM}, {0x6, MyCmd.Keycode.MODLE}, {0x7, MyCmd.Keycode.AUDIO}, {0x8, MyCmd.Keycode.KEY_TURN_A}, {0x9, MyCmd.Keycode.KEY_TURN_D}, {0x10, MyCmd.Keycode.NEXT}, {0x11, MyCmd.Keycode.PREVIOUS}, {0x12, MyCmd.Keycode.AS}, {0x20, MyCmd.Keycode.HOME}, {0x21, MyCmd.Keycode.NAVIGATION},
+
+
+            {0x22, MyCmd.Keycode.BACK}, {0x23, MyCmd.Keycode.HOME}, {0x24, MyCmd.Keycode.PLAY_PAUSE}, {0x25, MyCmd.Keycode.PREVIOUS}, {0x26, MyCmd.Keycode.NEXT}, {0x27, MyCmd.Keycode.PREVIOUS}, {0x28, MyCmd.Keycode.NEXT}, {0x29, MyCmd.Keycode.AUDIO},
+
+    };
+    byte[] airData = new byte[12];
+
     public LC100XinChi() {
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
 
@@ -22,29 +35,6 @@ public class LC100XinChi extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x21, 0x22, 0x23, 0x1c, 0x1d, 0x24, 0x5a, 0x65, 0x10
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.BT_DIAL},
-            {0x7, MyCmd.Keycode.BT_HANG},
-
-
-            {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.BACK}, {0xb, MyCmd.Keycode.HOME}, {0xc, MyCmd.Keycode.PLAY_PAUSE}, {0xd, MyCmd.Keycode.BT},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.KEY_AM}, {0x5, MyCmd.Keycode.KEY_FM},
-            {0x6, MyCmd.Keycode.MODLE}, {0x7, MyCmd.Keycode.AUDIO}, {0x8, MyCmd.Keycode.KEY_TURN_A}, {0x9, MyCmd.Keycode.KEY_TURN_D}, {0x10, MyCmd.Keycode.NEXT}, {0x11, MyCmd.Keycode.PREVIOUS},
-            {0x12, MyCmd.Keycode.AS}, {0x20, MyCmd.Keycode.HOME}, {0x21, MyCmd.Keycode.NAVIGATION},
-
-
-            {0x22, MyCmd.Keycode.BACK}, {0x23, MyCmd.Keycode.HOME}, {0x24, MyCmd.Keycode.PLAY_PAUSE}, {0x25, MyCmd.Keycode.PREVIOUS}, {0x26, MyCmd.Keycode.NEXT}, {0x27, MyCmd.Keycode.PREVIOUS},
-            {0x28, MyCmd.Keycode.NEXT}, {0x29, MyCmd.Keycode.AUDIO},
-
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -77,8 +67,6 @@ public class LC100XinChi extends Canbox {
         }
         return data;
     }
-
-    byte[] airData = new byte[12];
 
     public void parseACInfo(byte[] data) {
 

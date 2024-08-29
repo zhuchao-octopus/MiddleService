@@ -6,6 +6,11 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class DongNanA5OD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x28, 0x27};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.BT},
+
+            {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x10, MyCmd.Keycode.POWER}, {0x14, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x15, MyCmd.Keycode.VOLUME_DOWN}, {0x29, MyCmd.Keycode.ROLL_PREV}, {0x2a, MyCmd.Keycode.ROLL_NEXT}, {0x2b, MyCmd.Keycode.PREVIOUS}, {0x2c, MyCmd.Keycode.NEXT}, {0x2d, MyCmd.Keycode.ROLL_PREV}, {0x2e, MyCmd.Keycode.ROLL_NEXT}, {0x2f, MyCmd.Keycode.PLAY_PAUSE}, {0x30, MyCmd.Keycode.AUDIO}, {0x31, MyCmd.Keycode.RADIO}, {0x32, MyCmd.Keycode.HOME}, {0x33, MyCmd.Keycode.AUX_IN}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.BACK}, {0x46, MyCmd.Keycode.KEY_REPEAT}, {0x47, MyCmd.Keycode.KEY_SHUFFLE}, {0x48, MyCmd.Keycode.KEYAMS_RPT}, {0x49, MyCmd.Keycode.AS}, {0x4a, MyCmd.Keycode.NAVIGATION},};
+
     public DongNanA5OD() {
         // buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -21,20 +26,6 @@ public class DongNanA5OD extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x28, 0x27};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.BT},
-
-            {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3},
-            {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x10, MyCmd.Keycode.POWER}, {0x14, MyCmd.Keycode.VOLUME_ROLL_UP},
-            {0x15, MyCmd.Keycode.VOLUME_DOWN}, {0x29, MyCmd.Keycode.ROLL_PREV}, {0x2a, MyCmd.Keycode.ROLL_NEXT}, {0x2b, MyCmd.Keycode.PREVIOUS}, {0x2c, MyCmd.Keycode.NEXT},
-            {0x2d, MyCmd.Keycode.ROLL_PREV}, {0x2e, MyCmd.Keycode.ROLL_NEXT}, {0x2f, MyCmd.Keycode.PLAY_PAUSE}, {0x30, MyCmd.Keycode.AUDIO}, {0x31, MyCmd.Keycode.RADIO}, {0x32, MyCmd.Keycode.HOME},
-            {0x33, MyCmd.Keycode.AUX_IN}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.BACK}, {0x46, MyCmd.Keycode.KEY_REPEAT}, {0x47, MyCmd.Keycode.KEY_SHUFFLE},
-            {0x48, MyCmd.Keycode.KEYAMS_RPT}, {0x49, MyCmd.Keycode.AS}, {0x4a, MyCmd.Keycode.NAVIGATION},
-    };
-
 
     @Override
     public int getACTemp(byte data) {

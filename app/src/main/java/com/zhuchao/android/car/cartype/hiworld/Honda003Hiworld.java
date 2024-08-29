@@ -11,6 +11,15 @@ import java.util.Locale;
 
 public class Honda003Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0xa4};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.SPEECH},
+
+    };
+    private final byte[] mLcdInfo = new byte[15];
+    private final byte[] mLcdInfoSend = new byte[15];
+    private final boolean mShowVolume = false;
+
+
     public Honda003Hiworld() {
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
 
@@ -21,15 +30,6 @@ public class Honda003Hiworld extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0xa4};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS},
-            {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.SPEECH},
-
-    };
-
 
     @Override
     public int getACTemp(byte data) {
@@ -81,10 +81,6 @@ public class Honda003Hiworld extends Canbox {
         super.parseACInfo(airData);
     }
 
-
-    private final byte[] mLcdInfo = new byte[15];
-    private final byte[] mLcdInfoSend = new byte[15];
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         switch (source) {
@@ -123,8 +119,6 @@ public class Honda003Hiworld extends Canbox {
             sendLcdInfo();
         }
     }
-
-    private final boolean mShowVolume = false;
 
     public void setMediaSrc(int source) {// default is simple box
         String s = "";

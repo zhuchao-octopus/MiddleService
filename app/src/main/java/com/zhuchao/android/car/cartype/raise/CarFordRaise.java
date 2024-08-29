@@ -24,6 +24,72 @@ import java.util.Date;
 
 public class CarFordRaise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL_NORMAL = {
+
+            {0x13, MyCmd.Keycode.NAVIGATION}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x17, MyCmd.Keycode.KEYAMS_RPT},
+
+
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
+
+
+            {0x2e, MyCmd.Keycode.KEY_TURN_D}, {0x2f, MyCmd.Keycode.KEY_TURN_A},
+
+            {0x30, KEY_MEDIA}, {0x31, KEY_BACK}, {0x32, KEY_GPS},
+
+            {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER},
+
+            {0x48, KEY_PLAYPAUSE}, {0x49, MyCmd.Keycode.KEY_TURN_D}, {0x4a, MyCmd.Keycode.KEY_TURN_A}, {0x4b, KEY_PREVIOUSSONG}, {0x4c, KEY_NEXTSONG},
+
+
+            {0x50, MyCmd.Keycode.DARK},
+
+            {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG},
+
+            {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE}, {0x5b, MyCmd.Keycode.DARK},
+
+            {(byte) 0x5c, AK_KEYPAD_VOLUME_A}, {(byte) 0x5d, AK_KEYPAD_VOLUME_D}, {(byte) 0x5e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x5f, MyCmd.Keycode.KEY_TURN_D},
+
+            {0x66, MyCmd.Keycode.PLAY_PAUSE}, {0x67, MyCmd.Keycode.AUDIO}, {0x68, MyCmd.Keycode.SETUP},
+
+
+            {0x67, MyCmd.Keycode.AUDIO},
+
+            {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D}, {(byte) 0x70, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x71, MyCmd.Keycode.KEY_TURN_D},
+
+    };
+    private final static byte[][] KEYS_WHEEL_KUGA = {
+
+            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_GPS}, {0x2b, KEY_NUM_J},
+
+            {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_MUTE},
+
+            {0x48, KEY_PLAYPAUSE}, {0x49, MyCmd.Keycode.KEY_TURN_D}, {0x4a, MyCmd.Keycode.KEY_TURN_A}, {0x4c, KEY_PREVIOUSSONG}, {0x4b, KEY_NEXTSONG},
+
+            {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG},
+
+            {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE}, {0x5b, MyCmd.Keycode.DARK},
+
+
+            {0x6F, MyCmd.Keycode.AUDIO},
+            // { 0x5c, 0 },
+            // { 0x5d, 0 },
+            // { 0x5e, 0 },
+            // { 0x5f, 0 },
+
+            {(byte) 0x86, KEY_PLAYPAUSE}, {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D}, {(byte) 0xF2, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0xF3, MyCmd.Keycode.KEY_TURN_D},
+
+    };
+    private final static int SEND_CAR_TYPE = 11;
+    private final int mBaud = 0;
+    byte[] airData = new byte[13];
+    private byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
+    private byte mOutDoorTempUnit;
+    private byte mOutDoorTemp = -41;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int showWarningMsg = -1;
+    private int mDoorStatus = 0;
+    private int mSource = MyCmd.SOURCE_NONE;
+
     public CarFordRaise() {
 
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -83,68 +149,6 @@ public class CarFordRaise extends Canbox {
         }
         return cmd;
     }
-
-    private final static byte[][] KEYS_WHEEL_NORMAL = {
-
-            {0x13, MyCmd.Keycode.NAVIGATION}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x17, MyCmd.Keycode.KEYAMS_RPT},
-
-
-            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8},
-            {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J},
-
-
-            {0x2e, MyCmd.Keycode.KEY_TURN_D}, {0x2f, MyCmd.Keycode.KEY_TURN_A},
-
-            {0x30, KEY_MEDIA}, {0x31, KEY_BACK}, {0x32, KEY_GPS},
-
-            {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER},
-
-            {0x48, KEY_PLAYPAUSE}, {0x49, MyCmd.Keycode.KEY_TURN_D}, {0x4a, MyCmd.Keycode.KEY_TURN_A}, {0x4b, KEY_PREVIOUSSONG}, {0x4c, KEY_NEXTSONG},
-
-
-            {0x50, MyCmd.Keycode.DARK},
-
-            {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG},
-
-            {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE}, {0x5b, MyCmd.Keycode.DARK},
-
-            {(byte) 0x5c, AK_KEYPAD_VOLUME_A}, {(byte) 0x5d, AK_KEYPAD_VOLUME_D}, {(byte) 0x5e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x5f, MyCmd.Keycode.KEY_TURN_D},
-
-            {0x66, MyCmd.Keycode.PLAY_PAUSE}, {0x67, MyCmd.Keycode.AUDIO}, {0x68, MyCmd.Keycode.SETUP},
-
-
-            {0x67, MyCmd.Keycode.AUDIO},
-
-            {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D}, {(byte) 0x70, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x71, MyCmd.Keycode.KEY_TURN_D},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL_KUGA = {
-
-            {0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8},
-            {0x29, KEY_NUM_9}, {0x2a, KEY_GPS}, {0x2b, KEY_NUM_J},
-
-            {0x33, KEY_FM}, {0x34, KEY_FM}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_MUTE},
-
-            {0x48, KEY_PLAYPAUSE}, {0x49, MyCmd.Keycode.KEY_TURN_D}, {0x4a, MyCmd.Keycode.KEY_TURN_A}, {0x4c, KEY_PREVIOUSSONG}, {0x4b, KEY_NEXTSONG},
-
-            {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG},
-
-            {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE}, {0x5b, MyCmd.Keycode.DARK},
-
-
-            {0x6F, MyCmd.Keycode.AUDIO},
-            // { 0x5c, 0 },
-            // { 0x5d, 0 },
-            // { 0x5e, 0 },
-            // { 0x5f, 0 },
-
-            {(byte) 0x86, KEY_PLAYPAUSE}, {(byte) 0xF0, AK_KEYPAD_VOLUME_A}, {(byte) 0xF1, AK_KEYPAD_VOLUME_D}, {(byte) 0xF2, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0xF3, MyCmd.Keycode.KEY_TURN_D},
-
-    };
-
-
-    private byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
 
     private void parseWheelKey(byte[] data, int len) {
         if (doKeyStudy(data[2], data[3])) {
@@ -237,11 +241,6 @@ public class CarFordRaise extends Canbox {
         }
         return data;
     }
-
-    byte[] airData = new byte[13];
-
-    private byte mOutDoorTempUnit;
-    private byte mOutDoorTemp = -41;
 
     private void parseACInfo(byte[] data, int len) {
         //		if (data[4] >= 0x7f) {
@@ -349,8 +348,6 @@ public class CarFordRaise extends Canbox {
         super.parseACInfo(airData);
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
     public void updateOutDoorTemp(int temp) {
 
         if (temp == CarUtil.INVALID_OUT_DOOR_TEMP) {
@@ -375,7 +372,6 @@ public class CarFordRaise extends Canbox {
         }
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
     }
-
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -652,8 +648,6 @@ public class CarFordRaise extends Canbox {
                 break;
         }
     }
-
-    private int showWarningMsg = -1;
 
     public void updateCanboxSettings() {
 
@@ -1231,8 +1225,6 @@ public class CarFordRaise extends Canbox {
         }
     }
 
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -1247,9 +1239,6 @@ public class CarFordRaise extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    private int mSource = MyCmd.SOURCE_NONE;
-    private final int mBaud = 0;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -1275,7 +1264,6 @@ public class CarFordRaise extends Canbox {
 
         sendDataToCanbox(data, data.length);
     }
-
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         //		setMediaSrc(0);
@@ -1311,6 +1299,53 @@ public class CarFordRaise extends Canbox {
             sendDataToCanbox(data, data.length);
         }
     }
+
+    //	public void udpateLang() {
+    //		int lang = -1;
+    //		String locale = Locale.getDefault().getLanguage();
+    //		String country = Locale.getDefault().getCountry();
+    //		if (locale != null) {
+    //			if (locale.equals("en") && country.equals("US")) {
+    //				lang = 3;
+    //			} else if (locale.equals("en")) {
+    //				lang = 2;
+    //			} else if (locale.equals("de")) {
+    //				lang = 4;
+    //			} else if (locale.equals("it")) {
+    //				lang = 5;
+    //			}  else if (locale.equals("fr") && country.equals("US")) {
+    //				lang = 7;
+    //			}  else if (locale.equals("fr")) {
+    //				lang = 6;
+    //			}  else if (locale.equals("es")&& country.equals("US")) {
+    //				lang = 9;
+    //			}  else if (locale.equals("es")) {
+    //				lang = 8;
+    //			} else if (locale.equals("tr")) {
+    //				lang = 0xa;
+    //			} else if (locale.equals("ru")) {
+    //				lang = 0xb;
+    //			}else if (locale.equals("nl")) {
+    //				lang = 0xc;
+    //			}  else if (locale.equals("pl")) {
+    //				lang = 0xe;
+    //			}else if (locale.equals("sv")) {
+    //				lang = 0x12;
+    //			}else if (locale.equals("pt")&& country.equals("BR")) {
+    //				lang = 0x17;
+    //			}else if (locale.equals("pt")) {
+    //				lang = 0x16;
+    //			}else if (locale.equals("zh")&& country.equals("TW")) {
+    //				lang = 0x1c;
+    //			}else if (locale.equals("zh")) {
+    //				lang = 0x1b;
+    //			}
+    //		}
+    //		if (lang != -1) {
+    //			byte[] buf = { (byte) 0x87, 0x1, (byte) lang };
+    //			sendDataToCanbox(buf, buf.length);
+    //		}
+    //	}
 
     private void doSyncControl(byte[] data) {
         switch (data[2]) {
@@ -1393,53 +1428,6 @@ public class CarFordRaise extends Canbox {
 
     }
 
-    //	public void udpateLang() {
-    //		int lang = -1;
-    //		String locale = Locale.getDefault().getLanguage();
-    //		String country = Locale.getDefault().getCountry();
-    //		if (locale != null) {
-    //			if (locale.equals("en") && country.equals("US")) {
-    //				lang = 3;
-    //			} else if (locale.equals("en")) {
-    //				lang = 2;
-    //			} else if (locale.equals("de")) {
-    //				lang = 4;
-    //			} else if (locale.equals("it")) {
-    //				lang = 5;
-    //			}  else if (locale.equals("fr") && country.equals("US")) {
-    //				lang = 7;
-    //			}  else if (locale.equals("fr")) {
-    //				lang = 6;
-    //			}  else if (locale.equals("es")&& country.equals("US")) {
-    //				lang = 9;
-    //			}  else if (locale.equals("es")) {
-    //				lang = 8;
-    //			} else if (locale.equals("tr")) {
-    //				lang = 0xa;
-    //			} else if (locale.equals("ru")) {
-    //				lang = 0xb;
-    //			}else if (locale.equals("nl")) {
-    //				lang = 0xc;
-    //			}  else if (locale.equals("pl")) {
-    //				lang = 0xe;
-    //			}else if (locale.equals("sv")) {
-    //				lang = 0x12;
-    //			}else if (locale.equals("pt")&& country.equals("BR")) {
-    //				lang = 0x17;
-    //			}else if (locale.equals("pt")) {
-    //				lang = 0x16;
-    //			}else if (locale.equals("zh")&& country.equals("TW")) {
-    //				lang = 0x1c;
-    //			}else if (locale.equals("zh")) {
-    //				lang = 0x1b;
-    //			}
-    //		}
-    //		if (lang != -1) {
-    //			byte[] buf = { (byte) 0x87, 0x1, (byte) lang };
-    //			sendDataToCanbox(buf, buf.length);
-    //		}
-    //	}
-
     public void startConnect() {
         super.startConnect();
         sendCarType2();
@@ -1453,16 +1441,6 @@ public class CarFordRaise extends Canbox {
         mHandler.removeMessages(SEND_CAR_TYPE);
         super.stopConnect();
     }
-
-    private final static int SEND_CAR_TYPE = 11;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == SEND_CAR_TYPE) {
-                sendCarType2();
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     private void sendCarType2() {
         mHandler.removeMessages(SEND_CAR_TYPE);
@@ -1479,18 +1457,20 @@ public class CarFordRaise extends Canbox {
         }
     }
 
-
     public void setSongName(String s) {
         sendId3((byte) 0x1, s);
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SEND_CAR_TYPE) {
+                sendCarType2();
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void setSongAritst(String s) {
         sendId3((byte) 0x2, s);
     }
-
-    //	public void setSongAlbum(String s) {
-    //		sendId3((byte)0x3, s);
-    //	}
 
     public void sendId3(byte index, String num) {
 
@@ -1529,12 +1509,15 @@ public class CarFordRaise extends Canbox {
         }
     }
 
-
     public void setVolume(int volume) {
 
         //		byte[] data = new byte[] { (byte) 0xc2, 0x1, (byte) volume };
         //		sendDataToCanbox(data, data.length);
     }
+
+    //	public void setSongAlbum(String s) {
+    //		sendId3((byte)0x3, s);
+    //	}
 
     public void updateTime() {
         if (mContext == null) {
@@ -1564,7 +1547,6 @@ public class CarFordRaise extends Canbox {
         byte[] buf = new byte[]{(byte) 0x82, 0x06, y, mon, d, h, m, 0};
         sendDataToCanbox(buf, buf.length);
     }
-
 
     private void setAllLed(boolean show) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, (byte) 0xa2, (byte) (show ? 0x7 : 0)};
@@ -1624,4 +1606,8 @@ public class CarFordRaise extends Canbox {
         mEQData[5] = buf[6];
         super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQData);
     }
+
+
+
+
 }

@@ -36,34 +36,40 @@ import java.util.List;
 
 //import android.app.ActivityTaskManager;
 public class RecentView {
+    static final int MAX_RECENT_TASKS = 64;
+    public static RecentView mThis;
     private final WindowManager mWindowManager;
     private final WindowManager.LayoutParams mLayoutParamsMicButton;
-
     private final View mViewMicButton;
     private final boolean isShowSpeech = false;
+    private final ListView mTrList;
+    LinearLayout mHorizontalScrollView;
+    MyListAdapter mMyListAdapter;
+    ArrayList<CData> mListData = new ArrayList<CData>();
+    List<ActivityManager.RecentTaskInfo> recentTasks;
     private boolean isstart = false;
     private Context mContext;
-    LinearLayout mHorizontalScrollView;
-    public static RecentView mThis;
-
-    public static void start(Context context) {
-        if (mThis == null) {
-            mThis = new RecentView(context);
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            hideMicButton();
+            openActivity(msg.arg1);
         }
-        mThis.doStart();
-    }
+    };
+    OnClickListener mClickListenerClose = new OnClickListener() {
 
-    public static void toggle(Context context) {
-        if (mThis == null) {
-            mThis = new RecentView(context);
+        @Override
+        public void onClick(View arg0) {
+            // TODO Auto-generated method stub
+            int index = (Integer) arg0.getTag();
+            if (index < mListData.size()) {
+                CData c = mListData.get(index);
+                c.bmp.recycle();
+                clearTask(c.id);
+            }
+            mListData.remove(index);
+            mMyListAdapter.notifyDataSetChanged();
         }
-
-        if (!mThis.isstart) {
-            mThis.doStart();
-        } else {
-            mThis.hideMicButton();
-        }
-    }
+    };
 
     public RecentView(Context context) {
         mContext = context;
@@ -115,207 +121,28 @@ public class RecentView {
         });
     }
 
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            hideMicButton();
-            openActivity(msg.arg1);
+    public static void start(Context context) {
+        if (mThis == null) {
+            mThis = new RecentView(context);
         }
-    };
-
-    private class MyListAdapter extends BaseAdapter {
-        public MyListAdapter(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public int getCount() {
-            // return recentTasks.size();
-            return mListData.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v;
-            if (convertView == null) {
-                v = newView(parent);
-            } else {
-                v = convertView;
-            }
-            bindView(v, position, parent);
-            return v;
-        }
-
-        private class ViewHolder {
-            TextView name;
-            View bg;
-            ImageView bt;
-        }
-
-        private View newView(ViewGroup parent) {
-            View v = LayoutInflater.from(mContext).inflate(R.layout.recent_view, parent, false);
-            ViewHolder vh = new ViewHolder();
-            vh.name = v.findViewById(R.id.text);
-            vh.bg = v.findViewById(R.id.img);
-            vh.bt = v.findViewById(R.id.close);
-            v.setTag(vh);
-            return v;
-        }
-
-        private void bindView(View v, int position, ViewGroup parent) {
-
-            if (position < mListData.size()) {
-                ViewHolder vh = (ViewHolder) v.getTag();
-                CData c = mListData.get(position);
-                try {
-                    BitmapDrawable bd = new BitmapDrawable(c.bmp);
-                    vh.bg.setBackground(bd);
-                    vh.name.setText(c.name);
-                    vh.bt.setOnClickListener(mClickListenerClose);
-                    vh.bt.setTag(position);
-                } catch (Exception e) {
-                    Log.d("fff", "bindView!!!" + e);
-                }
-            }
-        }
-
+        mThis.doStart();
     }
 
-    OnClickListener mClickListenerClose = new OnClickListener() {
-
-        @Override
-        public void onClick(View arg0) {
-            // TODO Auto-generated method stub
-            int index = (Integer) arg0.getTag();
-            if (index < mListData.size()) {
-                CData c = mListData.get(index);
-                c.bmp.recycle();
-                clearTask(c.id);
-            }
-            mListData.remove(index);
-            mMyListAdapter.notifyDataSetChanged();
+    public static void toggle(Context context) {
+        if (mThis == null) {
+            mThis = new RecentView(context);
         }
-    };
 
-    private void clearAllBmp() {
-        //		for (int i = 0; i < mListData.size(); ++i) {
-        //			CData c = mListData.get(i);
-        //			c.bmp.recycle();
-        //		}
-        mListData.clear();
-    }
-
-    private void clearAll() {
-
-        //	Log.d("fff", "clearAll!!!");
-        for (int i = 0; i < mListData.size(); ++i) {
-            CData c = mListData.get(i);
-            clearTask(c.id);
-        }
-        clearAllBmp();
-        mMyListAdapter.notifyDataSetChanged();
-    }
-
-    private void clearTask(int id) {
-        Log.d("fff", "clearTask:" + id);
-
-        ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        try {
-            //ActivityTaskManager.getService().removeTask(id);
-            //		am.removeTask(id);
-        } catch (Exception e) {
-            Log.d("fff", String.valueOf(e));
-        }
-    }
-
-    MyListAdapter mMyListAdapter;
-
-    private final ListView mTrList;
-
-    private void initTask() {
-        mMyListAdapter = new MyListAdapter(mContext);
-        mTrList.setAdapter(mMyListAdapter);
-
-        loadThumbnail();
-        // test
-
-        //		Bitmap b = BitmapFactory.decodeFile("/mnt/paramter/icon/bt.png");
-        //
-        //		CData c = new CData("abc", 123, b);
-        //		mListData.add(c);
-        //		b = BitmapFactory.decodeFile("/mnt/paramter/icon/music.png");
-        //
-        //		c = new CData("abcdsfs", 123, b);
-        //		mListData.add(c);
-        //
-        //		b = BitmapFactory.decodeFile("/mnt/paramter/icon/video.png");
-        //
-        //		c = new CData("abcdsfs", 123, b);
-        //		mListData.add(c);
-    }
-
-    private void doStart() {
-        if (!isstart) {
-            isstart = true;
-            mWindowManager.addView(mViewMicButton, mLayoutParamsMicButton);
-        }
-        // getRecentTasks(mContext, 20);
-        // reloadButtons(mContext, 20);
-        // loadThumbnail(0);
-        initTask();
-    }
-
-    public void hideMicButton() {
-        if (isstart) {
-            //	clearAllBmp();
-            try {
-                mWindowManager.removeView(mViewMicButton);
-            } catch (Exception e) {
-
-            }
-            isstart = false;
+        if (!mThis.isstart) {
+            mThis.doStart();
+        } else {
+            mThis.hideMicButton();
         }
     }
 
     public static void getRecentTasks(Context context, int appNumber) {
 
     }
-
-    private void openActivity(int pos) {
-
-        try {
-            CData c = mListData.get(pos);
-            mContext.startActivity(c.intent);
-
-        } catch (Exception e) {
-            Log.d("fff", "openActivity:" + e);
-        }
-    }
-
-    public class CData {
-        public String name;
-        public int id;
-        public Bitmap bmp;
-        Intent intent;
-
-        CData(String s, int i, Bitmap b, Intent it) {
-            bmp = b;
-            id = i;
-            name = s;
-            intent = it;
-        }
-    }
-
-    ArrayList<CData> mListData = new ArrayList<CData>();
 
     /**
      * 调用逻辑
@@ -336,7 +163,7 @@ public class RecentView {
 			            snapshot = ActivityTaskManager.getService().getTaskSnapshot(id, false);
 			           // Log.d("ffck1", "1111aaaaaaaaaaaaa:" + snapshot);
 			            if (snapshot != null){
-			            	
+
 			            Bitmap thumbnail = null;
 			            final GraphicBuffer buffer = snapshot.getSnapshot();
 			          //  Log.d("ffck1", "1111aaaaaaaaaaaaa:" + buffer);
@@ -384,8 +211,92 @@ public class RecentView {
         //	}
     }
 
-    static final int MAX_RECENT_TASKS = 64;
-    List<ActivityManager.RecentTaskInfo> recentTasks;
+    private void clearAllBmp() {
+        //		for (int i = 0; i < mListData.size(); ++i) {
+        //			CData c = mListData.get(i);
+        //			c.bmp.recycle();
+        //		}
+        mListData.clear();
+    }
+
+    private void clearAll() {
+
+        //	Log.d("fff", "clearAll!!!");
+        for (int i = 0; i < mListData.size(); ++i) {
+            CData c = mListData.get(i);
+            clearTask(c.id);
+        }
+        clearAllBmp();
+        mMyListAdapter.notifyDataSetChanged();
+    }
+
+    private void clearTask(int id) {
+        Log.d("fff", "clearTask:" + id);
+
+        ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        try {
+            //ActivityTaskManager.getService().removeTask(id);
+            //		am.removeTask(id);
+        } catch (Exception e) {
+            Log.d("fff", String.valueOf(e));
+        }
+    }
+
+    private void initTask() {
+        mMyListAdapter = new MyListAdapter(mContext);
+        mTrList.setAdapter(mMyListAdapter);
+
+        loadThumbnail();
+        // test
+
+        //		Bitmap b = BitmapFactory.decodeFile("/mnt/paramter/icon/bt.png");
+        //
+        //		CData c = new CData("abc", 123, b);
+        //		mListData.add(c);
+        //		b = BitmapFactory.decodeFile("/mnt/paramter/icon/music.png");
+        //
+        //		c = new CData("abcdsfs", 123, b);
+        //		mListData.add(c);
+        //
+        //		b = BitmapFactory.decodeFile("/mnt/paramter/icon/video.png");
+        //
+        //		c = new CData("abcdsfs", 123, b);
+        //		mListData.add(c);
+    }
+
+    private void doStart() {
+        if (!isstart) {
+            isstart = true;
+            mWindowManager.addView(mViewMicButton, mLayoutParamsMicButton);
+        }
+        // getRecentTasks(mContext, 20);
+        // reloadButtons(mContext, 20);
+        // loadThumbnail(0);
+        initTask();
+    }
+
+    public void hideMicButton() {
+        if (isstart) {
+            //	clearAllBmp();
+            try {
+                mWindowManager.removeView(mViewMicButton);
+            } catch (Exception e) {
+
+            }
+            isstart = false;
+        }
+    }
+
+    private void openActivity(int pos) {
+
+        try {
+            CData c = mListData.get(pos);
+            mContext.startActivity(c.intent);
+
+        } catch (Exception e) {
+            Log.d("fff", "openActivity:" + e);
+        }
+    }
 
     void loadThumbnail() {
         int index;
@@ -447,6 +358,88 @@ public class RecentView {
                     // Log.d("ffck", info.toString() + "5loadThumbnail:" + b);
                 }
             }
+        }
+    }
+
+    private class MyListAdapter extends BaseAdapter {
+        public MyListAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public int getCount() {
+            // return recentTasks.size();
+            return mListData.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v;
+            if (convertView == null) {
+                v = newView(parent);
+            } else {
+                v = convertView;
+            }
+            bindView(v, position, parent);
+            return v;
+        }
+
+        private View newView(ViewGroup parent) {
+            View v = LayoutInflater.from(mContext).inflate(R.layout.recent_view, parent, false);
+            ViewHolder vh = new ViewHolder();
+            vh.name = v.findViewById(R.id.text);
+            vh.bg = v.findViewById(R.id.img);
+            vh.bt = v.findViewById(R.id.close);
+            v.setTag(vh);
+            return v;
+        }
+
+        private void bindView(View v, int position, ViewGroup parent) {
+
+            if (position < mListData.size()) {
+                ViewHolder vh = (ViewHolder) v.getTag();
+                CData c = mListData.get(position);
+                try {
+                    BitmapDrawable bd = new BitmapDrawable(c.bmp);
+                    vh.bg.setBackground(bd);
+                    vh.name.setText(c.name);
+                    vh.bt.setOnClickListener(mClickListenerClose);
+                    vh.bt.setTag(position);
+                } catch (Exception e) {
+                    Log.d("fff", "bindView!!!" + e);
+                }
+            }
+        }
+
+        private class ViewHolder {
+            TextView name;
+            View bg;
+            ImageView bt;
+        }
+
+    }
+
+    public class CData {
+        public String name;
+        public int id;
+        public Bitmap bmp;
+        Intent intent;
+
+        CData(String s, int i, Bitmap b, Intent it) {
+            bmp = b;
+            id = i;
+            name = s;
+            intent = it;
         }
     }
 

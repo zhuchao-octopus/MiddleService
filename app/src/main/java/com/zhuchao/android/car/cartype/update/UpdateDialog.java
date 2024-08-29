@@ -25,6 +25,7 @@ public class UpdateDialog extends Dialog {
     TextView mTitle;
     TextView mMessage;
     McuManager mcu;
+    private Canbox mCanbox;
 
     public UpdateDialog(Context c) {
         super(c);
@@ -40,20 +41,6 @@ public class UpdateDialog extends Dialog {
         mMessage.setText(s);
     }
 
-    private final View.OnClickListener mOnClickDialogCancel = new View.OnClickListener() {
-        public void onClick(View v) {
-            stopKeepAcc();
-            dismiss();
-        }
-    };
-
-    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
-        public void handleMessage(@NonNull Message msg) {
-            startKeepAcc();
-            super.handleMessage(msg);
-        }
-    };
-
     private void startKeepAcc() {
         mHandler.removeMessages(0);
         mHandler.sendEmptyMessageDelayed(0, 2000);
@@ -62,7 +49,12 @@ public class UpdateDialog extends Dialog {
         }
 
 
-    }
+    }    private final View.OnClickListener mOnClickDialogCancel = new View.OnClickListener() {
+        public void onClick(View v) {
+            stopKeepAcc();
+            dismiss();
+        }
+    };
 
     private void stopKeepAcc() {
         mHandler.removeMessages(0);
@@ -76,14 +68,18 @@ public class UpdateDialog extends Dialog {
         }
     }
 
-
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
         CarUtil.mIsUpdating = true;
         startKeepAcc();
-    }
+    }    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        public void handleMessage(@NonNull Message msg) {
+            startKeepAcc();
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     protected void onStop() {
@@ -92,8 +88,6 @@ public class UpdateDialog extends Dialog {
         CarUtil.mIsUpdating = false;
         stopKeepAcc();
     }
-
-    private Canbox mCanbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,4 +107,10 @@ public class UpdateDialog extends Dialog {
             CanService.mCanbox = null;
         }
     }
+
+
+
+
+
+
 }

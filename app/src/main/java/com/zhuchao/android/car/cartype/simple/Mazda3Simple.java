@@ -11,25 +11,28 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class Mazda3Simple extends Canbox {
 
-    public Mazda3Simple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_PREVIOUSSONG}, {0x3, KEY_NEXTSONG},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_PREVIOUSSONG}, {0x3, KEY_NEXTSONG},
 
             {0x6, KEY_MUTE},
 
-            {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG}, {0x20, MyCmd.Keycode.AUDIO}, {0x21, MyCmd.Keycode.RADIO}, {0x22, MyCmd.Keycode.HOME}, {0x23, MyCmd.Keycode.BACK},
-            {0x24, MyCmd.Keycode.NAVIGATION}, {0x25, MyCmd.Keycode.PLAY_PAUSE}, {0x26, MyCmd.Keycode.PREVIOUS}, {0x27, MyCmd.Keycode.NEXT}, {0x28, MyCmd.Keycode.PREVIOUS}, {0x29, MyCmd.Keycode.NEXT},
-            {0x2a, MyCmd.Keycode.MUTE}, {0x2b, MyCmd.Keycode.KEY_TURN_A}, {0x2c, MyCmd.Keycode.KEY_TURN_D}, {0x2d, MyCmd.Keycode.VOLUME_UP}, {0x2e, MyCmd.Keycode.VOLUME_DOWN},
-    };
+            {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG}, {0x20, MyCmd.Keycode.AUDIO}, {0x21, MyCmd.Keycode.RADIO}, {0x22, MyCmd.Keycode.HOME}, {0x23, MyCmd.Keycode.BACK}, {0x24, MyCmd.Keycode.NAVIGATION}, {0x25, MyCmd.Keycode.PLAY_PAUSE}, {0x26, MyCmd.Keycode.PREVIOUS}, {0x27, MyCmd.Keycode.NEXT}, {0x28, MyCmd.Keycode.PREVIOUS}, {0x29, MyCmd.Keycode.NEXT}, {0x2a, MyCmd.Keycode.MUTE}, {0x2b, MyCmd.Keycode.KEY_TURN_A}, {0x2c, MyCmd.Keycode.KEY_TURN_D}, {0x2d, MyCmd.Keycode.VOLUME_UP}, {0x2e, MyCmd.Keycode.VOLUME_DOWN},};
+    private final static int SHOW_VOLUME_STEP = 1;
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, KEY_FM}, {0x2, KEY_FM}, {0x3, KEY_FM}, {0x9, KEY_FM},
+
+            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
+
+            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
+
+            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
+
+            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},};
+    private int mDoorStatus = 0;
+
+    public Mazda3Simple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -74,10 +77,7 @@ public class Mazda3Simple extends Canbox {
         if (step > 0) {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
         }
-    }
-
-    private final static int SHOW_VOLUME_STEP = 1;
-    private final Handler mHandler = new Handler() {
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == SHOW_VOLUME_STEP) {
                 doKeyStep(msg.arg1, msg.arg2);
@@ -90,20 +90,6 @@ public class Mazda3Simple extends Canbox {
         super.setContext(c);
         updateTime();
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, KEY_FM}, {0x2, KEY_FM}, {0x3, KEY_FM}, {0x9, KEY_FM},
-
-            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
-
-            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
-
-            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
-
-            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},
-    };
-
-    private int mDoorStatus = 0;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -168,5 +154,8 @@ public class Mazda3Simple extends Canbox {
 
         }
     }
+
+
+
 
 }

@@ -32,76 +32,34 @@ import com.zhuchao.android.fbase.MMLog;
 import java.util.Objects;
 
 public class ReverseManager {
-    private static final String TAG="ReverseManager";
-    private static WindowManager mWindowManager;
-    private static WindowManager.LayoutParams mLayoutParams;
-    @SuppressLint("StaticFieldLeak")
-    private static View mView;
-
-    @SuppressLint("StaticFieldLeak")
-    private static View mEmptyView;
-    public static boolean isShow = false;
-    private static Presentation mPresentation = null;
-    @SuppressLint("StaticFieldLeak")
-    private static ReverseUI mUI;
-    public static boolean mShowScreen1 = false;
-    @SuppressLint("StaticFieldLeak")
-    private static Context mContext;
-
-    public static void reinit(Context context) {
-        stop();
-        mUI = null;
-        mView = null;
-        init(context);
-    }
-
-    @SuppressLint("InflateParams")
-    private static void init(Context context) {
-        mContext = context;
-        if (mView == null) {
-            mView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.back, null);
-            mEmptyView = mView.findViewById(R.id.empty);
-            mLayoutParams = new WindowManager.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_FULLSCREEN, PixelFormat.RGBA_8888);
-            if (Util.isRK356X() || Util.isPX6() || Util.isPX30() || (Util.isPX5() && (Util.isAndroidQ() || Util.isAndroidR()))) {
-                mLayoutParams.setTitle("AK_RFV240658f4");
-            }
-
-            String s = MachineConfig.getPropertyOnce(MachineConfig.KEY_SCREEN1_VIEW);
-            if (s != null && s.contains(MachineConfig.VALUE_SCREEN1_VIEW_REVERSE)) {
-                mShowScreen1 = true;
-                DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
-                Display[] display = displayManager.getDisplays();
-
-                if (display.length > 1) {
-                    mPresentation = new Presentation(context, display[1], R.style.TranslucentTheme);
-                    mPresentation.getWindow().setType((WindowManager.LayoutParams.TYPE_SYSTEM_ALERT));
-                    mPresentation.setContentView(mView);
-                }
-            } else {
-                mPresentation = null;
-            }
-
-            if (mPresentation == null) {
-                mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            }
-
-            MMLog.d(TAG, TAG+".init tag="+mView.findViewById(R.id.screen1_main).getTag());
-        }
-    }
-
-    //	public static void addRadarView(Context context) {
-    //		mPresentation.addContentView(RadarManager.init(context), mLayoutParams);
-    //	}
-
+    private static final String TAG = "ReverseManager";
     private final static int START_UI = 0;
     //	private final static int HIDE_EMPTY = 1;
     private final static int START_SET_SOURCE = 2;
     private final static int REQUEST_ANGLE = 3;
     private final static int REQUEST_ANGLE_TIME = 200;
-
     private final static int REMOVE_UI = 4;
     private final static int STOP_UI = 5;
-    private static final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+    public static boolean isShow = false;
+    public static boolean mShowScreen1 = false;
+    public static int isStarted = -1;
+    private static WindowManager mWindowManager;
+    private static WindowManager.LayoutParams mLayoutParams;
+
+    //	public static void addRadarView(Context context) {
+    //		mPresentation.addContentView(RadarManager.init(context), mLayoutParams);
+    //	}
+    @SuppressLint("StaticFieldLeak")
+    private static View mView;
+    @SuppressLint("StaticFieldLeak")
+    private static View mEmptyView;
+    private static Presentation mPresentation = null;
+    @SuppressLint("StaticFieldLeak")
+    private static ReverseUI mUI;
+    @SuppressLint("StaticFieldLeak")
+    private static Context mContext;
+    private static int mLastStartDelay = 0;
+    private static long mLastStopTime = 0;    private static final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case START_UI:
@@ -152,6 +110,55 @@ public class ReverseManager {
 
         }
     };
+    private static boolean mShowFrontCamera = false;
+
+    //	public static void hideEmpty(){
+    //
+    //		Log.d("camera", "HIDE_EMPTY");
+    //		mEmptyView.setVisibility(View.GONE);
+    //		mUI.initBackTrack();
+    //	}
+
+    public static void reinit(Context context) {
+        stop();
+        mUI = null;
+        mView = null;
+        init(context);
+    }
+
+    @SuppressLint("InflateParams")
+    private static void init(Context context) {
+        mContext = context;
+        if (mView == null) {
+            mView = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.back, null);
+            mEmptyView = mView.findViewById(R.id.empty);
+            mLayoutParams = new WindowManager.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_FULLSCREEN, PixelFormat.RGBA_8888);
+            if (Util.isRK356X() || Util.isPX6() || Util.isPX30() || (Util.isPX5() && (Util.isAndroidQ() || Util.isAndroidR()))) {
+                mLayoutParams.setTitle("AK_RFV240658f4");
+            }
+
+            String s = MachineConfig.getPropertyOnce(MachineConfig.KEY_SCREEN1_VIEW);
+            if (s != null && s.contains(MachineConfig.VALUE_SCREEN1_VIEW_REVERSE)) {
+                mShowScreen1 = true;
+                DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+                Display[] display = displayManager.getDisplays();
+
+                if (display.length > 1) {
+                    mPresentation = new Presentation(context, display[1], R.style.TranslucentTheme);
+                    mPresentation.getWindow().setType((WindowManager.LayoutParams.TYPE_SYSTEM_ALERT));
+                    mPresentation.setContentView(mView);
+                }
+            } else {
+                mPresentation = null;
+            }
+
+            if (mPresentation == null) {
+                mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            }
+
+            MMLog.d(TAG, TAG + ".init tag=" + mView.findViewById(R.id.screen1_main).getTag());
+        }
+    }
 
     private static void startRequestAngleData() {
         if (isShow) {
@@ -163,19 +170,8 @@ public class ReverseManager {
         }
     }
 
-    //	public static void hideEmpty(){
-    //
-    //		Log.d("camera", "HIDE_EMPTY");
-    //		mEmptyView.setVisibility(View.GONE);
-    //		mUI.initBackTrack();
-    //	}
-
-    public static int isStarted = -1;
-    private static int mLastStartDelay = 0;
-    private static long mLastStopTime = 0;
-
     public static void start(Context context, int delay) {
-        MMLog.d(TAG, TAG+".start delay=" + delay);
+        MMLog.d(TAG, TAG + ".start delay=" + delay);
         if (!isShow) {
             mShowFrontCamera = false;
             if (Util.isRKSystem()) {
@@ -251,9 +247,6 @@ public class ReverseManager {
         }
     }
 
-
-    private static boolean mShowFrontCamera = false;
-
     public static boolean switchToFrontCamera(boolean s) {
         boolean ret = false;
         if (isShow) {
@@ -281,7 +274,6 @@ public class ReverseManager {
         return ret;
     }
 
-
     public static boolean toggleFrontCmaera() {
         boolean ret = false;
         if (AppConfig.isHidePackage("com.zhuchao.android.car.frontcamera.FrontCameraActivity")) {
@@ -295,7 +287,7 @@ public class ReverseManager {
     }
 
     public static void stop() {
-        MMLog.d(TAG, TAG+".stop isShow=" + isShow);
+        MMLog.d(TAG, TAG + ".stop isShow=" + isShow);
         if (isShow) {
             mHandler.removeMessages(REQUEST_ANGLE);
             //			Log.d("test", "stop");
@@ -353,4 +345,6 @@ public class ReverseManager {
             //			Log.d("test", "<<stop");
         }
     }
+
+
 }

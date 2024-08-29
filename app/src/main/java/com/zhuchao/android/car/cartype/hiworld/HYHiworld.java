@@ -10,6 +10,21 @@ import java.util.Locale;
 
 public class HYHiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x61, (byte) 0xa6, 0x32};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
+            //		{ 0x7, MyCmd.Keycode },
+            {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.MODLE}, {0x20, MyCmd.Keycode.KEY_SEEK_PREV}, {0x21, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x45, MyCmd.Keycode.BT},
+            //		{ 0x2, MyCmd.Keycode },
+            //		{ 0x2, MyCmd.Keycode },
+    };
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x24, MyCmd.Keycode.AUDIO}, {0x28, MyCmd.Keycode.BT}, {0x2b, MyCmd.Keycode.HOME}, {0x2f, MyCmd.Keycode.MENU}, {0x35, MyCmd.Keycode.KEY_DISPLAY}, {0x36, MyCmd.Keycode.SETUP}, {0x37, MyCmd.Keycode.AS},
+            //		{ 0x38, MyCmd.Keycode. },
+            {0x39, MyCmd.Keycode.NAVIGATION}, {0x47, MyCmd.Keycode.KEY_FM}, {0x48, MyCmd.Keycode.KEY_AM},
+            //		{ 0x49, MyCmd.Keycode. },
+            //		{ 0x4a, MyCmd.Keycode. },
+            {0x4b, MyCmd.Keycode.RADIO}, {0x5b, MyCmd.Keycode.PREVIOUS}, {0x5c, MyCmd.Keycode.NEXT},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+
     public HYHiworld() {
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
         buildCmdRadarFront((byte) 0x41, (byte) 0x0, (byte) 4);
@@ -29,36 +44,10 @@ public class HYHiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x61, (byte) 0xa6, 0x32};
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
-            //		{ 0x7, MyCmd.Keycode },
-            {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.MODLE}, {0x20, MyCmd.Keycode.KEY_SEEK_PREV}, {0x21, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x45, MyCmd.Keycode.BT},
-            //		{ 0x2, MyCmd.Keycode },
-            //		{ 0x2, MyCmd.Keycode },
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x24, MyCmd.Keycode.AUDIO},
-            {0x28, MyCmd.Keycode.BT}, {0x2b, MyCmd.Keycode.HOME}, {0x2f, MyCmd.Keycode.MENU}, {0x35, MyCmd.Keycode.KEY_DISPLAY}, {0x36, MyCmd.Keycode.SETUP}, {0x37, MyCmd.Keycode.AS},
-            //		{ 0x38, MyCmd.Keycode. },
-            {0x39, MyCmd.Keycode.NAVIGATION}, {0x47, MyCmd.Keycode.KEY_FM}, {0x48, MyCmd.Keycode.KEY_AM},
-            //		{ 0x49, MyCmd.Keycode. },
-            //		{ 0x4a, MyCmd.Keycode. },
-            {0x4b, MyCmd.Keycode.RADIO}, {0x5b, MyCmd.Keycode.PREVIOUS}, {0x5c, MyCmd.Keycode.NEXT},
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     public void parseCanboxData(byte[] data, int len) {
         if (data[0] == 0x22) {

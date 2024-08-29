@@ -6,6 +6,27 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class QiChengT90Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK},
+
+            {0x24, MyCmd.Keycode.AUDIO}, {0x25, MyCmd.Keycode.NAVIGATION},
+
+            {0x2b, MyCmd.Keycode.HOME}, {0x2f, MyCmd.Keycode.MENU},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+            {0x4, MyCmd.Keycode.MULT_SPEECH_AND_BT},
+
+            {0x6, MyCmd.Keycode.BT_HANG},
+
+            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
+
+            {0xb, MyCmd.Keycode.MODLE}, {0xf, MyCmd.Keycode.PLAY_PAUSE},
+
+            {0x50, MyCmd.Keycode.KEY_360},
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+
+
     public QiChengT90Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         //buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -23,39 +44,10 @@ public class QiChengT90Hiworld extends Canbox {
 
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK},
-
-            {0x24, MyCmd.Keycode.AUDIO}, {0x25, MyCmd.Keycode.NAVIGATION},
-
-            {0x2b, MyCmd.Keycode.HOME}, {0x2f, MyCmd.Keycode.MENU},
-    };
-
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-            {0x4, MyCmd.Keycode.MULT_SPEECH_AND_BT},
-
-            {0x6, MyCmd.Keycode.BT_HANG},
-
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-
-            {0xb, MyCmd.Keycode.MODLE}, {0xf, MyCmd.Keycode.PLAY_PAUSE},
-
-            {0x50, MyCmd.Keycode.KEY_360},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x26};

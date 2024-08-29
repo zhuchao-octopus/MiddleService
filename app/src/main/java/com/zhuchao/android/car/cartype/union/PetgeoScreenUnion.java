@@ -14,17 +14,47 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class PetgeoScreenUnion extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {
+
+
+            {(byte) 0x1, KEY_HOME}, {(byte) 0x3, KEY_PREVIOUSSONG}, {(byte) 0x4, KEY_NEXTSONG},
+
+
+            {0x7, MyCmd.Keycode.PLAY_PAUSE}, {0x8, KEY_BACK}, {0x10, KEY_MUTE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D},
+
+            {0x16, KEY_MUTE}, {0x17, KEY_PREVIOUSSONG}, {0x18, KEY_NEXTSONG}, {0x20, MyCmd.Keycode.KEY_CAR_INFO},
+
+
+            {0x30, MyCmd.Keycode.BT_DIAL}, {0x31, MyCmd.Keycode.BT_HANG},
+
+            {(byte) 0xc1, MyCmd.Keycode.BT_DIAL}, {(byte) 0xc0, MyCmd.Keycode.BT_HANG},
+
+            {0x50, KEY_GPS}, {0x40, KEY_SET},
+
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    private final int mSource = MyCmd.SOURCE_NONE;
+    private final int mBaud = 0;
+    int mKey;
+    int mRadarSwitch;
+    private int mDoorStatus = 0;
+
     public PetgeoScreenUnion() {
         //		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x01, 0x1, 0x3,
         //				0x0, 0x0 });
         //		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x02, 0x1, 0x1,
         //				0x2, 0x0 });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
         if (CarUtil.getCarEQ() == 1) {
             CarUtil.mIsNeedSendEQ = true;
             CarUtil.setMcuEQZoneUsed(1);
@@ -38,29 +68,6 @@ public class PetgeoScreenUnion extends Canbox {
         //		byte[] data = new byte[] { (byte) 0x90, 0x4,  0x71 , 0,0,0 };
         //		sendDataToCanbox(data, data.length);
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-
-
-            {(byte) 0x1, KEY_HOME}, {(byte) 0x3, KEY_PREVIOUSSONG}, {(byte) 0x4, KEY_NEXTSONG},
-
-
-            {0x7, MyCmd.Keycode.PLAY_PAUSE}, {0x8, KEY_BACK}, {0x10, KEY_MUTE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A},
-            {0x15, AK_KEYPAD_VOLUME_D},
-
-            {0x16, KEY_MUTE}, {0x17, KEY_PREVIOUSSONG}, {0x18, KEY_NEXTSONG}, {0x20, MyCmd.Keycode.KEY_CAR_INFO},
-
-
-            {0x30, MyCmd.Keycode.BT_DIAL}, {0x31, MyCmd.Keycode.BT_HANG},
-
-            {(byte) 0xc1, MyCmd.Keycode.BT_DIAL}, {(byte) 0xc0, MyCmd.Keycode.BT_HANG},
-
-            {0x50, KEY_GPS}, {0x40, KEY_SET},
-
-
-    };
-
-    int mKey;
 
     private void parseWheelKey(byte[] data, int len) {
         if (doKeyStudy(data[2], (data[2] == 0) ? 0 : 1)) {
@@ -103,8 +110,6 @@ public class PetgeoScreenUnion extends Canbox {
         }
         return data;
     }
-
-    int mRadarSwitch;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -234,18 +239,6 @@ public class PetgeoScreenUnion extends Canbox {
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
 
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -285,9 +278,6 @@ public class PetgeoScreenUnion extends Canbox {
         sendDataToCanbox(data, data.length);
 
     }
-
-    private final int mSource = MyCmd.SOURCE_NONE;
-    private final int mBaud = 0;
 
     public void setVolume(int volume) {
         byte[] data = new byte[]{0x5, 0x9, 0xf, (byte) volume};

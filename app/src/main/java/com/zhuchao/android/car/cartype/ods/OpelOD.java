@@ -5,6 +5,19 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class OpelOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0xc0, 0x38, 0x39};
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
+
+            {0x9, MyCmd.Keycode.BT_DIAL},
+
+            {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH},
+
+
+    };
+
+
     public OpelOD() {
 
         buildCmdVersion((byte) 0x7f, (byte) 0x0);
@@ -23,20 +36,6 @@ public class OpelOD extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0xc0, 0x38, 0x39};
-
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
-
-            {0x9, MyCmd.Keycode.BT_DIAL},
-
-            {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH},
-
-
-    };
 
     @Override
     public int getACTemp(byte data) {

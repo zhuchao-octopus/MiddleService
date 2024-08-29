@@ -15,13 +15,18 @@ import com.zhuchao.android.car.manager.McuManager;
 
 public class ChryslerSimple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_PREVIOUSSONG}, {0x3, KEY_NEXTSONG},
+
+            {0x5, KEY_MUTE},
+
+            {0x6, KEY_BT}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT},};
+    private final static int UPDATE_EQ = 0;
+    private int mDoorStatus = 0;
+    private byte[] mEqData = new byte[5];
+
     public ChryslerSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
         updateCanboxKeySettings();
     }
 
@@ -43,14 +48,6 @@ public class ChryslerSimple extends Canbox {
             CarUtil.setMcuEQZoneUsed(0);
         }
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_PREVIOUSSONG}, {0x3, KEY_NEXTSONG},
-
-            {0x5, KEY_MUTE},
-
-            {0x6, KEY_BT}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT},
-    };
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -152,11 +149,10 @@ public class ChryslerSimple extends Canbox {
         }
     }
 
-    private int mDoorStatus = 0;
-
-    private final static int UPDATE_EQ = 0;
-
-    private final Handler mHandler = new Handler() {
+    private void sendEQ(byte cmd, byte param) {
+        byte[] data = new byte[]{(byte) 0x84, 0x2, cmd, param};
+        sendDataToCanbox(data, data.length);
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == UPDATE_EQ) {
                 byte[] buf = new byte[]{(byte) 0x84, 0x02, 0x1, 0x1};
@@ -167,13 +163,6 @@ public class ChryslerSimple extends Canbox {
             super.handleMessage(msg);
         }
     };
-
-    private void sendEQ(byte cmd, byte param) {
-        byte[] data = new byte[]{(byte) 0x84, 0x2, cmd, param};
-        sendDataToCanbox(data, data.length);
-    }
-
-    private byte[] mEqData = new byte[5];
 
     private byte eqZoneC(byte b) {
         switch (b) {
@@ -278,9 +267,7 @@ public class ChryslerSimple extends Canbox {
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte[] data;
-        data = new byte[]{
-                (byte) 0xc0, 0x8, 0x10, 0, 0, (byte) play, 0, 0, 0, 0
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, 0x10, 0, 0, (byte) play, 0, 0, 0, 0};
         sendDataToCanbox(data, data.length);
 
     }
@@ -315,9 +302,7 @@ public class ChryslerSimple extends Canbox {
         } else {
             b[3] = 0;
         }
-        byte[] data = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], b[3], 0, 0
-        };
+        byte[] data = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], b[3], 0, 0};
         sendDataToCanbox(data, data.length);
     }
 
@@ -351,4 +336,8 @@ public class ChryslerSimple extends Canbox {
         sendDataToCanbox(buf, buf.length);
         super.stopConnect();
     }
+
+
+
+
 }

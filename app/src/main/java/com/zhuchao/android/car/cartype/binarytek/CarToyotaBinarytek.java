@@ -16,6 +16,25 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 
 public class CarToyotaBinarytek extends Canbox {
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+        }
+    };
+    byte[] mAirData;
+    byte[] mEqData = new byte[6];
+    private byte mKey;
+    private byte mOutDoorTemp;
+    private int mDoorStatus;
+    private byte[] mData0x21;
+    private byte[] mData0x22;
+    private byte[] mData0x23;
+    private byte[] mData0x25;
+    private byte[] mData0x1f;
+
     public CarToyotaBinarytek() {
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
@@ -24,8 +43,6 @@ public class CarToyotaBinarytek extends Canbox {
         }
         mWindMaxStep = 0x7;
     }
-
-    private byte mKey;
 
     private void parseWheelKey(byte[] data, int len) {
         if (doKeyStudy(data[2], data[3])) {
@@ -104,8 +121,6 @@ public class CarToyotaBinarytek extends Canbox {
         return ret;
     }
 
-    byte[] mAirData;
-
     private void parseACInfoHeat(byte[] data, int len) {
 
         mAirData[4] &= ~(0x33);
@@ -120,6 +135,19 @@ public class CarToyotaBinarytek extends Canbox {
     private boolean isValidTemp(int t) {
         return t >= 0 && t != 0x1e && t <= 0x1f;
     }
+
+    // public void setReverseRadaVol(byte param){
+    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x0, param};
+    // sendDataToCanbox(data, data.length);
+    // }
+    // public void setParkCarMode(byte param){
+    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x2, param};
+    // sendDataToCanbox(data, data.length);
+    // }
+    // public void requestInfo(byte param){
+    // byte []data = new byte[]{(byte)0x90, 0x2, param, 0};
+    // sendDataToCanbox(data, data.length);
+    // }
 
     @SuppressLint("DefaultLocale")
     private void parseACInfo(byte[] data, int len) {
@@ -197,8 +225,6 @@ public class CarToyotaBinarytek extends Canbox {
             GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
         }
     }
-
-    private byte mOutDoorTemp;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -382,13 +408,6 @@ public class CarToyotaBinarytek extends Canbox {
         }
     }
 
-    private int mDoorStatus;
-    private byte[] mData0x21;
-    private byte[] mData0x22;
-    private byte[] mData0x23;
-    private byte[] mData0x25;
-    private byte[] mData0x1f;
-
     public void sendDataToCanbox(byte[] data, int len) {
         if ((data[0] & 0xff) == 0xff) {
             if (data[1] == 0x25) {
@@ -437,19 +456,6 @@ public class CarToyotaBinarytek extends Canbox {
 
     }
 
-    // public void setReverseRadaVol(byte param){
-    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x0, param};
-    // sendDataToCanbox(data, data.length);
-    // }
-    // public void setParkCarMode(byte param){
-    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x2, param};
-    // sendDataToCanbox(data, data.length);
-    // }
-    // public void requestInfo(byte param){
-    // byte []data = new byte[]{(byte)0x90, 0x2, param, 0};
-    // sendDataToCanbox(data, data.length);
-    // }
-
     private void sendEQ(byte cmd, byte param) {
         byte[] data = new byte[]{(byte) 0x84, 0x2, cmd, param};
         sendDataToCanbox(data, data.length);
@@ -460,8 +466,6 @@ public class CarToyotaBinarytek extends Canbox {
         byte[] data = new byte[]{(byte) 0x84, 0x2, 0x07, (byte) volume};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] mEqData = new byte[6];
 
     public void sendEqToCanbox(byte[] eq) {
         if (eq != null && eq.length >= 11) {
@@ -550,14 +554,5 @@ public class CarToyotaBinarytek extends Canbox {
 
         // }
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-        }
-    };
 
 }

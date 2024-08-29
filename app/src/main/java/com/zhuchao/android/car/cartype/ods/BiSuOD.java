@@ -6,6 +6,20 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BiSuOD extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, MyCmd.Keycode.MULT_NEXT_AND_RECEIVE}, {0x4, MyCmd.Keycode.MULT_PREV_AND_HANG},
+
+
+            {0x5, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x6, MyCmd.Keycode.MULT_PREV_AND_RECEIVE},
+
+            {0x16, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE},};
+    private final static byte[][] KEYS_WHEEL2 = {
+
+            {0x1, MyCmd.Keycode.HOME}, {0x2, MyCmd.Keycode.MUTE}, {0x3, MyCmd.Keycode.AUX_IN}, {0x4, MyCmd.Keycode.NAVIGATION}, {0x5, MyCmd.Keycode.PLAY_PAUSE}, {0x6, MyCmd.Keycode.BT_DIAL}, {0x7, MyCmd.Keycode.PREVIOUS}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x12, MyCmd.Keycode.RADIO}, {0x13, MyCmd.Keycode.BT}, {0x14, MyCmd.Keycode.BT_HANG}, {0x15, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.EASY_CONNECT},
+
+    };
+
     public BiSuOD() {
         mIdAC = 0x25;
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -19,27 +33,6 @@ public class BiSuOD extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
 
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, MyCmd.Keycode.MULT_NEXT_AND_RECEIVE}, {0x4, MyCmd.Keycode.MULT_PREV_AND_HANG},
-
-
-            {0x5, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x6, MyCmd.Keycode.MULT_PREV_AND_RECEIVE},
-
-            {0x16, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-
-            {0x1, MyCmd.Keycode.HOME}, {0x2, MyCmd.Keycode.MUTE}, {0x3, MyCmd.Keycode.AUX_IN}, {0x4, MyCmd.Keycode.NAVIGATION}, {0x5, MyCmd.Keycode.PLAY_PAUSE}, {0x6, MyCmd.Keycode.BT_DIAL},
-            {0x7, MyCmd.Keycode.PREVIOUS}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-            {0x12, MyCmd.Keycode.RADIO}, {0x13, MyCmd.Keycode.BT}, {0x14, MyCmd.Keycode.BT_HANG}, {0x15, MyCmd.Keycode.SETUP}, {0x16, MyCmd.Keycode.EASY_CONNECT},
-
-    };
-
 
     public int getAngleValue2(byte[] data) {
 

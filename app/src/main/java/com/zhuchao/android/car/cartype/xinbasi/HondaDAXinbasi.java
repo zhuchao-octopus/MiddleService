@@ -10,6 +10,17 @@ import java.util.Date;
 
 public class HondaDAXinbasi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x5};
+    private static final byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.MULT_BACK_AND_HANG},
+
+
+            {0xb, MyCmd.Keycode.SPEECH}, {0xc, MyCmd.Keycode.BT_DIAL}, {0xd, MyCmd.Keycode.MULT_BACK_AND_HANG},
+
+            {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.MODLE},
+
+            {0x19, MyCmd.Keycode.MUTE},};
+
+
     public HondaDAXinbasi() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x3, (byte) 0x1, (byte) 0xf8, (byte) 0x02);
@@ -21,9 +32,6 @@ public class HondaDAXinbasi extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x5};
-
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0x82, 0x02, 0, 0};
@@ -64,18 +72,6 @@ public class HondaDAXinbasi extends Canbox {
         }
     }
 
-    private static final byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.MULT_BACK_AND_HANG},
-
-
-            {0xb, MyCmd.Keycode.SPEECH}, {0xc, MyCmd.Keycode.BT_DIAL}, {0xd, MyCmd.Keycode.MULT_BACK_AND_HANG},
-
-            {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.MODLE},
-
-            {0x19, MyCmd.Keycode.MUTE},
-    };
-
     //	@Override
     //	public int getAngleValue(byte[] data) {
     //
@@ -86,9 +82,7 @@ public class HondaDAXinbasi extends Canbox {
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
-        byte[] mData = new byte[]{
-                (byte) 0x82, 0x4, 4, 0, 0, 0
-        };
+        byte[] mData = new byte[]{(byte) 0x82, 0x4, 4, 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
 
     }

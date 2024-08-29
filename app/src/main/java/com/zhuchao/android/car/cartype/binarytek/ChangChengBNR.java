@@ -10,6 +10,13 @@ import java.util.Calendar;
 
 public class ChangChengBNR extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x10, 0x11, 0x13, 0x4,};
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.SPEECH}, {0x20, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x21, MyCmd.Keycode.KEY_AIR_CONTROL},};
+    private final byte[] airData = new byte[12];
+
+
     public ChangChengBNR() {
         mIdAC = 0x2;
         buildCmdDoor((byte) 0x3, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -26,18 +33,6 @@ public class ChangChengBNR extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x10, 0x11, 0x13, 0x4,
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL},
-            {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.SPEECH}, {0x20, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x21, MyCmd.Keycode.KEY_AIR_CONTROL},
-    };
-
 
     private void parseSeatHeat(byte[] data) {
         airData[4] = (byte) (((data[2] & 0x0f) << 4) | ((data[4] & 0x0f) >> 0));
@@ -75,8 +70,6 @@ public class ChangChengBNR extends Canbox {
         }
         return data & 0xff;
     }
-
-    private final byte[] airData = new byte[12];
 
     public void parseACInfo(byte[] data) {
 
@@ -187,9 +180,7 @@ public class ChangChengBNR extends Canbox {
     public void updateCompass(int compass) {
         int direction = compassAngleToDirectPriv(compass);
 
-        byte[] buf = new byte[]{
-                (byte) (0xc9), 0x3, (byte) (direction & 0xff), 0, 0
-        };
+        byte[] buf = new byte[]{(byte) (0xc9), 0x3, (byte) (direction & 0xff), 0, 0};
 
         sendDataToCanbox(buf, buf.length);
     }

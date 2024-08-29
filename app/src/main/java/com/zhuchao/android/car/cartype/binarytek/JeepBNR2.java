@@ -20,35 +20,7 @@ import java.util.Date;
 
 public class JeepBNR2 extends Canbox {
 
-    public JeepBNR2() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-        updateCanboxKeySettings();
-
-        buildCmdEQ((byte) 0x17, (byte) 0x1, 6);
-    }
-
-    byte[] mCmdEQ = new byte[]{(byte) 0x84, 0x02, 0x1, 0x1};
-
-    private void sendEQ(boolean on) {
-        mHandler.removeMessages(SEND_REPEAT_EQ);
-        if (on) {
-            mCmdEQ[3] = 0x1;
-            mHandler.sendEmptyMessageDelayed(SEND_REPEAT_EQ, 1000);
-
-        } else {
-            mCmdEQ[3] = 0x0;
-        }
-        sendDataToCanbox(mCmdEQ, mCmdEQ.length);
-    }
-
-    private byte[][] mKeyPannel;
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
 
             {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_MUTE},//for od Ferrari
             {0x6, KEY_MUTE}, {0x13, KEY_MUTE},
@@ -66,6 +38,37 @@ public class JeepBNR2 extends Canbox {
             {0x19, MyCmd.Keycode.ROLL_NEXT}, {0x1a, MyCmd.Keycode.ROLL_PREV},
 
     };
+    private final static int SHOW_VOLUME_STEP = 1;
+    private final static int HIDE_RADAR = 0;
+    private final static int SEND_MEDIA_TEXT = 10;
+    private final static int SEND_REPEAT_EQ = 11;
+    private final byte[] mEq = null;
+    private final int mPreBtStatus = 0;
+    byte[] mCmdEQ = new byte[]{(byte) 0x84, 0x02, 0x1, 0x1};
+    byte[] mAirData = new byte[8];
+    private byte[][] mKeyPannel;
+    private int mDoorStatus = 0;
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    public JeepBNR2() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+        updateCanboxKeySettings();
+
+        buildCmdEQ((byte) 0x17, (byte) 0x1, 6);
+    }
+
+    private void sendEQ(boolean on) {
+        mHandler.removeMessages(SEND_REPEAT_EQ);
+        if (on) {
+            mCmdEQ[3] = 0x1;
+            mHandler.sendEmptyMessageDelayed(SEND_REPEAT_EQ, 1000);
+
+        } else {
+            mCmdEQ[3] = 0x0;
+        }
+        sendDataToCanbox(mCmdEQ, mCmdEQ.length);
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -135,8 +138,6 @@ public class JeepBNR2 extends Canbox {
         return ((b & 0xff) == 0x19) || ((b & 0xff) == 0x1a);
     }
 
-    private final static int SHOW_VOLUME_STEP = 1;
-
     private void doKeyStep(int key, int step) {
         mHandler.removeMessages(SHOW_VOLUME_STEP);
         doKey(key, 1);
@@ -147,13 +148,9 @@ public class JeepBNR2 extends Canbox {
         }
     }
 
-
     private boolean isAirtContolCar() {
         return CarUtil.getCarType() == 0 || CarUtil.getCarType() == 1 || CarUtil.getCarType() == 4 || CarUtil.getCarType() == 6 || CarUtil.getCarType() == 7;
     }
-
-
-    byte[] mAirData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
         if (!isShowAir()) {
@@ -217,6 +214,50 @@ public class JeepBNR2 extends Canbox {
         }
     }
 
+    // public void setMediaMoreInfo(int source, int play, int total, int time,
+    // int total_time) {
+    // // byte min = (byte) ((time / 60) % 60);
+    // // byte sec = (byte) ((time) % 60);
+    // // ++play;
+    // // byte[] data = new byte[] { (byte) 0xa3, 0x1, (byte) (total & 0xFF),
+    // // (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF),
+    // // (byte) ((play >> 8) & 0xFF), min, sec };
+    // // sendDataToCanbox(data, data.length);
+    // }
+    //
+    // public void setMediaSrc(int source, byte type, byte[] b) {
+    // if (b[0] == 0x3) {
+    // b[0] = 5;
+    // } else {
+    // b[0] = 1;
+    // }
+    // byte[] data = new byte[] { (byte) 0x9a, 0x5, 8, b[0], b[1], b[2], 0 };
+    // sendDataToCanbox(data, data.length);
+    // }
+    //
+    // public void setMediaSrc(int source) {// default is simple box
+    // switch (source) {
+    // case MyCmd.SOURCE_DVD:
+    // mSource = 0x2;
+    // break;
+    // case MyCmd.SOURCE_RADIO:
+    // mSource = 0x1;
+    // break;
+    // case MyCmd.SOURCE_AUX:
+    // mSource = 0x4;
+    // break;
+    // case MyCmd.SOURCE_BT:
+    // mSource = 0x7;
+    // break;
+    // default:
+    // mSource = 0x6;
+    // break;
+    // }
+    //
+    // byte[] data = new byte[] { (byte) 0x99, 0x2, mSource, mVolume };
+    // sendDataToCanbox(data, data.length);
+    // }
+
     private byte getRadarData(byte i) {
         byte data = 0;
         switch (i) {
@@ -232,6 +273,57 @@ public class JeepBNR2 extends Canbox {
         }
         return data;
     }
+
+    // private byte eqSwitch(byte e){
+    // switch(e){
+    //
+    // }
+    // }
+    //	public void sendEqToCanbox(byte[] eq) {
+    //		// Log.d("abcd", "sendEqToCanbox");
+    //		if (eq != null && eq.length >= 11) {
+    //			byte[] buf = new byte[4];
+    //			int i;
+    //			buf[0] = (byte) 0x84;
+    //			buf[1] = 0x2;
+    //
+    //			// buf[2] = 0x2;
+    //			// buf[3] = eq[0];
+    //			// sendDataToCanbox(buf, buf.length);
+    //			// Util.doSleep(1);
+    //
+    //			buf[2] = 0x3;
+    //			buf[3] = (byte) (eq[0] + 3);
+    //			sendDataToCanbox(buf, buf.length);
+    //			Util.doSleep(1);
+    //
+    //			buf[2] = 0x4;
+    //			buf[3] = (byte) (eq[1] + 3);
+    //			sendDataToCanbox(buf, buf.length);
+    //			Util.doSleep(1);
+    //
+    //			buf[2] = 0x5;
+    //			buf[3] = (byte) (((eq[2] + eq[3] + eq[4]) / 3));
+    //
+    //			sendDataToCanbox(buf, buf.length);
+    //			Util.doSleep(1);
+    //
+    //			buf[2] = 0x6;
+    //			buf[3] = (byte) (((eq[8] + eq[9] + eq[10]) / 3));
+    //
+    //			sendDataToCanbox(buf, buf.length);
+    //			Util.doSleep(1);
+    //
+    //			buf[2] = 0x7;
+    //			buf[3] = (byte) (((eq[5] + eq[6] + eq[7]) / 3));
+    //
+    //			sendDataToCanbox(buf, buf.length);
+    //
+    //		}
+    //	}
+
+    // private byte mVolume;
+    // private byte mSource = 0x6;
 
     private byte getRadarData2(byte i) {
         byte data = 0;
@@ -414,8 +506,6 @@ public class JeepBNR2 extends Canbox {
         returnDriveData(data);
     }
 
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -431,107 +521,6 @@ public class JeepBNR2 extends Canbox {
         sendDataToCanbox(data, data.length);
     }
 
-    // public void setMediaMoreInfo(int source, int play, int total, int time,
-    // int total_time) {
-    // // byte min = (byte) ((time / 60) % 60);
-    // // byte sec = (byte) ((time) % 60);
-    // // ++play;
-    // // byte[] data = new byte[] { (byte) 0xa3, 0x1, (byte) (total & 0xFF),
-    // // (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF),
-    // // (byte) ((play >> 8) & 0xFF), min, sec };
-    // // sendDataToCanbox(data, data.length);
-    // }
-    //
-    // public void setMediaSrc(int source, byte type, byte[] b) {
-    // if (b[0] == 0x3) {
-    // b[0] = 5;
-    // } else {
-    // b[0] = 1;
-    // }
-    // byte[] data = new byte[] { (byte) 0x9a, 0x5, 8, b[0], b[1], b[2], 0 };
-    // sendDataToCanbox(data, data.length);
-    // }
-    //
-    // public void setMediaSrc(int source) {// default is simple box
-    // switch (source) {
-    // case MyCmd.SOURCE_DVD:
-    // mSource = 0x2;
-    // break;
-    // case MyCmd.SOURCE_RADIO:
-    // mSource = 0x1;
-    // break;
-    // case MyCmd.SOURCE_AUX:
-    // mSource = 0x4;
-    // break;
-    // case MyCmd.SOURCE_BT:
-    // mSource = 0x7;
-    // break;
-    // default:
-    // mSource = 0x6;
-    // break;
-    // }
-    //
-    // byte[] data = new byte[] { (byte) 0x99, 0x2, mSource, mVolume };
-    // sendDataToCanbox(data, data.length);
-    // }
-
-    private final byte[] mEq = null;
-
-    // private byte eqSwitch(byte e){
-    // switch(e){
-    //
-    // }
-    // }
-    //	public void sendEqToCanbox(byte[] eq) {
-    //		// Log.d("abcd", "sendEqToCanbox");
-    //		if (eq != null && eq.length >= 11) {
-    //			byte[] buf = new byte[4];
-    //			int i;
-    //			buf[0] = (byte) 0x84;
-    //			buf[1] = 0x2;
-    //
-    //			// buf[2] = 0x2;
-    //			// buf[3] = eq[0];
-    //			// sendDataToCanbox(buf, buf.length);
-    //			// Util.doSleep(1);
-    //
-    //			buf[2] = 0x3;
-    //			buf[3] = (byte) (eq[0] + 3);
-    //			sendDataToCanbox(buf, buf.length);
-    //			Util.doSleep(1);
-    //
-    //			buf[2] = 0x4;
-    //			buf[3] = (byte) (eq[1] + 3);
-    //			sendDataToCanbox(buf, buf.length);
-    //			Util.doSleep(1);
-    //
-    //			buf[2] = 0x5;
-    //			buf[3] = (byte) (((eq[2] + eq[3] + eq[4]) / 3));
-    //
-    //			sendDataToCanbox(buf, buf.length);
-    //			Util.doSleep(1);
-    //
-    //			buf[2] = 0x6;
-    //			buf[3] = (byte) (((eq[8] + eq[9] + eq[10]) / 3));
-    //
-    //			sendDataToCanbox(buf, buf.length);
-    //			Util.doSleep(1);
-    //
-    //			buf[2] = 0x7;
-    //			buf[3] = (byte) (((eq[5] + eq[6] + eq[7]) / 3));
-    //
-    //			sendDataToCanbox(buf, buf.length);
-    //
-    //		}
-    //	}
-
-    // private byte mVolume;
-    // private byte mSource = 0x6;
-
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
 
@@ -541,9 +530,7 @@ public class JeepBNR2 extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 
@@ -578,8 +565,6 @@ public class JeepBNR2 extends Canbox {
             CarUtil.mIsNeedSendEQ = true;
         }
     }
-
-    private final int mPreBtStatus = 0;
 
     public void setPhoneEx(int status_in, String num, String name) {
 
@@ -694,10 +679,39 @@ public class JeepBNR2 extends Canbox {
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
 
-    private final static int HIDE_RADAR = 0;
-    private final static int SEND_MEDIA_TEXT = 10;
-    private final static int SEND_REPEAT_EQ = 11;
-    private final Handler mHandler = new Handler() {
+    public void setContext(Context c) {
+        super.setContext(c);
+        udpateLang();
+    }
+
+    public void updateTime() {
+        Date curDate = new Date(System.currentTimeMillis());
+        byte h = (byte) curDate.getHours();
+
+        h = fixTimeHour(h);
+        String strTimeFormat = Settings.System.getString(mContext.getContentResolver(), android.provider.Settings.System.TIME_12_24);
+
+        if ("12".equals(strTimeFormat)) {
+
+            if (h > 12) {
+                h -= 12;
+            } else if (h == 0) {
+                h = 12;
+            }
+
+            h |= 0x80;
+        }
+
+        byte m = (byte) curDate.getMinutes();
+        byte s = (byte) curDate.getSeconds();
+
+        byte y = (byte) (curDate.getYear() - 100);
+        byte mon = (byte) (curDate.getMonth() + 1);
+        byte d = (byte) curDate.getDate();
+
+        byte[] buf = new byte[]{(byte) 0xc7, 0x06, y, mon, d, h, m, s};
+        sendDataToCanbox(buf, buf.length);
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HIDE_RADAR:
@@ -720,9 +734,21 @@ public class JeepBNR2 extends Canbox {
         }
     };
 
-    public void setContext(Context c) {
-        super.setContext(c);
-        udpateLang();
+    public void startConnect() {
+        super.startConnect();
+        byte cmd = -1;
+        if (CarUtil.getCarType2() == 1) {
+            cmd = 0;
+        } else if (CarUtil.getCarType2() == 2) {
+            cmd = 1;
+        }
+        if (cmd != -1) {
+            byte[] buf = new byte[]{(byte) 0xca, 0x01, cmd};
+            sendDataToCanbox(buf, buf.length);
+        }
+        //		if (CarUtil.getCarEQ() == 1 || CarUtil.isShowEQ()) {
+        sendEQ(true);
+        //		}
     }
 
     //	public void udpateLang() {
@@ -769,52 +795,6 @@ public class JeepBNR2 extends Canbox {
     //			sendDataToCanbox(buf, buf.length);
     //		}
     //	}
-
-    public void updateTime() {
-        Date curDate = new Date(System.currentTimeMillis());
-        byte h = (byte) curDate.getHours();
-
-        h = fixTimeHour(h);
-        String strTimeFormat = Settings.System.getString(mContext.getContentResolver(), android.provider.Settings.System.TIME_12_24);
-
-        if ("12".equals(strTimeFormat)) {
-
-            if (h > 12) {
-                h -= 12;
-            } else if (h == 0) {
-                h = 12;
-            }
-
-            h |= 0x80;
-        }
-
-        byte m = (byte) curDate.getMinutes();
-        byte s = (byte) curDate.getSeconds();
-
-        byte y = (byte) (curDate.getYear() - 100);
-        byte mon = (byte) (curDate.getMonth() + 1);
-        byte d = (byte) curDate.getDate();
-
-        byte[] buf = new byte[]{(byte) 0xc7, 0x06, y, mon, d, h, m, s};
-        sendDataToCanbox(buf, buf.length);
-    }
-
-    public void startConnect() {
-        super.startConnect();
-        byte cmd = -1;
-        if (CarUtil.getCarType2() == 1) {
-            cmd = 0;
-        } else if (CarUtil.getCarType2() == 2) {
-            cmd = 1;
-        }
-        if (cmd != -1) {
-            byte[] buf = new byte[]{(byte) 0xca, 0x01, cmd};
-            sendDataToCanbox(buf, buf.length);
-        }
-        //		if (CarUtil.getCarEQ() == 1 || CarUtil.isShowEQ()) {
-        sendEQ(true);
-        //		}
-    }
 
     @Override
     public void stopConnect() {
@@ -933,4 +913,8 @@ public class JeepBNR2 extends Canbox {
         }
         return ret;
     }
+
+
+
+
 }

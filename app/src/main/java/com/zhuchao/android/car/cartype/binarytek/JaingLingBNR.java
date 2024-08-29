@@ -6,6 +6,8 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class JaingLingBNR extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BT}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT},};
+
     public JaingLingBNR() {
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
         buildCmdRadarBack((byte) 0x24, (byte) 0x0, (byte) 0x4);
@@ -16,11 +18,6 @@ public class JaingLingBNR extends Canbox {
         mIdKey = 0x20;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BT}, {0xb, MyCmd.Keycode.PREVIOUS},
-            {0xc, MyCmd.Keycode.NEXT},
-    };
 
     @Override
     public int getACTemp(byte data) {

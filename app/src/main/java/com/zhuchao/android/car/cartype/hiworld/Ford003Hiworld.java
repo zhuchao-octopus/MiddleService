@@ -6,6 +6,15 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class Ford003Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.DVD}, {0x2, MyCmd.Keycode.RADIO}, {0x3, MyCmd.Keycode.AUX_IN}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.MENU}, {0x6, MyCmd.Keycode.EJECT}, {0x7, MyCmd.Keycode.SETUP}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.PREVIOUS}, {0xb, MyCmd.Keycode.NEXT}, {0xc, MyCmd.Keycode.PLAY_PAUSE}, {0xd, MyCmd.Keycode.KEY_SEEK_PREV}, {0xe, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xf, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.AS}, {0x11, MyCmd.Keycode.AUDIO}, {0x12, MyCmd.Keycode.NUMBER1}, {0x13, MyCmd.Keycode.NUMBER2}, {0x14, MyCmd.Keycode.NUMBER3}, {0x15, MyCmd.Keycode.NUMBER4}, {0x16, MyCmd.Keycode.NUMBER5}, {0x17, MyCmd.Keycode.NUMBER6}, {0x18, MyCmd.Keycode.NUMBER7}, {0x19, MyCmd.Keycode.NUMBER8}, {0x1a, MyCmd.Keycode.NUMBER9}, {0x1b, MyCmd.Keycode.NUMBER0}, {0x1c, MyCmd.Keycode.NUMBER_STAR}, {0x1d, MyCmd.Keycode.NUMBER_POUND},
+            //		{ 0x1e, MyCmd.Keycode },
+            //		{ 0x1f, MyCmd.Keycode },
+            //		{ 0x20, MyCmd.Keycode },
+            //		{ 0x21, MyCmd.Keycode },
+            {0x22, MyCmd.Keycode.VOLUME_UP}, {0x23, MyCmd.Keycode.VOLUME_DOWN},
+
+    };
+
     public Ford003Hiworld() {
         buildCmdDoor((byte) 0x73, (byte) 0x2, (byte) 0xf8, (byte) 0x09);
 
@@ -15,21 +24,6 @@ public class Ford003Hiworld extends Canbox {
 
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.DVD}, {0x2, MyCmd.Keycode.RADIO}, {0x3, MyCmd.Keycode.AUX_IN}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.MENU}, {0x6, MyCmd.Keycode.EJECT},
-            {0x7, MyCmd.Keycode.SETUP}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.PREVIOUS}, {0xb, MyCmd.Keycode.NEXT}, {0xc, MyCmd.Keycode.PLAY_PAUSE},
-            {0xd, MyCmd.Keycode.KEY_SEEK_PREV}, {0xe, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xf, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.AS}, {0x11, MyCmd.Keycode.AUDIO}, {0x12, MyCmd.Keycode.NUMBER1},
-            {0x13, MyCmd.Keycode.NUMBER2}, {0x14, MyCmd.Keycode.NUMBER3}, {0x15, MyCmd.Keycode.NUMBER4}, {0x16, MyCmd.Keycode.NUMBER5}, {0x17, MyCmd.Keycode.NUMBER6}, {0x18, MyCmd.Keycode.NUMBER7},
-            {0x19, MyCmd.Keycode.NUMBER8}, {0x1a, MyCmd.Keycode.NUMBER9}, {0x1b, MyCmd.Keycode.NUMBER0}, {0x1c, MyCmd.Keycode.NUMBER_STAR}, {0x1d, MyCmd.Keycode.NUMBER_POUND},
-            //		{ 0x1e, MyCmd.Keycode },
-            //		{ 0x1f, MyCmd.Keycode },
-            //		{ 0x20, MyCmd.Keycode },
-            //		{ 0x21, MyCmd.Keycode },
-            {0x22, MyCmd.Keycode.VOLUME_UP}, {0x23, MyCmd.Keycode.VOLUME_DOWN},
-
-    };
-
 
     @Override
     public int getACTemp(byte data) {

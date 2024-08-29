@@ -33,26 +33,111 @@ import java.util.ArrayList;
 public class PreInstallPanel extends Handler {
 
     private static final String TAG = "PreInstallPanel";
-    // private final Toast mToast;
-    private final View mView;
-    private final Context mContext;
-    private TextView mMessage;
-
     private final static int MSG_SHOW = 0;
     private final static int MSG_HIDE = 1;
     private final static int MSG_INSTALL = 2;
+    private final static String PRE_APP_PATH = "/mnt/paramter/apk/";
+    private final static String[] PRE_APP = {"EsFileExplorer", "Instructions", "AdobeReaderPDF", "trskeyboard"};
+    private final static String INSTALL_CONFIG = "/mnt/paramter/apk/install_config.txt";
+    /*
+        class PackageInstallObserver extends IPackageInstallObserver.Stub {
+            public void packageInstalled(String packageName, int returnCode) {
+                Log.i(TAG, packageName + " returnCode=" + returnCode +":"+mInstallIndex+":"+mAPK.size());
+                updateStatus(packageName, returnCode);
+                mInstallIndex++;
+                if (mInstallIndex < mAPK.size()) {
+                    sendEmptyMessage(MSG_INSTALL);
+                } else {
+                    post(new Runnable() {
+                        public void run() {
+                            (mView.findViewById(R.id.install_finish)).setVisibility(View.VISIBLE);
+                            (mView.findViewById(R.id.tr_progress)).setVisibility(View.GONE);
+                        }
+                    });
 
-    public boolean mShown = false;
+                    sendEmptyMessageDelayed(MSG_HIDE, 4000);
 
-    private WindowManager mWindowManager = null;
+                }
+                if (mDefaultKeyboard != null) {
+                    if (mDefaultKeyboard.contains(packageName)) {
+                        Log.i(TAG, " update=" + mDefaultKeyboard);
+                        InputMethodManager mImm = (InputMethodManager) mContext
+                                .getSystemService(Context.INPUT_METHOD_SERVICE);
+                        mImm.setInputMethod(null, mDefaultKeyboard);
+                    }
+                }
+            }
 
+        }
+
+
+        public void silentInstall(String path) {
+
+            Log.e(TAG, "silentInstall path:" + path);
+            File file = new File(path);
+            if (!file.exists()) {
+                Log.e(TAG, "silentInstall not found path:" + path);
+                return;
+            }
+            Uri uri = Uri.fromFile(file);
+
+            PackageManager pm = mContext.getPackageManager();
+            PackageInstallObserver observer = new PackageInstallObserver();
+            try {
+                pm.installPackage(uri, observer, 0, null);
+                Log.e(TAG, "not support");
+            } catch (Exception e) {
+                Log.e(TAG, "silentInstall fail:" + e);
+
+            }
+        }*/
+    private static final String ACTION_PREINSTALL_COMPLETE = "com.android.ACTION_PREINSTALL_COMPLETE";
+    private static final String BROADCAST_ACTION = "com.android.packageinstaller.ACTION_INSTALL_COMMIT";
+    // private final Toast mToast;
+    private final View mView;
+    private final Context mContext;
     private final WindowManager.LayoutParams mVolumeLayoutParams;
-
     private final TextView mTextView;
-
     private final String mDefaultKeyboard;
-
     private final PackageInstaller mPackageInstaller;
+    private final ArrayList<APKStatus> mAPK = new ArrayList<APKStatus>();
+    public boolean mShown = false;
+    private TextView mMessage;
+    private WindowManager mWindowManager = null;
+    private int mInstallIndex = 0;
+    private final SessionCallback mSessionCallback = new SessionCallback() {
+        @Override
+        public void onProgressChanged(int sessionId, float progress) {
+            // TODO Auto-generated method stub
+            Log.d(TAG, "onProgressChanged " + sessionId + " " + progress);
+        }
+
+        @Override
+        public void onFinished(int sessionId, boolean success) {
+            // TODO Auto-generated method stub
+            Log.d(TAG, "onFinished " + sessionId + " " + success);
+            onInstallResult(sessionId, success ? 1 : 0);
+        }
+
+        @Override
+        public void onCreated(int sessionId) {
+            // TODO Auto-generated method stub
+            Log.d(TAG, "onCreated " + sessionId);
+        }
+
+        @Override
+        public void onBadgingChanged(int sessionId) {
+            // TODO Auto-generated method stub
+            Log.d(TAG, "onBadgingChanged " + sessionId);
+        }
+
+        @Override
+        public void onActiveChanged(int sessionId, boolean active) {
+            // TODO Auto-generated method stub
+            Log.d(TAG, "onActiveChanged " + sessionId + " " + active);
+        }
+    };
+
 
     public PreInstallPanel(Context context) {
         mContext = context;
@@ -131,22 +216,6 @@ public class PreInstallPanel extends Handler {
 
     }
 
-    public static class APKStatus {
-        public String mName;
-        public String mPackageName;
-        public int mIndex;
-        public int sessionId;
-
-        public APKStatus(String name, String pName) {
-            mName = name;
-            mPackageName = pName;
-            sessionId = mIndex = 0;
-
-        }
-    }
-
-    private final ArrayList<APKStatus> mAPK = new ArrayList<APKStatus>();
-
     public void addInstallApk(String name) {
         File f = new File(name);
         Log.d(TAG, "addInstallApk " + f.exists());
@@ -163,7 +232,6 @@ public class PreInstallPanel extends Handler {
             updateView();
         }
     }
-
 
     public void updateStatus(String name, int status) {
 
@@ -213,12 +281,6 @@ public class PreInstallPanel extends Handler {
         //		}
     }
 
-    private final static String PRE_APP_PATH = "/mnt/paramter/apk/";
-    private final static String[] PRE_APP = {"EsFileExplorer", "Instructions", "AdobeReaderPDF", "trskeyboard"};
-
-    private final static String INSTALL_CONFIG = "/mnt/paramter/apk/install_config.txt";
-    private int mInstallIndex = 0;
-
     public boolean installPreInstallApp() {
         File f = new File(INSTALL_CONFIG);
         if (f.exists()) {
@@ -256,60 +318,6 @@ public class PreInstallPanel extends Handler {
         }
         return false;
     }
-
-    /*
-        class PackageInstallObserver extends IPackageInstallObserver.Stub {
-            public void packageInstalled(String packageName, int returnCode) {
-                Log.i(TAG, packageName + " returnCode=" + returnCode +":"+mInstallIndex+":"+mAPK.size());
-                updateStatus(packageName, returnCode);
-                mInstallIndex++;
-                if (mInstallIndex < mAPK.size()) {
-                    sendEmptyMessage(MSG_INSTALL);
-                } else {
-                    post(new Runnable() {
-                        public void run() {
-                            (mView.findViewById(R.id.install_finish)).setVisibility(View.VISIBLE);
-                            (mView.findViewById(R.id.tr_progress)).setVisibility(View.GONE);
-                        }
-                    });
-
-                    sendEmptyMessageDelayed(MSG_HIDE, 4000);
-
-                }
-                if (mDefaultKeyboard != null) {
-                    if (mDefaultKeyboard.contains(packageName)) {
-                        Log.i(TAG, " update=" + mDefaultKeyboard);
-                        InputMethodManager mImm = (InputMethodManager) mContext
-                                .getSystemService(Context.INPUT_METHOD_SERVICE);
-                        mImm.setInputMethod(null, mDefaultKeyboard);
-                    }
-                }
-            }
-
-        }
-
-
-        public void silentInstall(String path) {
-
-            Log.e(TAG, "silentInstall path:" + path);
-            File file = new File(path);
-            if (!file.exists()) {
-                Log.e(TAG, "silentInstall not found path:" + path);
-                return;
-            }
-            Uri uri = Uri.fromFile(file);
-
-            PackageManager pm = mContext.getPackageManager();
-            PackageInstallObserver observer = new PackageInstallObserver();
-            try {
-                pm.installPackage(uri, observer, 0, null);
-                Log.e(TAG, "not support");
-            } catch (Exception e) {
-                Log.e(TAG, "silentInstall fail:" + e);
-
-            }
-        }*/
-    private static final String ACTION_PREINSTALL_COMPLETE = "com.android.ACTION_PREINSTALL_COMPLETE";
 
     private void onInstallResult(int sessionId, int returnCode) {
         String packageName = "";
@@ -372,8 +380,6 @@ public class PreInstallPanel extends Handler {
         }).start();
     }
 
-    private static final String BROADCAST_ACTION = "com.android.packageinstaller.ACTION_INSTALL_COMMIT";
-
     public void doSilentInstall(APKStatus apkStatus) {
         if (apkStatus == null || apkStatus.mName == null) {
             Log.e(TAG, "silentInstall param is null");
@@ -425,36 +431,17 @@ public class PreInstallPanel extends Handler {
         }
     }
 
-    private final SessionCallback mSessionCallback = new SessionCallback() {
-        @Override
-        public void onProgressChanged(int sessionId, float progress) {
-            // TODO Auto-generated method stub
-            Log.d(TAG, "onProgressChanged " + sessionId + " " + progress);
-        }
+    public static class APKStatus {
+        public String mName;
+        public String mPackageName;
+        public int mIndex;
+        public int sessionId;
 
-        @Override
-        public void onFinished(int sessionId, boolean success) {
-            // TODO Auto-generated method stub
-            Log.d(TAG, "onFinished " + sessionId + " " + success);
-            onInstallResult(sessionId, success ? 1 : 0);
-        }
+        public APKStatus(String name, String pName) {
+            mName = name;
+            mPackageName = pName;
+            sessionId = mIndex = 0;
 
-        @Override
-        public void onCreated(int sessionId) {
-            // TODO Auto-generated method stub
-            Log.d(TAG, "onCreated " + sessionId);
         }
-
-        @Override
-        public void onBadgingChanged(int sessionId) {
-            // TODO Auto-generated method stub
-            Log.d(TAG, "onBadgingChanged " + sessionId);
-        }
-
-        @Override
-        public void onActiveChanged(int sessionId, boolean active) {
-            // TODO Auto-generated method stub
-            Log.d(TAG, "onActiveChanged " + sessionId + " " + active);
-        }
-    };
+    }
 }

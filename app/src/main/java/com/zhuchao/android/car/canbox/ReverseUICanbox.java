@@ -13,18 +13,13 @@ import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.manager.OSProManager;
 
 public class ReverseUICanbox {
+    private final static int[][] IDS_VW = {{R.id.backligt_layout, 0}, {R.id.close, 0}, {R.id.vw_show, 0}, {R.id.vw_color, 0}, {R.id.vw_0, 0xc64600}, {R.id.vw_1, 0xc64601}, {R.id.vw_2, 0xc64602}, {R.id.vw_3, 0xc64603}, {R.id.vw_r, 0xc64604}, {R.id.vw_l, 0xc64605}, {R.id.vw_lr, 0xc64606}, {R.id.vw_radar_v_off, 0xc6ab00}, {R.id.vw_radar_v_on, 0xc6ab01},
+
+    };
     private Canbox mCanbox;
     private View mMainView;
     private int mReverseID;
-
-    private final static int[][] IDS_VW = {
-            {R.id.backligt_layout, 0}, {R.id.close, 0}, {R.id.vw_show, 0}, {R.id.vw_color, 0}, {R.id.vw_0, 0xc64600}, {R.id.vw_1, 0xc64601}, {R.id.vw_2, 0xc64602}, {R.id.vw_3, 0xc64603},
-            {R.id.vw_r, 0xc64604}, {R.id.vw_l, 0xc64605}, {R.id.vw_lr, 0xc64606}, {R.id.vw_radar_v_off, 0xc6ab00}, {R.id.vw_radar_v_on, 0xc6ab01},
-
-    };
-
-
-    private final OnClickListener mOnClickListener = new OnClickListener() {
+    private SeekBar mLevel;    private final OnClickListener mOnClickListener = new OnClickListener() {
 
         @Override
         public void onClick(View arg0) {
@@ -56,11 +51,13 @@ public class ReverseUICanbox {
 
         }
     };
-
-    private final IdConfig[] mIdConfig = {
-            new IdConfig(46, R.id.layout_canbus_vw, IDS_VW, mOnClickListener)
+    private SeekBar mLevelContrast;    private final IdConfig[] mIdConfig = {new IdConfig(46, R.id.layout_canbus_vw, IDS_VW, mOnClickListener)
 
     };
+    private SeekBar mLevelSaturation;
+    private TextView mTvBacklight;
+    private TextView mTvConrast;
+    private TextView mTvSaturation;
 
     private void showBackLightControl(boolean s) {
         setViewVisible(R.id.backligt_layout, s ? 1 : 0);
@@ -93,16 +90,6 @@ public class ReverseUICanbox {
         }
 
     }
-
-
-    private SeekBar mLevel;
-    private SeekBar mLevelContrast;
-    private SeekBar mLevelSaturation;
-
-    private TextView mTvBacklight;
-    private TextView mTvConrast;
-    private TextView mTvSaturation;
-
 
     private void initVW() {
         updateView(0x40, 0);
@@ -178,7 +165,6 @@ public class ReverseUICanbox {
         });
     }
 
-
     private void initData(int id) {
         for (IdConfig config : mIdConfig) {
             if (config.mConfig == id) {
@@ -219,7 +205,6 @@ public class ReverseUICanbox {
             }
         }
     }
-
 
     private void updateView(int arg1, int arg2) {
         switch (mReverseID) {
@@ -329,4 +314,8 @@ public class ReverseUICanbox {
 
         }
     }
+
+
+
+
 }

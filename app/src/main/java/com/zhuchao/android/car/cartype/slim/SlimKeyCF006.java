@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.common.utils.AppConfig;
 import com.common.utils.MyCmd;
-import com.common.utils.Util;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.canbox.Canbox;
@@ -22,7 +21,31 @@ import java.util.Date;
 import java.util.Objects;
 
 public class SlimKeyCF006 extends Canbox {
+    private final static byte[][] KEYS_WHEEL_NORMAL = {{0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J}, {0x33, KEY_FM}, {0x34, KEY_AUX}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER}, {0x48, KEY_PLAYPAUSE}, {0x49, MyCmd.Keycode.KEY_TURN_D}, {0x4a, MyCmd.Keycode.KEY_TURN_A}, {0x4b, KEY_PREVIOUSSONG}, {0x4c, KEY_NEXTSONG}, {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE},};
+    private final static int HIDE_RADAR = 0;
+    private final static int DEALY_SEND_TPMS = 1;
     private final String TAG = "SlimKeyCF006";
+    private final byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HIDE_RADAR:
+                    RadarManager.stop();
+                    break;
+                case DEALY_SEND_TPMS:
+                    try {
+                        sendCanboxInfo("com.canboxsetting", (byte[]) (msg.obj));
+                    } catch (Exception ignored) {
+                    }
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] airData = new byte[10];
+    private byte mOutDoorTempUnit;
+    private int mSource = MyCmd.SOURCE_NONE;
+
 
     public SlimKeyCF006() {
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x4, 0x3, 0x0, 0x0});
@@ -30,13 +53,6 @@ public class SlimKeyCF006 extends Canbox {
         ///sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x10, 0x1});
         MMLog.d(TAG, "NEW SlimKeyCF006 CAN BOX.");
     }
-
-    private final static byte[][] KEYS_WHEEL_NORMAL = {{0x20, KEY_NUM_0}, {0x21, KEY_NUM_1}, {0x22, KEY_NUM_2}, {0x23, KEY_NUM_3}, {0x24, KEY_NUM_4}, {0x25, KEY_NUM_5}, {0x26, KEY_NUM_6}, {0x27, KEY_NUM_7}, {0x28, KEY_NUM_8}, {0x29, KEY_NUM_9}, {0x2a, KEY_NUM_X}, {0x2b, KEY_NUM_J}, {0x33, KEY_FM}, {0x34, KEY_AUX}, {0x35, KEY_DVD}, {0x36, KEY_AUX}, {0x37, KEY_HOME}, {0x38, KEY_EQ}, {0x39, KEY_BT}, {0x3d, MyCmd.Keycode.TIME_SETTING}, {0x3f, KEY_POWER}, {0x48, KEY_PLAYPAUSE}, {0x49, MyCmd.Keycode.KEY_TURN_D}, {0x4a, MyCmd.Keycode.KEY_TURN_A}, {0x4b, KEY_PREVIOUSSONG}, {0x4c, KEY_NEXTSONG}, {0x52, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x53, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x54, KEY_EJECT}, {0x56, MyCmd.Keycode.RDS_TA_SWITCH}, {0x57, KEY_GPS}, {0x59, KEY_EQ}, {0x5a, KEY_MUTE},};
-
-    private final byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
-
-    byte[] airData = new byte[10];
-    private byte mOutDoorTempUnit;
 
     protected void parseWheelKey(byte[] data, int len) {
         MMLog.d(TAG, "parseWheelKey: data = " + ByteUtils.BuffToHexStr(data));
@@ -74,7 +90,7 @@ public class SlimKeyCF006 extends Canbox {
             airData[0] = (byte) (airData[0] | (0x20));
         else airData[0] = (byte) (airData[0] & (0xDF));
 
-//        super.parseACInfo(airData);
+        //        super.parseACInfo(airData);
         boolean isAirActivity = "com.canboxsetting/com.canboxsetting.CanAirControlActivity".equals(AppConfig.getTopActivity());
         if (isAirActivity) {
             Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
@@ -126,7 +142,6 @@ public class SlimKeyCF006 extends Canbox {
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, t + unit);
     }
 
-
     private byte getRadarData(byte i) {
         byte data = 0;
         if (i == 0x1) {
@@ -163,8 +178,6 @@ public class SlimKeyCF006 extends Canbox {
         return data;
     }
 
-    private int mSource = MyCmd.SOURCE_NONE;
-
     public void setMediaSrc(int source) {
         mSource = source;
     }
@@ -191,26 +204,6 @@ public class SlimKeyCF006 extends Canbox {
         Log.d(TAG, "sendDataToCanbox: data = " + ByteUtils.BuffToHexStr(data));
         sendCmd(CANBOX_WRITE_COMMON_DATA, 0, data);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final static int DEALY_SEND_TPMS = 1;
-
-    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_RADAR:
-                    RadarManager.stop();
-                    break;
-                case DEALY_SEND_TPMS:
-                    try {
-                        sendCanboxInfo("com.canboxsetting", (byte[]) (msg.obj));
-                    } catch (Exception ignored) {
-                    }
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -256,17 +249,17 @@ public class SlimKeyCF006 extends Canbox {
     @Override
     public void touchInReverseEx(int x, int y, int w, int h, int down) {
         super.touchInReverseEx(x, y, w, h, down);
-//        Log.d(TAG, "touchInReverseEx: ", new Exception());
-//        MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
+        //        Log.d(TAG, "touchInReverseEx: ", new Exception());
+        //        MMLog.d(TAG, "touchInReverseEx x:" + x + " y:" + y + " w:" + w + " h:" + h + " down:" + down);
         int sendX = x * 1919 / w;
         byte sendXHi = (byte) (sendX >> 8);
         byte sendXLo = (byte) sendX;
         int sendY = y * 719 / h;
         byte sendYHi = (byte) (sendY >> 8);
         byte sendYLo = (byte) sendY;
-        byte touchAction = (byte) (down == 1?0x01:0x03);
+        byte touchAction = (byte) (down == 1 ? 0x01 : 0x03);
         byte sumValue = (byte) (0xA4 + 0x01 + 0x07 + 0x88 + sendYHi + sendYLo + sendXHi + sendXLo + touchAction);
-        byte[] buf = new byte[]{0x00,(byte) 0xA4, 0x01, 0x00, 0x07, (byte) 0x88, 0x00, sendXHi, sendXLo, sendYHi, sendYLo, touchAction, sumValue};
+        byte[] buf = new byte[]{0x00, (byte) 0xA4, 0x01, 0x00, 0x07, (byte) 0x88, 0x00, sendXHi, sendXLo, sendYHi, sendYLo, touchAction, sumValue};
         sendDataToCanbox(buf, buf.length);
     }
 }

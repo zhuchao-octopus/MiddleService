@@ -9,6 +9,17 @@ import java.util.Date;
 
 public class DongFeng005Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK}, {0x9, MyCmd.Keycode.MUTE}, {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x13, MyCmd.Keycode.TIME_SETTING}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x25, MyCmd.Keycode.KEY_REPEAT}, {0x28, MyCmd.Keycode.BT}, {0x2a, MyCmd.Keycode.PLAY_PAUSE}, {0x2f, MyCmd.Keycode.HOME}, {0x33, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.KEY_360}, {0x3c, MyCmd.Keycode.KEY_SHUFFLE}, {0x3d, MyCmd.Keycode.AUDIO}, {0x3e, MyCmd.Keycode.EASY_CONNECT}, {0x42, MyCmd.Keycode.EQ}, {0x43, MyCmd.Keycode.AS}, {0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN}, {0x4b, MyCmd.Keycode.RADIO}, {0x4d, MyCmd.Keycode.FAST_F}, {0x4e, MyCmd.Keycode.FAST_R}, {0x5e, MyCmd.Keycode.AS},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+
+            {0x5, MyCmd.Keycode.BT}, {0x4, MyCmd.Keycode.SPEECH},
+
+            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+
     public DongFeng005Hiworld() {
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
         buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
@@ -40,30 +51,6 @@ public class DongFeng005Hiworld extends Canbox {
 
         return -angle;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK}, {0x9, MyCmd.Keycode.MUTE}, {0x10, MyCmd.Keycode.PLAY_PAUSE},
-            {0x13, MyCmd.Keycode.TIME_SETTING}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x25, MyCmd.Keycode.KEY_REPEAT},
-            {0x28, MyCmd.Keycode.BT}, {0x2a, MyCmd.Keycode.PLAY_PAUSE}, {0x2f, MyCmd.Keycode.HOME}, {0x33, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.SETUP}, {0x39, MyCmd.Keycode.KEY_360},
-            {0x3c, MyCmd.Keycode.KEY_SHUFFLE}, {0x3d, MyCmd.Keycode.AUDIO}, {0x3e, MyCmd.Keycode.EASY_CONNECT}, {0x42, MyCmd.Keycode.EQ}, {0x43, MyCmd.Keycode.AS}, {0x45, MyCmd.Keycode.VOLUME_UP},
-            {0x46, MyCmd.Keycode.VOLUME_DOWN}, {0x4b, MyCmd.Keycode.RADIO}, {0x4d, MyCmd.Keycode.FAST_F}, {0x4e, MyCmd.Keycode.FAST_R}, {0x5e, MyCmd.Keycode.AS},
-    };
-
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
-
-            {0x5, MyCmd.Keycode.BT}, {0x4, MyCmd.Keycode.SPEECH},
-
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
-
 
     @Override
     public int getACTemp(byte data) {
@@ -175,9 +162,7 @@ public class DongFeng005Hiworld extends Canbox {
 
         byte m = (byte) curDate.getMinutes();
 
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, 0, 0, 0, 0
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, 0, 0, 0, 0};
 
         sendDataToCanbox(buf, buf.length);
 

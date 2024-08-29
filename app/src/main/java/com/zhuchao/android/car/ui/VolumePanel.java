@@ -27,32 +27,26 @@ import com.zhuchao.android.car.manager.McuManager;
 public class VolumePanel extends Handler {
 
     private static final String TAG = "VolumePanel";
+    private final static int MSG_SHOW = 0;
+    private final static int MSG_HIDE = 1;
+    private final static long DELAY_HIDE_TIME = 3000;
+    public static boolean mShown = false;
+    public static int mCurrentVolume = 10;
+    private static VolumePanel mThis;
     // private final Toast mToast;
     private final View mView;
     private final ImageView mLargeStreamIcon;
     private final SeekBar mLevel;
     private final Context mContext;
     private final TextView mMessage;
-
     private final McuManager mMcuManager;
-
-    private final static int MSG_SHOW = 0;
-    private final static int MSG_HIDE = 1;
-
-    public static boolean mShown = false;
     /**
      * 开机第一次不要显示
      */
     private final boolean mFirstShown = true;
-
-    private static VolumePanel mThis;
-
-    private WindowManager mWindowManager = null;
-
     private final WindowManager.LayoutParams mVolumeLayoutParams;
-    private final static long DELAY_HIDE_TIME = 3000;
-
-    public static int mCurrentVolume = 10;
+    private WindowManager mWindowManager = null;
+    private BroadcastReceiver mReceiver = null;
 
     public VolumePanel(Context context) {
         mContext = context;
@@ -212,8 +206,6 @@ public class VolumePanel extends Handler {
         }
 
     }
-
-    private BroadcastReceiver mReceiver = null;
 
     public void registerListener() {
         if (mReceiver == null) {

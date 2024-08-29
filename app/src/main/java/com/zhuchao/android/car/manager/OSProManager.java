@@ -32,12 +32,45 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class OSProManager {
+    // 内核与APP通讯协议
+    /*
+     *
+     * #define AK_PRO_GROUPID_COMMON 1 #define AK_PRO_GROUPID_TOUCH_KEY 2
+     *
+     *
+     * #define AK_PRO_SUBID_COMMON_REVERSE 1 #define AK_PRO_SUBID_TOUCH_KEY_XY 1
+     */
+    public static final int AK_PRO_GROUPID_COMMON = 1;
+    public static final int AK_PRO_GROUPID_TOUCH_KEY = 2;
+    public static final int AK_PRO_SUBID_COMMON_REVERSE = 1;
+    public static final int AK_PRO_SUBID_TOUCH_KEY_XY = 1;
+    public static final int AK_PRO_SUBID_TOUCH_KEY_FIX_KEY = 2;
     private final static String TAG = "OSProManager";
-    private Mcu mMcu;
-    private Context mContext;
+    private static final int REVERSE_WAIT_TIME = 1000;
+    private final static int MSG_RESET_BACKLIGHT = 0x10000;
+    private final static int MSG_RECOVER_BACKLIGHT = 0x10001;
+    private final static int MSG_NOTIFY_APP_REVERSE_STOP = 0x10002;
+    private final static int MSG_RECOVER_REVERSE_OPEN_APP = 0x10003;
+    private final static int MSG_DELAY_DO_REVERSE = 0x10004;
+    private final static int MSG_DELAY_SWITCH_TO_FRONT_CAMERA = 0x10005;
+    private final static int MSG_CHECK_FRONT_CAMERA_SIGNAL = 0x10006;
+    private final static int MSG_NOTIFY_APP_READY = 0x10100; // handler the
+    public static boolean mNoReverse = false;
+    public static int mSwitchToFrontCameraTime = 0;
+    public static int mReverse = 0;
+    public static Handler mHandlerReverse;
+    public static int mSimulationReverse = 0;
     @SuppressLint("StaticFieldLeak")
     private static OSProManager mThis;
+    private final long mReverseStartTime = 0;
+    private final long mReverseStopTime = 0;
+    boolean mSwitchToFrontCamera = false;
+    private Mcu mMcu;
+    private Context mContext;
     private McuManager mMcuManager;
+    private TouchKeyEvent mTouchKeyEvent;
+    private boolean mLastIsCameraApp = false;
+    private BroadcastReceiver mReceiver = null;
 
     public static OSProManager getInstance(Context c) {
         if (mThis == null) {
@@ -45,6 +78,42 @@ public class OSProManager {
             mThis.init(c);
         }
         return mThis;
+    }
+
+    public static void clearReverse() {
+        if (mThis != null) {
+            if (mReverse == 1) {
+                mThis.doReverse(0, false);
+            }
+        }
+    }
+
+    public static void checktartReverseAfterSleep() {
+        if (mThis != null) {
+            int reverse = Util.getFileValue("/sys/class/gpio-detection/car-reverse/status");
+            //			Log.d("add", "checktartReverseAfterSleep:"+reverse);
+            if (reverse == 1) {
+                mThis.mOsHandler.sendMessageDelayed(mThis.mOsHandler.obtainMessage(MSG_DELAY_DO_REVERSE, 1, 0), 200);
+            }
+        }
+    }
+
+    public static void simulationReverse(byte reverse) { // only canbox can use
+        if (mThis != null && mThis.mOsHandler != null) {
+            Log.d("aced", "simulationReverse:" + reverse + ":" + mSimulationReverse + ":" + mReverse);
+            if (reverse == 1) {
+                if (mReverse == 1) {
+                    return;
+                }
+                mSimulationReverse = 1;
+            } else {
+                if (mSimulationReverse == 0 || mReverse == 0) {
+                    return;
+                }
+                mSimulationReverse = 0;
+            }
+            mThis.doSimulationReverse(reverse);
+        }
     }
 
     public void init(Context c) {
@@ -70,53 +139,6 @@ public class OSProManager {
             sendTouchMode(0);
         }
     }
-
-    public static boolean mNoReverse = false;
-    public static int mSwitchToFrontCameraTime = 0;
-
-    private TouchKeyEvent mTouchKeyEvent;
-
-    public static void clearReverse() {
-        if (mThis != null) {
-            if (mReverse == 1) {
-                mThis.doReverse(0, false);
-            }
-        }
-    }
-
-    public static void checktartReverseAfterSleep() {
-        if (mThis != null) {
-            int reverse = Util.getFileValue("/sys/class/gpio-detection/car-reverse/status");
-            //			Log.d("add", "checktartReverseAfterSleep:"+reverse);
-            if (reverse == 1) {
-                mThis.mOsHandler.sendMessageDelayed(mThis.mOsHandler.obtainMessage(MSG_DELAY_DO_REVERSE, 1, 0), 200);
-            }
-        }
-    }
-
-    public static int mReverse = 0;
-    // 内核与APP通讯协议
-    /*
-     *
-     * #define AK_PRO_GROUPID_COMMON 1 #define AK_PRO_GROUPID_TOUCH_KEY 2
-     *
-     *
-     * #define AK_PRO_SUBID_COMMON_REVERSE 1 #define AK_PRO_SUBID_TOUCH_KEY_XY 1
-     */
-    public static final int AK_PRO_GROUPID_COMMON = 1;
-    public static final int AK_PRO_GROUPID_TOUCH_KEY = 2;
-
-    public static final int AK_PRO_SUBID_COMMON_REVERSE = 1;
-    public static final int AK_PRO_SUBID_TOUCH_KEY_XY = 1;
-    public static final int AK_PRO_SUBID_TOUCH_KEY_FIX_KEY = 2;
-
-    public static Handler mHandlerReverse;
-    private final long mReverseStartTime = 0;
-    private final long mReverseStopTime = 0;
-    private static final int REVERSE_WAIT_TIME = 1000;
-    private boolean mLastIsCameraApp = false;
-
-    boolean mSwitchToFrontCamera = false;
 
     private void doReverseSwitchToFront(boolean front) {
 
@@ -144,7 +166,62 @@ public class OSProManager {
             }
         }
         return false;
-    }
+    }    // kernel
+    // reverse
+    private final Handler mOsHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        @Override
+        public void handleMessage(Message msg) {
+            MMLog.d(TAG, "mOsHandler.msg=" + msg.toString());
+            switch (msg.what) {
+                case Mcu.MSG_RECEIVE_OS_DATA:
+                    byte[] protocol = (byte[]) msg.obj;
+                    doOsData(protocol);
+                    break;
+                case MSG_RESET_BACKLIGHT:
+                    mMcuManager.resetBacklightStatus(0);
+                    break;
+                case MSG_RECOVER_BACKLIGHT:
+                    ReverseManager.stop();
+                    break;
+                case MSG_NOTIFY_APP_REVERSE_STOP:
+                    BroadcastUtil.sendByCarService(mContext, Util.isRKSystem() ? null : AppConfig.getCarAppPackageName(mContext), MyCmd.Cmd.REVERSE_STATUS, msg.arg1);
+                    break;
+                case MSG_NOTIFY_APP_READY:
+                    appReady();
+                    break;
+                case MSG_RECOVER_REVERSE_OPEN_APP:
+                    mMcuManager.resetReverseOpenApp();
+                    break;
+                case MSG_DELAY_DO_REVERSE:
+                    // if (msg.obj != null) {
+                    // doOsData((byte[]) msg.obj);
+                    doReverse(msg.arg1, true);
+                    // }
+                    break;
+                case MSG_DELAY_SWITCH_TO_FRONT_CAMERA:
+                    doReverse(0, false);
+                    break;
+                case MSG_CHECK_FRONT_CAMERA_SIGNAL:
+                    String source;
+
+                    if (Util.isRKSystem()) {
+                        source = readLine("/sys/class/ak/source/cvbs_status");
+                    } else {
+                        source = readLine("/sys/class/misc/mst701/device/lock");
+                    }
+                    /// } else {
+                    /// source = readLine("/sys/class/misc/mst701/device/lock");
+                    /// }
+                    /// to do better future
+                    ///	if (source == null || !source.equals("1")) {
+                    ///		doReverse(0, false);
+                    ///	}
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     public void doReverse(int status, boolean delay) {
         Util.setProperty(AKProperty.REVERSE, String.valueOf(status));
@@ -304,77 +381,6 @@ public class OSProManager {
         }
     }
 
-    private final static int MSG_RESET_BACKLIGHT = 0x10000;
-    private final static int MSG_RECOVER_BACKLIGHT = 0x10001;
-    private final static int MSG_NOTIFY_APP_REVERSE_STOP = 0x10002;
-
-    private final static int MSG_RECOVER_REVERSE_OPEN_APP = 0x10003;
-
-    private final static int MSG_DELAY_DO_REVERSE = 0x10004;
-
-    private final static int MSG_DELAY_SWITCH_TO_FRONT_CAMERA = 0x10005;
-
-
-    private final static int MSG_CHECK_FRONT_CAMERA_SIGNAL = 0x10006;
-
-    private final static int MSG_NOTIFY_APP_READY = 0x10100; // handler the
-    // kernel
-    // reverse
-    private final Handler mOsHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
-        @Override
-        public void handleMessage(Message msg) {
-            MMLog.d(TAG,"mOsHandler.msg="+msg.toString());
-            switch (msg.what) {
-                case Mcu.MSG_RECEIVE_OS_DATA:
-                    byte[] protocol = (byte[]) msg.obj;
-                    doOsData(protocol);
-                    break;
-                case MSG_RESET_BACKLIGHT:
-                    mMcuManager.resetBacklightStatus(0);
-                    break;
-                case MSG_RECOVER_BACKLIGHT:
-                    ReverseManager.stop();
-                    break;
-                case MSG_NOTIFY_APP_REVERSE_STOP:
-                    BroadcastUtil.sendByCarService(mContext, Util.isRKSystem() ? null : AppConfig.getCarAppPackageName(mContext), MyCmd.Cmd.REVERSE_STATUS, msg.arg1);
-                    break;
-                case MSG_NOTIFY_APP_READY:
-                    appReady();
-                    break;
-                case MSG_RECOVER_REVERSE_OPEN_APP:
-                    mMcuManager.resetReverseOpenApp();
-                    break;
-                case MSG_DELAY_DO_REVERSE:
-                    // if (msg.obj != null) {
-                    // doOsData((byte[]) msg.obj);
-                    doReverse(msg.arg1, true);
-                    // }
-                    break;
-                case MSG_DELAY_SWITCH_TO_FRONT_CAMERA:
-                    doReverse(0, false);
-                    break;
-                case MSG_CHECK_FRONT_CAMERA_SIGNAL:
-                    String source;
-
-                    if (Util.isRKSystem()) {
-                        source = readLine("/sys/class/ak/source/cvbs_status");
-                    } else {
-                        source = readLine("/sys/class/misc/mst701/device/lock");
-                    }
-                    /// } else {
-                    /// source = readLine("/sys/class/misc/mst701/device/lock");
-                    /// }
-                    /// to do better future
-                    ///	if (source == null || !source.equals("1")) {
-                    ///		doReverse(0, false);
-                    ///	}
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
     private String readLine(String path) {
         File file = new File(path);
         String source = null;
@@ -429,8 +435,6 @@ public class OSProManager {
         }
     }
 
-    private BroadcastReceiver mReceiver = null;
-
     private void registerListener() {
         if (mReceiver == null) {
             mReceiver = new BroadcastReceiver() {
@@ -452,8 +456,6 @@ public class OSProManager {
         }
     }
 
-    public static int mSimulationReverse = 0;
-
     public void doSimulationReverse(byte reverse) { // only canbox can use
         Log.d("aced", "doSimulationReverse:");
 
@@ -469,21 +471,5 @@ public class OSProManager {
         }
     }
 
-    public static void simulationReverse(byte reverse) { // only canbox can use
-        if (mThis != null && mThis.mOsHandler != null) {
-            Log.d("aced", "simulationReverse:" + reverse + ":" + mSimulationReverse + ":" + mReverse);
-            if (reverse == 1) {
-                if (mReverse == 1) {
-                    return;
-                }
-                mSimulationReverse = 1;
-            } else {
-                if (mSimulationReverse == 0 || mReverse == 0) {
-                    return;
-                }
-                mSimulationReverse = 0;
-            }
-            mThis.doSimulationReverse(reverse);
-        }
-    }
+
 }

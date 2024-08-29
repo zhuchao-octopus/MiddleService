@@ -11,13 +11,16 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class CarOPEL extends Canbox {
 
+    private final static int REPEAT_TIME = 500;
+    private final byte mDoorStatus = 0;
+    byte[] data;
+    private long mSendInfoTime = 0;
+    private int mSendIndex = 0;
+    private boolean mStop = false;
+
     public CarOPEL() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x1, 0x1, 0x1, 0x0
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x1, 0x1, 0x1, 0x0});
 
 
     }
@@ -70,22 +73,7 @@ public class CarOPEL extends Canbox {
                 doKey(KEY_HOMEPAGE, 1);
                 break;
         }
-    }
-
-    @Override
-    public void parseCanboxData(byte[] data, int len) {
-        // TODO Auto-generated method stub
-        if (data[0] == (byte) 0xfd) {
-            if (data[2] == 0x0) {
-                parseWheelKey(data, len);
-            }
-        }
-    }
-
-    private long mSendInfoTime = 0;
-    private final static int REPEAT_TIME = 500;
-    private int mSendIndex = 0;
-    private final Handler mHandler = new Handler() {
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             //			Log.d("allen3", "!!!!!!!!");
@@ -106,8 +94,15 @@ public class CarOPEL extends Canbox {
         }
     };
 
-    private final byte mDoorStatus = 0;
-    private boolean mStop = false;
+    @Override
+    public void parseCanboxData(byte[] data, int len) {
+        // TODO Auto-generated method stub
+        if (data[0] == (byte) 0xfd) {
+            if (data[2] == 0x0) {
+                parseWheelKey(data, len);
+            }
+        }
+    }
 
     public void startConnect() {//default is simple box
         byte[] data = new byte[]{0x05, 0x04, 0x0};
@@ -145,13 +140,9 @@ public class CarOPEL extends Canbox {
         sendCommonDataToCanbox(send);
     }
 
-    byte[] data;
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
-        data = new byte[]{
-                0x10, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20
-        };
+        data = new byte[]{0x10, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20};
 
 
         int seconds = time % 60;
@@ -229,9 +220,7 @@ public class CarOPEL extends Canbox {
     }
 
     public void setMediaSrc(int source) {//default is simple box
-        data = new byte[]{
-                0x10, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20
-        };
+        data = new byte[]{0x10, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20};
 
 
         switch (source) {
@@ -291,7 +280,6 @@ public class CarOPEL extends Canbox {
         //			mHandler.sendEmptyMessageDelayed(1, 300);
         //		}
     }
-
 
     public void setMediaSrcASC(byte[] b) {
 
@@ -356,6 +344,10 @@ public class CarOPEL extends Canbox {
         //			mHandler.sendEmptyMessageDelayed(1, 300);
         //		}
     }
+
+
+
+
 	
 	/*	public void setVolume(int vol){
 	byte []data = new byte[]{0x10, 0x00, 'V', 'O', 'L', ':', 0x20, 0x20, 0x20, 0x20,

@@ -8,26 +8,7 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class OutlanderHiworld extends Canbox {
 
-    public OutlanderHiworld() {
-        buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
-        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
-        buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
-        // buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-        mIdAC = 0x31;
-
-        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
-
-    }
-
-
-    @Override
-    public void stopConnect() {
-
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
 
             //			{ 0x3, MyCmd.Keycode.MUTE },
             {0x4, MyCmd.Keycode.SPEECH},
@@ -40,6 +21,24 @@ public class OutlanderHiworld extends Canbox {
             {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.MODLE},
 
     };
+
+
+    public OutlanderHiworld() {
+        buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
+        buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
+        buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
+        // buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+        mIdAC = 0x31;
+
+        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
+
+    }
+
+    @Override
+    public void stopConnect() {
+
+    }
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x0};

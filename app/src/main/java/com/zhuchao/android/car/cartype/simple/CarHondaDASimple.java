@@ -17,19 +17,7 @@ import java.util.Date;
 
 public class CarHondaDASimple extends Canbox {
 
-    public CarHondaDASimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private byte[][] mKeyPannel;
-    private final static int[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL},
-            {0xa, MyCmd.Keycode.MULT_BACK_AND_HANG},
+    private final static int[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL}, {0xa, MyCmd.Keycode.MULT_BACK_AND_HANG},
 
             {0x14, KEY_NEXTSONG}, {0x13, KEY_PREVIOUSSONG}, {0x16, KEY_PLAYPAUSE},
 
@@ -38,7 +26,67 @@ public class CarHondaDASimple extends Canbox {
             {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x86, KEY_MUTE},
 
     };
+    private final static byte[] RADAR_CHANGE = new byte[]{1, 5, 7, 9, 11, 14};
+    private final byte mSource = 0x6;
+    byte[] mAirData = new byte[8];
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private byte[][] mKeyPannel;
+    private boolean mRadarSwitch = false;
+    private int mDoorStatus = 0;
+    private byte[] mEq = null;
+    private byte mVolume;
+    private int mRightCameraSwitch = 0;
 
+    public CarHondaDASimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
+
+    // public void setMediaMoreInfo(int source, int play, int total, int time,
+    // int total_time) {
+    // // byte min = (byte) ((time / 60) % 60);
+    // // byte sec = (byte) ((time) % 60);
+    // // ++play;
+    // // byte[] data = new byte[] { (byte) 0xa3, 0x1, (byte) (total & 0xFF),
+    // // (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF),
+    // // (byte) ((play >> 8) & 0xFF), min, sec };
+    // // sendDataToCanbox(data, data.length);
+    // }
+    //
+    // public void setMediaSrc(int source, byte type, byte[] b) {
+    // if (b[0] == 0x3) {
+    // b[0] = 5;
+    // } else {
+    // b[0] = 1;
+    // }
+    // byte[] data = new byte[] { (byte) 0x9a, 0x5, 8, b[0], b[1], b[2], 0 };
+    // sendDataToCanbox(data, data.length);
+    // }
+    //
+    // public void setMediaSrc(int source) {// default is simple box
+    // switch (source) {
+    // case MyCmd.SOURCE_DVD:
+    // mSource = 0x2;
+    // break;
+    // case MyCmd.SOURCE_RADIO:
+    // mSource = 0x1;
+    // break;
+    // case MyCmd.SOURCE_AUX:
+    // mSource = 0x4;
+    // break;
+    // case MyCmd.SOURCE_BT:
+    // mSource = 0x7;
+    // break;
+    // default:
+    // mSource = 0x6;
+    // break;
+    // }
+    //
+    // byte[] data = new byte[] { (byte) 0x99, 0x2, mSource, mVolume };
+    // sendDataToCanbox(data, data.length);
+    // }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -82,8 +130,6 @@ public class CarHondaDASimple extends Canbox {
         }
 
     }
-
-    byte[] mAirData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
         //		if (data[4] >= 0x1f){
@@ -152,8 +198,6 @@ public class CarHondaDASimple extends Canbox {
             sendCanboxInfo("com.canboxsetting", data);
         }
     }
-
-    private final static byte[] RADAR_CHANGE = new byte[]{1, 5, 7, 9, 11, 14};
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -316,9 +360,6 @@ public class CarHondaDASimple extends Canbox {
         }
     }
 
-    private boolean mRadarSwitch = false;
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -333,52 +374,6 @@ public class CarHondaDASimple extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    // public void setMediaMoreInfo(int source, int play, int total, int time,
-    // int total_time) {
-    // // byte min = (byte) ((time / 60) % 60);
-    // // byte sec = (byte) ((time) % 60);
-    // // ++play;
-    // // byte[] data = new byte[] { (byte) 0xa3, 0x1, (byte) (total & 0xFF),
-    // // (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF),
-    // // (byte) ((play >> 8) & 0xFF), min, sec };
-    // // sendDataToCanbox(data, data.length);
-    // }
-    //
-    // public void setMediaSrc(int source, byte type, byte[] b) {
-    // if (b[0] == 0x3) {
-    // b[0] = 5;
-    // } else {
-    // b[0] = 1;
-    // }
-    // byte[] data = new byte[] { (byte) 0x9a, 0x5, 8, b[0], b[1], b[2], 0 };
-    // sendDataToCanbox(data, data.length);
-    // }
-    //
-    // public void setMediaSrc(int source) {// default is simple box
-    // switch (source) {
-    // case MyCmd.SOURCE_DVD:
-    // mSource = 0x2;
-    // break;
-    // case MyCmd.SOURCE_RADIO:
-    // mSource = 0x1;
-    // break;
-    // case MyCmd.SOURCE_AUX:
-    // mSource = 0x4;
-    // break;
-    // case MyCmd.SOURCE_BT:
-    // mSource = 0x7;
-    // break;
-    // default:
-    // mSource = 0x6;
-    // break;
-    // }
-    //
-    // byte[] data = new byte[] { (byte) 0x99, 0x2, mSource, mVolume };
-    // sendDataToCanbox(data, data.length);
-    // }
-
-    private byte[] mEq = null;
 
     public void sendEqToCanbox(byte[] eq) {
         if (eq != null && eq.length >= 13) {
@@ -456,9 +451,6 @@ public class CarHondaDASimple extends Canbox {
         }
     }
 
-    private byte mVolume;
-    private final byte mSource = 0x6;
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         byte min = (byte) ((time / 60) % 60);
         byte sec = (byte) ((time) % 60);
@@ -468,13 +460,9 @@ public class CarHondaDASimple extends Canbox {
         if (MyCmd.SOURCE_DVD != source) {
 
             ++play;
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }
@@ -586,10 +574,6 @@ public class CarHondaDASimple extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
     public void setPhone(int status, String num) {
         sendId3((byte) 0x1, num);
     }
@@ -635,17 +619,13 @@ public class CarHondaDASimple extends Canbox {
         byte m = (byte) curDate.getMinutes();
         byte s = (byte) curDate.getSeconds();
 
-        byte[] buf = new byte[]{
-                (byte) 0xc6, 0x04, 0x50, h, m, s
-        };
+        byte[] buf = new byte[]{(byte) 0xc6, 0x04, 0x50, h, m, s};
         sendDataToCanbox(buf, buf.length);
     }
 
     public int getUpdateTime() {
         return 60000;
     }
-
-    private int mRightCameraSwitch = 0;
 
     private void toggleCameraSwitch() {
         String top = AppConfig.getTopActivity();

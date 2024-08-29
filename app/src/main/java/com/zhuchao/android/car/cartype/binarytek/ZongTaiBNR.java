@@ -11,6 +11,13 @@ import java.util.Date;
 
 public class ZongTaiBNR extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x71, 0x70, 0x73, 0x68, 0x6a, 0x74};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x4, MyCmd.Keycode.KEY_SEEK_PREV},
+
+            {0x5, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0xa, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.BT_DIAL},
+
+            {0xb, MyCmd.Keycode.SPEECH},};
+
     public ZongTaiBNR() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -27,16 +34,6 @@ public class ZongTaiBNR extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x71, 0x70, 0x73, 0x68, 0x6a, 0x74};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x4, MyCmd.Keycode.KEY_SEEK_PREV},
-
-            {0x5, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0xa, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.BT_DIAL},
-
-            {0xb, MyCmd.Keycode.SPEECH},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0x85, 0x01, 0};

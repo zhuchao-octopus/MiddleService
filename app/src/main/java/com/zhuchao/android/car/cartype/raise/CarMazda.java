@@ -12,6 +12,16 @@ import com.zhuchao.android.car.canbox.RadarManager;
 
 public class CarMazda extends Canbox {
 
+    private final static int HIDE_RADAR = 0;
+    private final byte mDoorStatus = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+        }
+    };
+
     public CarMazda() {
         //		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] {  0x05, 0x01, 0x1,
         //				0x3, 0x0, 0x0 });
@@ -186,8 +196,6 @@ public class CarMazda extends Canbox {
         }
     }
 
-    private final byte mDoorStatus = 0;
-
     public void startConnect() {//default is simple box
 
     }
@@ -214,9 +222,7 @@ public class CarMazda extends Canbox {
     }
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
-        byte[] data = new byte[]{
-                0xf, 0x07, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20
-        };
+        byte[] data = new byte[]{0xf, 0x07, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20};
 
         int seconds = time % 60;
         int minutes = (time / 60) % 60;
@@ -290,9 +296,7 @@ public class CarMazda extends Canbox {
     }
 
     public void setMediaSrc(int source) {//default is simple box
-        byte[] data = new byte[]{
-                0xf, 0x07, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20
-        };
+        byte[] data = new byte[]{0xf, 0x07, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20};
 
 
         switch (source) {
@@ -347,7 +351,6 @@ public class CarMazda extends Canbox {
         }
         sendDataToCanbox(data, (byte) data.length);
     }
-
 
     public void setMediaSrcASC(byte[] b) {
 
@@ -423,15 +426,6 @@ public class CarMazda extends Canbox {
 
         // }
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-        }
-    };
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;

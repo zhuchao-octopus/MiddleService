@@ -26,13 +26,40 @@ import java.util.Locale;
 
 public class HYRaise extends Canbox {
 
+    private final static byte[][] KEYS_PANNEL = {
+
+            {0x10, KEY_MUTE}, {0x11, MyCmd.Keycode.MODLE}, {0x12, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x13, MyCmd.Keycode.KEY_SEEK_PREV}, {0x14, MyCmd.Keycode.VOLUME_UP}, {0x15, MyCmd.Keycode.VOLUME_DOWN}, {(byte) 0x84, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x85, MyCmd.Keycode.VOLUME_DOWN}, {0x16, MyCmd.Keycode.BT_DIAL}, {0x17, MyCmd.Keycode.BT_HANG}, {0x30, MyCmd.Keycode.SPEECH}, {0x18, MyCmd.Keycode.POWER}, {0x19, MyCmd.Keycode.VOLUME_UP}, {0x1a, MyCmd.Keycode.VOLUME_DOWN}, {0x1b, MyCmd.Keycode.RADIO}, {0x1c, MyCmd.Keycode.AUDIO}, {0x1d, MyCmd.Keycode.BT}, {0x1e, MyCmd.Keycode.DARK}, {0x1f, MyCmd.Keycode.KEY_SEEK_PREV}, {0x20, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x21, MyCmd.Keycode.NAVIGATION}, {0x22, MyCmd.Keycode.NAVIGATION}, {0x23, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x24, MyCmd.Keycode.SETUP}, {0x25, MyCmd.Keycode.PLAY_PAUSE}, {0x26, MyCmd.Keycode.KEY_TURN_A}, {0x27, MyCmd.Keycode.KEY_TURN_D},
+            // { 0x28, MyCmd.Keycode. },
+            {0x29, MyCmd.Keycode.HOME}, {0x2A, MyCmd.Keycode.KEY_FM}, {0x2B, MyCmd.Keycode.KEY_AM}, {0x2C, MyCmd.Keycode.SETUP}, {0x2D, MyCmd.Keycode.MENU}, {0x2E, MyCmd.Keycode.BACK}, {0x2F, MyCmd.Keycode.PREVIOUS}, {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.BT}, {0x34, MyCmd.Keycode.NEXT},
+            // { 0x35, MyCmd.Keycode.SETUP },
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final static int SHOW_VOLUME_STEP = 1;
+
+    // private void requestVersion(){
+    // byte[] data = new byte[] { (byte) 0xc4, 0x1, (byte) volume };
+    // sendDataToCanbox(data, data.length);
+    // }
+    private final static int REPEAT_SEND_EQ = 2;
+
+    // private byte mKeyPannel[][];
+    private final static int REPEAT_SET_CARTYPE = 3;
+    private final byte[] mAirData = new byte[8];
+    byte[] d360 = new byte[2];
+    byte[] buf = new byte[8];
+    byte[] mData;
+    byte[] mEQData = new byte[]{10, 10, 10, 7, 7, 30};
+    private int mKeyDown = 0;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+    private int mSource = MyCmd.SOURCE_NONE;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
     public HYRaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x1, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x1, 0x1, 0x1, 0x0
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x1, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x1, 0x1, 0x1, 0x0});
         updateCanboxKeySettings();
 
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -112,11 +139,6 @@ public class HYRaise extends Canbox {
         }
     }
 
-    // private void requestVersion(){
-    // byte[] data = new byte[] { (byte) 0xc4, 0x1, (byte) volume };
-    // sendDataToCanbox(data, data.length);
-    // }
-
     public void updateCanboxKeySettings() {
 
         if (CarUtil.getCarEQ() == 1) {
@@ -131,28 +153,9 @@ public class HYRaise extends Canbox {
         //		}
     }
 
-    // private byte mKeyPannel[][];
-
-    private final static byte[][] KEYS_PANNEL = {
-
-            {0x10, KEY_MUTE}, {0x11, MyCmd.Keycode.MODLE}, {0x12, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x13, MyCmd.Keycode.KEY_SEEK_PREV}, {0x14, MyCmd.Keycode.VOLUME_UP}, {0x15, MyCmd.Keycode.VOLUME_DOWN},
-            {(byte) 0x84, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x85, MyCmd.Keycode.VOLUME_DOWN}, {0x16, MyCmd.Keycode.BT_DIAL}, {0x17, MyCmd.Keycode.BT_HANG}, {0x30, MyCmd.Keycode.SPEECH},
-            {0x18, MyCmd.Keycode.POWER}, {0x19, MyCmd.Keycode.VOLUME_UP}, {0x1a, MyCmd.Keycode.VOLUME_DOWN}, {0x1b, MyCmd.Keycode.RADIO}, {0x1c, MyCmd.Keycode.AUDIO}, {0x1d, MyCmd.Keycode.BT},
-            {0x1e, MyCmd.Keycode.DARK}, {0x1f, MyCmd.Keycode.KEY_SEEK_PREV}, {0x20, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x21, MyCmd.Keycode.NAVIGATION}, {0x22, MyCmd.Keycode.NAVIGATION},
-            {0x23, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x24, MyCmd.Keycode.SETUP}, {0x25, MyCmd.Keycode.PLAY_PAUSE}, {0x26, MyCmd.Keycode.KEY_TURN_A}, {0x27, MyCmd.Keycode.KEY_TURN_D},
-            // { 0x28, MyCmd.Keycode. },
-            {0x29, MyCmd.Keycode.HOME}, {0x2A, MyCmd.Keycode.KEY_FM}, {0x2B, MyCmd.Keycode.KEY_AM}, {0x2C, MyCmd.Keycode.SETUP}, {0x2D, MyCmd.Keycode.MENU}, {0x2E, MyCmd.Keycode.BACK},
-            {0x2F, MyCmd.Keycode.PREVIOUS}, {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.BT}, {0x34, MyCmd.Keycode.NEXT},
-            // { 0x35, MyCmd.Keycode.SETUP },
-
-    };
-
     private boolean isOneKey(byte b) {
         return ((b & 0xff) >= 0x81) || ((b & 0xff) == 0x3c) || ((b & 0xff) == 0x3d) || ((b & 0xff) == 0x3e) || ((b & 0xff) == 0x3f);
     }
-
-
-    private int mKeyDown = 0;
 
     private void parseWheelKey05(byte[] data, int len) {
         if (data[2] != 0) {
@@ -259,8 +262,6 @@ public class HYRaise extends Canbox {
             }
         }
     }
-
-    private final byte[] mAirData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -529,12 +530,22 @@ public class HYRaise extends Canbox {
         if (data[1] == 0x7d || data[1] == 0x52 || data[1] == 0x57) {
             sendCanboxInfo("com.canboxsetting", data);
         }
-    }
-
-    byte[] d360 = new byte[2];
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
-    private int mUnit = 0;
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HIDE_RADAR:
+                    RadarManager.stop();
+                    break;
+                case SHOW_VOLUME_STEP:
+                    doKeyStep(msg.arg1, msg.arg2);
+                    break;
+                case REPEAT_SET_CARTYPE:
+                    setCarType();
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
@@ -580,17 +591,10 @@ public class HYRaise extends Canbox {
 
     }
 
-    private int mDoorStatus = 0;
-
     private void checkHideRadar() {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final static int SHOW_VOLUME_STEP = 1;
-    private final static int REPEAT_SEND_EQ = 2;
-    private final static int REPEAT_SET_CARTYPE = 3;
 
     private void doKeyStep(int key, int step) {
         mHandler.removeMessages(SHOW_VOLUME_STEP);
@@ -601,23 +605,6 @@ public class HYRaise extends Canbox {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
         }
     }
-
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_RADAR:
-                    RadarManager.stop();
-                    break;
-                case SHOW_VOLUME_STEP:
-                    doKeyStep(msg.arg1, msg.arg2);
-                    break;
-                case REPEAT_SET_CARTYPE:
-                    setCarType();
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     private void setCarType() {//just for elec car now
         //		int t = CarUtil.getCarType();
@@ -653,10 +640,6 @@ public class HYRaise extends Canbox {
         }
     }
 
-
-    byte[] buf = new byte[8];
-
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -679,17 +662,13 @@ public class HYRaise extends Canbox {
             // break;
         }
 
-        mData = new byte[]{
-                (byte) 0xa, 0x9, s, (byte) ((play & 0xFF00) >> 8), (byte) ((play) & 0xFF), h, min, sec
-        };
+        mData = new byte[]{(byte) 0xa, 0x9, s, (byte) ((play & 0xFF00) >> 8), (byte) ((play) & 0xFF), h, min, sec};
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
 
             sendDataToCanbox(mData, mData.length);
         }
     }
-
-    byte[] mData;
 
     private int Sum(byte[] data, int len) {
         int sum = 0;
@@ -730,8 +709,6 @@ public class HYRaise extends Canbox {
             sendDataToCanbox(mData, mData.length);
         }
     }
-
-    private int mSource = MyCmd.SOURCE_NONE;
 
     public void setMediaSrc(int source) {
         mSource = source;
@@ -792,14 +769,10 @@ public class HYRaise extends Canbox {
 
                         byte[] buf;
 
-                        buf = new byte[]{
-                                (byte) 0x7, 0x8, mEQData[2], mEQData[1], mEQData[0]
-                        };
+                        buf = new byte[]{(byte) 0x7, 0x8, mEQData[2], mEQData[1], mEQData[0]};
                         sendDataToCanbox(buf, buf.length);
                         Util.doSleep(20);
-                        buf = new byte[]{
-                                (byte) 0x6, 0x7, mEQData[3], mEQData[4]
-                        };
+                        buf = new byte[]{(byte) 0x6, 0x7, mEQData[3], mEQData[4]};
                         sendDataToCanbox(buf, buf.length);
 
                         Util.doSleep(20);
@@ -817,7 +790,6 @@ public class HYRaise extends Canbox {
         // mHandler.sendEmptyMessageDelayed(REPEAT_SEND_EQ, 300);
     }
 
-
     public void startConnect() {
 
         setPower(0);
@@ -831,8 +803,6 @@ public class HYRaise extends Canbox {
         setPower(1);
         mHandler.removeMessages(REPEAT_SET_CARTYPE);
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 
@@ -888,9 +858,6 @@ public class HYRaise extends Canbox {
 
     }
 
-
-    byte[] mEQData = new byte[]{10, 10, 10, 7, 7, 30};
-
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
         if (cmd == EQ_REQUEST_ALL_MAX) {
@@ -925,9 +892,7 @@ public class HYRaise extends Canbox {
                 case EQ_CMD_SET_HIGH:
                 case EQ_CMD_SET_MIDDLE:
                 case EQ_CMD_SET_LOW:
-                    buf = new byte[]{
-                            (byte) 0x7, 0x8, mEQData[2], mEQData[1], mEQData[0]
-                    };
+                    buf = new byte[]{(byte) 0x7, 0x8, mEQData[2], mEQData[1], mEQData[0]};
                     break;
                 case EQ_CMD_SET_ZONE_FR:
                 case EQ_CMD_SET_ZONE_LR:
@@ -967,4 +932,8 @@ public class HYRaise extends Canbox {
 
         sendDataToCanbox(buf, buf.length);
     }
+
+
+
+
 }

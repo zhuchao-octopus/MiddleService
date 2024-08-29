@@ -5,6 +5,9 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class SubaruX3XinFeiYang extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},};
+
+
     public SubaruX3XinFeiYang() {
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
         buildCmdAngle((byte) 0x29, (byte) 0x0, 360);
@@ -12,13 +15,6 @@ public class SubaruX3XinFeiYang extends Canbox {
         mIdKey = 0x20;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.BT_DIAL},
-            {0xa, MyCmd.Keycode.BT_HANG},
-    };
-
 
     @Override
     public int getAngleValue2(byte[] data) {

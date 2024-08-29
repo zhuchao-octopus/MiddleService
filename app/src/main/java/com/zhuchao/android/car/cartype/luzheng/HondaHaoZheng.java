@@ -6,6 +6,9 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class HondaHaoZheng extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.SPEECH}, {0x8, MyCmd.Keycode.BT},};
+
+
     public HondaHaoZheng() {
         buildCmdDoor((byte) 0x8, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
         buildCmdRadarFront((byte) 0x63, (byte) 0x0, (byte) 0x4);
@@ -20,12 +23,6 @@ public class HondaHaoZheng extends Canbox {
         mIdKey = 0x6;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.PREVIOUS},
-            {0x7, MyCmd.Keycode.SPEECH}, {0x8, MyCmd.Keycode.BT},
-    };
 
     //	private void parseRadar(byte[] data) {
     //
@@ -112,13 +109,9 @@ public class HondaHaoZheng extends Canbox {
         byte[] data;
 
         if (MyCmd.SOURCE_DVD != source) {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }

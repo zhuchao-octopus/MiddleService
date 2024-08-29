@@ -18,18 +18,7 @@ import java.util.Date;
 
 public class NissanBinarytek extends Canbox {
 
-    public NissanBinarytek() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x9, KEY_BT_DIAL}, {0xA, KEY_BT_HANG}, {0x15, KEY_BACK},
-            {0x16, KEY_PLAYPAUSE}, {(byte) 0x87, KEY_POWER},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x9, KEY_BT_DIAL}, {0xA, KEY_BT_HANG}, {0x15, KEY_BACK}, {0x16, KEY_PLAYPAUSE}, {(byte) 0x87, KEY_POWER},
 
 
             {(byte) 0x72, KEY_GPS}, {(byte) 0x73, KEY_HOME},
@@ -51,7 +40,6 @@ public class NissanBinarytek extends Canbox {
             //			{ 0x67, KEY_PREVIOUSSONG },
 
     };
-
     private final static byte[][] KEYS_WHEEL_SIMAA_SPECAIL_CAR_APP = {
 
             //		{ 0x70, KEY_PLAYPAUSE },
@@ -68,7 +56,42 @@ public class NissanBinarytek extends Canbox {
             {0x60, KEY_UP}, {0x65, KEY_LEFT}, {0x66, KEY_ENTER}, {0x67, KEY_ENTER},
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.KEY_AM},
+
+            {0x2, MyCmd.Keycode.KEY_FM}, {0x3, MyCmd.Keycode.KEY_FM},
+
+            {0x9, KEY_FM},
+
+            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
+
+            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
+
+            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
+
+            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
     private int mKey;
+    private int mDoorStatus = 0;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+    public NissanBinarytek() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
 
@@ -136,24 +159,6 @@ public class NissanBinarytek extends Canbox {
         updateTime();
     }
 
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.KEY_AM},
-
-            {0x2, MyCmd.Keycode.KEY_FM}, {0x3, MyCmd.Keycode.KEY_FM},
-
-            {0x9, KEY_FM},
-
-            {0x4, KEY_DVD}, {0x5, KEY_MEDIA}, {0x6, KEY_MEDIA}, {0xa, KEY_MEDIA},
-
-            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.AUX_IN},
-
-            {0xe, MyCmd.Keycode.KEY_TV}, {0x10, MyCmd.Keycode.ALL_APP},
-
-            {0x11, KEY_BT_DIAL}, {0x12, KEY_BT_HANG},
-
-    };
-
-
     private void parseWheelKey2(byte[] data) {
         if (doKeyStudy(1, data[2], 1)) {
             doKeyStudy(1, data[2], 0);
@@ -173,7 +178,6 @@ public class NissanBinarytek extends Canbox {
             doKey(key, 0);
         }
     }
-
 
     private byte getRadarData(byte i) {
         byte data = 0;
@@ -201,16 +205,6 @@ public class NissanBinarytek extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -240,8 +234,6 @@ public class NissanBinarytek extends Canbox {
             handler.sendMessage(handler.obtainMessage(CANBOX_RETURN_AIR, airData));
         }
     }
-
-    private int mDoorStatus = 0;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -341,8 +333,6 @@ public class NissanBinarytek extends Canbox {
         }
     }
 
-    byte[] data;
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -374,14 +364,10 @@ public class NissanBinarytek extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec};
         }
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -410,9 +396,7 @@ public class NissanBinarytek extends Canbox {
                 mediaType = 0x30;
                 break;
         }
-        byte[] data = new byte[]{
-                (byte) 0xc0, 0x8, s, mediaType, 0, 0, 0, 0, 0, 0
-        };
+        byte[] data = new byte[]{(byte) 0xc0, 0x8, s, mediaType, 0, 0, 0, 0, 0, 0};
         if (mediaType != 0) {
             sendDataToCanbox(data, data.length);
         }
@@ -428,11 +412,13 @@ public class NissanBinarytek extends Canbox {
         } else {
             b[3] = 0;
         }
-        data = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], b[3], 0, 0
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], b[3], 0, 0};
         sendDataToCanbox(data, data.length);
     }
+
+    // public void setPhone(int status, String num) {
+    // sendId3((byte)0x1, num);
+    // }
 
     public void sendId3(byte index, String num) {
 
@@ -466,14 +452,6 @@ public class NissanBinarytek extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
-    // public void setPhone(int status, String num) {
-    // sendId3((byte)0x1, num);
-    // }
-
     public void setSongName(String s) {
         sendId3((byte) 0x2, s);
         mName = s;
@@ -488,8 +466,6 @@ public class NissanBinarytek extends Canbox {
         sendId3((byte) 0x3, s);
         mAlbum = s;
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 

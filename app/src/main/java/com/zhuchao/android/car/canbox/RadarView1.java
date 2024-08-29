@@ -9,39 +9,47 @@ import android.widget.ImageView;
 
 public class RadarView1 extends ImageView {
 
-    private final byte[] mRadarDataFrontEx = new byte[2];
-    private final int[] mRadarFrontStartXEx = new int[2];
-    // private int[] mRadarFrontStartYEx = new int[2];
-
-    private final byte[] mRadarDataFront = new byte[4];
-    private final byte[] mRadarDataBack = new byte[4];
-
-    private final int[] mRadarColorFront = new int[4];
-    private final int[] mRadarColorBack = new int[4];
-
-    private final int[] mRadarBackStartX = new int[4];
-    private final int[] mRadarBackStartY = new int[4];
-
-    private final int[] mRadarFrontStartX = new int[4];
-    private final int[] mRadarFrontStartY = new int[4];
-
-    private boolean mLeftRightRadar = true; // golf7
-
-    private final byte[] mRadarDataLeft = new byte[4];
-    private final byte[] mRadarDataRight = new byte[4];
-
-    private final int[] mRadarColorLeft = new int[4];
-    private final int[] mRadarColorRight = new int[4];
-
-    private final int[] mRadarLeftRightStartY = new int[4];
-    private int mRadarLeftStartX;// = new int[4];
-    private int mRadarRightStartX;// = new int[4];
-
     private final static int RADAR_BAR_NUM = 10;
     private final static int RADAR_BAR_INTERVAL = 4;
+    // private int[] mRadarFrontStartYEx = new int[2];
     private final static int RADAR_BAR_HEIGHT = 18;
-
+    private final byte[] mRadarDataFrontEx = new byte[2];
+    private final int[] mRadarFrontStartXEx = new int[2];
+    private final byte[] mRadarDataFront = new byte[4];
+    private final byte[] mRadarDataBack = new byte[4];
+    private final int[] mRadarColorFront = new int[4];
+    private final int[] mRadarColorBack = new int[4];
+    private final int[] mRadarBackStartX = new int[4];
+    private final int[] mRadarBackStartY = new int[4];
+    private final int[] mRadarFrontStartX = new int[4];
+    private final int[] mRadarFrontStartY = new int[4];
+    private final byte[] mRadarDataLeft = new byte[4];
+    private final byte[] mRadarDataRight = new byte[4];
+    private final int[] mRadarColorLeft = new int[4];
+    private final int[] mRadarColorRight = new int[4];
+    private final int[] mRadarLeftRightStartY = new int[4];
+    private boolean mLeftRightRadar = true; // golf7
+    private int mRadarLeftStartX;// = new int[4];
+    private int mRadarRightStartX;// = new int[4];
     private Paint mPaint;
+    private boolean mUseCustomColor = false;
+    private int mRadarNum = -1;
+
+    public RadarView1(Context context) {
+        super(context);
+        initRadarData();
+    }
+
+    public RadarView1(Context context, AttributeSet attrs) {
+
+        super(context, attrs);
+        initRadarData();
+    }
+
+    public RadarView1(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initRadarData();
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -208,8 +216,6 @@ public class RadarView1 extends ImageView {
         return true;
     }
 
-    private boolean mUseCustomColor = false;
-
     public boolean setRadarColor(int[] radaData) {
         if (radaData == null) {
             mUseCustomColor = false;
@@ -281,8 +287,6 @@ public class RadarView1 extends ImageView {
         }
         return true;
     }
-
-    private int mRadarNum = -1;
 
     public void setRadarNum(int num) { //dafault is 4
         if (mRadarNum == num) {
@@ -374,21 +378,5 @@ public class RadarView1 extends ImageView {
         // mRadarDataRight[1] = 6;
         // mRadarDataRight[2] = 3;
         // mRadarDataRight[3] = 4;
-    }
-
-    public RadarView1(Context context) {
-        super(context);
-        initRadarData();
-    }
-
-    public RadarView1(Context context, AttributeSet attrs) {
-
-        super(context, attrs);
-        initRadarData();
-    }
-
-    public RadarView1(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        initRadarData();
     }
 }

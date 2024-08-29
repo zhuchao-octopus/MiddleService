@@ -21,21 +21,37 @@ import java.util.Locale;
 
 public class FiatEGEARaise extends Canbox {
 
-    public FiatEGEARaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_BT},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_BT},
 
             {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, KEY_BT_DIAL}, {0xA, KEY_BT_HANG}, {0x10, KEY_MIC}, {0x11, KEY_FM}, {0x12, KEY_MIC},
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME}, {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final byte mRadarSwitch = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+    public FiatEGEARaise() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
 
@@ -59,12 +75,6 @@ public class FiatEGEARaise extends Canbox {
             }
         }
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME},
-            {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
-
-    };
 
     private void parseWheelKey2(byte[] data) {
         byte key = 0;
@@ -251,9 +261,6 @@ public class FiatEGEARaise extends Canbox {
 
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -295,9 +302,6 @@ public class FiatEGEARaise extends Canbox {
 
     }
 
-    private final byte mRadarSwitch = 0;
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -312,8 +316,6 @@ public class FiatEGEARaise extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] data;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -333,12 +335,29 @@ public class FiatEGEARaise extends Canbox {
         }
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
-            data = new byte[]{
-                    (byte) 0xc0, 0x6, s, (byte) ((total & 0xff00) >> 8), (byte) ((total & 0xff) >> 0), (byte) ((play & 0xff00) >> 8), (byte) ((play & 0xff) >> 0), 1
-            };
+            data = new byte[]{(byte) 0xc0, 0x6, s, (byte) ((total & 0xff00) >> 8), (byte) ((total & 0xff) >> 0), (byte) ((play & 0xff00) >> 8), (byte) ((play & 0xff) >> 0), 1};
             sendDataToCanbox(data, data.length);
         }
     }
+
+    // public void setPhone(int status, String num) {
+    // sendId3((byte)0x1, num);
+    // }
+
+    // public void setSongName(String s) {
+    // sendId3((byte) 0x2, s);
+    // mName = s;
+    // }
+    //
+    // public void setSongAritst(String s) {
+    // sendId3((byte) 0x4, s);
+    // mArtist = s;
+    // }
+    //
+    // public void setSongAlbum(String s) {
+    // sendId3((byte) 0x3, s);
+    // mAlbum = s;
+    // }
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         byte s;
@@ -350,9 +369,7 @@ public class FiatEGEARaise extends Canbox {
             s = 1;
         }
         // int freq = (b[1]&0xff) | ((b[2]&0xff)<<8)
-        data = new byte[]{
-                (byte) 0xc0, 0x6, s, b[2], b[1], (byte) (b[3] + 1), b[0], 0
-        };
+        data = new byte[]{(byte) 0xc0, 0x6, s, b[2], b[1], (byte) (b[3] + 1), b[0], 0};
         sendDataToCanbox(data, data.length);
     }
 
@@ -422,31 +439,6 @@ public class FiatEGEARaise extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
-    // public void setPhone(int status, String num) {
-    // sendId3((byte)0x1, num);
-    // }
-
-    // public void setSongName(String s) {
-    // sendId3((byte) 0x2, s);
-    // mName = s;
-    // }
-    //
-    // public void setSongAritst(String s) {
-    // sendId3((byte) 0x4, s);
-    // mArtist = s;
-    // }
-    //
-    // public void setSongAlbum(String s) {
-    // sendId3((byte) 0x3, s);
-    // mAlbum = s;
-    // }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
-
     public void setPhone(int status, String num) {// default is simple box
 
         mPhoneStatus = status;
@@ -513,16 +505,6 @@ public class FiatEGEARaise extends Canbox {
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
 
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
-
     public void setContext(Context c) {
         super.setContext(c);
         updateTime();
@@ -558,10 +540,7 @@ public class FiatEGEARaise extends Canbox {
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
 
-        byte[] buf = new byte[]{
-                (byte) 0xa7, 0x07, (byte) DecimaltoBCD(y / 100), (byte) DecimaltoBCD(y % 100), (byte) DecimaltoBCD(mon), (byte) DecimaltoBCD(d), (byte) DecimaltoBCD(h), (byte) DecimaltoBCD(m),
-                (byte) DecimaltoBCD(s)
-        };
+        byte[] buf = new byte[]{(byte) 0xa7, 0x07, (byte) DecimaltoBCD(y / 100), (byte) DecimaltoBCD(y % 100), (byte) DecimaltoBCD(mon), (byte) DecimaltoBCD(d), (byte) DecimaltoBCD(h), (byte) DecimaltoBCD(m), (byte) DecimaltoBCD(s)};
         sendDataToCanbox(buf, buf.length);
     }
 

@@ -6,6 +6,9 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class Sorento13XinChi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.VOLUME_UP}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.HOME}, {0x8, MyCmd.Keycode.NAVIGATION}, {0x9, MyCmd.Keycode.BT}, {0xa, MyCmd.Keycode.KEY_DISPLAY}, {0xb, MyCmd.Keycode.BACK}, {0xc, MyCmd.Keycode.SPEECH},};
+
     public Sorento13XinChi() {
         buildCmdEQ((byte) 0x70, (byte) 0xff, 0);
         buildCmdVersion((byte) 0x71, (byte) 0x0);
@@ -15,14 +18,6 @@ public class Sorento13XinChi extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.VOLUME_UP}, {0x5, MyCmd.Keycode.VOLUME_DOWN},
-            {0x7, MyCmd.Keycode.HOME}, {0x8, MyCmd.Keycode.NAVIGATION}, {0x9, MyCmd.Keycode.BT}, {0xa, MyCmd.Keycode.KEY_DISPLAY}, {0xb, MyCmd.Keycode.BACK}, {0xc, MyCmd.Keycode.SPEECH},
-    };
-
 
     @Override
     public int getACTemp(byte data) {
@@ -107,9 +102,7 @@ public class Sorento13XinChi extends Canbox {
                     return 0;
             }
 
-            byte[] buf = new byte[]{
-                    (byte) 0x93, 0x7, mEQData[5], (byte) (mEQData[4] + 1), (byte) (mEQData[3] + 1), (byte) (mEQData[2] + 1), (byte) (mEQData[1] + 1), (byte) (mEQData[0] + 1), 0
-            };
+            byte[] buf = new byte[]{(byte) 0x93, 0x7, mEQData[5], (byte) (mEQData[4] + 1), (byte) (mEQData[3] + 1), (byte) (mEQData[2] + 1), (byte) (mEQData[1] + 1), (byte) (mEQData[0] + 1), 0};
             sendDataToCanbox(buf, buf.length);
 
 
@@ -162,9 +155,7 @@ public class Sorento13XinChi extends Canbox {
 
 
     private void stopEQ() {
-        byte[] buf = new byte[]{
-                (byte) 0x93, 0x7, (byte) 0x80, (byte) (mEQData[4] + 1), (byte) (mEQData[3] + 1), (byte) (mEQData[2] + 1), (byte) (mEQData[1] + 1), (byte) (mEQData[0] + 1), 0
-        };
+        byte[] buf = new byte[]{(byte) 0x93, 0x7, (byte) 0x80, (byte) (mEQData[4] + 1), (byte) (mEQData[3] + 1), (byte) (mEQData[2] + 1), (byte) (mEQData[1] + 1), (byte) (mEQData[0] + 1), 0};
         sendDataToCanbox(buf, buf.length);
     }
 
@@ -182,9 +173,7 @@ public class Sorento13XinChi extends Canbox {
                     mEQData[4] = Byte.valueOf(ss[4]);
                     mEQData[5] = Byte.valueOf(ss[5]);
 
-                    byte[] buf = new byte[]{
-                            (byte) 0x93, 0x7, mEQData[5], (byte) (mEQData[4] + 1), (byte) (mEQData[3] + 1), (byte) (mEQData[2] + 1), (byte) (mEQData[1] + 1), (byte) (mEQData[0] + 1), 0
-                    };
+                    byte[] buf = new byte[]{(byte) 0x93, 0x7, mEQData[5], (byte) (mEQData[4] + 1), (byte) (mEQData[3] + 1), (byte) (mEQData[2] + 1), (byte) (mEQData[1] + 1), (byte) (mEQData[0] + 1), 0};
                     sendDataToCanbox(buf, buf.length);
 
                 } catch (Exception e) {

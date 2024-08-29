@@ -15,14 +15,13 @@ import com.zhuchao.android.car.R;
 
 public class AutoParkingMsgManager {
     public final static String TAG = "AutoParkingMsgManager";
+    public static boolean isShow = false;
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams mLayoutParams;
     private static View mView;
     private static TextView mTextWarn;
     private static TextView mTextWarn1;
     private static ImageView mImageWarn;
-
-    public static boolean isShow = false;
 
     public static void init(Context context) {
         if (mView == null) {

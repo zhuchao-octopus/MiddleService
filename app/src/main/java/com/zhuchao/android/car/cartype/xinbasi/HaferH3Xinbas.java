@@ -20,13 +20,34 @@ import java.util.Locale;
 
 public class HaferH3Xinbas extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL_17 = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MUTE}, {0x9, KEY_BT_DIAL}, {0xa, MyCmd.Keycode.SPEECH},
+
+            {0x20, KEY_POWER}, {0x21, MyCmd.Keycode.KEY_SEEK_PREV}, {0x22, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x23, KEY_BT_DIAL}, {0x24, KEY_BT_HANG}, {0x25, KEY_FM}, {0x26, KEY_MUTE}, {0x27, KEY_MUTE}, {0x28, KEY_SOURCE},
+
+            {0x29, KEY_HOME}, {0x2a, KEY_GPS}, {0x2b, MyCmd.Keycode.BRIGHTNESS}, {0x2c, MyCmd.Keycode.HOME}, {0x2d, MyCmd.Keycode.KEY_RADIO_PS}, {0x2e, MyCmd.Keycode.BT},
+
+            {(byte) 0xf0, AK_KEYPAD_VOLUME_D}, {(byte) 0xf1, AK_KEYPAD_VOLUME_A},};
+    private final static byte[][] KEYS_WHEEL_NORMAL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MUTE}, {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG},
+
+            {0x20, KEY_POWER}, {0x21, MyCmd.Keycode.KEY_SEEK_PREV}, {0x22, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x23, KEY_BT_DIAL}, {0x24, KEY_BT_HANG}, {0x25, KEY_FM}, {0x26, KEY_SET}, {0x27, KEY_MUTE}, {0x28, KEY_SOURCE},
+
+            {0x29, KEY_HOME}, {0x2a, KEY_GPS}, {0x2b, MyCmd.Keycode.BRIGHTNESS}, {0x2c, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x2d, MyCmd.Keycode.KEY_RADIO_PS}, {0x2e, MyCmd.Keycode.BT},
+
+            {(byte) 0xf0, AK_KEYPAD_VOLUME_A}, {(byte) 0xf1, AK_KEYPAD_VOLUME_D},};
+    private final static int HIDE_RADAR = 0;
+    private final static int KEY_VOL = 1;
+    private final static int SHOW_VOLUME_STEP = 2;
+    private final static int CONNECT_REPEAT = 0x80;
+    private byte[][] KEYS_WHEEL;
+    private int mVolStep = 0;
+    private int mDoorStatus = 0;
+    private boolean mAirStep = false;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mRepeatConnectCount = 50000;
+
     public HaferH3Xinbas() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
         updateCanboxKeySettings();
     }
 
@@ -46,29 +67,6 @@ public class HaferH3Xinbas extends Canbox {
         mHandler.removeMessages(CONNECT_REPEAT);
         mRepeatConnectCount = 50000;
     }
-
-    private byte[][] KEYS_WHEEL;
-    private final static byte[][] KEYS_WHEEL_17 = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MUTE}, {0x9, KEY_BT_DIAL}, {0xa, MyCmd.Keycode.SPEECH},
-
-            {0x20, KEY_POWER}, {0x21, MyCmd.Keycode.KEY_SEEK_PREV}, {0x22, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x23, KEY_BT_DIAL}, {0x24, KEY_BT_HANG}, {0x25, KEY_FM}, {0x26, KEY_MUTE}, {0x27, KEY_MUTE},
-            {0x28, KEY_SOURCE},
-
-            {0x29, KEY_HOME}, {0x2a, KEY_GPS}, {0x2b, MyCmd.Keycode.BRIGHTNESS}, {0x2c, MyCmd.Keycode.HOME}, {0x2d, MyCmd.Keycode.KEY_RADIO_PS}, {0x2e, MyCmd.Keycode.BT},
-
-            {(byte) 0xf0, AK_KEYPAD_VOLUME_D}, {(byte) 0xf1, AK_KEYPAD_VOLUME_A},
-    };
-
-    private final static byte[][] KEYS_WHEEL_NORMAL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MUTE}, {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG},
-
-            {0x20, KEY_POWER}, {0x21, MyCmd.Keycode.KEY_SEEK_PREV}, {0x22, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x23, KEY_BT_DIAL}, {0x24, KEY_BT_HANG}, {0x25, KEY_FM}, {0x26, KEY_SET}, {0x27, KEY_MUTE},
-            {0x28, KEY_SOURCE},
-
-            {0x29, KEY_HOME}, {0x2a, KEY_GPS}, {0x2b, MyCmd.Keycode.BRIGHTNESS}, {0x2c, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x2d, MyCmd.Keycode.KEY_RADIO_PS}, {0x2e, MyCmd.Keycode.BT},
-
-            {(byte) 0xf0, AK_KEYPAD_VOLUME_A}, {(byte) 0xf1, AK_KEYPAD_VOLUME_D},
-    };
 
     public void updateCanboxKeySettings() {
         if (CarUtil.getKeyType() == 1) {
@@ -155,34 +153,7 @@ public class HaferH3Xinbas extends Canbox {
         //				doKey(0, 0);
         //			}
         //		}
-    }
-
-    public void setContext(Context c) {
-        super.setContext(c);
-        updateTime();
-        udpateLang();
-    }
-
-
-    private final static int HIDE_RADAR = 0;
-    private final static int KEY_VOL = 1;
-    private final static int SHOW_VOLUME_STEP = 2;
-
-    private final static int CONNECT_REPEAT = 0x80;
-
-    private void doKeyStep(int key, int step) {
-        mHandler.removeMessages(SHOW_VOLUME_STEP);
-        doKey(key, 1);
-        doKey(key, 0);
-        --step;
-
-        if (step > 0) {
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
-        }
-    }
-
-    private int mVolStep = 0;
-    private final Handler mHandler = new Handler() {
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case CONNECT_REPEAT:
@@ -206,10 +177,22 @@ public class HaferH3Xinbas extends Canbox {
         }
     };
 
+    public void setContext(Context c) {
+        super.setContext(c);
+        updateTime();
+        udpateLang();
+    }
 
-    private int mDoorStatus = 0;
+    private void doKeyStep(int key, int step) {
+        mHandler.removeMessages(SHOW_VOLUME_STEP);
+        doKey(key, 1);
+        doKey(key, 0);
+        --step;
 
-    private boolean mAirStep = false;
+        if (step > 0) {
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
+        }
+    }
 
     private void parseACInfo(byte[] data, int len) {
         //		if (data[4] >= 0x24 && data[4] <= 0x40){
@@ -268,8 +251,6 @@ public class HaferH3Xinbas extends Canbox {
         updateOutDoorTemp(temp);
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
     public void updateOutDoorTemp(int temp) {
 
 
@@ -301,7 +282,6 @@ public class HaferH3Xinbas extends Canbox {
 
 
     }
-
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -388,7 +368,6 @@ public class HaferH3Xinbas extends Canbox {
         }
     }
 
-
     private void doRightCameraSwitch(int s) {
 
         String top = AppConfig.getTopActivity();
@@ -417,9 +396,6 @@ public class HaferH3Xinbas extends Canbox {
             }
         }
     }
-
-    private int mRepeatConnectCount = 50000;
-
 
     protected void doKey(int value, int status) { // value 0 -> key up
 
@@ -481,7 +457,6 @@ public class HaferH3Xinbas extends Canbox {
 
     }
 
-
     public void updateTime() {
         if (mContext == null) {
             return;
@@ -515,7 +490,6 @@ public class HaferH3Xinbas extends Canbox {
         sendDataToCanbox(buf, buf.length);
     }
 
-
     public void udpateLang() {
         int lang = -1;
         String locale = Locale.getDefault().getLanguage();
@@ -536,4 +510,8 @@ public class HaferH3Xinbas extends Canbox {
     public int getUpdateTime() {
         return 60000;
     }
+
+
+
+
 }

@@ -16,6 +16,13 @@ import java.util.Locale;
 
 
 public class VWMQBHiworld extends Canbox {
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x35, 0x45, 0x46, 0x47, 0x48, 0x49, 0x67, 0x68, 0x69, 0x64, 0x76, 0x1f, 0x1e, 0x75, 0x77, 0x74, 0x36, 0x48, (byte) 0x85, (byte) 0x87, (byte) 0x88, (byte) 0xc1, (byte) 0xf0, (byte) 0xc2, (byte) 0x1f, (byte) 0xe8,};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_HANG},
+            //		{ 0x6, MyCmd.Keycode },
+            //		{ 0x7, MyCmd.Keycode },
+            {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MODLE},
+            //		{ 0xd, MyCmd.Keycode },
+    };
     private final String TAG = "VWMQBHiworld";
 
     public VWMQBHiworld() {
@@ -41,15 +48,6 @@ public class VWMQBHiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x35, 0x45, 0x46, 0x47, 0x48, 0x49, 0x67, 0x68, 0x69, 0x64, 0x76, 0x1f, 0x1e, 0x75, 0x77, 0x74, 0x36, 0x48, (byte) 0x85, (byte) 0x87, (byte) 0x88, (byte) 0xc1, (byte) 0xf0, (byte) 0xc2, (byte) 0x1f, (byte) 0xe8,};
-
-    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_HANG},
-            //		{ 0x6, MyCmd.Keycode },
-            //		{ 0x7, MyCmd.Keycode },
-            {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MODLE},
-            //		{ 0xd, MyCmd.Keycode },
-    };
 
     @Override
     public int getAngleValue(byte[] data) {

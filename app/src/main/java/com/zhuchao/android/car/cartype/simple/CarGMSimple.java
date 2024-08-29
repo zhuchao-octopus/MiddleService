@@ -21,56 +21,57 @@ import java.util.Locale;
 
 public class CarGMSimple extends Canbox {
 
-    public CarGMSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-        updateCanboxKeySettings();
-
-        buildCmdEQ((byte) 0x2f, (byte) 0x0, 6);
-    }
-
-    private byte[][] mKeyPannel;
-    private final static byte[][] KEYS_PANNEL_GL8 = {
-            {0x1, KEY_PREVIOUSSONG}, {0x2, KEY_NUM_5}, {0x3, KEY_NUM_4}, {0x4, KEY_NUM_3}, {0x5, KEY_POWER}, {0x6, KEY_GPS}, {0x7, KEY_FM}, {0x8, KEY_NUM_1}, {0x9, KEY_NUM_2}, {0xa, KEY_NEXTSONG},
-            {0xb, KEY_MENU}, {0xc, KEY_BACK}, {0xd, KEY_EQ}, {0xe, KEY_EJECT}, {0x11, KEY_SET}, {0x12, KEY_MEDIA}, {0x13, KEY_PLAYPAUSE}, {0x14, KEY_FM}, {0x15, KEY_MUTE}, {0x16, KEY_NUM_6},
-            {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x19, KEY_SEEK_NEXT}, {0x1a, KEY_SEEK_PREV}, {0x34, MyCmd.Keycode.KEY_TURN_A}, {0x35, MyCmd.Keycode.KEY_TURN_D},
-    };
-
+    private final static byte[][] KEYS_PANNEL_GL8 = {{0x1, KEY_PREVIOUSSONG}, {0x2, KEY_NUM_5}, {0x3, KEY_NUM_4}, {0x4, KEY_NUM_3}, {0x5, KEY_POWER}, {0x6, KEY_GPS}, {0x7, KEY_FM}, {0x8, KEY_NUM_1}, {0x9, KEY_NUM_2}, {0xa, KEY_NEXTSONG}, {0xb, KEY_MENU}, {0xc, KEY_BACK}, {0xd, KEY_EQ}, {0xe, KEY_EJECT}, {0x11, KEY_SET}, {0x12, KEY_MEDIA}, {0x13, KEY_PLAYPAUSE}, {0x14, KEY_FM}, {0x15, KEY_MUTE}, {0x16, KEY_NUM_6}, {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x19, KEY_SEEK_NEXT}, {0x1a, KEY_SEEK_PREV}, {0x34, MyCmd.Keycode.KEY_TURN_A}, {0x35, MyCmd.Keycode.KEY_TURN_D},};
     private final static byte[][] KEYS_PANNEL_ASTRA_J = {
 
-            {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x9, KEY_PREVIOUSSONG}, {0x6, KEY_NEXTSONG}, {0xb, KEY_POWER}, {0xc, KEY_NUM_1}, {0xd, KEY_NUM_2}, {0xe, KEY_NUM_3},
-            {0xf, KEY_NUM_4}, {0x1e, KEY_NUM_5}, {0x1f, KEY_NUM_6}, {0x1, KEY_HOME}, {0x16, KEY_MODE}, {0x1b, KEY_PLAYPAUSE}, {0x12, KEY_BT}, {0x50, KEY_EQ}, {0x19, MyCmd.Keycode.KEY_TURN_A},
-            {0x1a, MyCmd.Keycode.KEY_TURN_D}, {0x3, KEY_MENU}, {0x14, KEY_SET}, {0x4, KEY_GPS}, {0x5, KEY_FM}, {0xa, MyCmd.Keycode.AS}, {0x11, KEY_EJECT},
-    };
-
-    private final static byte[][] KEYS_PANNEL_ENVISION_L = {
-            {0x1, KEY_NUM_2}, {0x2, KEY_MUTE}, {0x3, KEY_BACK}, {0x4, KEY_GPS}, {0x5, KEY_FM}, {0x6, KEY_PREVIOUSSONG}, {0x7, KEY_POWER}, {0x8, KEY_MENU}, {0x9, KEY_GPS}, {0xa, KEY_NUM_3},
-            {0xb, KEY_NUM_4}, {0xc, KEY_NUM_5}, {0xd, KEY_NUM_6}, {0x10, MyCmd.Keycode.AS}, {0x11, KEY_EJECT}, {0x12, KEY_SET}, {0x13, MyCmd.Keycode.TIME_SETTING}, {0x14, KEY_EQ}, {0x15, KEY_NUM_1},
-            {0x16, KEY_NEXTSONG}, {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x19, KEY_SEEK_NEXT}, {0x1a, KEY_SEEK_PREV}, {0x1b, KEY_PLAYPAUSE}, {0x40, KEY_AUX}, {0x36, KEY_DVD},
-    };
-
-    private final static byte[][] KEYS_PANNEL_NORMAL = {
-            {0x1, KEY_POWER}, {0x2, KEY_PREVIOUSSONG}, {0x3, KEY_NEXTSONG}, {0x4, KEY_SET}, {0x5, KEY_EQ}, {0x6, KEY_BACK}, {0x7, KEY_FM}, {0x8, KEY_DVD}, {0x9, KEY_MUTE}, {0xa, KEY_NUM_1},
-            {0xb, KEY_NUM_2}, {0xc, KEY_NUM_3}, {0xd, KEY_NUM_4}, {0xe, KEY_NUM_5}, {0xf, KEY_NUM_6}, {0x10, KEY_GPS}, {0x11, KEY_EJECT}, {0x12, KEY_GPS}, {0x13, MyCmd.Keycode.TIME_SETTING},
-            {0x14, KEY_FM}, {0x15, MyCmd.Keycode.AS}, {0x16, KEY_MENU}, {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x19, KEY_SEEK_NEXT}, {0x1a, KEY_SEEK_PREV}, {0x1b, KEY_PLAYPAUSE},
-            {0x1c, KEY_PREVIOUSSONG}, {0x1d, KEY_NEXTSONG}, {0x40, KEY_AUX}, {0x34, MyCmd.Keycode.KEY_TURN_A}, {0x35, MyCmd.Keycode.KEY_TURN_D}, {0x50, KEY_HOME}, {0x51, KEY_SOURCE},
-            {0x52, KEY_PLAYPAUSE}, {0x53, KEY_MENU}, {0x54, KEY_MEDIA}, {0x55, KEY_GPS}, {0x56, KEY_GPS}, {0x57, KEY_GPS}, {0x58, KEY_SEEK_PREV}, {0x59, KEY_SEEK_NEXT}, {0x5a, KEY_PREVIOUSSONG},
-            {0x5b, KEY_NEXTSONG},
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_SOURCE}, {0x6, MyCmd.Keycode.MULT_SPEECH_AND_BT},
-            {0x7, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x8, KEY_BT}, {0x9, KEY_MUTE},
+            {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x9, KEY_PREVIOUSSONG}, {0x6, KEY_NEXTSONG}, {0xb, KEY_POWER}, {0xc, KEY_NUM_1}, {0xd, KEY_NUM_2}, {0xe, KEY_NUM_3}, {0xf, KEY_NUM_4}, {0x1e, KEY_NUM_5}, {0x1f, KEY_NUM_6}, {0x1, KEY_HOME}, {0x16, KEY_MODE}, {0x1b, KEY_PLAYPAUSE}, {0x12, KEY_BT}, {0x50, KEY_EQ}, {0x19, MyCmd.Keycode.KEY_TURN_A}, {0x1a, MyCmd.Keycode.KEY_TURN_D}, {0x3, KEY_MENU}, {0x14, KEY_SET}, {0x4, KEY_GPS}, {0x5, KEY_FM}, {0xa, MyCmd.Keycode.AS}, {0x11, KEY_EJECT},};
+    private final static byte[][] KEYS_PANNEL_ENVISION_L = {{0x1, KEY_NUM_2}, {0x2, KEY_MUTE}, {0x3, KEY_BACK}, {0x4, KEY_GPS}, {0x5, KEY_FM}, {0x6, KEY_PREVIOUSSONG}, {0x7, KEY_POWER}, {0x8, KEY_MENU}, {0x9, KEY_GPS}, {0xa, KEY_NUM_3}, {0xb, KEY_NUM_4}, {0xc, KEY_NUM_5}, {0xd, KEY_NUM_6}, {0x10, MyCmd.Keycode.AS}, {0x11, KEY_EJECT}, {0x12, KEY_SET}, {0x13, MyCmd.Keycode.TIME_SETTING}, {0x14, KEY_EQ}, {0x15, KEY_NUM_1}, {0x16, KEY_NEXTSONG}, {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x19, KEY_SEEK_NEXT}, {0x1a, KEY_SEEK_PREV}, {0x1b, KEY_PLAYPAUSE}, {0x40, KEY_AUX}, {0x36, KEY_DVD},};
+    private final static byte[][] KEYS_PANNEL_NORMAL = {{0x1, KEY_POWER}, {0x2, KEY_PREVIOUSSONG}, {0x3, KEY_NEXTSONG}, {0x4, KEY_SET}, {0x5, KEY_EQ}, {0x6, KEY_BACK}, {0x7, KEY_FM}, {0x8, KEY_DVD}, {0x9, KEY_MUTE}, {0xa, KEY_NUM_1}, {0xb, KEY_NUM_2}, {0xc, KEY_NUM_3}, {0xd, KEY_NUM_4}, {0xe, KEY_NUM_5}, {0xf, KEY_NUM_6}, {0x10, KEY_GPS}, {0x11, KEY_EJECT}, {0x12, KEY_GPS}, {0x13, MyCmd.Keycode.TIME_SETTING}, {0x14, KEY_FM}, {0x15, MyCmd.Keycode.AS}, {0x16, KEY_MENU}, {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x19, KEY_SEEK_NEXT}, {0x1a, KEY_SEEK_PREV}, {0x1b, KEY_PLAYPAUSE}, {0x1c, KEY_PREVIOUSSONG}, {0x1d, KEY_NEXTSONG}, {0x40, KEY_AUX}, {0x34, MyCmd.Keycode.KEY_TURN_A}, {0x35, MyCmd.Keycode.KEY_TURN_D}, {0x50, KEY_HOME}, {0x51, KEY_SOURCE}, {0x52, KEY_PLAYPAUSE}, {0x53, KEY_MENU}, {0x54, KEY_MEDIA}, {0x55, KEY_GPS}, {0x56, KEY_GPS}, {0x57, KEY_GPS}, {0x58, KEY_SEEK_PREV}, {0x59, KEY_SEEK_NEXT}, {0x5a, KEY_PREVIOUSSONG}, {0x5b, KEY_NEXTSONG},};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_SOURCE}, {0x6, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0x7, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x8, KEY_BT}, {0x9, KEY_MUTE},
 
 
             {(byte) 0x81, MyCmd.Keycode.BT_HANG}, {(byte) 0x82, MyCmd.Keycode.BT_DIAL}, {(byte) 0x83, MyCmd.Keycode.BT_DIAL},
 
     };
+    private final static byte[] RADAR_CHANGE = new byte[]{1, 5, 7, 9, 11, 14};
+    private final static int HIDE_RADAR = 0;
+    private final static int DELAY_SEND_ANSTART = 1;
+    private final byte[] mAirData = new byte[8];
+    private final byte[] data0x8 = new byte[12];
+    private final byte[] data0x9 = new byte[3];
+    private final byte mRadarSwitch = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HIDE_RADAR: {
+                    RadarManager.stop();
+                    break;
+                }
+                case DELAY_SEND_ANSTART:
+                    sendCanboxInfo("com.canboxsetting", (byte[]) msg.obj);
+                    break;
+
+            }
+        }
+    };
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private byte[][] mKeyPannel;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mDoorStatus = 0;
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+    private int mSource = 0;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+    public CarGMSimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+        updateCanboxKeySettings();
+
+        buildCmdEQ((byte) 0x2f, (byte) 0x0, 6);
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -114,8 +115,6 @@ public class CarGMSimple extends Canbox {
         }
 
     }
-
-    private final byte[] mAirData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -211,8 +210,49 @@ public class CarGMSimple extends Canbox {
         }
     }
 
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    // public void setMediaMoreInfo(int source, int play, int total, int time,
+    // int total_time) {
+    // // byte min = (byte) ((time / 60) % 60);
+    // // byte sec = (byte) ((time) % 60);
+    // // ++play;
+    // // byte[] data = new byte[] { (byte) 0xa3, 0x1, (byte) (total & 0xFF),
+    // // (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF),
+    // // (byte) ((play >> 8) & 0xFF), min, sec };
+    // // sendDataToCanbox(data, data.length);
+    // }
+    //
+    // public void setMediaSrc(int source, byte type, byte[] b) {
+    // if (b[0] == 0x3) {
+    // b[0] = 5;
+    // } else {
+    // b[0] = 1;
+    // }
+    // byte[] data = new byte[] { (byte) 0x9a, 0x5, 8, b[0], b[1], b[2], 0 };
+    // sendDataToCanbox(data, data.length);
+    // }
+    //
+    // public void setMediaSrc(int source) {// default is simple box
+    // switch (source) {
+    // case MyCmd.SOURCE_DVD:
+    // mSource = 0x2;
+    // break;
+    // case MyCmd.SOURCE_RADIO:
+    // mSource = 0x1;
+    // break;
+    // case MyCmd.SOURCE_AUX:
+    // mSource = 0x4;
+    // break;
+    // case MyCmd.SOURCE_BT:
+    // mSource = 0x7;
+    // break;
+    // default:
+    // mSource = 0x6;
+    // break;
+    // }
+    //
+    // byte[] data = new byte[] { (byte) 0x99, 0x2, mSource, mVolume };
+    // sendDataToCanbox(data, data.length);
+    // }
 
     public void updateOutDoorTemp(int temp) {
 
@@ -237,8 +277,6 @@ public class CarGMSimple extends Canbox {
         GlobalDefinition.sendByCarServiceToSystemUI(mContext, "com.android.systemui", MyCmd.Cmd.SET_OUT_DOOR_TEMP, s);
 
     }
-
-    private final static byte[] RADAR_CHANGE = new byte[]{1, 5, 7, 9, 11, 14};
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -427,10 +465,6 @@ public class CarGMSimple extends Canbox {
         }
     }
 
-    private final byte[] data0x8 = new byte[12];
-    private final byte[] data0x9 = new byte[3];
-    private final byte mRadarSwitch = 0;
-
     private void checkHideRadar() {
         mHandler.removeMessages(HIDE_RADAR);
         // if (mRadarSwitch != 1) {
@@ -447,25 +481,6 @@ public class CarGMSimple extends Canbox {
         // }
     }
 
-    private final static int HIDE_RADAR = 0;
-    private final static int DELAY_SEND_ANSTART = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_RADAR: {
-                    RadarManager.stop();
-                    break;
-                }
-                case DELAY_SEND_ANSTART:
-                    sendCanboxInfo("com.canboxsetting", (byte[]) msg.obj);
-                    break;
-
-            }
-        }
-    };
-
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -480,55 +495,6 @@ public class CarGMSimple extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    // public void setMediaMoreInfo(int source, int play, int total, int time,
-    // int total_time) {
-    // // byte min = (byte) ((time / 60) % 60);
-    // // byte sec = (byte) ((time) % 60);
-    // // ++play;
-    // // byte[] data = new byte[] { (byte) 0xa3, 0x1, (byte) (total & 0xFF),
-    // // (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF),
-    // // (byte) ((play >> 8) & 0xFF), min, sec };
-    // // sendDataToCanbox(data, data.length);
-    // }
-    //
-    // public void setMediaSrc(int source, byte type, byte[] b) {
-    // if (b[0] == 0x3) {
-    // b[0] = 5;
-    // } else {
-    // b[0] = 1;
-    // }
-    // byte[] data = new byte[] { (byte) 0x9a, 0x5, 8, b[0], b[1], b[2], 0 };
-    // sendDataToCanbox(data, data.length);
-    // }
-    //
-    // public void setMediaSrc(int source) {// default is simple box
-    // switch (source) {
-    // case MyCmd.SOURCE_DVD:
-    // mSource = 0x2;
-    // break;
-    // case MyCmd.SOURCE_RADIO:
-    // mSource = 0x1;
-    // break;
-    // case MyCmd.SOURCE_AUX:
-    // mSource = 0x4;
-    // break;
-    // case MyCmd.SOURCE_BT:
-    // mSource = 0x7;
-    // break;
-    // default:
-    // mSource = 0x6;
-    // break;
-    // }
-    //
-    // byte[] data = new byte[] { (byte) 0x99, 0x2, mSource, mVolume };
-    // sendDataToCanbox(data, data.length);
-    // }
-
-
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -561,14 +527,10 @@ public class CarGMSimple extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         }
 
 
@@ -582,17 +544,13 @@ public class CarGMSimple extends Canbox {
         } else {
             b[0] = 0;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
 
 
         byte[] data = new byte[]{(byte) 0xc2, 0x4, b[0], b[1], b[2], 0};
         sendDataToCanbox(data, data.length);
     }
-
-    private int mSource = 0;
 
     public void setMediaSrc(int source) {// default is simple box
         mSource = source;
@@ -775,10 +733,12 @@ public class CarGMSimple extends Canbox {
         super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQData);
     }
 
-
     public void sendId3(byte index, String num) {
         sendId3Ex(index, num, 0);
     }
+    //	public void setPhone(int status, String num) {
+    //		sendId3((byte)0x1, num);
+    //	}
 
     public void sendId3Ex(byte index, String num, int code) {
 
@@ -816,13 +776,6 @@ public class CarGMSimple extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-    //	public void setPhone(int status, String num) {
-    //		sendId3((byte)0x1, num);
-    //	}
-
     public void setSongName(String s) {
         sendId3((byte) 0x2, s);
         mName = s;
@@ -837,8 +790,6 @@ public class CarGMSimple extends Canbox {
         sendId3((byte) 0x3, s);
         mAlbum = s;
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhoneEx(int status, String num, String name) {
         switch (status) {

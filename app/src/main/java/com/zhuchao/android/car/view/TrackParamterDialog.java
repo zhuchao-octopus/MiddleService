@@ -18,61 +18,20 @@ public class TrackParamterDialog extends Dialog {
     public final static int MYDIALOG_STYLE_SCAN_CANCEAL = 3;
     public final static int MYDIALOG_STYLE_SCAN = 4;
     public final static int MYDIALOG_STYLE_PASSWD = 5;
-
-
-    public TrackParamterDialog(Context context) {
-        super(context, R.style.dialog);
-    }
-
-    public TrackParamterDialog(Context context, View.OnClickListener ok) {
-        super(context, R.style.dialog);
-    }
-
-    public void hide() {
-
-        super.cancel();
-    }
-
     private final View.OnClickListener mOnClickDialogCancel = new View.OnClickListener() {
         public void onClick(View v) {
             BackTrack.reset();
             hide();
         }
     };
-
-
     private final View.OnClickListener mOnClickDialogOK = new View.OnClickListener() {
         public void onClick(View v) {
             BackTrack.saveConfig(GlobalDefinition.getContext());
             hide();
         }
     };
-
-
-    private void initText() {
-        String s = "";
-        int i;
-
-        i = BackTrack.get_track_camera_h();
-        s = String.valueOf((i - 800) / 10);
-        ((TextView) findViewById(R.id.camera_heigt)).setText(s);
-
-
-        i = BackTrack.get_screen_w();
-        s = String.valueOf((i - 1024) / 10);
-        ((TextView) findViewById(R.id.left_right)).setText(s);
-
-
-        i = BackTrack.get_track_car_w();
-        s = String.valueOf((i - 1800) / 10);
-        ((TextView) findViewById(R.id.width)).setText(s);
-
-
-        //		i = BackTrack.get_screen_w();
-        //		i = (i-1024)/10;
-        //		((TextView)findViewById(R.id.left_right)).setText(s);
-    }
-
+    private BackStaticView mBackStaticView;
+    private BackTrackView mBackTrackView;
     private final View.OnClickListener mOnClickDialog = new View.OnClickListener() {
         public void onClick(View v) {
 
@@ -144,6 +103,44 @@ public class TrackParamterDialog extends Dialog {
         }
     };
 
+
+    public TrackParamterDialog(Context context) {
+        super(context, R.style.dialog);
+    }
+
+    public TrackParamterDialog(Context context, View.OnClickListener ok) {
+        super(context, R.style.dialog);
+    }
+
+    public void hide() {
+
+        super.cancel();
+    }
+
+    private void initText() {
+        String s = "";
+        int i;
+
+        i = BackTrack.get_track_camera_h();
+        s = String.valueOf((i - 800) / 10);
+        ((TextView) findViewById(R.id.camera_heigt)).setText(s);
+
+
+        i = BackTrack.get_screen_w();
+        s = String.valueOf((i - 1024) / 10);
+        ((TextView) findViewById(R.id.left_right)).setText(s);
+
+
+        i = BackTrack.get_track_car_w();
+        s = String.valueOf((i - 1800) / 10);
+        ((TextView) findViewById(R.id.width)).setText(s);
+
+
+        //		i = BackTrack.get_screen_w();
+        //		i = (i-1024)/10;
+        //		((TextView)findViewById(R.id.left_right)).setText(s);
+    }
+
     public void setBackStaticView(BackStaticView v) {
         mBackStaticView = v;
     }
@@ -151,9 +148,6 @@ public class TrackParamterDialog extends Dialog {
     public void setBackTrackView(BackTrackView v) {
         mBackTrackView = v;
     }
-
-    private BackStaticView mBackStaticView;
-    private BackTrackView mBackTrackView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

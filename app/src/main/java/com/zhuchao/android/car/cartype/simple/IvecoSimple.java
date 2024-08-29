@@ -5,18 +5,16 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class IvecoSimple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
+
+    };
+
     public IvecoSimple() {
         buildCmdAngle((byte) 0x26, (byte) 0x0, 0x2198);
         buildCmdVersion((byte) 0x30, (byte) 0x0);
         mIdKey = 0x20;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE},
-            {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
-
-    };
 
     @Override
     public int getAngleValue(byte[] data) {

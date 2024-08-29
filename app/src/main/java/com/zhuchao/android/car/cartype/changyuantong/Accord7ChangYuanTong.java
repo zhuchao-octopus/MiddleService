@@ -7,6 +7,8 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class Accord7ChangYuanTong extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.BT_HANG},};
+
     public Accord7ChangYuanTong() {
         //		sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x01, 0x2, 0x3,
         //				0x0, 0x0 });
@@ -24,15 +26,9 @@ public class Accord7ChangYuanTong extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
 
         if (CarUtil.getModelId() == 69) {
-            sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                    0x05, 0x01, 0x0, 0x3, 0x0, 0x0
-            });
+            sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x0, 0x3, 0x0, 0x0});
         }
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.BT_HANG},
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {

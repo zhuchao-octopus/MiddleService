@@ -3,9 +3,9 @@
     android:id="@+id/screen1_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/vehicle_camera_colorkey"
     android:orientation="vertical"
-    android:tag="1"
-    android:background="@color/vehicle_camera_colorkey">
+    android:tag="1">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,9 +27,9 @@
             android:id="@+id/no_signal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#000000"
             android:gravity="center"
             android:orientation="vertical"
-            android:background="#000000"
             android:visibility="gone">
 
             <ImageView

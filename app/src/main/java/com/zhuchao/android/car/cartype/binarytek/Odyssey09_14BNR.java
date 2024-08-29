@@ -6,6 +6,12 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class Odyssey09_14BNR extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x77, 0x78, 0x79, 0x7a, 0x7b, 0x7c};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.MULT_BACK_AND_HANG}, {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.KEY_DISPLAY},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x11, MyCmd.Keycode.KEY_CAR_INFO}, {0x12, MyCmd.Keycode.KEY_CAR_INFO}, {0x13, MyCmd.Keycode.KEY_CAR_INFO}, {0x14, MyCmd.Keycode.KEY_CAR_INFO}, {0x15, MyCmd.Keycode.HOME}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x18, MyCmd.Keycode.BACK}, {0x19, MyCmd.Keycode.PLAY_PAUSE}, {0x1a, MyCmd.Keycode.EQ}, {0x1d, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x1e, MyCmd.Keycode.KEY_SEEK_PREV},
+
+    };
+
     public Odyssey09_14BNR() {
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
         buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0x4);
@@ -23,21 +29,6 @@ public class Odyssey09_14BNR extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x77, 0x78, 0x79, 0x7a, 0x7b, 0x7c};
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.MULT_BACK_AND_HANG}, {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.KEY_DISPLAY},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x11, MyCmd.Keycode.KEY_CAR_INFO}, {0x12, MyCmd.Keycode.KEY_CAR_INFO}, {0x13, MyCmd.Keycode.KEY_CAR_INFO}, {0x14, MyCmd.Keycode.KEY_CAR_INFO}, {0x15, MyCmd.Keycode.HOME},
-            {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x18, MyCmd.Keycode.BACK}, {0x19, MyCmd.Keycode.PLAY_PAUSE}, {0x1a, MyCmd.Keycode.EQ}, {0x1d, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x1e, MyCmd.Keycode.KEY_SEEK_PREV},
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {

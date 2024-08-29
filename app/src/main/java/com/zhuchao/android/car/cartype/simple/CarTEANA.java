@@ -6,12 +6,8 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class CarTEANA extends Canbox {
     public CarTEANA() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
     }
 
     private void parseWheelKey(byte[] data, int len) {
@@ -146,9 +142,7 @@ public class CarTEANA extends Canbox {
                 mediaType = 0x30;
                 break;
         }
-        byte[] data = new byte[]{
-                (byte) 0xc0, 0x8, s, mediaType, (byte) (play & 0xff), (byte) ((play >> 8) & 0xff), 0, (byte) (time / 3600), (byte) (time / 60), (byte) (time % 60)
-        };
+        byte[] data = new byte[]{(byte) 0xc0, 0x8, s, mediaType, (byte) (play & 0xff), (byte) ((play >> 8) & 0xff), 0, (byte) (time / 3600), (byte) (time / 60), (byte) (time % 60)};
         sendDataToCanbox(data, data.length);
     }
 

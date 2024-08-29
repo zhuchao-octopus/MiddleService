@@ -7,6 +7,15 @@ import java.util.Locale;
 
 public class BentengFWP009Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+
+            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
+
+            {0xc, MyCmd.Keycode.MODLE},
+
+    };
+
+
     public BentengFWP009Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdVersion((byte) 0xf0, (byte) 0x0);
@@ -17,20 +26,10 @@ public class BentengFWP009Hiworld extends Canbox {
 
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
-
-            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
-
-            {0xc, MyCmd.Keycode.MODLE},
-
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0xc, 0xf};

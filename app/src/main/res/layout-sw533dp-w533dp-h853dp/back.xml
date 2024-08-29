@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/vehicle_camera_colorkey"
-    android:tag="7"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:tag="7">
 
     <RelativeLayout
         android:layout_width="match_parent"

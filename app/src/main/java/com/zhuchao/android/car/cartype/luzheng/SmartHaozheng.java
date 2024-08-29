@@ -17,19 +17,18 @@ import java.util.Date;
 
 public class SmartHaozheng extends Canbox {
 
-    public SmartHaozheng() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x5, KEY_BT},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x5, KEY_BT},
 
     };
+    byte[] mAirData = new byte[8];
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+
+    public SmartHaozheng() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -51,8 +50,6 @@ public class SmartHaozheng extends Canbox {
             }
         }
     }
-
-    byte[] mAirData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
 
@@ -176,9 +173,6 @@ public class SmartHaozheng extends Canbox {
 
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -224,8 +218,6 @@ public class SmartHaozheng extends Canbox {
         }
 
     }
-
-    private int mDoorStatus = 0;
 
     public void updateTime() {
         if (mContext == null) {

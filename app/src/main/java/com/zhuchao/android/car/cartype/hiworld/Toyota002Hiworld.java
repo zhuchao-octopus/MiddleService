@@ -11,6 +11,13 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class Toyota002Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x83, (byte) 0x84, (byte) 0x85, (byte) 0x86,};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xc, MyCmd.Keycode.MODLE}, {0x20, MyCmd.Keycode.KEY_AIR_CONTROL},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x2f, MyCmd.Keycode.HOME}, {0x30, MyCmd.Keycode.BT}, {0x39, MyCmd.Keycode.KEY_DISPLAY}, {0x42, MyCmd.Keycode.EQ},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+    private final static int SET_EQ_STEP = 1;
+    int mPreSource = -1;
+
     public Toyota002Hiworld() {
         buildCmdDoor((byte) 0x1a, (byte) 0x2, (byte) 0xfc, (byte) 0x03);
         //buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0xa);
@@ -32,22 +39,6 @@ public class Toyota002Hiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x83, (byte) 0x84, (byte) 0x85, (byte) 0x86,};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x8, MyCmd.Keycode.PREVIOUS},
-            {0x9, MyCmd.Keycode.NEXT}, {0xc, MyCmd.Keycode.MODLE}, {0x20, MyCmd.Keycode.KEY_AIR_CONTROL},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x2f, MyCmd.Keycode.HOME}, {0x30, MyCmd.Keycode.BT}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
-            {0x42, MyCmd.Keycode.EQ},
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
-
     @Override
     public int getAngleValue2(byte[] data) {
         // TODO Auto-generated method stub
@@ -56,6 +47,23 @@ public class Toyota002Hiworld extends Canbox {
 
         return -angle;
     }
+
+    //	private void parseACInfoEx(byte[] data)
+    //	{
+    //
+    //
+    //
+    //		airData[9] = (byte)(
+    //				((data[2]&0x00)>>0) |
+    //				((data[2]&0x10)>>3)
+    //				);
+    //		airData[10] = (byte)getACTemp(data[3]);
+    //
+    //		airData[11] = data[4];
+    //
+    //
+    //		super.parseACInfoRear(airData);
+    //	}
 
     @Override
     public int getACTemp(byte data) {
@@ -71,7 +79,6 @@ public class Toyota002Hiworld extends Canbox {
         }
         return data;
     }
-
 
     public void parseACInfo(byte[] data) {
 
@@ -115,25 +122,6 @@ public class Toyota002Hiworld extends Canbox {
         airData[5] |= 0x80;
         super.parseACInfo(airData);
     }
-
-    //	private void parseACInfoEx(byte[] data)
-    //	{
-    //
-    //
-    //
-    //		airData[9] = (byte)(
-    //				((data[2]&0x00)>>0) |
-    //				((data[2]&0x10)>>3)
-    //				);
-    //		airData[10] = (byte)getACTemp(data[3]);
-    //
-    //		airData[11] = data[4];
-    //
-    //
-    //		super.parseACInfoRear(airData);
-    //	}
-
-    int mPreSource = -1;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -202,12 +190,10 @@ public class Toyota002Hiworld extends Canbox {
         }
     }
 
-
     public int getOutTemp(byte[] data) {//
         int t = data[3] * 10;
         return t;
     }
-
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -268,16 +254,6 @@ public class Toyota002Hiworld extends Canbox {
         }
     }
 
-    private final static int SET_EQ_STEP = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == SET_EQ_STEP) {
-                sendEQCmd((byte) msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-
     public void parseEQ(int id, byte[] buf) {
 
         if (mEQData == null) {
@@ -298,12 +274,18 @@ public class Toyota002Hiworld extends Canbox {
     public void setVolume(int volume) {
         byte[] buf = new byte[]{(byte) 0x8f, 0x3, 1, (byte) volume, 0};
         sendDataToCanbox(buf, buf.length);
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SET_EQ_STEP) {
+                sendEQCmd((byte) msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void sendDataToCanbox(byte[] data, int len) { // default is simple
         super.sendDataToCanboxHiword1(data, len);
     }
-
 
     @Override
     public void startConnect() {
@@ -314,6 +296,8 @@ public class Toyota002Hiworld extends Canbox {
     public void stopConnect() {
 
     }
+
+
 
 
 }

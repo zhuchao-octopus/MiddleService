@@ -13,6 +13,14 @@ import java.nio.charset.StandardCharsets;
 
 public class QiRuiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x40};
+    private static final byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_TURN_A}, {0x4, MyCmd.Keycode.KEY_TURN_D}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
+
+            {0x10, MyCmd.Keycode.KEY_FM}, {0x11, MyCmd.Keycode.KEY_AM}, {0x12, MyCmd.Keycode.POWER}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x15, MyCmd.Keycode.MUTE}, {0x16, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x17, MyCmd.Keycode.MODLE}, {0x18, MyCmd.Keycode.AS}, {0x19, MyCmd.Keycode.SETUP}, {0x20, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x21, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x22, MyCmd.Keycode.EQ}, {0x23, MyCmd.Keycode.MENU}, {0x24, MyCmd.Keycode.BT}, {0x25, MyCmd.Keycode.RADIO}, {0x26, MyCmd.Keycode.HOME}, {0x27, MyCmd.Keycode.EASY_CONNECT}, {0x28, MyCmd.Keycode.BT}, {0x29, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.BACKLIGHT_OFF}, {0x2b, MyCmd.Keycode.PLAY_PAUSE}, {0x2c, MyCmd.Keycode.ROLL_NEXT}, {0x2d, MyCmd.Keycode.ROLL_PREV}, {0x2e, MyCmd.Keycode.VOLUME_UP}, {0x2f, MyCmd.Keycode.VOLUME_DOWN},};
+    int mCallingTime;
+    int mPhoneStatus;
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public QiRuiRaise() {
         mIdAC = 0x21;
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -33,9 +41,6 @@ public class QiRuiRaise extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x40};
-
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xee, 0x02, 0x4, 0};
@@ -86,17 +91,6 @@ public class QiRuiRaise extends Canbox {
         }
         return cmd;
     }
-
-    private static final byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_TURN_A}, {0x4, MyCmd.Keycode.KEY_TURN_D}, {0x5, MyCmd.Keycode.BT_DIAL},
-            {0x6, MyCmd.Keycode.BT_HANG}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
-
-            {0x10, MyCmd.Keycode.KEY_FM}, {0x11, MyCmd.Keycode.KEY_AM}, {0x12, MyCmd.Keycode.POWER}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x15, MyCmd.Keycode.MUTE},
-            {0x16, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x17, MyCmd.Keycode.MODLE}, {0x18, MyCmd.Keycode.AS}, {0x19, MyCmd.Keycode.SETUP}, {0x20, MyCmd.Keycode.VOLUME_ROLL_UP},
-            {0x21, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x22, MyCmd.Keycode.EQ}, {0x23, MyCmd.Keycode.MENU}, {0x24, MyCmd.Keycode.BT}, {0x25, MyCmd.Keycode.RADIO}, {0x26, MyCmd.Keycode.HOME},
-            {0x27, MyCmd.Keycode.EASY_CONNECT}, {0x28, MyCmd.Keycode.BT}, {0x29, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.BACKLIGHT_OFF}, {0x2b, MyCmd.Keycode.PLAY_PAUSE},
-            {0x2c, MyCmd.Keycode.ROLL_NEXT}, {0x2d, MyCmd.Keycode.ROLL_PREV}, {0x2e, MyCmd.Keycode.VOLUME_UP}, {0x2f, MyCmd.Keycode.VOLUME_DOWN},
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -163,10 +157,6 @@ public class QiRuiRaise extends Canbox {
         super.parseACInfo(airData);
     }
 
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -198,14 +188,10 @@ public class QiRuiRaise extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec};
         }
 
         // if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -219,9 +205,7 @@ public class QiRuiRaise extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 
@@ -268,7 +252,6 @@ public class QiRuiRaise extends Canbox {
 
         sendDataToCanbox(mData, mData.length);
     }
-
 
     public boolean requestAngleData() {
         byte[] data3 = new byte[]{(byte) 0x90, 0x2, 0x29, 0};
@@ -386,32 +369,11 @@ public class QiRuiRaise extends Canbox {
         }
     }
 
-    int mCallingTime;
-    int mPhoneStatus;
-
     public void clear() {
         super.clear();
         mHandler.removeMessages(0);
         mPhoneStatus = 0;
     }
-
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                if (mPhoneStatus == HFP_INFO_CALLING) {
-                    ++mCallingTime;
-                    byte[] data = new byte[]{(byte) 0xc3, 4, 0, 0, 0, 0};
-                    data[4] = (byte) (((mCallingTime / 3600)));
-                    data[3] = (byte) (((mCallingTime % 3600) / 60));
-                    data[2] = (byte) ((mCallingTime % 3600) % 60);
-                    sendDataToCanbox(data, data.length);
-                    mHandler.sendEmptyMessageDelayed(0, 1000);
-                }
-            }
-            super.handleMessage(msg);
-        }
-    };
-
 
     public void udpateVoiceControl(int data) {
 
@@ -453,5 +415,24 @@ public class QiRuiRaise extends Canbox {
     public void requestVersion() {
         byte[] buf = new byte[]{(byte) 0x90, 0x2, 0x30, 0x0};
         sendDataToCanbox(buf, buf.length);
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                if (mPhoneStatus == HFP_INFO_CALLING) {
+                    ++mCallingTime;
+                    byte[] data = new byte[]{(byte) 0xc3, 4, 0, 0, 0, 0};
+                    data[4] = (byte) (((mCallingTime / 3600)));
+                    data[3] = (byte) (((mCallingTime % 3600) / 60));
+                    data[2] = (byte) ((mCallingTime % 3600) % 60);
+                    sendDataToCanbox(data, data.length);
+                    mHandler.sendEmptyMessageDelayed(0, 1000);
+                }
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+
+
+
 }

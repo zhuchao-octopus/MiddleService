@@ -13,16 +13,7 @@ import java.util.Locale;
 
 public class BenzG350Hiworld extends Canbox {
 
-    public BenzG350Hiworld() {
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-
-        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
-
-    }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
 
             {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
 
@@ -43,6 +34,14 @@ public class BenzG350Hiworld extends Canbox {
             {0x10, MyCmd.Keycode.BACK}, {0x50, MyCmd.Keycode.KEY_DISPLAY},
 
     };
+
+
+    public BenzG350Hiworld() {
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+
+        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
+
+    }
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         byte type = 7;
@@ -288,9 +287,7 @@ public class BenzG350Hiworld extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, format
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, format};
 
         sendDataToCanbox(buf, buf.length);
 

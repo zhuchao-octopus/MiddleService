@@ -9,6 +9,21 @@ import java.util.Locale;
 
 public class PSAHiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x13, (byte) 0x14, (byte) 0x15, (byte) 0x71, (byte) 0x72, (byte) 0x76, (byte) 0x79, (byte) 0x81, (byte) 0x82, (byte) 0x83, (byte) 0x85, (byte) 0x94, (byte) 0xc1, (byte) 0xc2,};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xb, MyCmd.Keycode.MODLE}, {0xa, MyCmd.Keycode.HOME}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK},
+            //		{ 0x11, MyCmd.Keycode },
+            //		{ 0x12, MyCmd.Keycode },
+            //		{ 0x13, MyCmd.Keycode },
+            //		{ 0x14, MyCmd.Keycode },
+            //		{ 0x15, MyCmd.Keycode },
+            //		{ 0x16, MyCmd.Keycode },
+            {0x40, MyCmd.Keycode.BT},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK}, {0x7, MyCmd.Keycode.HOME}, {0x8, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x11, MyCmd.Keycode.EJECT}, {0x16, MyCmd.Keycode.RADIO}, {0x17, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x18, MyCmd.Keycode.KEY_SEEK_PREV}, {0x19, MyCmd.Keycode.KEY_SEEK_PREV}, {0x1a, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x24, MyCmd.Keycode.PLAY_PAUSE}, {0x25, MyCmd.Keycode.BACK},
+            //		{ 0x26, MyCmd.Keycode },
+            //		{ 0x27, MyCmd.Keycode. },
+            {0x28, MyCmd.Keycode.KEY_LIST}, {0x2a, MyCmd.Keycode.MODLE}, {0x2b, MyCmd.Keycode.BT}, {0x2c, MyCmd.Keycode.MODLE}, {0x2d, MyCmd.Keycode.AUDIO}, {0x2e, MyCmd.Keycode.RADIO}, {0x2f, MyCmd.Keycode.RADIO}, {0x31, MyCmd.Keycode.AUDIO}, {0x32, MyCmd.Keycode.POWER}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x40, MyCmd.Keycode.NAVIGATION},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0}, {0x3, MyCmd.Keycode.ROLL_NEXT, 0}, {0x13, MyCmd.Keycode.ROLL_PREV, 0}, {0x4, MyCmd.Keycode.ROLL_NEXT, 0}, {0x14, MyCmd.Keycode.ROLL_PREV, 0}, {0x5, MyCmd.Keycode.ROLL_NEXT, 0}, {0x15, MyCmd.Keycode.ROLL_PREV, 0},};
+
     public PSAHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -35,38 +50,6 @@ public class PSAHiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            (byte) 0x13, (byte) 0x14, (byte) 0x15, (byte) 0x71, (byte) 0x72, (byte) 0x76, (byte) 0x79, (byte) 0x81, (byte) 0x82, (byte) 0x83, (byte) 0x85, (byte) 0x94, (byte) 0xc1, (byte) 0xc2,
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.NEXT},
-            {0x9, MyCmd.Keycode.PREVIOUS}, {0xb, MyCmd.Keycode.MODLE}, {0xa, MyCmd.Keycode.HOME}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE},
-            {0x10, MyCmd.Keycode.BACK},
-            //		{ 0x11, MyCmd.Keycode },
-            //		{ 0x12, MyCmd.Keycode },
-            //		{ 0x13, MyCmd.Keycode },
-            //		{ 0x14, MyCmd.Keycode },
-            //		{ 0x15, MyCmd.Keycode },
-            //		{ 0x16, MyCmd.Keycode },
-            {0x40, MyCmd.Keycode.BT},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.BACK}, {0x7, MyCmd.Keycode.HOME}, {0x8, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.NUMBER1},
-            {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x11, MyCmd.Keycode.EJECT},
-            {0x16, MyCmd.Keycode.RADIO}, {0x17, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x18, MyCmd.Keycode.KEY_SEEK_PREV}, {0x19, MyCmd.Keycode.KEY_SEEK_PREV}, {0x1a, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x24, MyCmd.Keycode.PLAY_PAUSE}, {0x25, MyCmd.Keycode.BACK},
-            //		{ 0x26, MyCmd.Keycode },
-            //		{ 0x27, MyCmd.Keycode. },
-            {0x28, MyCmd.Keycode.KEY_LIST}, {0x2a, MyCmd.Keycode.MODLE}, {0x2b, MyCmd.Keycode.BT}, {0x2c, MyCmd.Keycode.MODLE}, {0x2d, MyCmd.Keycode.AUDIO}, {0x2e, MyCmd.Keycode.RADIO},
-            {0x2f, MyCmd.Keycode.RADIO}, {0x31, MyCmd.Keycode.AUDIO}, {0x32, MyCmd.Keycode.POWER}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x40, MyCmd.Keycode.NAVIGATION},
-    };
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0}, {0x3, MyCmd.Keycode.ROLL_NEXT, 0},
-            {0x13, MyCmd.Keycode.ROLL_PREV, 0}, {0x4, MyCmd.Keycode.ROLL_NEXT, 0}, {0x14, MyCmd.Keycode.ROLL_PREV, 0}, {0x5, MyCmd.Keycode.ROLL_NEXT, 0}, {0x15, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x01, 0};

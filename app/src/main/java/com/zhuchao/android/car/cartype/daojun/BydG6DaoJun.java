@@ -8,6 +8,13 @@ import java.util.Calendar;
 
 public class BydG6DaoJun extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x6};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x2, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x3, MyCmd.Keycode.ROLL_NEXT}, {0x4, MyCmd.Keycode.ROLL_PREV}, {0x5, MyCmd.Keycode.POWER}, {0x24, MyCmd.Keycode.PLAY_PAUSE},
+
+
+    };
+    byte[] mLcdInfo = new byte[]{(byte) 0x77, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public BydG6DaoJun() {
 
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
@@ -20,19 +27,10 @@ public class BydG6DaoJun extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x6};
-
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0x72, 0x02, 1, 1};
         return cmd;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x2, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x3, MyCmd.Keycode.ROLL_NEXT}, {0x4, MyCmd.Keycode.ROLL_PREV}, {0x5, MyCmd.Keycode.POWER},
-            {0x24, MyCmd.Keycode.PLAY_PAUSE},
-
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -166,8 +164,6 @@ public class BydG6DaoJun extends Canbox {
         sendDataToCanbox(mLcdInfo, mLcdInfo.length);
     }
 
-    byte[] mLcdInfo = new byte[]{(byte) 0x77, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
-
     public void setVolume(int volume) {
 
         mLcdInfo[3] = (byte) volume;
@@ -207,9 +203,7 @@ public class BydG6DaoJun extends Canbox {
     @Override
     public void startConnect() {
         // TODO Auto-generated method stub
-        byte[] buf = new byte[]{
-                (byte) 0xf5, 8, 1, (byte) 0x81, 1, (byte) 0x80, 0, (byte) 0x80, 0, (byte) 0x80
-        };
+        byte[] buf = new byte[]{(byte) 0xf5, 8, 1, (byte) 0x81, 1, (byte) 0x80, 0, (byte) 0x80, 0, (byte) 0x80};
 
         sendDataToCanbox(buf, buf.length);
         buf[0] = (byte) 0xb4;
@@ -229,9 +223,7 @@ public class BydG6DaoJun extends Canbox {
 
     @Override
     public void stopConnect() {
-        byte[] buf = new byte[]{
-                (byte) 0xf5, 8, 1, (byte) 0x81, 0x10, (byte) 0x80, 0, (byte) 0x80, 0, (byte) 0x80
-        };
+        byte[] buf = new byte[]{(byte) 0xf5, 8, 1, (byte) 0x81, 0x10, (byte) 0x80, 0, (byte) 0x80, 0, (byte) 0x80};
 
         sendDataToCanbox(buf, buf.length);
     }

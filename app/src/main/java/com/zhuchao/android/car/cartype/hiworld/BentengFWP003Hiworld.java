@@ -5,19 +5,7 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BentengFWP003Hiworld extends Canbox {
 
-    public BentengFWP003Hiworld() {
-        buildCmdDoor((byte) 0x73, (byte) 0x2, (byte) 0xf8, (byte) 0x09);
-
-
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-        mIdAC = 0x73;
-
-        buildCmdKey((byte) 0x72, (byte) 5, (byte) 4, (byte) 0, KEYS_WHEEL);
-    }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
 
             {0x3, MyCmd.Keycode.MUTE},
 
@@ -30,6 +18,16 @@ public class BentengFWP003Hiworld extends Canbox {
 
     };
 
+
+    public BentengFWP003Hiworld() {
+        buildCmdDoor((byte) 0x73, (byte) 0x2, (byte) 0xf8, (byte) 0x09);
+
+
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+        mIdAC = 0x73;
+
+        buildCmdKey((byte) 0x72, (byte) 5, (byte) 4, (byte) 0, KEYS_WHEEL);
+    }
 
     @Override
     public int getACTemp(byte data) {

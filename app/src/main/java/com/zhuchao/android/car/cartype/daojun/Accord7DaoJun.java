@@ -7,6 +7,9 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class Accord7DaoJun extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.BT_HANG},};
+
+
     public Accord7DaoJun() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -17,15 +20,8 @@ public class Accord7DaoJun extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
     }
 
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.BT_HANG},
-    };
-
     private byte[] getCarTypeCmd() {
-        byte[] cmd = new byte[]{
-                (byte) 0x72, 0x09, 0x4, 0x2, 0xf, 0x1, 0x3, (byte) 0xef, (byte) 0xf7, (byte) 0xc3, (byte) 0xfb
-        };
+        byte[] cmd = new byte[]{(byte) 0x72, 0x09, 0x4, 0x2, 0xf, 0x1, 0x3, (byte) 0xef, (byte) 0xf7, (byte) 0xc3, (byte) 0xfb};
         switch (CarUtil.getModelId()) {
             case 55:
                 cmd[4] = 0x2;

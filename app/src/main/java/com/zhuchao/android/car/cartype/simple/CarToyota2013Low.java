@@ -3,13 +3,12 @@ package com.zhuchao.android.car.cartype.simple;
 import com.zhuchao.android.car.canbox.Canbox;
 
 public class CarToyota2013Low extends Canbox {
+    private final byte[] mAcData = new byte[1];
+    private final byte mDoorStatus = 0;
+
     public CarToyota2013Low() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
     }
 
     private void parseWheelKey(byte[] data, int len) {
@@ -110,9 +109,6 @@ public class CarToyota2013Low extends Canbox {
         //		}
     }
 
-
-    private final byte[] mAcData = new byte[1];
-
     @Override
     public void parseCanboxData(byte[] data, int len) {
         // TODO Auto-generated method stub
@@ -159,8 +155,6 @@ public class CarToyota2013Low extends Canbox {
             break;
         }
     }
-
-    private final byte mDoorStatus = 0;
 
     //	public void setReverseRadaVol(byte param){
     //		byte []data = new byte[]{(byte)0xc6, 0x2, 0x0, param};

@@ -17,6 +17,20 @@ import java.util.Locale;
 
 public class ChangChengHiworldCCP003 extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x62};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
+
+
+            {0xd, MyCmd.Keycode.NEXT}, {0xe, MyCmd.Keycode.PREVIOUS},
+
+            {0xa, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MODLE}, {0x2c, MyCmd.Keycode.MODLE},
+
+
+            {0x67, MyCmd.Keycode.EASY_CONNECT},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK}, {0x7, MyCmd.Keycode.RADIO}, {0x9, MyCmd.Keycode.MUTE}, {0x17, MyCmd.Keycode.PREVIOUS}, {0x18, MyCmd.Keycode.NEXT}, {0x19, MyCmd.Keycode.PREVIOUS}, {0x1a, MyCmd.Keycode.NEXT}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x25, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.PLAY_PAUSE}, {0x2c, MyCmd.Keycode.MODLE}, {0x2f, MyCmd.Keycode.HOME}, {0x33, MyCmd.Keycode.RADIO}, {0x34, MyCmd.Keycode.BT_DIAL}, {0x35, MyCmd.Keycode.BT_HANG}, {0x37, MyCmd.Keycode.SETUP}, {0x40, MyCmd.Keycode.HOME}, {0x41, MyCmd.Keycode.BT}, {0x42, MyCmd.Keycode.EQ},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
+
     public ChangChengHiworldCCP003() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -48,31 +62,6 @@ public class ChangChengHiworldCCP003 extends Canbox {
         int angle = (short) (((data[8] & 0xff) << 8) | (data[9] & 0xff));
         return -angle;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x62};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
-            {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
-
-
-            {0xd, MyCmd.Keycode.NEXT}, {0xe, MyCmd.Keycode.PREVIOUS},
-
-            {0xa, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MODLE}, {0x2c, MyCmd.Keycode.MODLE},
-
-
-            {0x67, MyCmd.Keycode.EASY_CONNECT},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK}, {0x7, MyCmd.Keycode.RADIO}, {0x9, MyCmd.Keycode.MUTE},
-            {0x17, MyCmd.Keycode.PREVIOUS}, {0x18, MyCmd.Keycode.NEXT}, {0x19, MyCmd.Keycode.PREVIOUS}, {0x1a, MyCmd.Keycode.NEXT}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO},
-            {0x25, MyCmd.Keycode.NAVIGATION}, {0x2a, MyCmd.Keycode.PLAY_PAUSE}, {0x2c, MyCmd.Keycode.MODLE}, {0x2f, MyCmd.Keycode.HOME}, {0x33, MyCmd.Keycode.RADIO}, {0x34, MyCmd.Keycode.BT_DIAL},
-            {0x35, MyCmd.Keycode.BT_HANG}, {0x37, MyCmd.Keycode.SETUP}, {0x40, MyCmd.Keycode.HOME}, {0x41, MyCmd.Keycode.BT}, {0x42, MyCmd.Keycode.EQ},
-    };
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x17, 0x11};
@@ -309,7 +298,6 @@ public class ChangChengHiworldCCP003 extends Canbox {
         }
     }
 
-
     public void sendId3(byte index, String num, int data_len, int reserve) {
 
         try {
@@ -354,18 +342,6 @@ public class ChangChengHiworldCCP003 extends Canbox {
         super.sendDataToCanboxHiword1(data, len);
     }
 
-
-    private final Handler mHandlerRepeat = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                sendEQCmd(msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
-
     private void sendEQCmd(int style, int step) {
         mHandlerRepeat.removeMessages(0);
         if (step == 0) {
@@ -399,7 +375,14 @@ public class ChangChengHiworldCCP003 extends Canbox {
             mHandlerRepeat.sendMessageDelayed(mHandlerRepeat.obtainMessage(0, style, step), 100);
         }
 
-    }
+    }    private final Handler mHandlerRepeat = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                sendEQCmd(msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -535,11 +518,12 @@ public class ChangChengHiworldCCP003 extends Canbox {
     public void updateCompass(int compass) {
         int direction = (compassAngleToDirect(compass) + 8 - 1) % 8;
 
-        byte[] buf = new byte[]{
-                0x13, (byte) (0xe4), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte) (direction & 0xff), 0, 0, 0, 0, 0, 0, 0
-        };
+        byte[] buf = new byte[]{0x13, (byte) (0xe4), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte) (direction & 0xff), 0, 0, 0, 0, 0, 0, 0};
 
         sendDataToCanbox(buf, buf.length);
     }
+
+
+
 
 }

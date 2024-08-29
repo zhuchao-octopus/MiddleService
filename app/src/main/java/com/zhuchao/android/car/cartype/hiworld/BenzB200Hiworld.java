@@ -12,30 +12,8 @@ import java.util.Date;
 
 public class BenzB200Hiworld extends Canbox {
 
-    public BenzB200Hiworld() {
-        buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
-        buildCmdDoor((byte) 0x73, (byte) 0x2, (byte) 0xf8, (byte) 0x07);
-        buildCmdAngle((byte) 0x72, (byte) 0x0, 35);
-        // buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-        mIdAC = 0x73;
-
-        buildCmdKey((byte) 0x72, (byte) 1, (byte) 4, (byte) 0, KEYS_WHEEL);
-        //	buildCmdKey((byte) 0x74, (byte) 4, (byte) 2, (byte) 2, KEYS_WHEEL2);
-
-        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
-    }
-
-
-    @Override
-    public void stopConnect() {
-
-    }
-
     private final static byte[] IDS_TO_CANBOXSETTING = {0x61};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
 
             {0x3, MyCmd.Keycode.MUTE},
 
@@ -50,7 +28,28 @@ public class BenzB200Hiworld extends Canbox {
             {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PREVIOUS}, {0x17, MyCmd.Keycode.NEXT}, {0x18, MyCmd.Keycode.SPEECH},
 
     };
+    private String mVersion8 = "";
+    private String mVersion32 = "";
 
+
+    public BenzB200Hiworld() {
+        buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
+        buildCmdDoor((byte) 0x73, (byte) 0x2, (byte) 0xf8, (byte) 0x07);
+        buildCmdAngle((byte) 0x72, (byte) 0x0, 35);
+        // buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+        mIdAC = 0x73;
+
+        buildCmdKey((byte) 0x72, (byte) 1, (byte) 4, (byte) 0, KEYS_WHEEL);
+        //	buildCmdKey((byte) 0x74, (byte) 4, (byte) 2, (byte) 2, KEYS_WHEEL2);
+
+        IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
+    }
+
+    @Override
+    public void stopConnect() {
+
+    }
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0xd3, 0x0, 0x0};
@@ -124,10 +123,6 @@ public class BenzB200Hiworld extends Canbox {
         return (new String(version));
 
     }
-
-    private String mVersion8 = "";
-    private String mVersion32 = "";
-
 
     public void parseCanboxData(byte[] data, int len) {
         switch (data[0]) {
@@ -217,9 +212,7 @@ public class BenzB200Hiworld extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 0
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, 0};
 
         sendDataToCanbox(buf, buf.length);
 

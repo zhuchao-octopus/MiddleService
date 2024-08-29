@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="3dip"
-    android:paddingEnd="1dip"
     android:paddingStart="3dip"
-    android:paddingTop="9dip">
+    android:paddingTop="9dip"
+    android:paddingEnd="1dip"
+    android:paddingBottom="3dip">
 
     <TextView
         android:id="@+id/alertTitle"
@@ -30,7 +30,7 @@
         android:layout_width="120dip"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:text="@android:string/cancel"
-        android:maxLines="2" />
+        android:maxLines="2"
+        android:text="@android:string/cancel" />
 
 </LinearLayout>

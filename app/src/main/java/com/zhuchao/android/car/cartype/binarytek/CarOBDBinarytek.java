@@ -11,13 +11,22 @@ import com.zhuchao.android.car.canbox.OBDView;
 
 public class CarOBDBinarytek extends Canbox {
 
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            byte[] buf = new byte[]{(byte) 0x89, 0x01, 5};
+            sendDataToCanbox(buf, buf.length);
+            buf[0] = (byte) 0x8a;
+            sendDataToCanbox(buf, buf.length);
+            buf[0] = (byte) 0x8b;
+            sendDataToCanbox(buf, buf.length);
+            super.handleMessage(msg);
+        }
+    };
+    private int mDoorStatus = 0;
+
     public CarOBDBinarytek() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
     }
 
     @Override
@@ -116,18 +125,6 @@ public class CarOBDBinarytek extends Canbox {
 
     }
 
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            byte[] buf = new byte[]{(byte) 0x89, 0x01, 5};
-            sendDataToCanbox(buf, buf.length);
-            buf[0] = (byte) 0x8a;
-            sendDataToCanbox(buf, buf.length);
-            buf[0] = (byte) 0x8b;
-            sendDataToCanbox(buf, buf.length);
-            super.handleMessage(msg);
-        }
-    };
-
     public void updateScreenSaveNeedData(boolean b) {
         if (b) {
             mHandler.sendEmptyMessageDelayed(0, 1);
@@ -151,7 +148,5 @@ public class CarOBDBinarytek extends Canbox {
         }
         sendDataToCanbox(buf, buf.length);
     }
-
-    private int mDoorStatus = 0;
 
 }

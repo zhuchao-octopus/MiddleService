@@ -1,7 +1,5 @@
 package com.zhuchao.android.car.cartype.update;
 
-import android.util.Log;
-
 import com.common.utils.Util;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.cartype.CarUtil;
@@ -9,20 +7,17 @@ import com.zhuchao.android.fbase.ByteUtils;
 import com.zhuchao.android.fbase.MMLog;
 
 import java.io.FileInputStream;
-import java.util.Arrays;
 
 public class UpdateHiWorld extends Canbox {
+    private final static int PACKAGE_LEN = 136;
     private final String TAG = "UpdateHiWorld";
-
+    public int mType = 0;
+    byte[] data = new byte[PACKAGE_LEN + 1];
+    UpdateDialog mUpdateDialog;
     private int mPackageTotalNum = 0;
     private int mPackageSendNum = 0;
-    private final static int PACKAGE_LEN = 136;
-    public int mType = 0;
-
     private byte[] buf;
-    byte[] data = new byte[PACKAGE_LEN + 1];
-
-    UpdateDialog mUpdateDialog;
+    private int updateTag = 0;
 
     public UpdateHiWorld() {
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
@@ -110,9 +105,9 @@ public class UpdateHiWorld extends Canbox {
                 ///byte[] data = new byte[]{0x2, (byte) 0xe0, 0x0, 0x0};
                 byte[] data = new byte[]{0x2, (byte) 0xe0, 0x0, 0x0};
                 //if (mType == 0) {
-                    sendDataToCanbox(data, data.length);
+                sendDataToCanbox(data, data.length);
                 //} else {
-                    sendDataToCanbox2(data, data.length);
+                sendDataToCanbox2(data, data.length);
                 //}
 
                 /// sendDataToCanbox2(data, data.length);
@@ -151,7 +146,7 @@ public class UpdateHiWorld extends Canbox {
                 data[i + 1] = buf[buf_len];
             }
 
-            MMLog.d(TAG, "continueUpdate" +mPackageSendNum +"/"+ mPackageTotalNum);
+            MMLog.d(TAG, "continueUpdate" + mPackageSendNum + "/" + mPackageTotalNum);
             //sendDataToCanbox(data, data.length);
             sendCmd(CANBOX_WRITE_COMMON_DATA, 0, data);
             ++mPackageSendNum;
@@ -178,12 +173,11 @@ public class UpdateHiWorld extends Canbox {
     public int getReturnType() {
         return 0xff;
     }
-    private int updateTag = 0;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
         // TODO Auto-generated method stub
-        MMLog.d(TAG, "parseCanboxData:"+ ByteUtils.BuffToHexStr(data));
+        MMLog.d(TAG, "parseCanboxData:" + ByteUtils.BuffToHexStr(data));
 
         if (updateTag == -1 || mUpdateDialog == null || !mUpdateDialog.isShowing()) {
             return;

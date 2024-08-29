@@ -21,7 +21,6 @@ import com.common.utils.UtilSystem;
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
-import com.zhuchao.android.fbase.ByteUtils;
 import com.zhuchao.android.fbase.MMLog;
 
 import java.util.Locale;
@@ -29,16 +28,15 @@ import java.util.Objects;
 
 
 public class AirConditionPanel extends Handler {
+    public static final int MESSAGE_AIR_CONDITION = 0x01;
+    public static final int MESSAGE_AIR_TO_ACCONTROL_APK = 0x10;
+    public static final int MESSAGE_AIRDATA_TO_ACCONTROL_APK = 0x11;
     /**
      * Called when the activity is first created.
      */
     private static final String TAG = "AirConditionPanel";
-    public static final int MESSAGE_AIR_CONDITION = 0x01;
-    public static final int MESSAGE_AIR_TO_ACCONTROL_APK = 0x10;
-    public static final int MESSAGE_AIRDATA_TO_ACCONTROL_APK = 0x11;
     //	public static final int MESSAGE_AIR_OUTDOOR_TEMP = 0x02;
     //	public static final int MESSAGE_AIR_HIDE = 0x03;
-
     private final byte[] mAirData = new byte[15];
     private final byte[] mAirDataBackup = new byte[15];
 	/* 参考欣朴大众协议v2.61.002,考虑兼容性，不完全一致
@@ -151,9 +149,10 @@ public class AirConditionPanel extends Handler {
         后座右边温度。 同前面左右温度8
 	 */
     //	private Toast mToast = null;
-
+    private final Context mContext;
     WindowManager mWindowManager;
     WindowManager.LayoutParams mLayoutParams;
+    View airConditionView = null;
     private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
@@ -166,6 +165,25 @@ public class AirConditionPanel extends Handler {
             super.handleMessage(msg);
         }
     };
+    private int outDoorTemp = 0xff;
+    private int mSeatHeat = 0;
+    private int mSeatCold = 0;
+    private boolean mSeatColdExit = false;
+
+    @SuppressLint("InflateParams")
+    public AirConditionPanel(Context context) {
+        //    	Log.e(TAG,"AirConditionPanel");
+        mContext = context;
+
+        //		mToast = new Toast(context); //Toast.makeText(context,"", Toast.LENGTH_SHORT);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        airConditionView = inflater.inflate(R.layout.air, null);
+        //		mToast.setGravity(Gravity.CENTER, 0, 0);
+        //		mToast.setView(airConditionView);
+
+        mLayoutParams = new WindowManager.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCH_MODAL | LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.RGBA_8888);
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+    }
 
     public void postChanged(int type, Object obj) {
         ///		if (hasMessages(type))
@@ -317,8 +335,7 @@ public class AirConditionPanel extends Handler {
                     return;
                 }
 
-                if (!isExtShow())
-                {
+                if (!isExtShow()) {
                     //View airConditionView = mToast.getView();
                     setAirConditionTitle(airConditionView);
                     setAirConditionWind(airConditionView);
@@ -366,24 +383,6 @@ public class AirConditionPanel extends Handler {
             //   	mToast.cancel();
             //   	break;
         }
-    }
-
-    private final Context mContext;
-    View airConditionView = null;
-
-    @SuppressLint("InflateParams")
-    public AirConditionPanel(Context context) {
-        //    	Log.e(TAG,"AirConditionPanel");
-        mContext = context;
-
-        //		mToast = new Toast(context); //Toast.makeText(context,"", Toast.LENGTH_SHORT);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        airConditionView = inflater.inflate(R.layout.air, null);
-        //		mToast.setGravity(Gravity.CENTER, 0, 0);
-        //		mToast.setView(airConditionView);
-
-        mLayoutParams = new WindowManager.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0, LayoutParams.TYPE_SYSTEM_ERROR, LayoutParams.FLAG_LAYOUT_NO_LIMITS | LayoutParams.FLAG_LAYOUT_IN_SCREEN | LayoutParams.FLAG_NOT_FOCUSABLE | LayoutParams.FLAG_NOT_TOUCH_MODAL | LayoutParams.FLAG_NOT_TOUCHABLE, PixelFormat.RGBA_8888);
-        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
     }
 
     void setAirConditionTitle(View view) {
@@ -629,17 +628,13 @@ public class AirConditionPanel extends Handler {
 
     }
 
-    private int outDoorTemp = 0xff;
-
     @SuppressLint("SetTextI18n")
     void setAirConditionTemperature(View view) {
         int leftTemp = mAirData[2] & 0xff;
         int rightTemp = mAirData[3] & 0xff;
-        MMLog.d(TAG,"leftTemp="+ leftTemp+",rightTemp="+rightTemp);
-        if ((mAirData[5] & 0x2) == 0)
-        {
-            if ((CarUtil.getAirCondition() == 4) || CarUtil.getAirCondition() == 5)
-            {
+        MMLog.d(TAG, "leftTemp=" + leftTemp + ",rightTemp=" + rightTemp);
+        if ((mAirData[5] & 0x2) == 0) {
+            if ((CarUtil.getAirCondition() == 4) || CarUtil.getAirCondition() == 5) {
                 switch (leftTemp) {
                     case 0x00:
                         ((TextView) view.findViewById(R.id.left_temp)).setText(R.string.LO);
@@ -711,8 +706,7 @@ public class AirConditionPanel extends Handler {
         } else {
             view.findViewById(R.id.left_temp).setVisibility(View.INVISIBLE);
         }
-        if ((mAirData[5] & 0x4) == 0)
-        {
+        if ((mAirData[5] & 0x4) == 0) {
             if ((CarUtil.getAirCondition() == 4) || CarUtil.getAirCondition() == 5) {
                 switch (rightTemp) {
                     case 0x00:
@@ -772,8 +766,7 @@ public class AirConditionPanel extends Handler {
                         ((TextView) view.findViewById(R.id.right_temp)).setText(R.string.HI);
                         break;
                 }
-            }
-            else if (rightTemp == 0x00) {
+            } else if (rightTemp == 0x00) {
                 ((TextView) view.findViewById(R.id.right_temp)).setText(R.string.LO);
             } else if (rightTemp == 0xff) {
                 ((TextView) view.findViewById(R.id.right_temp)).setText(R.string.HI);
@@ -921,10 +914,6 @@ public class AirConditionPanel extends Handler {
         }
         return 0;
     }
-
-    private int mSeatHeat = 0;
-    private int mSeatCold = 0;
-    private boolean mSeatColdExit = false;
 
     void setAirConditionAction(View view) {
         //    	((ImageView)view.findViewById(R.id.air_action_user)).setVisibility(View.VISIBLE);

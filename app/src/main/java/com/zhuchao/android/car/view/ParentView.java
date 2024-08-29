@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 
 //import android.app.ActivityTaskManager;
 public class ParentView extends LinearLayout {
+    private View.OnKeyListener mOnKeyListener;
+
     public ParentView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -17,8 +19,6 @@ public class ParentView extends LinearLayout {
         super(context, attrs);
 
     }
-
-    private View.OnKeyListener mOnKeyListener;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {

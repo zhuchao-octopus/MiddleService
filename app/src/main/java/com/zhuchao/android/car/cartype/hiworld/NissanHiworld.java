@@ -13,6 +13,12 @@ import java.util.Date;
 
 public class NissanHiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x72, 0x12, (byte) 0xa6};
+    private static final byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.PREVIOUS, 0}, {0x2, MyCmd.Keycode.NEXT, 0}, {0x3, MyCmd.Keycode.PREVIOUS, 0}, {0x4, MyCmd.Keycode.NEXT, 0}, {0x5, MyCmd.Keycode.PREVIOUS, 0}, {0x6, MyCmd.Keycode.NEXT, 0}, {0x7, MyCmd.Keycode.PREVIOUS, 0}, {0x8, MyCmd.Keycode.NEXT, 0}, {0x9, MyCmd.Keycode.PLAY_PAUSE, 0}, {0xa, MyCmd.Keycode.BACK, 0}, {0xb, MyCmd.Keycode.MENU, 0}, {0xc, MyCmd.Keycode.NAVIGATION, 0},};
+    private final byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0xa, MyCmd.Keycode.MODLE}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK},};
+    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
+
+
     public NissanHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -30,7 +36,6 @@ public class NissanHiworld extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
 
     @Override
     public void stopConnect() {
@@ -130,23 +135,6 @@ public class NissanHiworld extends Canbox {
 
         return cmd;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x72, 0x12, (byte) 0xa6
-    };
-
-
-    private final byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0xa, MyCmd.Keycode.MODLE},
-            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK},
-    };
-
-    private static final byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.PREVIOUS, 0}, {0x2, MyCmd.Keycode.NEXT, 0}, {0x3, MyCmd.Keycode.PREVIOUS, 0}, {0x4, MyCmd.Keycode.NEXT, 0}, {0x5, MyCmd.Keycode.PREVIOUS, 0},
-            {0x6, MyCmd.Keycode.NEXT, 0}, {0x7, MyCmd.Keycode.PREVIOUS, 0}, {0x8, MyCmd.Keycode.NEXT, 0}, {0x9, MyCmd.Keycode.PLAY_PAUSE, 0}, {0xa, MyCmd.Keycode.BACK, 0},
-            {0xb, MyCmd.Keycode.MENU, 0}, {0xc, MyCmd.Keycode.NAVIGATION, 0},
-    };
-
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -278,7 +266,6 @@ public class NissanHiworld extends Canbox {
     public void setMediaSrc(int source) {
     }
 
-
     public int getOutTemp(byte[] data) {//
         short t = (short) ((data[10] & 0xff) | ((data[9] & 0xff) << 8));
         return t;
@@ -291,16 +278,6 @@ public class NissanHiworld extends Canbox {
     public void sendDataToCanbox(byte[] data, int len) { // default is simple
         super.sendDataToCanboxHiword2(data, len);
     }
-
-    private final Handler mHandlerRepeat = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                sendEQCmd(msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
 
     private void sendEQCmd(int step) {
         mHandlerRepeat.removeMessages(0);
@@ -321,7 +298,14 @@ public class NissanHiworld extends Canbox {
             mHandlerRepeat.sendMessageDelayed(mHandlerRepeat.obtainMessage(0, 0, step), 100);
         }
 
-    }
+    }    private final Handler mHandlerRepeat = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                sendEQCmd(msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -411,11 +395,13 @@ public class NissanHiworld extends Canbox {
         byte m = (byte) curDate.getMinutes();
 
 
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, 0, 0, h, m, ampm, Am, 0, 0, 0
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, 0, 0, h, m, ampm, Am, 0, 0, 0};
 
         sendDataToCanbox(buf, buf.length);
 
     }
+
+
+
+
 }

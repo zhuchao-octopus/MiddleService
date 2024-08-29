@@ -7,6 +7,9 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class LiFanRaise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0xc, KEY_NEXTSONG}, {0xb, KEY_PREVIOUSSONG}, {0x5, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, KEY_EQ}, {0x7, KEY_FM}, {0x9, KEY_MUTE}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2}, {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x11, MyCmd.Keycode.EJECT}, {0x16, MyCmd.Keycode.HOME}, {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x21, KEY_GPS}, {0x21, KEY_SOURCE}, {0x22, MyCmd.Keycode.AS},};
+
     public LiFanRaise() {
         mIdAC = 0x3;
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -19,17 +22,6 @@ public class LiFanRaise extends Canbox {
         mIdKey2 = 0x2;
         MAP_KEYS2 = KEYS_WHEEL2;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0xc, KEY_NEXTSONG}, {0xb, KEY_PREVIOUSSONG}, {0x5, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL},
-            {0xa, MyCmd.Keycode.BT_HANG},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, KEY_EQ}, {0x7, KEY_FM}, {0x9, KEY_MUTE}, {0xa, MyCmd.Keycode.NUMBER1}, {0xb, MyCmd.Keycode.NUMBER2},
-            {0xc, MyCmd.Keycode.NUMBER3}, {0xd, MyCmd.Keycode.NUMBER4}, {0xe, MyCmd.Keycode.NUMBER5}, {0xf, MyCmd.Keycode.NUMBER6}, {0x11, MyCmd.Keycode.EJECT}, {0x16, MyCmd.Keycode.HOME},
-            {0x17, AK_KEYPAD_VOLUME_A}, {0x18, AK_KEYPAD_VOLUME_D}, {0x21, KEY_GPS}, {0x21, KEY_SOURCE}, {0x22, MyCmd.Keycode.AS},
-    };
 
     private int getACTempPriv(byte data) {//
         if ((data & 0xff) == 0x80) {

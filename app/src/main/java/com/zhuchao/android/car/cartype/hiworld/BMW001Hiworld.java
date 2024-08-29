@@ -7,6 +7,17 @@ import java.util.Date;
 
 public class BMW001Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+
+            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
+
+            {0x9, MyCmd.Keycode.PREVIOUS}, {0x8, MyCmd.Keycode.NEXT},
+
+            {0xa, MyCmd.Keycode.MODLE},
+
+    };
+
+
     public BMW001Hiworld() {
         buildCmdDoor((byte) 0x73, (byte) 0x3, (byte) 0xfc, (byte) 0x09);
         buildCmdAngle((byte) 0x72, (byte) 0x0, 140);
@@ -20,22 +31,10 @@ public class BMW001Hiworld extends Canbox {
 
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
-
-            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
-
-            {0x9, MyCmd.Keycode.PREVIOUS}, {0x8, MyCmd.Keycode.NEXT},
-
-            {0xa, MyCmd.Keycode.MODLE},
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -86,9 +85,7 @@ public class BMW001Hiworld extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, 0, y, mon, d, 0
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, 0, y, mon, d, 0};
 
         sendDataToCanbox(buf, buf.length);
 

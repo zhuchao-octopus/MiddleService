@@ -6,23 +6,7 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class JiLiHiworld extends Canbox {
 
-    public JiLiHiworld() {
-
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-        mIdAC = 0x31;
-
-        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
-
-    }
-
-
-    @Override
-    public void stopConnect() {
-
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
 
             {0x3, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.BT_DIAL},
 
@@ -32,6 +16,20 @@ public class JiLiHiworld extends Canbox {
 
     };
 
+
+    public JiLiHiworld() {
+
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+        mIdAC = 0x31;
+
+        buildCmdKey((byte) 0x11, (byte) 2, (byte) 4, (byte) 0, KEYS_WHEEL);
+
+    }
+
+    @Override
+    public void stopConnect() {
+
+    }
 
     @Override
     public int getACTemp(byte data) {

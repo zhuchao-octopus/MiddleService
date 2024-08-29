@@ -15,13 +15,46 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class PetgeoScreenRaise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x7, MyCmd.Keycode.PLAY_PAUSE}, {0x8, KEY_BACK}, {0x10, KEY_MUTE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D},
+
+            {0x16, MyCmd.Keycode.BT_DIAL}, {0x17, MyCmd.Keycode.BT_HANG}, {0x18, KEY_PREVIOUSSONG}, {0x19, KEY_NEXTSONG}, {0x20, MyCmd.Keycode.KEY_CAR_INFO}, {0x21, KEY_MENU},
+
+
+            {0x30, MyCmd.Keycode.BT_DIAL}, {0x31, MyCmd.Keycode.BT_HANG}, {0x32, KEY_GPS}, {0x33, KEY_FM}, {0x34, KEY_SET}, {0x35, MyCmd.Keycode.NAVIGATION}, {0x36, MyCmd.Keycode.AUDIO}, {0x37, MyCmd.Keycode.RADIO},
+
+
+            {(byte) 0x38, KEY_PREVIOUSSONG}, {(byte) 0x39, KEY_NEXTSONG},
+
+            {(byte) 0x40, KEY_PREVIOUSSONG}, {(byte) 0x41, KEY_NEXTSONG}, {(byte) 0x42, KEY_PREVIOUSSONG}, {(byte) 0x43, KEY_NEXTSONG}, {(byte) 0x44, KEY_NUM_1}, {(byte) 0x45, KEY_NUM_2}, {(byte) 0x46, KEY_NUM_3}, {(byte) 0x47, KEY_NUM_4}, {(byte) 0x48, KEY_NUM_5}, {(byte) 0x49, KEY_NUM_6},
+
+            {0x50, KEY_FM}, {0x51, MyCmd.Keycode.SETUP}, {(byte) 0x52, KEY_EQ}, {(byte) 0x53, MyCmd.Keycode.RDS_TA_SWITCH}, {(byte) 0x54, MyCmd.Keycode.DARK},
+
+            {(byte) 0x55, KEY_EJECT},
+
+            {(byte) 0x58, KEY_PREVIOUSSONG}, {(byte) 0x59, KEY_NEXTSONG}, {(byte) 0x57, KEY_PREVIOUSSONG}, {(byte) 0x56, KEY_NEXTSONG},
+
+            {(byte) 0x80, KEY_POWER},};
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    private final int mSource = MyCmd.SOURCE_NONE;
+    private final int mBaud = 0;
+    int mKey;
+    byte[] airData = new byte[8];
+    int mRadarSwitch;
+    private int mDoorStatus = 0;
+
     public PetgeoScreenRaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x1, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x1, 0x1, 0x2, 0x0
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x1, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x1, 0x1, 0x2, 0x0});
 
         if (CarUtil.getCarEQ() == 1) {
             CarUtil.mIsNeedSendEQ = true;
@@ -36,34 +69,6 @@ public class PetgeoScreenRaise extends Canbox {
 
     public void startConnect() {// default is simple box
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x7, MyCmd.Keycode.PLAY_PAUSE}, {0x8, KEY_BACK}, {0x10, KEY_MUTE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A},
-            {0x15, AK_KEYPAD_VOLUME_D},
-
-            {0x16, MyCmd.Keycode.BT_DIAL}, {0x17, MyCmd.Keycode.BT_HANG}, {0x18, KEY_PREVIOUSSONG}, {0x19, KEY_NEXTSONG}, {0x20, MyCmd.Keycode.KEY_CAR_INFO}, {0x21, KEY_MENU},
-
-
-            {0x30, MyCmd.Keycode.BT_DIAL}, {0x31, MyCmd.Keycode.BT_HANG}, {0x32, KEY_GPS}, {0x33, KEY_FM}, {0x34, KEY_SET}, {0x35, MyCmd.Keycode.NAVIGATION}, {0x36, MyCmd.Keycode.AUDIO},
-            {0x37, MyCmd.Keycode.RADIO},
-
-
-            {(byte) 0x38, KEY_PREVIOUSSONG}, {(byte) 0x39, KEY_NEXTSONG},
-
-            {(byte) 0x40, KEY_PREVIOUSSONG}, {(byte) 0x41, KEY_NEXTSONG}, {(byte) 0x42, KEY_PREVIOUSSONG}, {(byte) 0x43, KEY_NEXTSONG}, {(byte) 0x44, KEY_NUM_1}, {(byte) 0x45, KEY_NUM_2},
-            {(byte) 0x46, KEY_NUM_3}, {(byte) 0x47, KEY_NUM_4}, {(byte) 0x48, KEY_NUM_5}, {(byte) 0x49, KEY_NUM_6},
-
-            {0x50, KEY_FM}, {0x51, MyCmd.Keycode.SETUP}, {(byte) 0x52, KEY_EQ}, {(byte) 0x53, MyCmd.Keycode.RDS_TA_SWITCH}, {(byte) 0x54, MyCmd.Keycode.DARK},
-
-            {(byte) 0x55, KEY_EJECT},
-
-            {(byte) 0x58, KEY_PREVIOUSSONG}, {(byte) 0x59, KEY_NEXTSONG}, {(byte) 0x57, KEY_PREVIOUSSONG}, {(byte) 0x56, KEY_NEXTSONG},
-
-            {(byte) 0x80, KEY_POWER},
-    };
-
-    int mKey;
 
     private void parseWheelKey(byte[] data, int len) {
         //		if (data[2] == (byte) 0xa5) {
@@ -118,8 +123,6 @@ public class PetgeoScreenRaise extends Canbox {
 
         //		}
     }
-
-    byte[] airData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
         int windMode = 0;
@@ -208,8 +211,6 @@ public class PetgeoScreenRaise extends Canbox {
         }
         return data;
     }
-
-    int mRadarSwitch;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -336,18 +337,6 @@ public class PetgeoScreenRaise extends Canbox {
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
 
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -387,9 +376,6 @@ public class PetgeoScreenRaise extends Canbox {
         sendDataToCanbox(data, data.length);
 
     }
-
-    private final int mSource = MyCmd.SOURCE_NONE;
-    private final int mBaud = 0;
 
     public void setVolume(int volume) {
         byte[] data = new byte[]{0x5, 0x9, 0xf, (byte) volume};

@@ -12,6 +12,19 @@ import java.util.Date;
 
 public class BeiQiEC180Raise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x37, 0x39, 0x40, 0x41, 0x42, 0x43};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x7, KEY_SOURCE},
+
+            {0x8, MyCmd.Keycode.POWER}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.HOME}, {0xb, MyCmd.Keycode.NAVIGATION}, {0xc, MyCmd.Keycode.RADIO}, {0xd, MyCmd.Keycode.AUDIO}, {0xe, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xf, MyCmd.Keycode.KEY_SEEK_PREV},
+            //			{ 0x14, MyCmd.Keycode.BT },
+            //			{ 0x15, MyCmd.Keycode },
+            {0x16, MyCmd.Keycode.SPEECH},
+            //			{ 0x17, MyCmd.Keycode },
+
+            //this for od pro
+            {0x10, MyCmd.Keycode.BACK}, {0x11, MyCmd.Keycode.KEY_AIR_CONTROL},};
+    byte[] airData = new byte[12];
+
     public BeiQiEC180Raise() {
         mSupportRaise0x7d = true;
         mIdAC = 0x23;
@@ -26,8 +39,6 @@ public class BeiQiEC180Raise extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x37, 0x39, 0x40, 0x41, 0x42, 0x43};
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xee, 0x02, 1, 0};
@@ -64,22 +75,6 @@ public class BeiQiEC180Raise extends Canbox {
         return cmd;
     }
 
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_HANG},
-            {0x7, KEY_SOURCE},
-
-            {0x8, MyCmd.Keycode.POWER}, {0x9, MyCmd.Keycode.MUTE}, {0xa, MyCmd.Keycode.HOME}, {0xb, MyCmd.Keycode.NAVIGATION}, {0xc, MyCmd.Keycode.RADIO}, {0xd, MyCmd.Keycode.AUDIO},
-            {0xe, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xf, MyCmd.Keycode.KEY_SEEK_PREV},
-            //			{ 0x14, MyCmd.Keycode.BT },
-            //			{ 0x15, MyCmd.Keycode },
-            {0x16, MyCmd.Keycode.SPEECH},
-            //			{ 0x17, MyCmd.Keycode },
-
-            //this for od pro
-            {0x10, MyCmd.Keycode.BACK}, {0x11, MyCmd.Keycode.KEY_AIR_CONTROL},
-    };
-
-
     private int getAcType() {
 
         if (CarUtil.getManaId() == 13) { // od
@@ -94,7 +89,6 @@ public class BeiQiEC180Raise extends Canbox {
         return 0;
     }
 
-
     public int getACTemp(byte data) {//
         if (data >= 1 && data <= 0xf) {
             if (getAcType() == 0) {
@@ -105,8 +99,6 @@ public class BeiQiEC180Raise extends Canbox {
         }
         return data & 0xff;
     }
-
-    byte[] airData = new byte[12];
 
     public void parseACInfo(byte[] data) {
 

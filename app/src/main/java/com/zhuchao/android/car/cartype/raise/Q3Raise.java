@@ -7,6 +7,9 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class Q3Raise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_GPS}, {0x4, KEY_SOURCE}, {0x5, KEY_BT}, {0x6, KEY_MUTE},};
+
+
     public Q3Raise() {
         mIdAC = 0x21;
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -15,11 +18,6 @@ public class Q3Raise extends Canbox {
         mIdKey = 0x20;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_GPS}, {0x4, KEY_SOURCE}, {0x5, KEY_BT}, {0x6, KEY_MUTE},
-    };
 
     public void parseACInfo(byte[] data) {
         if (data[4] == 0xfe) {
@@ -49,13 +47,9 @@ public class Q3Raise extends Canbox {
 
         if (MyCmd.SOURCE_DVD != source) {
             ++play;
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }

@@ -31,18 +31,23 @@ import com.zhuchao.android.car.manager.AutoIlluminManager;
 public class BacklightPanel extends Handler {
 
     private static final String TAG = "BacklightPanel";
+    private final static int STEP_NUM = 5;
+    private final static int DEFAULT_ILL_DOWN_BACKLIGHT = 20;
+    private static BacklightPanel mThis;
+    private final Context mContext;
+    private final BacklightUI[] mBacklightUI = new BacklightUI[BacklightUI.MAX_DISPLAY];
     // private final Toast mToast;
     private View mView;
-    private final Context mContext;
-
     private Presentation mPresentation = null;
     private WindowManager mWindowManager = null;
-
     private WindowManager.LayoutParams mVolumeLayoutParams;
+    private BroadcastReceiver mReceiver = null;
+    private int mSetIll = -1;
 
-    private final BacklightUI[] mBacklightUI = new BacklightUI[BacklightUI.MAX_DISPLAY];
-
-    private static BacklightPanel mThis;
+    // private void prepareHide() {
+    // removeMessages(BacklightUI.MSG_HIDE);
+    // sendEmptyMessageDelayed(BacklightUI.MSG_HIDE, DELAY_HIDE_TIME);
+    // }
 
     public BacklightPanel(Context context) {
         mContext = context;
@@ -54,6 +59,40 @@ public class BacklightPanel extends Handler {
         mThis = this;
     }
 
+    public static void setBacklightBrightness(Context context, int value) {
+        if (android.os.Build.VERSION.SDK_INT >= 27) {
+            // <uses-permission android:name="android.permission.CONTROL_DISPLAY_BRIGHTNESS" />
+            DisplayManager displayManager = context.getSystemService(DisplayManager.class);
+            //displayManager.setTemporaryBrightness(value);
+            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, value);
+        } else {
+            try {
+                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                //					pm.setBacklightBrightness(value);
+            } catch (Exception e) {
+                Log.v(TAG, "setBacklightBrightness: err" + e);
+            }
+        }
+    }
+
+    public static void setBrightness(int brightness, int type) {
+        if (mThis != null) {
+            mThis.setBrightnessInner(brightness, type);
+        }
+    }
+
+    public static void setContrast(int brightness, int type) {
+        if (mThis != null) {
+            mThis.setContrastInner(brightness, type);
+        }
+    }
+
+    public static void doIllSwitch(boolean on) {
+        if (mThis != null) {
+            mThis.doIllSwitchInner(on);
+        }
+    }
+
     private void initDefalutScreen1Backlight() {
         int brightness = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_SCREEN1_BACKLIGHT);
         if (brightness != 0) {
@@ -61,6 +100,8 @@ public class BacklightPanel extends Handler {
         }
 
     }
+
+    //private IPowerManager mPower;
 
     private void initUI(int index) {
 
@@ -123,11 +164,6 @@ public class BacklightPanel extends Handler {
         }
     }
 
-    // private void prepareHide() {
-    // removeMessages(BacklightUI.MSG_HIDE);
-    // sendEmptyMessageDelayed(BacklightUI.MSG_HIDE, DELAY_HIDE_TIME);
-    // }
-
     private void show(int cmd) {
         doShow(cmd);
         // prepareHide();
@@ -186,8 +222,6 @@ public class BacklightPanel extends Handler {
 
     }
 
-    private BroadcastReceiver mReceiver = null;
-
     public void registerListener() {
         if (mReceiver == null) {
             mReceiver = new BroadcastReceiver() {
@@ -223,8 +257,6 @@ public class BacklightPanel extends Handler {
 
     }
 
-    //private IPowerManager mPower;
-
     private void init() {
         try {
             PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
@@ -239,8 +271,6 @@ public class BacklightPanel extends Handler {
         ///			GlobalDef.mReverseBrightness = GlobalDef.CVBS_DEFALUT_BRIGHTNESS;
         ///		}
     }
-
-    private final static int STEP_NUM = 5;
 
     private void doBacklightStep() {
 		/*try{
@@ -271,25 +301,6 @@ public class BacklightPanel extends Handler {
 		*/
     }
 
-    private final static int DEFAULT_ILL_DOWN_BACKLIGHT = 20;
-    private int mSetIll = -1;
-
-    public static void setBacklightBrightness(Context context, int value) {
-        if (android.os.Build.VERSION.SDK_INT >= 27) {
-            // <uses-permission android:name="android.permission.CONTROL_DISPLAY_BRIGHTNESS" />
-            DisplayManager displayManager = context.getSystemService(DisplayManager.class);
-            //displayManager.setTemporaryBrightness(value);
-            Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, value);
-        } else {
-            try {
-                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                //					pm.setBacklightBrightness(value);
-            } catch (Exception e) {
-                Log.v(TAG, "setBacklightBrightness: err" + e);
-            }
-        }
-    }
-
     void setTemporaryScreenBrightnessSettingOverride(Context context, int value) {
         try {
             if (android.os.Build.VERSION.SDK_INT >= 27) {
@@ -303,7 +314,6 @@ public class BacklightPanel extends Handler {
             Log.v(TAG, "setTemporaryScreenBrightnessSettingOverride: err" + e);
         }
     }
-
 
     public void doIllSwitchInner(boolean on) {
         PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
@@ -437,25 +447,6 @@ public class BacklightPanel extends Handler {
             Util.setFileValue(GlobalDefinition.BRIGHTNESS_CONTRAST, contrast);
             Log.d(TAG, type + ":" + contrast);
             SettingProperties.setIntProperty(mContext, SettingProperties.KEY_REVERSE_CONTRAST, contrast);
-        }
-    }
-
-    public static void setBrightness(int brightness, int type) {
-        if (mThis != null) {
-            mThis.setBrightnessInner(brightness, type);
-        }
-    }
-
-
-    public static void setContrast(int brightness, int type) {
-        if (mThis != null) {
-            mThis.setContrastInner(brightness, type);
-        }
-    }
-
-    public static void doIllSwitch(boolean on) {
-        if (mThis != null) {
-            mThis.doIllSwitchInner(on);
         }
     }
 }

@@ -8,6 +8,9 @@ import java.util.Calendar;
 
 public class BydS6DaoJun extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_TURN_A}, {0x4, MyCmd.Keycode.KEY_TURN_D}, {0x5, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.PLAY_PAUSE}, {0x7, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.NAVIGATION}, {0x9, MyCmd.Keycode.RADIO},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MODLE}, {0x24, MyCmd.Keycode.BT_DIAL}, {0x25, MyCmd.Keycode.BT_HANG},};
+
     public BydS6DaoJun() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x4, (byte) 0x0, (byte) 0x3f, (byte) 0x03);
@@ -30,15 +33,6 @@ public class BydS6DaoJun extends Canbox {
         byte[] cmd = new byte[]{(byte) 0x85, 0x02, 1, 1};
         return cmd;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_TURN_A}, {0x4, MyCmd.Keycode.KEY_TURN_D}, {0x5, MyCmd.Keycode.POWER},
-            {0x6, MyCmd.Keycode.PLAY_PAUSE}, {0x7, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.NAVIGATION}, {0x9, MyCmd.Keycode.RADIO},
-    };
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MODLE}, {0x24, MyCmd.Keycode.BT_DIAL},
-            {0x25, MyCmd.Keycode.BT_HANG},
-    };
 
     @Override
     public int getACTemp(byte data) {

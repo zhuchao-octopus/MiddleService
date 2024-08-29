@@ -6,6 +6,22 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class KeyPannelHiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER},
+
+            {0x6, MyCmd.Keycode.BACK},
+
+            {0x9, MyCmd.Keycode.MUTE},
+
+
+            {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x2b, MyCmd.Keycode.HOME}, {0x30, MyCmd.Keycode.BT},
+
+            {0x33, MyCmd.Keycode.RADIO}, {0x34, MyCmd.Keycode.BT_DIAL}, {0x35, MyCmd.Keycode.BT_HANG}, {0x39, MyCmd.Keycode.KEY_DISPLAY}, {0x3b, MyCmd.Keycode.MODLE},
+
+            {0x42, MyCmd.Keycode.EQ}, {0x4b, MyCmd.Keycode.RADIO}, {0x5f, MyCmd.Keycode.SPEECH},
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+
     public KeyPannelHiworld() {
 
 
@@ -21,28 +37,6 @@ public class KeyPannelHiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER},
-
-            {0x6, MyCmd.Keycode.BACK},
-
-            {0x9, MyCmd.Keycode.MUTE},
-
-
-            {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x24, MyCmd.Keycode.AUDIO}, {0x2b, MyCmd.Keycode.HOME}, {0x30, MyCmd.Keycode.BT},
-
-            {0x33, MyCmd.Keycode.RADIO}, {0x34, MyCmd.Keycode.BT_DIAL}, {0x35, MyCmd.Keycode.BT_HANG}, {0x39, MyCmd.Keycode.KEY_DISPLAY}, {0x3b, MyCmd.Keycode.MODLE},
-
-            {0x42, MyCmd.Keycode.EQ}, {0x4b, MyCmd.Keycode.RADIO}, {0x5f, MyCmd.Keycode.SPEECH},
-
-    };
-
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
-
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 

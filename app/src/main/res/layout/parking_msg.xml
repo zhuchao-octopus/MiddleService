@@ -5,10 +5,10 @@
     android:layout_height="480px"
     android:background="@drawable/panel_background"
     android:orientation="horizontal"
-    android:paddingBottom="20px"
     android:paddingLeft="15px"
+    android:paddingTop="10px"
     android:paddingRight="15px"
-    android:paddingTop="10px">
+    android:paddingBottom="20px">
 
     <ImageView
         android:id="@+id/waring_image"
@@ -41,10 +41,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/panel_background"
                 android:gravity="center"
-                android:paddingBottom="25px"
                 android:paddingLeft="15px"
-                android:paddingRight="15px"
                 android:paddingTop="25px"
+                android:paddingRight="15px"
+                android:paddingBottom="25px"
                 android:text="@string/prompt1d" />
         </LinearLayout>
     </LinearLayout>

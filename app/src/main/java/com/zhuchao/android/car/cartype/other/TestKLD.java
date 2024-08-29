@@ -27,7 +27,6 @@ import com.common.utils.SettingProperties;
 import com.common.utils.SystemProperties;
 import com.common.utils.Util;
 import com.common.utils.shell.ShellUtils;
-
 import com.zhuchao.android.car.GlobalDefinition;
 import com.zhuchao.android.car.canbox.Canbox;
 import com.zhuchao.android.car.hardware.Mcu;
@@ -44,58 +43,25 @@ import java.util.Iterator;
 
 public class TestKLD extends Canbox {
 
-    private final McuManager mMcuManager;
-
     public final static String TAG = "KLD";
-
-    public TestKLD() {
-        // sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x01, 0x2, 0x3,
-        // 0x0, 0x0 });
-        // sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x02, 0x0, 0x0,
-        // 0x5, 0x0 });
-
-        buildCmdKey((byte) 0x20, (byte) 5, (byte) 2, (byte) 0, KEYS_WHEEL);
-        buildCmdKey((byte) 0x21, (byte) 5, (byte) 2, (byte) 2, KEYS_WHEEL2);
-
-        mMcuManager = McuManager.getInstance();
-
-
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.RADIO}, {0x2, MyCmd.Keycode.AUDIO}, {0x3, MyCmd.Keycode.VIDEO}, {0x4, MyCmd.Keycode.BT}, {0x5, MyCmd.Keycode.AUX_IN}, {0x6, MyCmd.Keycode.NAVIGATION},
-            {0x7, MyCmd.Keycode.KEY_F_CAMERA},
+    final static int GPS_SHOW_NUM = 12;
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.RADIO}, {0x2, MyCmd.Keycode.AUDIO}, {0x3, MyCmd.Keycode.VIDEO}, {0x4, MyCmd.Keycode.BT}, {0x5, MyCmd.Keycode.AUX_IN}, {0x6, MyCmd.Keycode.NAVIGATION}, {0x7, MyCmd.Keycode.KEY_F_CAMERA},
 
             {0x8, MyCmd.Keycode.KEY_CAMERA}, {0x9, MyCmd.Keycode.SPEECH}, {0xa, MyCmd.Keycode.SETUP}, {0xb, MyCmd.Keycode.DVD}, {0xc, MyCmd.Keycode.EASY_CONNECT}, {0xd, MyCmd.Keycode.DVR},
 
             {0x10, MyCmd.Keycode.PAUSE}, {0x11, MyCmd.Keycode.PLAY}, {0x12, MyCmd.Keycode.PREVIOUS}, {0x13, MyCmd.Keycode.NEXT},
 
     };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE},
-            {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.BACK}, {0xc, MyCmd.Keycode.HOME},
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.BACK}, {0xc, MyCmd.Keycode.HOME},
 
     };
-
-    @Override
-    public void setContext(Context c) {
-        // TODO Auto-generated method stub
-        super.setContext(c);
-        initGpsCompass();
-
-        mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-
-        //		mHandlerTest.sendEmptyMessageDelayed(0, 12000);
-        //		Log.d("ddck", "setContext !!!!!!!!!!!test!!!!!!!!:");
-    }
-
     private static final int MSG_CHECK_RM_DATA = 8;
     private static final int MSG_CHECK_SYNC = 9;
-
     private static final String MCU_RECOVERY_FILE = "/sys/class/ak/source/factory";
-
-    private final Handler mHandlerTest = new Handler() { //test
+    private final static int[] RET_CMD2 = new int[]{0x010c, 0x0104, 0x0202, 0x0405, 0x0302, 0x0106, 0x0403, 0x0108};
+    private final static int[] RET_CMD3 = new int[]{0x11000, 0x11001};
+    private final static int RETURN_BT_NAME = 1;
+    private final static int RETURN_BT_MAC = 2;    private final Handler mHandlerTest = new Handler() { //test
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
@@ -117,17 +83,198 @@ public class TestKLD extends Canbox {
                         mHandlerTest.sendEmptyMessageDelayed(MSG_CHECK_SYNC, 100);
                     } else {
                         Log.d("reset", "mcu reset");
-                        Util.setFileValue(MCU_RECOVERY_FILE, new byte[]{
-                                0x55, (byte) 0xaa, 0x00
-                        });
+                        Util.setFileValue(MCU_RECOVERY_FILE, new byte[]{0x55, (byte) 0xaa, 0x00});
                     }
                     break;
             }
             super.handleMessage(msg);
         }
     };
+    private static final String SYSTEM_VERSION_FILE = "/system/ak47_update_hold.txt";
+    private final static String GPS_SOUND1 = "/system/media/audio/ringtones/ANDROMEDA.ogg";
+    private final static String GPS_SOUND2 = "/product/media/audio/ringtones/ANDROMEDA.ogg";
+    private final McuManager mMcuManager;
+    private final byte[] mSN = new byte[64];
+    GpsSatellite[] mGpsSatellite = new GpsSatellite[GPS_SHOW_NUM];
     private byte mStatus = 0;
     private byte mAccStatus = 1;
+    private int mReturnID = 0;
+    private byte mSWCMode1 = -1;
+    private byte mSWCMode2 = -1;
+    private byte mPannelMode = -1;
+    private byte mKeyBack = 0;
+    private int mSnLen = 0;
+    private String mBTName;
+    private String mBTMac;
+    private int mReturnTAG = 0;
+    private Mcu mMcu;
+    private int mMusicPlayCur;
+    private int mMusicTime;
+    private int mPhoneStatus = 0;
+    private LocationManager mLocationManager = null;
+    private MyLocationListener mLocationListener = null;
+    private int mLatitude;
+    private int mLongtitude;
+    private byte mGpsPos = 0;
+    private int mInUse = 0;
+    GpsStatus.Listener listener = new GpsStatus.Listener() {
+        public void onGpsStatusChanged(int event) {
+
+            switch (event) {
+                // 第一次定位
+                case GpsStatus.GPS_EVENT_FIRST_FIX:
+                    Log.e(TAG, "GPS_EVENT_FIRST_FIX");
+                    break;
+                // 卫星状态改变
+                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+                    // 获取当前状态
+                    GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
+                    // 获取卫星颗数的默认最大值
+                    int maxSatellites = gpsStatus.getMaxSatellites();
+                    // 创建一个迭代器保存所有卫星
+                    Iterator<GpsSatellite> iters = gpsStatus.getSatellites().iterator();
+                    int count = 0;
+                    for (int i = 0; i < GPS_SHOW_NUM; ++i) {
+                        mGpsSatellite[i] = null;
+                    }
+
+                    while (iters.hasNext() && count <= maxSatellites) { // get in
+                        // used
+                        // number
+                        GpsSatellite s = iters.next();
+                        if (s.usedInFix()) {
+                            if (count >= GPS_SHOW_NUM) break;
+                            mGpsSatellite[count] = s;
+
+                            // Log.e(TAG, "1count:" + count + ":" + s.getSnr() + ":"
+                            // + s.getPrn());
+                            count++;
+                        }
+                    }
+                    mInUse = count;
+                    break;
+            }
+        }
+    };
+    private WifiManager mWifiManager;
+    private int mNetStatus = 0;
+    private MediaPlayer mMediaPlayer;
+    public TestKLD() {
+        // sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x01, 0x2, 0x3,
+        // 0x0, 0x0 });
+        // sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[] { 0x05, 0x02, 0x0, 0x0,
+        // 0x5, 0x0 });
+
+        buildCmdKey((byte) 0x20, (byte) 5, (byte) 2, (byte) 0, KEYS_WHEEL);
+        buildCmdKey((byte) 0x21, (byte) 5, (byte) 2, (byte) 2, KEYS_WHEEL2);
+
+        mMcuManager = McuManager.getInstance();
+
+
+    }
+
+    public static WifiConfiguration createWifiInfo(String ssid, String password) {
+
+        WifiConfiguration config = new WifiConfiguration();
+
+        config.allowedAuthAlgorithms.clear();
+
+        config.allowedGroupCiphers.clear();
+
+        config.allowedKeyManagement.clear();
+
+        config.allowedPairwiseCiphers.clear();
+
+        config.allowedProtocols.clear();
+
+        config.SSID = "\"" + ssid + "\"";
+
+        //    	if(TextUtils.isEmpty(password)) {
+        //
+        //    	config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        //
+        //    	Log.i(TAG, "password is ''");
+        //
+        //    	return config;
+        //
+        //    	}
+
+        config.preSharedKey = "\"" + password + "\"";
+
+        config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+
+        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+
+        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+
+        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+
+        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+
+        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+
+        config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+
+        config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+
+        config.status = WifiConfiguration.Status.ENABLED;
+
+        return config;
+
+    }
+
+    /**
+     * 检查互联网地址是否可以访问-使用DNS解析
+     *
+     * @param hostname 要检查的域名或IP
+     * @param callback 检查结果回调（是否可以解析成功）{@see java.lang.Comparable<T>}
+     */
+    public static void isNetWorkAvailableOfDNS(final String hostname, final Comparable<Boolean> callback) {
+        final Handler handler = new Handler() {
+
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (callback != null) {
+                    callback.compareTo(msg.arg1 == 0);
+                }
+            }
+
+        };
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Message msg = new Message();
+                try {
+                    DNSParse parse = new DNSParse(hostname);
+                    Thread thread = new Thread(parse);
+                    thread.start();
+                    thread.join(3 * 1000); // 设置等待DNS解析线程响应时间为3秒
+                    InetAddress resCode = parse.get(); // 获取解析到的IP地址
+                    msg.arg1 = resCode == null ? -1 : 0;
+                } catch (Exception e) {
+                    msg.arg1 = -1;
+                    e.printStackTrace();
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+
+        }).start();
+    }
+
+    @Override
+    public void setContext(Context c) {
+        // TODO Auto-generated method stub
+        super.setContext(c);
+        initGpsCompass();
+
+        mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+
+        //		mHandlerTest.sendEmptyMessageDelayed(0, 12000);
+        //		Log.d("ddck", "setContext !!!!!!!!!!!test!!!!!!!!:");
+    }
 
     @Override
     public void stopConnect() {
@@ -146,12 +293,6 @@ public class TestKLD extends Canbox {
         byte[] send = new byte[]{0x78, 0x1, mStatus};
         sendDataToCanbox(send, send.length);
     }
-
-    private int mReturnID = 0;
-    private final static int[] RET_CMD2 = new int[]{
-            0x010c, 0x0104, 0x0202, 0x0405, 0x0302, 0x0106, 0x0403, 0x0108
-    };
-    private final static int[] RET_CMD3 = new int[]{0x11000, 0x11001};
 
     public void parseVersion(int id, byte[] data) { // this for mcu pro
 
@@ -378,10 +519,7 @@ public class TestKLD extends Canbox {
                             sendToCan(0x90, 0x3, getSource());
                             break;
                         case 4:
-                            send = new byte[]{
-                                    (byte) 0x90, 0x5, 0x4, (byte) ((mMusicTime & 0xff00) >> 8), (byte) ((mMusicTime & 0xff) >> 0), (byte) ((mMusicPlayCur & 0xff00) >> 8),
-                                    (byte) ((mMusicPlayCur & 0xff) >> 0)
-                            };
+                            send = new byte[]{(byte) 0x90, 0x5, 0x4, (byte) ((mMusicTime & 0xff00) >> 8), (byte) ((mMusicTime & 0xff) >> 0), (byte) ((mMusicPlayCur & 0xff00) >> 8), (byte) ((mMusicPlayCur & 0xff) >> 0)};
                             sendDataToCanbox(send, send.length);
                             break;
                         case 5:
@@ -403,11 +541,7 @@ public class TestKLD extends Canbox {
                             sendToCan(0x90, 0x7, mGpsPos);
                             break;
                         case 8:
-                            send = new byte[]{
-                                    (byte) 0x90, 0x9, 0x8, (byte) ((mLatitude & 0xff000000) >> 24), (byte) ((mLatitude & 0xff0000) >> 16), (byte) ((mLatitude & 0xff00) >> 8),
-                                    (byte) ((mLatitude & 0xff) >> 0), (byte) ((mLongtitude & 0xff000000) >> 24), (byte) ((mLongtitude & 0xff0000) >> 16), (byte) ((mLongtitude & 0xff00) >> 8),
-                                    (byte) ((mLongtitude & 0xff) >> 0)
-                            };
+                            send = new byte[]{(byte) 0x90, 0x9, 0x8, (byte) ((mLatitude & 0xff000000) >> 24), (byte) ((mLatitude & 0xff0000) >> 16), (byte) ((mLatitude & 0xff00) >> 8), (byte) ((mLatitude & 0xff) >> 0), (byte) ((mLongtitude & 0xff000000) >> 24), (byte) ((mLongtitude & 0xff0000) >> 16), (byte) ((mLongtitude & 0xff00) >> 8), (byte) ((mLongtitude & 0xff) >> 0)};
                             sendDataToCanbox(send, send.length);
                             break;
                         case 9:
@@ -481,11 +615,6 @@ public class TestKLD extends Canbox {
 
     }
 
-    private byte mSWCMode1 = -1;
-    private byte mSWCMode2 = -1;
-    private byte mPannelMode = -1;
-    private byte mKeyBack = 0;
-
     private void reset() {
 
         Util.sudoExec("rm:-r:/data/");
@@ -498,16 +627,6 @@ public class TestKLD extends Canbox {
         mContext.sendBroadcast(it);// for some app
         // reset itself
     }
-
-    private int mSnLen = 0;
-    private final byte[] mSN = new byte[64];
-
-    private String mBTName;
-    private String mBTMac;
-
-    private final static int RETURN_BT_NAME = 1;
-    private final static int RETURN_BT_MAC = 2;
-    private int mReturnTAG = 0;
 
     public void sendBTName(String s, String mac) {
         if (s == null) {
@@ -559,13 +678,9 @@ public class TestKLD extends Canbox {
     }
 
     private void sendToCan(int d0, int d1, int d2, int d3) {
-        byte[] send = new byte[]{
-                (byte) d0, 0x3, (byte) d1, (byte) d2, (byte) d3
-        };
+        byte[] send = new byte[]{(byte) d0, 0x3, (byte) d1, (byte) d2, (byte) d3};
         sendDataToCanbox(send, send.length);
     }
-
-    private Mcu mMcu;
 
     private int sendMcuData(byte[] buf) {
         if (mMcu == null) {
@@ -573,9 +688,7 @@ public class TestKLD extends Canbox {
         }
         return mMcu.sendCmd(buf);
     }
-
-    private int mMusicPlayCur;
-    private int mMusicTime;
+    //wifi
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         mMusicTime = time;
@@ -588,16 +701,10 @@ public class TestKLD extends Canbox {
     public void setMediaSrc(int source) {
     }
 
-    private int mPhoneStatus = 0;
-
     public void setPhone(int status, String num) {
         mPhoneStatus = status;
         sendToCan(0x90, 0x6, (byte) mPhoneStatus);
     }
-
-
-    private LocationManager mLocationManager = null;
-    private MyLocationListener mLocationListener = null;
 
     private void initGpsCompass() {
 
@@ -622,80 +729,6 @@ public class TestKLD extends Canbox {
         // doUpdateGpsTime();
     }
 
-    private int mLatitude;
-    private int mLongtitude;
-    private byte mGpsPos = 0;
-
-    public class MyLocationListener implements LocationListener {
-        public void onLocationChanged(Location location) {
-            mLatitude = (int) location.getLatitude();
-            mLongtitude = (int) location.getLongitude();
-
-            if (location.getLatitude() != 0 && location.getLongitude() != 0) {
-                mGpsPos = 0;
-            } else {
-                mGpsPos = 1;
-            }
-
-        }
-
-        public void onProviderDisabled(String provider) {
-
-        }
-
-        public void onProviderEnabled(String provider) {
-        }
-
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
-    }
-
-    private int mInUse = 0;
-    final static int GPS_SHOW_NUM = 12;
-    GpsSatellite[] mGpsSatellite = new GpsSatellite[GPS_SHOW_NUM];
-    GpsStatus.Listener listener = new GpsStatus.Listener() {
-        public void onGpsStatusChanged(int event) {
-
-            switch (event) {
-                // 第一次定位
-                case GpsStatus.GPS_EVENT_FIRST_FIX:
-                    Log.e(TAG, "GPS_EVENT_FIRST_FIX");
-                    break;
-                // 卫星状态改变
-                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                    // 获取当前状态
-                    GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
-                    // 获取卫星颗数的默认最大值
-                    int maxSatellites = gpsStatus.getMaxSatellites();
-                    // 创建一个迭代器保存所有卫星
-                    Iterator<GpsSatellite> iters = gpsStatus.getSatellites().iterator();
-                    int count = 0;
-                    for (int i = 0; i < GPS_SHOW_NUM; ++i) {
-                        mGpsSatellite[i] = null;
-                    }
-
-                    while (iters.hasNext() && count <= maxSatellites) { // get in
-                        // used
-                        // number
-                        GpsSatellite s = iters.next();
-                        if (s.usedInFix()) {
-                            if (count >= GPS_SHOW_NUM) break;
-                            mGpsSatellite[count] = s;
-
-                            // Log.e(TAG, "1count:" + count + ":" + s.getSnr() + ":"
-                            // + s.getPrn());
-                            count++;
-                        }
-                    }
-                    mInUse = count;
-                    break;
-            }
-        }
-    };
-    //wifi
-
-    private WifiManager mWifiManager;
-
     private void statWifi(boolean start) {
         try {
             Log.d(TAG, "statWifi !!" + start);
@@ -705,8 +738,6 @@ public class TestKLD extends Canbox {
             Log.d(TAG, "statWifi err" + e);
         }
     }
-
-    private static final String SYSTEM_VERSION_FILE = "/system/ak47_update_hold.txt";
 
     private void sendOSVersion() {
         try {
@@ -736,6 +767,16 @@ public class TestKLD extends Canbox {
             reader.close();
         }
     }
+
+	/*ActionListener mActionListener = new ActionListener() {
+		public void onSuccess() {
+			Log.d(TAG, "connectWifi onSuccess:");
+		};
+
+		public void onFailure(int arg0) {
+			Log.d(TAG, "connectWifi onFailure:" + arg0);
+		};
+	};*/
 
     public WifiConfiguration createWifiConfig(String ssid, String password) {
         WifiConfiguration config = new WifiConfiguration();
@@ -797,74 +838,12 @@ public class TestKLD extends Canbox {
 
     }
 
-    public static WifiConfiguration createWifiInfo(String ssid, String password) {
-
-        WifiConfiguration config = new WifiConfiguration();
-
-        config.allowedAuthAlgorithms.clear();
-
-        config.allowedGroupCiphers.clear();
-
-        config.allowedKeyManagement.clear();
-
-        config.allowedPairwiseCiphers.clear();
-
-        config.allowedProtocols.clear();
-
-        config.SSID = "\"" + ssid + "\"";
-
-        //    	if(TextUtils.isEmpty(password)) {
-        //
-        //    	config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-        //
-        //    	Log.i(TAG, "password is ''");
-        //
-        //    	return config;
-        //
-        //    	}
-
-        config.preSharedKey = "\"" + password + "\"";
-
-        config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-
-        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-
-        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-
-        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-
-        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-
-        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-
-        config.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-
-        config.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-
-        config.status = WifiConfiguration.Status.ENABLED;
-
-        return config;
-
-    }
-
-	/*ActionListener mActionListener = new ActionListener() {
-		public void onSuccess() {
-			Log.d(TAG, "connectWifi onSuccess:");
-		};
-
-		public void onFailure(int arg0) {
-			Log.d(TAG, "connectWifi onFailure:" + arg0);
-		};
-	};*/
-
     private void connectWifi(String name, String psw) {
         statWifi(true);
         Log.d("ddck", "connectWifi:" + name + ":" + psw);
         //WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         //wifiManager.connect(createWifiInfo(name, psw), mActionListener);
     }
-
-    private int mNetStatus = 0;
 
     public boolean connectionTest(String urlAddress) {
 
@@ -918,82 +897,6 @@ public class TestKLD extends Canbox {
         //	            return false;
         //	        }
     }
-
-
-    /**
-     * 检查互联网地址是否可以访问-使用DNS解析
-     *
-     * @param hostname 要检查的域名或IP
-     * @param callback 检查结果回调（是否可以解析成功）{@see java.lang.Comparable<T>}
-     */
-    public static void isNetWorkAvailableOfDNS(final String hostname, final Comparable<Boolean> callback) {
-        final Handler handler = new Handler() {
-
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (callback != null) {
-                    callback.compareTo(msg.arg1 == 0);
-                }
-            }
-
-        };
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                Message msg = new Message();
-                try {
-                    DNSParse parse = new DNSParse(hostname);
-                    Thread thread = new Thread(parse);
-                    thread.start();
-                    thread.join(3 * 1000); // 设置等待DNS解析线程响应时间为3秒
-                    InetAddress resCode = parse.get(); // 获取解析到的IP地址
-                    msg.arg1 = resCode == null ? -1 : 0;
-                } catch (Exception e) {
-                    msg.arg1 = -1;
-                    e.printStackTrace();
-                } finally {
-                    handler.sendMessage(msg);
-                }
-            }
-
-        }).start();
-    }
-
-    /**
-     * DNS解析线程
-     */
-    private static class DNSParse implements Runnable {
-        private final String hostname;
-        private InetAddress address;
-
-        public DNSParse(String hostname) {
-            this.hostname = hostname;
-        }
-
-        public void run() {
-            try {
-                set(InetAddress.getByName(hostname));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        public synchronized void set(InetAddress address) {
-            this.address = address;
-        }
-
-        public synchronized InetAddress get() {
-            return address;
-        }
-    }
-
-
-    private final static String GPS_SOUND1 = "/system/media/audio/ringtones/ANDROMEDA.ogg";
-    private final static String GPS_SOUND2 = "/product/media/audio/ringtones/ANDROMEDA.ogg";
-
-    private MediaPlayer mMediaPlayer;
 
     private void testGPSSound() {
         if (mMediaPlayer == null) {
@@ -1075,4 +978,60 @@ public class TestKLD extends Canbox {
         }
 
     }
+
+    /**
+     * DNS解析线程
+     */
+    private static class DNSParse implements Runnable {
+        private final String hostname;
+        private InetAddress address;
+
+        public DNSParse(String hostname) {
+            this.hostname = hostname;
+        }
+
+        public void run() {
+            try {
+                set(InetAddress.getByName(hostname));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public synchronized void set(InetAddress address) {
+            this.address = address;
+        }
+
+        public synchronized InetAddress get() {
+            return address;
+        }
+    }
+
+    public class MyLocationListener implements LocationListener {
+        public void onLocationChanged(Location location) {
+            mLatitude = (int) location.getLatitude();
+            mLongtitude = (int) location.getLongitude();
+
+            if (location.getLatitude() != 0 && location.getLongitude() != 0) {
+                mGpsPos = 0;
+            } else {
+                mGpsPos = 1;
+            }
+
+        }
+
+        public void onProviderDisabled(String provider) {
+
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    }
+
+
+
+
 }

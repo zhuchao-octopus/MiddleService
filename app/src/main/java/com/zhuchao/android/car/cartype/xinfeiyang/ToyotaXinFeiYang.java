@@ -5,6 +5,24 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class ToyotaXinFeiYang extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x21, 0x22, 0x23, 0x26, 0x27, 0x35};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x7, MyCmd.Keycode.MODLE},
+
+            {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+            {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT},
+
+            {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x88, MyCmd.Keycode.MODLE},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x0, MyCmd.Keycode.KEY_AM}, {0x1, MyCmd.Keycode.KEY_FM}, {0x2, MyCmd.Keycode.DVD}, {0x3, MyCmd.Keycode.AUDIO}, {0x4, MyCmd.Keycode.BT_MUSIC}, {0x5, MyCmd.Keycode.AUX_IN}, {0x6, MyCmd.Keycode.KEY_TV},
+
+    };
+    byte[] airData = new byte[14];
+    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public ToyotaXinFeiYang() {
 
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -21,27 +39,6 @@ public class ToyotaXinFeiYang extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x21, 0x22, 0x23, 0x26, 0x27, 0x35};
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x7, MyCmd.Keycode.MODLE},
-
-            {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-            {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT},
-
-            {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x88, MyCmd.Keycode.MODLE},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x0, MyCmd.Keycode.KEY_AM}, {0x1, MyCmd.Keycode.KEY_FM}, {0x2, MyCmd.Keycode.DVD}, {0x3, MyCmd.Keycode.AUDIO}, {0x4, MyCmd.Keycode.BT_MUSIC}, {0x5, MyCmd.Keycode.AUX_IN},
-            {0x6, MyCmd.Keycode.KEY_TV},
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -73,8 +70,6 @@ public class ToyotaXinFeiYang extends Canbox {
         }
         return data;
     }
-
-    byte[] airData = new byte[14];
 
     public void parseACInfo(byte[] data) {
 
@@ -158,10 +153,6 @@ public class ToyotaXinFeiYang extends Canbox {
         }
     }
 
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -193,14 +184,10 @@ public class ToyotaXinFeiYang extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, 0, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), min, sec};
         }
 
         // if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -214,9 +201,7 @@ public class ToyotaXinFeiYang extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 
@@ -263,9 +248,6 @@ public class ToyotaXinFeiYang extends Canbox {
 
         sendDataToCanbox(mData, mData.length);
     }
-
-
-    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;

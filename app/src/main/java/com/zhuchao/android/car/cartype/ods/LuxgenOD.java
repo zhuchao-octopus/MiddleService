@@ -5,6 +5,17 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class LuxgenOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {3};
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0xc, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.PREVIOUS},
+
+            {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x12, MyCmd.Keycode.SPEECH}, {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.RADIO}, {(byte) 0x84, MyCmd.Keycode.BACK}, {(byte) 0x85, MyCmd.Keycode.BT}, {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.AUDIO}, {(byte) 0x88, MyCmd.Keycode.SETUP}, {(byte) 0x8b, MyCmd.Keycode.SETUP}, {(byte) 0x8c, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x8e, MyCmd.Keycode.HOME}, {0x30, MyCmd.Keycode.VOLUME_UP}, {0x31, MyCmd.Keycode.VOLUME_DOWN}, {0x32, MyCmd.Keycode.PREVIOUS}, {0x33, MyCmd.Keycode.NEXT}, {0x34, MyCmd.Keycode.PREVIOUS}, {0x35, MyCmd.Keycode.NEXT}, {0x36, MyCmd.Keycode.PREVIOUS}, {0x37, MyCmd.Keycode.NEXT}, {0x38, MyCmd.Keycode.PLAY_PAUSE}, {0x40, MyCmd.Keycode.PREVIOUS}, {0x41, MyCmd.Keycode.NEXT}, {0x42, MyCmd.Keycode.PREVIOUS}, {0x43, MyCmd.Keycode.NEXT}, {0x44, MyCmd.Keycode.PREVIOUS}, {0x45, MyCmd.Keycode.NEXT}, {0x46, MyCmd.Keycode.PREVIOUS}, {0x47, MyCmd.Keycode.NEXT}, {0x48, MyCmd.Keycode.PREVIOUS}, {0x49, MyCmd.Keycode.NEXT},
+
+
+    };
+
+
     public LuxgenOD() {
 
         buildCmdVersion((byte) 0x7f, (byte) 0x0);
@@ -22,24 +33,6 @@ public class LuxgenOD extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {3};
-
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0xc, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.PREVIOUS},
-
-            {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x12, MyCmd.Keycode.SPEECH},
-            {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.RADIO}, {(byte) 0x84, MyCmd.Keycode.BACK}, {(byte) 0x85, MyCmd.Keycode.BT}, {(byte) 0x86, MyCmd.Keycode.NAVIGATION},
-            {(byte) 0x87, MyCmd.Keycode.AUDIO}, {(byte) 0x88, MyCmd.Keycode.SETUP}, {(byte) 0x8b, MyCmd.Keycode.SETUP}, {(byte) 0x8c, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x8e, MyCmd.Keycode.HOME},
-            {0x30, MyCmd.Keycode.VOLUME_UP}, {0x31, MyCmd.Keycode.VOLUME_DOWN}, {0x32, MyCmd.Keycode.PREVIOUS}, {0x33, MyCmd.Keycode.NEXT}, {0x34, MyCmd.Keycode.PREVIOUS}, {0x35, MyCmd.Keycode.NEXT},
-            {0x36, MyCmd.Keycode.PREVIOUS}, {0x37, MyCmd.Keycode.NEXT}, {0x38, MyCmd.Keycode.PLAY_PAUSE}, {0x40, MyCmd.Keycode.PREVIOUS}, {0x41, MyCmd.Keycode.NEXT}, {0x42, MyCmd.Keycode.PREVIOUS},
-            {0x43, MyCmd.Keycode.NEXT}, {0x44, MyCmd.Keycode.PREVIOUS}, {0x45, MyCmd.Keycode.NEXT}, {0x46, MyCmd.Keycode.PREVIOUS}, {0x47, MyCmd.Keycode.NEXT}, {0x48, MyCmd.Keycode.PREVIOUS},
-            {0x49, MyCmd.Keycode.NEXT},
-
-
-    };
 
     @Override
     public int getACTemp(byte data) {

@@ -22,22 +22,40 @@ import java.util.Date;
 
 public class SubaruSimple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL}, {0xA, KEY_BT_HANG}, {0x15, KEY_BACK}, {0x16, KEY_PLAYPAUSE},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME}, {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final byte mRadarSwitch = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    byte[] mEqData = new byte[6];
+    private boolean mMuteByGlonass = false;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+    private int mVolume = 30;
+
     public SubaruSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
 
         updateCanboxKeySettings();
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, KEY_BT_DIAL}, {0xA, KEY_BT_HANG},
-            {0x15, KEY_BACK}, {0x16, KEY_PLAYPAUSE},
-
-    };
 
     private void parseWheelKey(byte[] data) {
 
@@ -61,12 +79,6 @@ public class SubaruSimple extends Canbox {
             }
         }
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME},
-            {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
-
-    };
 
     private void parseWheelKey2(byte[] data) {
         byte key = 0;
@@ -284,11 +296,6 @@ public class SubaruSimple extends Canbox {
 
     }
 
-    private boolean mMuteByGlonass = false;
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -331,13 +338,13 @@ public class SubaruSimple extends Canbox {
 
     }
 
-    private final byte mRadarSwitch = 0;
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
     }
+    //	public void setPhone(int status, String num) {
+    //		sendId3((byte)0x1, num);
+    //	}
 
     public void setParkCarMode(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x2, param};
@@ -348,8 +355,6 @@ public class SubaruSimple extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] data;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -382,14 +387,10 @@ public class SubaruSimple extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            data = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-            };
+            data = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         }
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -403,12 +404,9 @@ public class SubaruSimple extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        data = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(data, data.length);
     }
-
 
     public void sendId3(byte index, String num) {
 
@@ -463,13 +461,6 @@ public class SubaruSimple extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-    //	public void setPhone(int status, String num) {
-    //		sendId3((byte)0x1, num);
-    //	}
-
     public void setSongName(String s) {
         sendId3((byte) 0x3, s);
         mName = s;
@@ -484,8 +475,6 @@ public class SubaruSimple extends Canbox {
         sendId3((byte) 0x4, s);
         mAlbum = s;
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 
@@ -530,27 +519,6 @@ public class SubaruSimple extends Canbox {
         }
         sendId3((byte) 0x1, num);
     }
-
-    public void setVolume(int volume) {
-
-        byte[] data = new byte[]{(byte) 0xc4, 0x1, (byte) volume};
-        sendDataToCanbox(data, data.length);
-    }
-
-    private void checkHideRadar() {
-        mHandler.removeMessages(HIDE_RADAR);
-        mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
-    }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
     //
     // public void setPhone(int status, String num) {// default is simple box
     // switch (status) {
@@ -593,6 +561,16 @@ public class SubaruSimple extends Canbox {
     //
     // }
 
+    public void setVolume(int volume) {
+
+        byte[] data = new byte[]{(byte) 0xc4, 0x1, (byte) volume};
+        sendDataToCanbox(data, data.length);
+    }
+
+    private void checkHideRadar() {
+        mHandler.removeMessages(HIDE_RADAR);
+        mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
+    }
 
     public void updateCanboxKeySettings() {
         //		if (CarUtil.getCarType2() == 0) {
@@ -637,21 +615,15 @@ public class SubaruSimple extends Canbox {
         startEQ();
     }
 
-    private int mVolume = 30;
-
     public void stopConnect() {
         stopEQ();
         super.stopConnect();
     }
 
     private void powerEQ(boolean power) {
-        byte[] data = new byte[]{
-                (byte) 0x84, 0x2, 0x1, (byte) (power ? 1 : 0)
-        };
+        byte[] data = new byte[]{(byte) 0x84, 0x2, 0x1, (byte) (power ? 1 : 0)};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] mEqData = new byte[6];
 
     private void sendEQ(byte cmd, byte param) {
         byte[] data = new byte[]{(byte) 0x84, 0x2, cmd, param};

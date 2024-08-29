@@ -261,9 +261,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
                 android:paddingLeft="10px"
-                android:paddingRight="10px">
+                android:paddingRight="10px"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -276,9 +276,9 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:visibility="gone"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="0px"
@@ -349,8 +349,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingLeft="10px"
-                android:visibility="gone"
-                android:paddingRight="10px">
+                android:paddingRight="10px"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -372,9 +372,9 @@
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:visibility="gone"
                     android:paddingLeft="10px"
-                    android:paddingRight="10px">
+                    android:paddingRight="10px"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -501,9 +501,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone"
                 android:paddingLeft="10px"
-                android:paddingRight="10px">
+                android:paddingRight="10px"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -525,8 +525,8 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:paddingLeft="10px"
-                    android:visibility="gone"
-                    android:paddingRight="10px">
+                    android:paddingRight="10px"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -556,9 +556,9 @@
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
-                    android:visibility="gone"
                     android:orientation="vertical"
-                    android:paddingLeft="10px">
+                    android:paddingLeft="10px"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -592,9 +592,9 @@
 
                     <LinearLayout
                         android:layout_width="fill_parent"
-                        android:visibility="gone"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="0px"
@@ -619,9 +619,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="78px"
                 android:layout_marginTop="5px"
+                android:orientation="horizontal"
                 android:paddingLeft="10px"
-                android:paddingRight="10px"
-                android:orientation="horizontal">
+                android:paddingRight="10px">
 
                 <TextView
                     android:layout_width="0px"
@@ -654,11 +654,11 @@
 
                 <LinearLayout
                     android:layout_width="0px"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingLeft="10px">
+                    android:paddingLeft="10px"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0px"
@@ -703,11 +703,11 @@
 
                 <LinearLayout
                     android:layout_width="0px"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal"
-                    android:paddingLeft="10px">
+                    android:paddingLeft="10px"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="0px"

@@ -9,23 +9,22 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BenzB200Union extends Canbox {
 
-    public BenzB200Union() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D},
+    private final static byte[][] KEYS_WHEEL = {{0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D},
 
             {0x13, MyCmd.Keycode.KEY_SEEK_PREV}, {0x12, MyCmd.Keycode.KEY_SEEK_NEXT},
 
             {0x16, KEY_MUTE}, {0x17, MyCmd.Keycode.SPEECH}, {0x50, KEY_BT_DIAL}, {0x51, KEY_BT_HANG}, {0x52, KEY_MODE}, {0x53, KEY_HOME},
 
     };
+    private final byte[] data = new byte[11];
+    private int mDoorStatus;
+    private int mSource = MyCmd.SOURCE_NONE;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
+    public BenzB200Union() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     public void stopConnect() {// default is simple box
         setMediaSrc(MyCmd.SOURCE_NONE);
@@ -90,8 +89,6 @@ public class BenzB200Union extends Canbox {
         }
     }
 
-    private int mDoorStatus;
-
     @Override
     public void parseCanboxData(byte[] data, int len) {
         // TODO Auto-generated method stub
@@ -152,10 +149,6 @@ public class BenzB200Union extends Canbox {
 
     }
 
-
-    private int mSource = MyCmd.SOURCE_NONE;
-    private final byte[] data = new byte[11];
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte min = (byte) ((time / 60) % 60);
@@ -190,7 +183,6 @@ public class BenzB200Union extends Canbox {
         data[6] = b[1];
         sendDataToCanbox(data, data.length);
     }
-
 
     public void setMediaSrc(int source) {
         byte s = 0;
@@ -229,9 +221,6 @@ public class BenzB200Union extends Canbox {
             sendDataToCanbox(data, data.length);
         }
     }
-
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 

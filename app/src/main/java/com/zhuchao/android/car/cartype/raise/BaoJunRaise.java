@@ -11,6 +11,20 @@ import java.nio.charset.StandardCharsets;
 
 public class BaoJunRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x52};
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+            {0xc, KEY_NEXTSONG}, {0xb, KEY_PREVIOUSSONG}, {0xd, KEY_MIC}, {0xe, MyCmd.Keycode.BT},
+
+
+            {0x20, MyCmd.Keycode.POWER}, {0x21, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x22, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x23, MyCmd.Keycode.PLAY_PAUSE}, {0x24, MyCmd.Keycode.ROLL_NEXT}, {0x25, MyCmd.Keycode.ROLL_PREV}, {0x26, MyCmd.Keycode.KEY_AM}, {0x27, MyCmd.Keycode.KEY_FM}, {0x28, MyCmd.Keycode.AUDIO}, {0x29, MyCmd.Keycode.BT}, {0x2a, MyCmd.Keycode.KEY_DISPLAY}, {0x2b, MyCmd.Keycode.SETUP}, {0x2c, MyCmd.Keycode.MENU}, {0x2d, MyCmd.Keycode.HOME}, {0x2e, MyCmd.Keycode.PREVIOUS}, {0x2f, MyCmd.Keycode.NEXT}, {0x30, MyCmd.Keycode.NAVIGATION}, {0x31, MyCmd.Keycode.BACK}, {0x32, MyCmd.Keycode.KEY_RADIO_SCAN},};
+    int mSource = MyCmd.SOURCE_NONE;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
     public BaoJunRaise() {
 
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -25,8 +39,6 @@ public class BaoJunRaise extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x52};
-
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xee, 0x02, 0, 0};
         if (CarUtil.getModelId() == 48) {
@@ -37,21 +49,6 @@ public class BaoJunRaise extends Canbox {
         }
         return cmd;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-            {0xc, KEY_NEXTSONG}, {0xb, KEY_PREVIOUSSONG}, {0xd, KEY_MIC}, {0xe, MyCmd.Keycode.BT},
-
-
-            {0x20, MyCmd.Keycode.POWER}, {0x21, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x22, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x23, MyCmd.Keycode.PLAY_PAUSE}, {0x24, MyCmd.Keycode.ROLL_NEXT},
-            {0x25, MyCmd.Keycode.ROLL_PREV}, {0x26, MyCmd.Keycode.KEY_AM}, {0x27, MyCmd.Keycode.KEY_FM}, {0x28, MyCmd.Keycode.AUDIO}, {0x29, MyCmd.Keycode.BT}, {0x2a, MyCmd.Keycode.KEY_DISPLAY},
-            {0x2b, MyCmd.Keycode.SETUP}, {0x2c, MyCmd.Keycode.MENU}, {0x2d, MyCmd.Keycode.HOME}, {0x2e, MyCmd.Keycode.PREVIOUS}, {0x2f, MyCmd.Keycode.NEXT}, {0x30, MyCmd.Keycode.NAVIGATION},
-            {0x31, MyCmd.Keycode.BACK}, {0x32, MyCmd.Keycode.KEY_RADIO_SCAN},
-    };
 
     @Override
     public int getACTemp(byte data) {
@@ -165,13 +162,9 @@ public class BaoJunRaise extends Canbox {
     }
 
     public void setMediaSrc(int source, byte type, byte[] b) {
-        byte[] data = new byte[]{
-                (byte) 0xc0, 0x5, 0x1, b[0], b[1], b[2], (byte) (b[3] + 1),
-        };
+        byte[] data = new byte[]{(byte) 0xc0, 0x5, 0x1, b[0], b[1], b[2], (byte) (b[3] + 1),};
         sendDataToCanbox(data, data.length);
     }
-
-    int mSource = MyCmd.SOURCE_NONE;
 
     public void setMediaSrc(int source) {// default is simple box
         byte s;
@@ -196,8 +189,6 @@ public class BaoJunRaise extends Canbox {
         byte[] data = new byte[]{(byte) 0xc0, 0x2, s, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 

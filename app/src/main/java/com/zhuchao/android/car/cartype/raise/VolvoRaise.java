@@ -6,6 +6,17 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class VolvoRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x7d, 0x7e};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.PLAY_PAUSE}, {0xc, MyCmd.Keycode.BACK}, {0xd, MyCmd.Keycode.ROLL_PREV}, {0xe, MyCmd.Keycode.ROLL_NEXT},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.NUMBER1}, {0x2, MyCmd.Keycode.NUMBER2}, {0x3, MyCmd.Keycode.NUMBER3}, {0x4, MyCmd.Keycode.NUMBER4}, {0x5, MyCmd.Keycode.NUMBER5}, {0x6, MyCmd.Keycode.NUMBER6}, {0x7, MyCmd.Keycode.NUMBER7}, {0x8, MyCmd.Keycode.NUMBER8}, {0x9, MyCmd.Keycode.NUMBER9}, {0xa, MyCmd.Keycode.NUMBER0}, {0xb, MyCmd.Keycode.NUMBER_POUND}, {0xc, MyCmd.Keycode.NUMBER_STAR}, {0x10, MyCmd.Keycode.RADIO}, {0x11, MyCmd.Keycode.AUDIO}, {0x12, MyCmd.Keycode.BT},
+            //		{ 0x13, MyCmd.Keycode. },
+            {0x14, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.NEXT}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.BACK}, {0x18, MyCmd.Keycode.POWER}, {0x19, MyCmd.Keycode.EQ}, {0x1a, MyCmd.Keycode.NAVIGATION},
+            //		{ 0x1b, MyCmd.Keycode },
+            {0x1c, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x1d, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x1e, MyCmd.Keycode.ROLL_PREV}, {0x1f, MyCmd.Keycode.ROLL_NEXT},
+            //		{ 0x20, MyCmd.Keycode },
+            //		{ 0x80, MyCmd.Keycode },
+    };
+
     public VolvoRaise() {
         buildCmdDoor((byte) 0x7d, (byte) 0x1, (byte) 0xfc, (byte) 0x03, (byte) 0x5);
         //		buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0xa);
@@ -21,28 +32,6 @@ public class VolvoRaise extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x7d, 0x7e};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE},
-            {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.PLAY_PAUSE}, {0xc, MyCmd.Keycode.BACK},
-            {0xd, MyCmd.Keycode.ROLL_PREV}, {0xe, MyCmd.Keycode.ROLL_NEXT},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.NUMBER1}, {0x2, MyCmd.Keycode.NUMBER2}, {0x3, MyCmd.Keycode.NUMBER3}, {0x4, MyCmd.Keycode.NUMBER4}, {0x5, MyCmd.Keycode.NUMBER5}, {0x6, MyCmd.Keycode.NUMBER6},
-            {0x7, MyCmd.Keycode.NUMBER7}, {0x8, MyCmd.Keycode.NUMBER8}, {0x9, MyCmd.Keycode.NUMBER9}, {0xa, MyCmd.Keycode.NUMBER0}, {0xb, MyCmd.Keycode.NUMBER_POUND}, {0xc, MyCmd.Keycode.NUMBER_STAR},
-            {0x10, MyCmd.Keycode.RADIO}, {0x11, MyCmd.Keycode.AUDIO}, {0x12, MyCmd.Keycode.BT},
-            //		{ 0x13, MyCmd.Keycode. },
-            {0x14, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.NEXT}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.BACK}, {0x18, MyCmd.Keycode.POWER}, {0x19, MyCmd.Keycode.EQ},
-            {0x1a, MyCmd.Keycode.NAVIGATION},
-            //		{ 0x1b, MyCmd.Keycode },
-            {0x1c, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x1d, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x1e, MyCmd.Keycode.ROLL_PREV}, {0x1f, MyCmd.Keycode.ROLL_NEXT},
-            //		{ 0x20, MyCmd.Keycode },
-            //		{ 0x80, MyCmd.Keycode },
-    };
-
 
     @Override
     public int getACTemp(byte data, int unit) {

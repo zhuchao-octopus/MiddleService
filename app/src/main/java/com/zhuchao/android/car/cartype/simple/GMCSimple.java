@@ -18,17 +18,7 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class GMCSimple extends Canbox {
 
-    public GMCSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
 
             {0x7, KEY_SOURCE}, {0x9, KEY_BT},
 
@@ -37,6 +27,16 @@ public class GMCSimple extends Canbox {
             {0x18, KEY_HOME},
 
     };
+    public boolean isAddView = false;
+    private int mDoorStatus = 0;
+    private WindowManager mWindowManager;
+    private WindowManager.LayoutParams mLayoutParams;
+    private View mView;
+
+    public GMCSimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -132,13 +132,6 @@ public class GMCSimple extends Canbox {
         }
 
     }
-
-    private int mDoorStatus = 0;
-
-    private WindowManager mWindowManager;
-    private WindowManager.LayoutParams mLayoutParams;
-    private View mView;
-    public boolean isAddView = false;
 
     private void showSOS(int show) {
 

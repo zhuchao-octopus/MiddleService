@@ -6,6 +6,14 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class FiatBagoo extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.VOLUME_UP}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.NAVIGATION},
+
+    };
+    byte[] mData = null;
+
+
     public FiatBagoo() {
 
         buildCmdDoor((byte) 0x14, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
@@ -14,22 +22,12 @@ public class FiatBagoo extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
     }
 
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.VOLUME_UP}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-            {0xa, MyCmd.Keycode.NAVIGATION},
-
-    };
-
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         ++play;
         mData = new byte[]{(byte) 0x93, 0x6, 4, 0, (byte) (play & 0xff), 2, 0, 0};
 
         sendDataToCanbox(mData, mData.length);
     }
-
-    byte[] mData = null;
 
     public void setMediaSrc(int source, byte type, byte[] b) {
 

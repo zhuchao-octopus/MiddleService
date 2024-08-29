@@ -7,6 +7,17 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class BenzRaise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
+
+            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x7, KEY_SOURCE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BACK}, {0xa, MyCmd.Keycode.MUTE},};
+    private final static byte[][] KEYS_WHEEL2 = {
+
+            {0x1, MyCmd.Keycode.PREVIOUS}, {0x2, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.VOLUME_UP}, {0x4, MyCmd.Keycode.VOLUME_DOWN}, {0x5, MyCmd.Keycode.KEY_TURN_D}, {0x6, MyCmd.Keycode.KEY_TURN_A}, {0x7, MyCmd.Keycode.PLAY_PAUSE},
+            //		{ 0x8, MyCmd.Keycode },
+            {0x9, MyCmd.Keycode.BACK}, {0xa, MyCmd.Keycode.BACKLIGHT_OFF},};
+
     public BenzRaise() {
         mIdAC = 0x21;
         buildCmdDoor((byte) 0x41, (byte) 0x0, (byte) 0x1f, (byte) 0x13);
@@ -21,24 +32,6 @@ public class BenzRaise extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
 
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
-
-            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x7, KEY_SOURCE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BACK}, {0xa, MyCmd.Keycode.MUTE},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-
-            {0x1, MyCmd.Keycode.PREVIOUS}, {0x2, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.VOLUME_UP}, {0x4, MyCmd.Keycode.VOLUME_DOWN}, {0x5, MyCmd.Keycode.KEY_TURN_D},
-            {0x6, MyCmd.Keycode.KEY_TURN_A}, {0x7, MyCmd.Keycode.PLAY_PAUSE},
-            //		{ 0x8, MyCmd.Keycode },
-            {0x9, MyCmd.Keycode.BACK}, {0xa, MyCmd.Keycode.BACKLIGHT_OFF},
-    };
-
 
     public int getOutTemp(byte[] data) {//
         int t = CarUtil.CLEAR_OUT_DOOR_TEMP;
@@ -104,13 +97,9 @@ public class BenzRaise extends Canbox {
         byte[] data;
 
         if (MyCmd.SOURCE_DVD != source) {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }

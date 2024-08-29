@@ -7,17 +7,7 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class Haima001Hiworld extends Canbox {
 
-    public Haima001Hiworld() {
-
-    }
-
-    @Override
-    public void stopConnect() {
-
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
 
             {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
 
@@ -28,6 +18,14 @@ public class Haima001Hiworld extends Canbox {
 
     };
 
+    public Haima001Hiworld() {
+
+    }
+
+    @Override
+    public void stopConnect() {
+
+    }
 
     @Override
     public void parseCanboxData(byte[] data, int len) {

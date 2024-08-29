@@ -24,35 +24,51 @@ import java.io.File;
 
 public class CarUtil {
     public static final String TAG = "CarUtil";
-    private Canbox mCanbox = null;
-    private static CarUtil mCarUtil = null;
-    public static int m360UI = 0;
-    public static int mTempUnit = 0;
     // public static int mMileagepUnit = 0;
     public static final int INVALID_OUT_DOOR_TEMP = Integer.MAX_VALUE;
     public static final int CLEAR_OUT_DOOR_TEMP = Integer.MAX_VALUE - 1;
-
     public static final int SWITCH_CANBOX_REVERSE = (1);
     public static final int SWITCH_CANBOX_LR_TURNER_LIGHT = (1 << 1);
     public static final int SWITCH_CANBOX_BRAKE = (1 << 2);
-
     public static final int AC_CONFIG_TEMP_CHANGE = (1 << 2);
     public static final int AC_CONFIG_HIDE = (1 << 3);
     public static final int AC_CONFIG_OURDOOR_HIDE = (1 << 4);
-
-    public static int mSettingCanboxBrake = 0;
-    public static int mPreCanboxBrake = 0;
-    public static String mCanboxType = null;
     public static final int TIME_CANBOX_UPDATE_TIME = 60000;
     public static final String PG = "/dev/ptyCan";
-
     public static final int CANBOX_LED_DISC = 1;
     public static final int CANBOX_LED_PANNEL = 2;
     public static final int CANBOX_LED_ILL = 0xfffe;
     public static final int CANBOX_LED_ALL = 0xffff;
+    public static int m360UI = 0;
+    public static int mTempUnit = 0;
+    public static int mSettingCanboxBrake = 0;
+    public static int mPreCanboxBrake = 0;
+    public static String mCanboxType = null;
     public static boolean mIsNeedSendEQ = false;
     public static boolean mIsUpdating = false;
     public static String mUpdateFile;
+    private static CarUtil mCarUtil = null;
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    private static int mKeyType = 0;
+    private static int mChangeKey = 0;
+    private static int mFrontDoor = 0;
+    private static int mBackDoor = 0;
+    private static int mAirCondition = 0;
+    private static int mCarType = 0;
+    private static int mCarType2 = 0;
+    private static int mCarEQ = 0;
+    private static int mOtherSettings = 0;
+    private static int mProVersion = 0;
+    private static int mProIndex = -1;
+    private static int mUpdateTime = -2;
+    private static int mCarTypeConfig = -1;
+    private static int mManaId = -1;
+    private static int mCateId = -1;
+    private static int mModelId = -1;
+    private static int mExternalRadarId = 0;
+    private static boolean mIsShowAC = false;
+    private static boolean mIsShowEQ = false;
+    private Canbox mCanbox = null;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     private CarUtil() {
@@ -124,13 +140,6 @@ public class CarUtil {
         mTempUnit = i;
         if (mCarUtil != null && mCarUtil.mCanbox != null) {
             mCarUtil.mCanbox.updateOutDoorTemp(INVALID_OUT_DOOR_TEMP);
-        }
-    }
-
-    private void initPGBin() {
-        File f = new File(PG);
-        if (f.exists()) {
-            Util.setFileValue(PG, "RESET");
         }
     }
 
@@ -240,101 +249,6 @@ public class CarUtil {
         return null;
     }
 
-    public void canboxParser(byte[] data, int len) {
-        ///try {
-        if (mCanbox != null) {
-            int type = mCanbox.getReturnType();
-            if (type == -1) {
-                type = CanboxToPro.getReturnMsgType(mCanboxType, mProVersion, mProIndex);
-            }
-            ///MMLog.d(TAG,"type:"+type+","+ ByteUtils.BuffToHexStr(data));
-
-            if (type == 0xff) {    //hiworld is update
-                mCanbox.parseCanboxData(data, len);
-            } else if (type == 1) {
-                len -= 3;
-                byte[] d = new byte[len];
-                mCanbox.byteArrayCopy(d, data, 0, 2, len);
-                mCanbox.parseCanboxData(d, len);
-            } else if (type == 2) {
-                len -= 4;
-                byte[] d = new byte[len];
-                mCanbox.byteArrayCopy(d, data, 0, 4, len);
-                byte change = d[0];
-                d[0] = d[1];
-                d[1] = change;
-                mCanbox.parseCanboxData(d, len);
-            } else if (type == 3) {
-                mCanbox.parseCanboxData(data, len);
-            } else if (type == 4) {
-                len -= 3;
-                byte[] d = new byte[len];
-                mCanbox.byteArrayCopy(d, data, 0, 3, len);
-                byte change = d[0];
-                d[0] = d[1];
-                d[1] = change;
-                mCanbox.parseCanboxData(d, len);
-            } else {
-                len -= 3;
-                byte[] d = new byte[len];
-                mCanbox.byteArrayCopy(d, data, 0, 3, len);
-                mCanbox.parseCanboxData(d, len);
-            }
-
-            if ((GlobalDefinition.getContext() != null) && isDataDistribution()) {
-                Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
-                i.putExtra("buf", data);
-                GlobalDefinition.getContext().sendBroadcast(i);
-            }
-        }
-            /*
-            else if (false) {
-                //no used now
-                if (((data[0] & 0xff) == 0x2e) && ((data[1] & 0xff) == 0x78) && ((data[2] & 0xff) == 0x3) && ((data[3] & 0xff) == 0x1) && ((data[4] & 0xff) == 0xec) && ((data[5] & 0xff) == 0x1) && ((data[6] & 0xff) == 0x96)) {
-                    Log.d(TAG, "in auto test");
-                    MachineConfig.setProperty(MachineConfig.KEY_CAN_BOX, "\u5176\u5B83\u5176\u5B83Test,v3,z300,i90811,h2,j02030000,l00000001");
-                    CanService.updateCanboxEx();
-
-                }
-            }*/
-        /// else if (mUpdatFile != null) {
-        /// if (mCanbox != null) {
-        /// mCanbox.parseCanboxData(data, len);
-        /// }
-        /// }
-        ///} catch (Exception e) {
-        ///    MMLog.e("CarUtil", "canboxParser err" + e);
-        ///}
-    }
-
-    private void clear() {
-        mIsNeedSendEQ = false;
-        if (mCanbox != null) {
-            mCanbox.clear();
-        }
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////
-    private static int mKeyType = 0;
-    private static int mChangeKey = 0;
-    private static int mFrontDoor = 0;
-    private static int mBackDoor = 0;
-    private static int mAirCondition = 0;
-    private static int mCarType = 0;
-    private static int mCarType2 = 0;
-    private static int mCarEQ = 0;
-    private static int mOtherSettings = 0;
-    private static int mProVersion = 0;
-    private static int mProIndex = -1;
-    private static int mUpdateTime = -2;
-    private static int mCarTypeConfig = -1;
-    private static int mManaId = -1;
-    private static int mCateId = -1;
-    private static int mModelId = -1;
-    private static int mExternalRadarId = 0;
-    private static boolean mIsShowAC = false;
-    private static boolean mIsShowEQ = false;
-
     public static int getExternalRadarId() {
         return mExternalRadarId;
     }
@@ -416,6 +330,176 @@ public class CarUtil {
             return (mAirCondition & AC_CONFIG_OURDOOR_HIDE) != 0;
         }
         return false;
+    }
+
+    public static boolean getRadarBeep() {
+        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_RADAR_BEEP) != 0;
+    }
+
+    public static boolean getHideRadarUI() {
+        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_RADAR_UI) != 0;
+    }
+
+    public static boolean getShowRadarUIOnlyInReverse() {
+        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_RADAR_UI_ONLY_IN_REVERSE) != 0;
+    }
+
+    public static boolean getRightCameraExist() {
+        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_RIGHT_CAMERA) != 0;
+    }
+
+    public static boolean isDataDistribution() {
+        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_DATA_DISTRIBUTION) != 0;
+    }
+
+    public static boolean requestAngleData() {
+        if (getCanboxInstance() != null) {
+            return getCanboxInstance().requestAngleData();
+        }
+        return false;
+    }
+
+    public static byte getTimeAddOrMinus1() {
+        if ((mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_HOUR_ADD_1) != 0) {
+            return 1;
+        } else if ((mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_HOUR_MINUS_1) != 0) {
+            return -1;
+        }
+        return 0;
+    }
+
+    public static boolean isShowAC() {
+        return mIsShowAC;
+    }
+
+    public static boolean isShowEQ() {
+        return mIsShowEQ;
+    }
+
+    public static boolean isFocusSync3Reverse() {
+        if (getCanboxType() != null && (getCanboxType().equals(MachineConfig.VALUE_CANBOX_FORD_SIMPLE) || getCanboxType().equals(MachineConfig.VALUE_CANBOX_FORD_EXPLORER_SIMPLE))) {
+            return getCarType() == 3;
+        }
+        return false;
+    }
+
+    public static int getCanboxPhoneSource() {
+        if (getCanboxType() != null && (getCanboxType().equals(MachineConfig.VALUE_CANBOX_FORD_SIMPLE) || getCanboxType().equals(MachineConfig.VALUE_CANBOX_FORD_EXPLORER_SIMPLE))) {
+        }
+        return MyCmd.SOURCE_AUX;
+    }
+
+    public static void updateCanbox(String f, Context c, String canType) {
+        if (mCarUtil != null) {
+            mUpdateFile = f;
+            if (canType == null) {
+                canType = mCanboxType;
+            }
+            if (canType == null) {
+                Toast.makeText(c, "no canbox manufacturer update fail!", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            MMLog.d(TAG, canType + " start UpdateCanbox:" + mUpdateFile);
+
+            if (canType.contains("haozheng")) {
+                mCarUtil.mCanbox = new UpdateLuZheng();
+            } else if (canType.contains("hiworld")) {
+                mCarUtil.mCanbox = new UpdateHiWorld();
+                if (canType.endsWith("0")) {
+                    ((UpdateHiWorld) mCarUtil.mCanbox).mType = 1;
+                }
+            } else if (canType.contains("raise")) {
+                mCarUtil.mCanbox = new UpdateRaise();
+            } else if (canType.contains("slim")) {
+                mCarUtil.mCanbox = new UpdateSimKey();
+            } else {
+                mCarUtil.mCanbox = new UpdateSimple();
+            }
+            mCarUtil.mCanbox.setContext(c);
+            mCarUtil.mCanbox.startConnect();
+        }
+    }
+
+    private void initPGBin() {
+        File f = new File(PG);
+        if (f.exists()) {
+            Util.setFileValue(PG, "RESET");
+        }
+    }
+
+    public void canboxParser(byte[] data, int len) {
+        ///try {
+        if (mCanbox != null) {
+            int type = mCanbox.getReturnType();
+            if (type == -1) {
+                type = CanboxToPro.getReturnMsgType(mCanboxType, mProVersion, mProIndex);
+            }
+            ///MMLog.d(TAG,"type:"+type+","+ ByteUtils.BuffToHexStr(data));
+
+            if (type == 0xff) {    //hiworld is update
+                mCanbox.parseCanboxData(data, len);
+            } else if (type == 1) {
+                len -= 3;
+                byte[] d = new byte[len];
+                mCanbox.byteArrayCopy(d, data, 0, 2, len);
+                mCanbox.parseCanboxData(d, len);
+            } else if (type == 2) {
+                len -= 4;
+                byte[] d = new byte[len];
+                mCanbox.byteArrayCopy(d, data, 0, 4, len);
+                byte change = d[0];
+                d[0] = d[1];
+                d[1] = change;
+                mCanbox.parseCanboxData(d, len);
+            } else if (type == 3) {
+                mCanbox.parseCanboxData(data, len);
+            } else if (type == 4) {
+                len -= 3;
+                byte[] d = new byte[len];
+                mCanbox.byteArrayCopy(d, data, 0, 3, len);
+                byte change = d[0];
+                d[0] = d[1];
+                d[1] = change;
+                mCanbox.parseCanboxData(d, len);
+            } else {
+                len -= 3;
+                byte[] d = new byte[len];
+                mCanbox.byteArrayCopy(d, data, 0, 3, len);
+                mCanbox.parseCanboxData(d, len);
+            }
+
+            if ((GlobalDefinition.getContext() != null) && isDataDistribution()) {
+                Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
+                i.putExtra("buf", data);
+                GlobalDefinition.getContext().sendBroadcast(i);
+            }
+        }
+            /*
+            else if (false) {
+                //no used now
+                if (((data[0] & 0xff) == 0x2e) && ((data[1] & 0xff) == 0x78) && ((data[2] & 0xff) == 0x3) && ((data[3] & 0xff) == 0x1) && ((data[4] & 0xff) == 0xec) && ((data[5] & 0xff) == 0x1) && ((data[6] & 0xff) == 0x96)) {
+                    Log.d(TAG, "in auto test");
+                    MachineConfig.setProperty(MachineConfig.KEY_CAN_BOX, "\u5176\u5B83\u5176\u5B83Test,v3,z300,i90811,h2,j02030000,l00000001");
+                    CanService.updateCanboxEx();
+
+                }
+            }*/
+        /// else if (mUpdatFile != null) {
+        /// if (mCanbox != null) {
+        /// mCanbox.parseCanboxData(data, len);
+        /// }
+        /// }
+        ///} catch (Exception e) {
+        ///    MMLog.e("CarUtil", "canboxParser err" + e);
+        ///}
+    }
+
+    private void clear() {
+        mIsNeedSendEQ = false;
+        if (mCanbox != null) {
+            mCanbox.clear();
+        }
     }
 
     private String getCanboxSetting() {
@@ -523,94 +607,5 @@ public class CarUtil {
             mIsShowEQ = appShow != null && appShow.contains(AppConfig.HIDE_CANBOX_EQ) && (appHide == null || !appHide.contains(AppConfig.HIDE_CANBOX_EQ));
         }
         return mCanboxType;
-    }
-
-    public static boolean getRadarBeep() {
-        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_RADAR_BEEP) != 0;
-    }
-
-    public static boolean getHideRadarUI() {
-        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_RADAR_UI) != 0;
-    }
-
-    public static boolean getShowRadarUIOnlyInReverse() {
-        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_RADAR_UI_ONLY_IN_REVERSE) != 0;
-    }
-
-    public static boolean getRightCameraExist() {
-        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_RIGHT_CAMERA) != 0;
-    }
-
-    public static boolean isDataDistribution() {
-        return (mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_DATA_DISTRIBUTION) != 0;
-    }
-
-    public static boolean requestAngleData() {
-        if (getCanboxInstance() != null) {
-            return getCanboxInstance().requestAngleData();
-        }
-        return false;
-    }
-
-    public static byte getTimeAddOrMinus1() {
-        if ((mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_HOUR_ADD_1) != 0) {
-            return 1;
-        } else if ((mOtherSettings & MachineConfig.VALUE_CANBOX_OTHER_HOUR_MINUS_1) != 0) {
-            return -1;
-        }
-        return 0;
-    }
-
-    public static boolean isShowAC() {
-        return mIsShowAC;
-    }
-
-    public static boolean isShowEQ() {
-        return mIsShowEQ;
-    }
-
-    public static boolean isFocusSync3Reverse() {
-        if (getCanboxType() != null && (getCanboxType().equals(MachineConfig.VALUE_CANBOX_FORD_SIMPLE) || getCanboxType().equals(MachineConfig.VALUE_CANBOX_FORD_EXPLORER_SIMPLE))) {
-            return getCarType() == 3;
-        }
-        return false;
-    }
-
-    public static int getCanboxPhoneSource() {
-        if (getCanboxType() != null && (getCanboxType().equals(MachineConfig.VALUE_CANBOX_FORD_SIMPLE) || getCanboxType().equals(MachineConfig.VALUE_CANBOX_FORD_EXPLORER_SIMPLE))) {
-        }
-        return MyCmd.SOURCE_AUX;
-    }
-
-    public static void updateCanbox(String f, Context c, String canType) {
-        if (mCarUtil != null) {
-            mUpdateFile = f;
-            if (canType == null) {
-                canType = mCanboxType;
-            }
-            if (canType == null) {
-                Toast.makeText(c, "no canbox manufacturer update fail!", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            MMLog.d(TAG, canType + " start UpdateCanbox:" + mUpdateFile);
-
-            if (canType.contains("haozheng")) {
-                mCarUtil.mCanbox = new UpdateLuZheng();
-            } else if (canType.contains("hiworld")) {
-                mCarUtil.mCanbox = new UpdateHiWorld();
-                if (canType.endsWith("0")) {
-                    ((UpdateHiWorld) mCarUtil.mCanbox).mType = 1;
-                }
-            } else if (canType.contains("raise")) {
-                mCarUtil.mCanbox = new UpdateRaise();
-            } else if (canType.contains("slim")) {
-                mCarUtil.mCanbox = new UpdateSimKey();
-            } else {
-                mCarUtil.mCanbox = new UpdateSimple();
-            }
-            mCarUtil.mCanbox.setContext(c);
-            mCarUtil.mCanbox.startConnect();
-        }
     }
 }

@@ -11,6 +11,40 @@ import java.util.Date;
 
 public class JiangHuaiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x38, 0x39, 0x3a};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH},
+
+            {(byte) 0x8b, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x8c, MyCmd.Keycode.VOLUME_DOWN},
+            //		{ (byte)0x8d, MyCmd.Keycode },
+            {(byte) 0x8e, MyCmd.Keycode.EASY_CONNECT},
+
+
+            {0x9, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG},
+
+            {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.RADIO}, {(byte) 0x82, MyCmd.Keycode.PREVIOUS}, {(byte) 0x83, MyCmd.Keycode.NEXT}, {(byte) 0x84, MyCmd.Keycode.BACK}, {(byte) 0x85, MyCmd.Keycode.BT}, {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.AUDIO}, {(byte) 0x88, MyCmd.Keycode.SETUP}, {(byte) 0x89, MyCmd.Keycode.BT}, {(byte) 0x8a, MyCmd.Keycode.NEXT},};
+    private final static byte[][] KEYS_WHEEL_IEV6E = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH},
+
+            {(byte) 0x8b, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x8c, MyCmd.Keycode.VOLUME_DOWN},
+            //		{ (byte)0x8d, MyCmd.Keycode },
+            {(byte) 0x8e, MyCmd.Keycode.EASY_CONNECT},
+
+
+            {0x9, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG},
+
+            {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.MENU}, {(byte) 0x82, MyCmd.Keycode.BACK}, {(byte) 0x83, MyCmd.Keycode.AUDIO}, {(byte) 0x84, MyCmd.Keycode.RADIO}, {(byte) 0x85, MyCmd.Keycode.PREVIOUS}, {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.MUTE}, {(byte) 0x88, MyCmd.Keycode.KEY_DISPLAY}, {(byte) 0x89, MyCmd.Keycode.BT}, {(byte) 0x8a, MyCmd.Keycode.NEXT},};
+    private final static byte[][] KEYS_WHEEL_S2_HIGH = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH},
+
+
+            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+    };
+    private final static byte[][] KEYS_WHEEL_IEV6E_LOW = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.SETUP}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.AS}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.MODLE},
+            //		{ 0xb, MyCmd.Keycode.AUDIO },
+
+    };
+    private final byte[] mLcdInfo = new byte[]{(byte) 0x75, 0x8, 0, 0, 0, 0, 0, 0, 0, 1};
+    private boolean mNeedInfo = false;
+
     public JiangHuaiRaise() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -63,8 +97,6 @@ public class JiangHuaiRaise extends Canbox {
         return cmd;
     }
 
-    private boolean mNeedInfo = false;
-
     private void checkIfNeedInfo() {
         switch (CarUtil.getModelId()) {
             case 9:
@@ -74,56 +106,6 @@ public class JiangHuaiRaise extends Canbox {
                 break;
         }
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x38, 0x39, 0x3a};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT},
-            {0x12, MyCmd.Keycode.SPEECH},
-
-            {(byte) 0x8b, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x8c, MyCmd.Keycode.VOLUME_DOWN},
-            //		{ (byte)0x8d, MyCmd.Keycode },
-            {(byte) 0x8e, MyCmd.Keycode.EASY_CONNECT},
-
-
-            {0x9, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG},
-
-            {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.RADIO}, {(byte) 0x82, MyCmd.Keycode.PREVIOUS}, {(byte) 0x83, MyCmd.Keycode.NEXT}, {(byte) 0x84, MyCmd.Keycode.BACK},
-            {(byte) 0x85, MyCmd.Keycode.BT}, {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.AUDIO}, {(byte) 0x88, MyCmd.Keycode.SETUP}, {(byte) 0x89, MyCmd.Keycode.BT},
-            {(byte) 0x8a, MyCmd.Keycode.NEXT},
-    };
-
-    private final static byte[][] KEYS_WHEEL_IEV6E = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT},
-            {0x12, MyCmd.Keycode.SPEECH},
-
-            {(byte) 0x8b, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x8c, MyCmd.Keycode.VOLUME_DOWN},
-            //		{ (byte)0x8d, MyCmd.Keycode },
-            {(byte) 0x8e, MyCmd.Keycode.EASY_CONNECT},
-
-
-            {0x9, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG},
-
-            {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.MENU}, {(byte) 0x82, MyCmd.Keycode.BACK}, {(byte) 0x83, MyCmd.Keycode.AUDIO}, {(byte) 0x84, MyCmd.Keycode.RADIO},
-            {(byte) 0x85, MyCmd.Keycode.PREVIOUS}, {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.MUTE}, {(byte) 0x88, MyCmd.Keycode.KEY_DISPLAY},
-            {(byte) 0x89, MyCmd.Keycode.BT}, {(byte) 0x8a, MyCmd.Keycode.NEXT},
-    };
-
-    private final static byte[][] KEYS_WHEEL_S2_HIGH = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT},
-            {0x12, MyCmd.Keycode.SPEECH},
-
-
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL_IEV6E_LOW = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.SETUP}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.MUTE},
-            {0x7, MyCmd.Keycode.AS}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.MODLE},
-            //		{ 0xb, MyCmd.Keycode.AUDIO },
-
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -195,8 +177,6 @@ public class JiangHuaiRaise extends Canbox {
 
         super.parseACInfo(airData);
     }
-
-    private final byte[] mLcdInfo = new byte[]{(byte) 0x75, 0x8, 0, 0, 0, 0, 0, 0, 0, 1};
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         byte min = (byte) ((time / 60) % 60);

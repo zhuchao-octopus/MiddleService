@@ -3,8 +3,8 @@
     android:id="@+id/recent_main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center"
     android:background="#ff000000"
+    android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout

@@ -6,6 +6,12 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class JiangHuaiDaoJun extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.SETUP}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.RADIO}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.NAVIGATION},
+
+    };
+    private final byte[] mData = new byte[]{(byte) 0x75, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
+
     public JiangHuaiDaoJun() {
 
         buildCmdVersion((byte) 0x30, (byte) 0x0);
@@ -14,18 +20,6 @@ public class JiangHuaiDaoJun extends Canbox {
         mIdKey = 0x2;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.SETUP}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.MUTE},
-            {0x7, MyCmd.Keycode.RADIO}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.NAVIGATION},
-
-    };
-
-
-    private final byte[] mData = new byte[]{
-            (byte) 0x75, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 

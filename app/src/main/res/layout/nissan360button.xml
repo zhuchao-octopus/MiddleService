@@ -7,9 +7,9 @@
 
     <ImageView
         android:id="@+id/mic_button"
-        android:clickable="true"
         android:layout_width="90px"
         android:layout_height="90px"
+        android:clickable="true"
         android:scaleType="fitCenter"
         android:src="@drawable/nissan360" />
 

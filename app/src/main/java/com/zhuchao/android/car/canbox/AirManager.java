@@ -23,17 +23,24 @@ import java.util.Objects;
 
 public class AirManager {
 
+    private static final int HIDE = 0;
+    public static boolean isShow = false;
+    public static boolean mShowScreen1 = false;
+    public static boolean mSetByUI = false;
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams mLayoutParams;
     @SuppressLint("StaticFieldLeak")
     private static View mView;
-
-    public static boolean isShow = false;
-
     private static Presentation mPresentation = null;
-
     private static AirUI mUI;
-    public static boolean mShowScreen1 = false;
+    private static final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE) {
+                stop();
+            }
+
+        }
+    };
 
     public static void reinit(Context context) {
         stop();
@@ -92,16 +99,6 @@ public class AirManager {
 
     }
 
-    private static final int HIDE = 0;
-    private static final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE) {
-                stop();
-            }
-
-        }
-    };
-
     public static void startAll(Context context) {
         AirUI.mStyle = AirUI.STYLE_ALL;
         start(context, null);
@@ -142,8 +139,6 @@ public class AirManager {
             }
         }
     }
-
-    public static boolean mSetByUI = false;
 
     public static void sendAirFunchtion(int i) {
         if (mUI != null) {

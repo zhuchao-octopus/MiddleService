@@ -12,6 +12,17 @@ import java.util.Date;
 
 public class GMXinChi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x8, 0x9, 0x7, 0x5, 0x6, 0xc, 0x16, 0x17, 0x18, 0x19, 0x70};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0x7, MyCmd.Keycode.MULT_MUTE_AND_HANG},
+
+
+            {0x10, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x11, MyCmd.Keycode.KEY_SEEK_PREV}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.POWER},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.NUMBER1}, {0x2, MyCmd.Keycode.NUMBER2}, {0x3, MyCmd.Keycode.NUMBER3}, {0x4, MyCmd.Keycode.NUMBER4}, {0x5, MyCmd.Keycode.NUMBER5}, {0x6, MyCmd.Keycode.NUMBER6}, {0x7, MyCmd.Keycode.RADIO}, {0x8, MyCmd.Keycode.SETUP}, {0x9, MyCmd.Keycode.POWER}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.RADIO}, {0xc, MyCmd.Keycode.SETUP}, {0xd, MyCmd.Keycode.MUTE}, {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.NEXT}, {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x11, MyCmd.Keycode.BACK}, {0x12, MyCmd.Keycode.EQ}, {0x13, MyCmd.Keycode.EJECT}, {0x14, MyCmd.Keycode.DVD}, {0x15, MyCmd.Keycode.AS}, {0x16, MyCmd.Keycode.TIME_SETTING}, {0x17, MyCmd.Keycode.PLAY_PAUSE}, {0x18, MyCmd.Keycode.HOME}, {0x19, MyCmd.Keycode.PREVIOUS}, {0x1a, MyCmd.Keycode.NEXT}, {0x1b, MyCmd.Keycode.BT}, {0x1c, MyCmd.Keycode.NAVIGATION}, {0x1d, MyCmd.Keycode.NAVIGATION}, {0x1e, MyCmd.Keycode.NAVIGATION}, {0x1f, MyCmd.Keycode.NAVIGATION}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x21, MyCmd.Keycode.NEXT}, {0x22, MyCmd.Keycode.NEXT}, {0x23, MyCmd.Keycode.PREVIOUS}, {0x24, MyCmd.Keycode.PREVIOUS}, {0x25, MyCmd.Keycode.NEXT}, {0x26, MyCmd.Keycode.PREVIOUS}, {0x27, MyCmd.Keycode.HOME}, {0x28, MyCmd.Keycode.DVD}, {0x29, MyCmd.Keycode.AUX_IN}, {0x2a, MyCmd.Keycode.PREVIOUS}, {0x2b, MyCmd.Keycode.NEXT}, {0x2c, MyCmd.Keycode.RADIO}, {0x2d, MyCmd.Keycode.KEY_CAR_INFO}, {0x30, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x31, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x32, MyCmd.Keycode.ROLL_NEXT}, {0x33, MyCmd.Keycode.ROLL_PREV}, {0x34, MyCmd.Keycode.ROLL_NEXT}, {0x35, MyCmd.Keycode.ROLL_PREV},
+
+    };
+    private final static int SET_EQ_STEP = 1;
+    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
+
     public GMXinChi() {
         buildCmdDoor((byte) 0x4, (byte) 0x2, (byte) 0xfc, (byte) 0x03);
         buildCmdRadarFront((byte) 0x2b, (byte) 0x0, (byte) 0x7, (byte) 3);
@@ -29,31 +40,6 @@ public class GMXinChi extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x8, 0x9, 0x7, 0x5, 0x6, 0xc, 0x16, 0x17, 0x18, 0x19, 0x70
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MODLE},
-            {0x6, MyCmd.Keycode.MULT_SPEECH_AND_BT}, {0x7, MyCmd.Keycode.MULT_MUTE_AND_HANG},
-
-
-            {0x10, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x11, MyCmd.Keycode.KEY_SEEK_PREV}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.POWER},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.NUMBER1}, {0x2, MyCmd.Keycode.NUMBER2}, {0x3, MyCmd.Keycode.NUMBER3}, {0x4, MyCmd.Keycode.NUMBER4}, {0x5, MyCmd.Keycode.NUMBER5}, {0x6, MyCmd.Keycode.NUMBER6},
-            {0x7, MyCmd.Keycode.RADIO}, {0x8, MyCmd.Keycode.SETUP}, {0x9, MyCmd.Keycode.POWER}, {0xa, MyCmd.Keycode.MODLE}, {0xb, MyCmd.Keycode.RADIO}, {0xc, MyCmd.Keycode.SETUP},
-            {0xd, MyCmd.Keycode.MUTE}, {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.NEXT}, {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x11, MyCmd.Keycode.BACK}, {0x12, MyCmd.Keycode.EQ},
-            {0x13, MyCmd.Keycode.EJECT}, {0x14, MyCmd.Keycode.DVD}, {0x15, MyCmd.Keycode.AS}, {0x16, MyCmd.Keycode.TIME_SETTING}, {0x17, MyCmd.Keycode.PLAY_PAUSE}, {0x18, MyCmd.Keycode.HOME},
-            {0x19, MyCmd.Keycode.PREVIOUS}, {0x1a, MyCmd.Keycode.NEXT}, {0x1b, MyCmd.Keycode.BT}, {0x1c, MyCmd.Keycode.NAVIGATION}, {0x1d, MyCmd.Keycode.NAVIGATION}, {0x1e, MyCmd.Keycode.NAVIGATION},
-            {0x1f, MyCmd.Keycode.NAVIGATION}, {0x20, MyCmd.Keycode.NAVIGATION}, {0x21, MyCmd.Keycode.NEXT}, {0x22, MyCmd.Keycode.NEXT}, {0x23, MyCmd.Keycode.PREVIOUS}, {0x24, MyCmd.Keycode.PREVIOUS},
-            {0x25, MyCmd.Keycode.NEXT}, {0x26, MyCmd.Keycode.PREVIOUS}, {0x27, MyCmd.Keycode.HOME}, {0x28, MyCmd.Keycode.DVD}, {0x29, MyCmd.Keycode.AUX_IN}, {0x2a, MyCmd.Keycode.PREVIOUS},
-            {0x2b, MyCmd.Keycode.NEXT}, {0x2c, MyCmd.Keycode.RADIO}, {0x2d, MyCmd.Keycode.KEY_CAR_INFO}, {0x30, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x31, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-            {0x32, MyCmd.Keycode.ROLL_NEXT}, {0x33, MyCmd.Keycode.ROLL_PREV}, {0x34, MyCmd.Keycode.ROLL_NEXT}, {0x35, MyCmd.Keycode.ROLL_PREV},
-
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -131,9 +117,7 @@ public class GMXinChi extends Canbox {
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
-        byte[] mData = new byte[]{
-                (byte) 0x88, 0x4, 4, 0, 0, 0
-        };
+        byte[] mData = new byte[]{(byte) 0x88, 0x4, 4, 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
 
     }
@@ -217,18 +201,6 @@ public class GMXinChi extends Canbox {
         }
     }
 
-    private final static int SET_EQ_STEP = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == SET_EQ_STEP) {
-                sendEQCmd((byte) msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
-
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
         if (cmd == EQ_REQUEST_ALL_MAX) {
@@ -289,7 +261,14 @@ public class GMXinChi extends Canbox {
 
         }
         return ret;
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SET_EQ_STEP) {
+                sendEQCmd((byte) msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void parseEQ(int id, byte[] buf) {
 
@@ -301,4 +280,8 @@ public class GMXinChi extends Canbox {
 
         super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQBuf);
     }
+
+
+
+
 }

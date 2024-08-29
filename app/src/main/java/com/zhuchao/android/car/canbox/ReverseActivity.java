@@ -14,20 +14,7 @@ import java.util.Objects;
 
 public class ReverseActivity extends Activity {
 
-    private ReverseUI mRadioUI;
     private static ReverseActivity mThis;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.back);
-        mRadioUI = ReverseUI.getInstance(this, findViewById(R.id.screen1_main), 0);
-        mRadioUI.onCreate();
-        mThis = this;
-        OSProManager.mHandlerReverse = mHandler;
-        MMLog.d("ReverseActivity", "ReverseActivity.onCreate tag="+findViewById(R.id.screen1_main).getTag());
-    }
-
     private static final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
@@ -37,6 +24,18 @@ public class ReverseActivity extends Activity {
             }
         }
     };
+    private ReverseUI mRadioUI;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.back);
+        mRadioUI = ReverseUI.getInstance(this, findViewById(R.id.screen1_main), 0);
+        mRadioUI.onCreate();
+        mThis = this;
+        OSProManager.mHandlerReverse = mHandler;
+        MMLog.d("ReverseActivity", "ReverseActivity.onCreate tag=" + findViewById(R.id.screen1_main).getTag());
+    }
 
     @Override
     protected void onResume() {

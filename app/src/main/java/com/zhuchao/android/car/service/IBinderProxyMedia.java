@@ -22,8 +22,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
     private static final String TAG = "IBinderProxyMedia";
     private final RemoteCallbackList<IMyAidlInterfaceListener> mListenerList = new RemoteCallbackList<>();
-    private int mRemoteCallbackCount = 0;
     private final ReentrantLock reentrantLock = new ReentrantLock(); // ReentrantLock 对象
+    private int mRemoteCallbackCount = 0;
 
     @Override
     public void registerListener(IMyAidlInterfaceListener iMyCarAidlInterfaceListener) {
@@ -133,40 +133,28 @@ public class IBinderProxyMedia extends IMyMediaAidlInterface.Stub {
             if (Cabinet.getPlayManager().getMediaLibraryManager() != null) {
                 switch (MsgID) {
                     case MessageEvent.MESSAGE_EVENT_LOCAL_VIDEO:
-                        if (Cabinet.getPlayManager().getLocalMediaVideos().getCount() > 0)
-                            movies = Cabinet.getPlayManager().getLocalMediaVideos().toMovieList();
-                        else
-                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalVideoSession().getVideoList().toMovieList();
+                        if (Cabinet.getPlayManager().getLocalMediaVideos().getCount() > 0) movies = Cabinet.getPlayManager().getLocalMediaVideos().toMovieList();
+                        else movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalVideoSession().getVideoList().toMovieList();
                         return transformToPMovie(movies);
                     case MessageEvent.MESSAGE_EVENT_USB_VIDEO:
-                        if (Cabinet.getPlayManager().getLocalUSBMediaVideos().getCount() > 0)
-                            movies = Cabinet.getPlayManager().getLocalUSBMediaVideos().toMovieList();
-                        else
-                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBVideoSession().getVideoList().toMovieList();
+                        if (Cabinet.getPlayManager().getLocalUSBMediaVideos().getCount() > 0) movies = Cabinet.getPlayManager().getLocalUSBMediaVideos().toMovieList();
+                        else movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBVideoSession().getVideoList().toMovieList();
                         return transformToPMovie(movies);//复制数据到AIDL空间
                     case MessageEvent.MESSAGE_EVENT_SD_VIDEO:
-                        if (Cabinet.getPlayManager().getLocalSDMediaVideos().getCount() > 0)
-                            movies = Cabinet.getPlayManager().getLocalSDMediaVideos().toMovieList();
-                        else
-                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDVideoSession().getVideoList().toMovieList();
+                        if (Cabinet.getPlayManager().getLocalSDMediaVideos().getCount() > 0) movies = Cabinet.getPlayManager().getLocalSDMediaVideos().toMovieList();
+                        else movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDVideoSession().getVideoList().toMovieList();
                         return transformToPMovie(movies);
                     case MessageEvent.MESSAGE_EVENT_LOCAL_AUDIO:
-                        if (Cabinet.getPlayManager().getLocalMediaAudios().getCount() > 0)
-                            movies = Cabinet.getPlayManager().getLocalMediaAudios().toMovieList();
-                        else
-                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalAudioSession().getVideoList().toMovieList();
+                        if (Cabinet.getPlayManager().getLocalMediaAudios().getCount() > 0) movies = Cabinet.getPlayManager().getLocalMediaAudios().toMovieList();
+                        else movies = Cabinet.getPlayManager().getMediaLibraryManager().getLocalAudioSession().getVideoList().toMovieList();
                         return transformToPMovie(movies);
                     case MessageEvent.MESSAGE_EVENT_USB_AUDIO:
-                        if (Cabinet.getPlayManager().getLocalUSBMediaAudios().getCount() > 0)
-                            movies = Cabinet.getPlayManager().getLocalUSBMediaAudios().toMovieList();
-                        else
-                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBAudioSession().getVideoList().toMovieList();
+                        if (Cabinet.getPlayManager().getLocalUSBMediaAudios().getCount() > 0) movies = Cabinet.getPlayManager().getLocalUSBMediaAudios().toMovieList();
+                        else movies = Cabinet.getPlayManager().getMediaLibraryManager().getUSBAudioSession().getVideoList().toMovieList();
                         return transformToPMovie(movies);
                     case MessageEvent.MESSAGE_EVENT_SD_AUDIO:
-                        if (Cabinet.getPlayManager().getLocalSDMediaAudios().getCount() > 0)
-                            movies = Cabinet.getPlayManager().getLocalSDMediaAudios().toMovieList();
-                        else
-                            movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDAudioSession().getVideoList().toMovieList();
+                        if (Cabinet.getPlayManager().getLocalSDMediaAudios().getCount() > 0) movies = Cabinet.getPlayManager().getLocalSDMediaAudios().toMovieList();
+                        else movies = Cabinet.getPlayManager().getMediaLibraryManager().getSDAudioSession().getVideoList().toMovieList();
                         return transformToPMovie(movies);
                 }
             }

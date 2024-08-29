@@ -15,17 +15,7 @@ import com.zhuchao.android.car.canbox.RadarManager;
 
 public class SubrauODS extends Canbox {
 
-    public SubrauODS() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
 
             {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG},
 
@@ -43,8 +33,25 @@ public class SubrauODS extends Canbox {
             {(byte) 0x84, KEY_BACK}, {(byte) 0x86, KEY_GPS}, {(byte) 0x8b, KEY_SET},
 
     };
-
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    byte[] mAirData = new byte[8];
     private int mKey = 0;
+    private byte mTemp = 127;
+    private int mDoorStatus = 0;
+
+
+    public SubrauODS() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -69,10 +76,6 @@ public class SubrauODS extends Canbox {
             doKey(mKey, 0);
         }
     }
-
-    byte[] mAirData = new byte[8];
-
-    private byte mTemp = 127;
 
     private void parseACInfo(byte[] data, int len) {
         if (data[6] >= 30) {
@@ -151,7 +154,6 @@ public class SubrauODS extends Canbox {
         }
 
     }
-
 
     private byte getRadarData2(byte i) {
         byte data = 0;
@@ -270,8 +272,6 @@ public class SubrauODS extends Canbox {
         }
     }
 
-    private int mDoorStatus = 0;
-
     public void setVolume(int volume) {
 
         // byte[] data = new byte[] { (byte) 0x84, 0x2, 0x2, (byte) volume };
@@ -282,16 +282,6 @@ public class SubrauODS extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     public void setContext(Context c) {
         super.setContext(c);

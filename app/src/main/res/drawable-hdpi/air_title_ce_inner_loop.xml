@@ -2,12 +2,12 @@
 
 <level-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:maxLevel="0"
-        android:drawable="@drawable/air_title_ce_inner_loop_0" />
+        android:drawable="@drawable/air_title_ce_inner_loop_0"
+        android:maxLevel="0" />
     <item
-        android:maxLevel="1"
-        android:drawable="@drawable/air_title_ce_inner_loop_1" />
+        android:drawable="@drawable/air_title_ce_inner_loop_1"
+        android:maxLevel="1" />
     <item
-        android:maxLevel="2"
-        android:drawable="@drawable/air_title_ce_inner_loop_a" />
+        android:drawable="@drawable/air_title_ce_inner_loop_a"
+        android:maxLevel="2" />
 </level-list>

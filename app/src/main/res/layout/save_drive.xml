@@ -5,10 +5,10 @@
     android:background="@drawable/panel_background"
     android:gravity="center"
     android:orientation="vertical"
-    android:paddingBottom="15px"
     android:paddingLeft="10px"
+    android:paddingTop="5px"
     android:paddingRight="10px"
-    android:paddingTop="5px">
+    android:paddingBottom="15px">
 
     <TextView
         android:layout_width="fill_parent"
@@ -27,10 +27,10 @@
         android:layout_width="640px"
         android:layout_height="110px"
         android:gravity="center"
-        android:paddingBottom="15px"
         android:paddingLeft="10px"
-        android:paddingRight="10px"
         android:paddingTop="5px"
+        android:paddingRight="10px"
+        android:paddingBottom="15px"
         android:text="@string/warning_driving"
         android:textColor="#ffffff"
         android:textSize="20sp" />

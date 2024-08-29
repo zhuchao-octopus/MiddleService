@@ -15,13 +15,24 @@ import com.zhuchao.android.car.manager.McuManager;
 
 public class MitsubishiOutLanderSimple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
+
+            {0x7, KEY_SOURCE}, {0x8, KEY_GPS},
+
+            {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final static int UPDATE_EQ = 1;
+    private final byte[] mAirData = new byte[8];
+    byte[] mEqData = new byte[6];
+    private int mDoorStatus = 0;
+
     public MitsubishiOutLanderSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
         updateCanboxKeySettings();
     }
 
@@ -34,17 +45,6 @@ public class MitsubishiOutLanderSimple extends Canbox {
         }
         setEQVolume(volume);
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
-
-            {0x7, KEY_SOURCE}, {0x8, KEY_GPS},
-
-            {0x9, KEY_BT_DIAL}, {0xa, KEY_BT_HANG},
-
-    };
 
     public void updateCanboxKeySettings() {
         // if (CarUtil.getKeyType()==2) {
@@ -84,8 +84,6 @@ public class MitsubishiOutLanderSimple extends Canbox {
         }
     }
 
-    private final byte[] mAirData = new byte[8];
-
     private void parseACInfo(byte[] data, int len) {
 
         byte[] airData = new byte[8];
@@ -112,11 +110,7 @@ public class MitsubishiOutLanderSimple extends Canbox {
     private void checkHideRadar() {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
-    }
-
-    private final static int HIDE_RADAR = 0;
-    private final static int UPDATE_EQ = 1;
-    private final Handler mHandler = new Handler() {
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HIDE_RADAR:
@@ -280,8 +274,6 @@ public class MitsubishiOutLanderSimple extends Canbox {
         }
     }
 
-    private int mDoorStatus = 0;
-
     // private Handler mHandler = new Handler() {
     // public void handleMessage(Message msg) {
     // switch (msg.what) {
@@ -305,8 +297,6 @@ public class MitsubishiOutLanderSimple extends Canbox {
         byte[] data = new byte[]{(byte) 0x84, 0x2, 0x08, (byte) volume};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] mEqData = new byte[6];
 
     public void sendEqToCanbox(byte[] eq) {
         if (eq != null && eq.length >= 11) {
@@ -403,4 +393,8 @@ public class MitsubishiOutLanderSimple extends Canbox {
         sendDataToCanbox(buf, buf.length);
         super.stopConnect();
     }
+
+
+
+
 }

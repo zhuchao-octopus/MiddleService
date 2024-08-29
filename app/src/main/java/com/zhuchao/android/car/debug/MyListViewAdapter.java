@@ -38,10 +38,6 @@ public class MyListViewAdapter extends ArrayAdapter<String> {
         mList.add(s);
     }
 
-    public static class ViewHolder {
-        public TextView text;
-    }
-
     public View getView(int position, View convertView, ViewGroup parent) {
         if (mList == null) return null;
 
@@ -58,6 +54,10 @@ public class MyListViewAdapter extends ArrayAdapter<String> {
         viewHolder.text.setText(mList.get(position));
         return convertView;
 
+    }
+
+    public static class ViewHolder {
+        public TextView text;
     }
 
 }

@@ -6,6 +6,11 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BMWE46LuZheng extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x41, 0x25};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.BT_DIAL}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.NEXT}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_HANG},
+
+    };
+
     public BMWE46LuZheng() {
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
         buildCmdEQ((byte) 0x27, (byte) 0x0, 6);
@@ -14,15 +19,6 @@ public class BMWE46LuZheng extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x41, 0x25};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.BT_DIAL}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.NEXT},
-            {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_HANG},
-
-    };
-
 
     @Override
     public int getAngleValue(byte[] data) {

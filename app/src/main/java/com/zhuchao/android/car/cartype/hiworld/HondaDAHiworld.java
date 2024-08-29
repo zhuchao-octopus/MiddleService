@@ -17,6 +17,15 @@ import java.util.Locale;
 
 public class HondaDAHiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x11, 0x12, 0x16, 0x17, 0x32, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x75, (byte) 0x84, (byte) 0x85, (byte) 0x87, (byte) 0x89, (byte) 0xa4, (byte) 0xe8};
+    private final static byte[][] KEYS_WHEEL = {{0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN}, {0x57, MyCmd.Keycode.KEY_TURN_A}, {0x58, MyCmd.Keycode.KEY_TURN_D}, {0x5b, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x5c, MyCmd.Keycode.KEY_SEEK_PREV}, {0x5d, MyCmd.Keycode.NEXT}, {0x5e, MyCmd.Keycode.PREVIOUS},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.MUTE}, {0xb, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MODLE}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x22, MyCmd.Keycode.ALL_APP}, {0x23, MyCmd.Keycode.KEY_FM}, {0x24, MyCmd.Keycode.KEY_AM}, {0x25, MyCmd.Keycode.AUDIO}, {0x26, MyCmd.Keycode.AUDIO}, {0x27, MyCmd.Keycode.AUDIO},
+
+    };
+    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
+
     public HondaDAHiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
@@ -38,29 +47,10 @@ public class HondaDAHiworld extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-
     @Override
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x11, 0x12, 0x16, 0x17, 0x32, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x75, (byte) 0x84, (byte) 0x85, (byte) 0x87, (byte) 0x89, (byte) 0xa4, (byte) 0xe8
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN}, {0x57, MyCmd.Keycode.KEY_TURN_A}, {0x58, MyCmd.Keycode.KEY_TURN_D}, {0x5b, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x5c, MyCmd.Keycode.KEY_SEEK_PREV}, {0x5d, MyCmd.Keycode.NEXT}, {0x5e, MyCmd.Keycode.PREVIOUS},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0x8, MyCmd.Keycode.PREVIOUS},
-            {0x9, MyCmd.Keycode.NEXT}, {0xa, MyCmd.Keycode.MUTE}, {0xb, MyCmd.Keycode.MODLE}, {0xc, MyCmd.Keycode.MODLE}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT},
-            {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x22, MyCmd.Keycode.ALL_APP}, {0x23, MyCmd.Keycode.KEY_FM}, {0x24, MyCmd.Keycode.KEY_AM}, {0x25, MyCmd.Keycode.AUDIO}, {0x26, MyCmd.Keycode.AUDIO},
-            {0x27, MyCmd.Keycode.AUDIO},
-
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x01, 0x2};
@@ -325,7 +315,6 @@ public class HondaDAHiworld extends Canbox {
         }
     }
 
-
     public int getOutTemp(byte[] data) {//
         short t = (short) ((data[10] & 0xff) | ((data[9] & 0xff) << 8));
         return t;
@@ -338,16 +327,6 @@ public class HondaDAHiworld extends Canbox {
     public void startConnect() {
 
     }
-
-    private final Handler mHandlerRepeat = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                sendEQCmd(msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-    byte[] mEQCmdBuf = new byte[]{0x2, (byte) 0xad, 0x0, 0x0};
 
     private void sendEQCmd(int style, int step) {
         mHandlerRepeat.removeMessages(0);
@@ -382,7 +361,14 @@ public class HondaDAHiworld extends Canbox {
             mHandlerRepeat.sendMessageDelayed(mHandlerRepeat.obtainMessage(0, style, step), 100);
         }
 
-    }
+    }    private final Handler mHandlerRepeat = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                sendEQCmd(msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -613,7 +599,6 @@ public class HondaDAHiworld extends Canbox {
         udpateLang();
     }
 
-
     public boolean isSupportCompass() {
         return true;
     }
@@ -670,10 +655,12 @@ public class HondaDAHiworld extends Canbox {
                 direction = 14;
                 break;
         }
-        byte[] buf = new byte[]{
-                0x13, (byte) (0x94), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte) (direction & 0xff), 0, 0, 0, 0, 0, 0, 0
-        };
+        byte[] buf = new byte[]{0x13, (byte) (0x94), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, (byte) (direction & 0xff), 0, 0, 0, 0, 0, 0, 0};
 
         sendDataToCanbox(buf, buf.length);
     }
+
+
+
+
 }

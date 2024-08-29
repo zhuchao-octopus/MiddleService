@@ -11,6 +11,13 @@ import java.util.Locale;
 
 public class VWHiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x12, 0x13, 0x72, 0x73};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x9, KEY_NEXTSONG}, {0x8, KEY_PREVIOUSSONG}, {0x3, KEY_MUTE},
+
+            {0x8, KEY_MIC}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0xF, MyCmd.Keycode.SPEECH}, {0xa, MyCmd.Keycode.MODLE},};
+    private final byte[] mLcdInfo = new byte[14];
+    private final boolean mShowVolume = false;
+
     public VWHiworld() {
         mIdAC = 0x73;
         buildCmdDoor((byte) 0x73, (byte) 0x2, (byte) 0xf8, (byte) 0x09);
@@ -31,7 +38,6 @@ public class VWHiworld extends Canbox {
         mLcdInfo[1] = (byte) 0xd2;
     }
 
-
     @Override
     public int getAngleValue2(byte[] data) {
         int angle = data[7] & 0xff;
@@ -41,16 +47,6 @@ public class VWHiworld extends Canbox {
         }
         return -angle;
     }
-
-
-    private final byte[] mLcdInfo = new byte[14];
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x12, 0x13, 0x72, 0x73};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x9, KEY_NEXTSONG}, {0x8, KEY_PREVIOUSSONG}, {0x3, KEY_MUTE},
-
-            {0x8, KEY_MIC}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG}, {0xF, MyCmd.Keycode.SPEECH}, {0xa, MyCmd.Keycode.MODLE},
-    };
 
     @Override
     public int getACTemp(byte data) {
@@ -197,8 +193,6 @@ public class VWHiworld extends Canbox {
             sendDataToCanbox(mLcdInfo, mLcdInfo.length);
         }
     }
-
-    private final boolean mShowVolume = false;
 
     public void setMediaSrc(int source) {// default is simple box
         String s = "";

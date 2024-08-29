@@ -10,6 +10,15 @@ import java.util.Calendar;
 
 public class BydHCY extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x7, 0x14, 0x17, 0x19, 0x26, 0x27, 0x43, 0x32, 0x33, 0x34, 0x35};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x4, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.PREVIOUS}, {0x8, MyCmd.Keycode.KEY_SEEK_PREV}, {0xa, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xc, MyCmd.Keycode.BT}, {0xd, MyCmd.Keycode.BT}, {0xe, MyCmd.Keycode.EQ}, {0xf, MyCmd.Keycode.EQ}, {0x10, MyCmd.Keycode.MODLE}, {0x11, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.SPEECH}, {0x14, MyCmd.Keycode.SPEECH},
+
+
+            {0x20, MyCmd.Keycode.MUTE}, {0x30, MyCmd.Keycode.POWER}, {0x31, MyCmd.Keycode.BACK}, {0x35, MyCmd.Keycode.MUTE}, {0x36, MyCmd.Keycode.HOME},
+
+
+    };
+
     public BydHCY() {
 
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
@@ -28,10 +37,6 @@ public class BydHCY extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x7, 0x14, 0x17, 0x19, 0x26, 0x27, 0x43, 0x32, 0x33, 0x34, 0x35
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = null;
@@ -66,18 +71,6 @@ public class BydHCY extends Canbox {
         //		}
         return cmd;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x4, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.PREVIOUS}, {0x8, MyCmd.Keycode.KEY_SEEK_PREV}, {0xa, MyCmd.Keycode.NEXT},
-            {0xb, MyCmd.Keycode.KEY_SEEK_NEXT}, {0xc, MyCmd.Keycode.BT}, {0xd, MyCmd.Keycode.BT}, {0xe, MyCmd.Keycode.EQ}, {0xf, MyCmd.Keycode.EQ}, {0x10, MyCmd.Keycode.MODLE},
-            {0x11, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.SPEECH}, {0x14, MyCmd.Keycode.SPEECH},
-
-
-            {0x20, MyCmd.Keycode.MUTE}, {0x30, MyCmd.Keycode.POWER}, {0x31, MyCmd.Keycode.BACK}, {0x35, MyCmd.Keycode.MUTE}, {0x36, MyCmd.Keycode.HOME},
-
-
-    };
-
 
     @Override
     public int getACTemp(byte data) {
@@ -163,9 +156,7 @@ public class BydHCY extends Canbox {
 
     public void updateCompass(int compass, double altitude) {
 
-        byte[] buf = new byte[]{
-                (byte) (0xca), 4, 0, 0, 0, 0
-        };
+        byte[] buf = new byte[]{(byte) (0xca), 4, 0, 0, 0, 0};
 
         int a = (int) (altitude * 10);
         int altitudePoint = a % 10;

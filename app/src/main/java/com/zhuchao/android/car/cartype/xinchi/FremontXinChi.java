@@ -14,6 +14,19 @@ import java.util.Locale;
 
 public class FremontXinChi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x70, 0xa, 0x7};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.RADIO}, {0x7, MyCmd.Keycode.SPEECH}, {0x8, MyCmd.Keycode.BT},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER},
+
+            {0x4, MyCmd.Keycode.NAVIGATION}, {0x5, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x6, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x7, MyCmd.Keycode.ROLL_PREV}, {0x8, MyCmd.Keycode.ROLL_NEXT}, {0x9, MyCmd.Keycode.EJECT},
+
+    };
+    private final static int SET_EQ_STEP = 1;
+    private final byte[] mAirDataEx = new byte[14];
+    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
+
     public FremontXinChi() {
         buildCmdDoor((byte) 0xa, (byte) 0x2, (byte) 0xfc, (byte) 0x03);
         //		buildCmdRadarFront((byte) 0xc, (byte) 0x0, (byte) 0x4, (byte) 3);
@@ -30,22 +43,6 @@ public class FremontXinChi extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x70, 0xa, 0x7};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.RADIO},
-            {0x7, MyCmd.Keycode.SPEECH}, {0x8, MyCmd.Keycode.BT},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER},
-
-            {0x4, MyCmd.Keycode.NAVIGATION}, {0x5, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x6, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x7, MyCmd.Keycode.ROLL_PREV}, {0x8, MyCmd.Keycode.ROLL_NEXT},
-            {0x9, MyCmd.Keycode.EJECT},
-
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -77,8 +74,6 @@ public class FremontXinChi extends Canbox {
         }
         return data;
     }
-
-    private final byte[] mAirDataEx = new byte[14];
 
     public void parseACInfo(byte[] data) {
 
@@ -128,7 +123,6 @@ public class FremontXinChi extends Canbox {
         }
     }
 
-
     @Override
     public void startConnect() {
         // TODO Auto-generated method stub
@@ -136,7 +130,6 @@ public class FremontXinChi extends Canbox {
         byte[] mData = new byte[]{(byte) 0xff, 0x1, (byte) 0x7f};
         sendDataToCanbox(mData, mData.length);
     }
-
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -238,7 +231,6 @@ public class FremontXinChi extends Canbox {
         }
     }
 
-
     private void sendEQCmd(byte id, int step) {
 
         if (step == 0) {
@@ -256,18 +248,6 @@ public class FremontXinChi extends Canbox {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(SET_EQ_STEP, id, step), 200);
         }
     }
-
-    private final static int SET_EQ_STEP = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == SET_EQ_STEP) {
-                sendEQCmd((byte) msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-
-    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -301,15 +281,20 @@ public class FremontXinChi extends Canbox {
                     return 0;
             }
 
-            byte[] buf = new byte[]{
-                    (byte) 0x93, 0x7, mEQBuf[5], (byte) (mEQBuf[4] + 1), (byte) (mEQBuf[3] + 1), (byte) (mEQBuf[2] + 1), (byte) (mEQBuf[1] + 1), (byte) (mEQBuf[0] + 1), 0
-            };
+            byte[] buf = new byte[]{(byte) 0x93, 0x7, mEQBuf[5], (byte) (mEQBuf[4] + 1), (byte) (mEQBuf[3] + 1), (byte) (mEQBuf[2] + 1), (byte) (mEQBuf[1] + 1), (byte) (mEQBuf[0] + 1), 0};
             sendDataToCanbox(buf, buf.length);
 
             super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQBuf);
         }
         return ret;
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SET_EQ_STEP) {
+                sendEQCmd((byte) msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void parseEQ(int id, byte[] buf) {
 
@@ -329,7 +314,6 @@ public class FremontXinChi extends Canbox {
 
         super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQBuf);
     }
-
 
     public int getUpdateTime() {
         return 60000;
@@ -366,7 +350,6 @@ public class FremontXinChi extends Canbox {
 
         sendDataToCanbox(buf, buf.length);
     }
-
 
     public void setContext(Context c) {
         super.setContext(c);
@@ -405,4 +388,8 @@ public class FremontXinChi extends Canbox {
             sendDataToCanbox(buf, buf.length);
         }
     }
+
+
+
+
 }

@@ -11,6 +11,29 @@ import java.util.Date;
 
 public class UAZ001Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL2 = {
+
+            {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK},
+
+            {0x9, MyCmd.Keycode.MUTE},
+
+
+            {0x2b, MyCmd.Keycode.HOME}, {0x28, MyCmd.Keycode.BT},
+
+            {0x37, MyCmd.Keycode.SETUP}, {0x54, MyCmd.Keycode.NAVIGATION},
+
+    };
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x4, MyCmd.Keycode.MULT_SPEECH_AND_BT},
+
+
+            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
+
+            {0xc, MyCmd.Keycode.MODLE},
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+
+
     public UAZ001Hiworld() {
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
         buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
@@ -33,35 +56,6 @@ public class UAZ001Hiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-
-            {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.BACK},
-
-            {0x9, MyCmd.Keycode.MUTE},
-
-
-            {0x2b, MyCmd.Keycode.HOME}, {0x28, MyCmd.Keycode.BT},
-
-            {0x37, MyCmd.Keycode.SETUP}, {0x54, MyCmd.Keycode.NAVIGATION},
-
-    };
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0x4, MyCmd.Keycode.MULT_SPEECH_AND_BT},
-
-
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-
-            {0xc, MyCmd.Keycode.MODLE},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
-
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -217,9 +211,7 @@ public class UAZ001Hiworld extends Canbox {
         //		byte y = (byte) (curDate.getYear() - 100);
         //		byte mon = (byte) (curDate.getMonth() + 1);
         //		byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, 0, 0, 0, 0
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, 0, 0, 0, 0};
 
         sendDataToCanbox(buf, buf.length);
 

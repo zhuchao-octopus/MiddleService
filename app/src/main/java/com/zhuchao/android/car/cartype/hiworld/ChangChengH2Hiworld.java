@@ -12,6 +12,22 @@ import java.util.Date;
 
 public class ChangChengH2Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x32, (byte) 0xf2};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
+
+            {0xc, MyCmd.Keycode.MODLE}, {0xd, MyCmd.Keycode.NEXT}, {0xe, MyCmd.Keycode.PREVIOUS},
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0},};
+    private final byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT},
+
+
+            {0x2c, MyCmd.Keycode.MODLE}, {0x3f, MyCmd.Keycode.HOME}, {0x43, MyCmd.Keycode.MUTE}, {0x47, MyCmd.Keycode.BT_DIAL}, {0x48, MyCmd.Keycode.BT_HANG},
+
+            {0x49, MyCmd.Keycode.RADIO}, {0x4a, MyCmd.Keycode.SETUP}, {0x4b, MyCmd.Keycode.NAVIGATION},};
+
     public ChangChengH2Hiworld() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
@@ -37,31 +53,6 @@ public class ChangChengH2Hiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            (byte) 0x32, (byte) 0xf2
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
-
-            {0xc, MyCmd.Keycode.MODLE}, {0xd, MyCmd.Keycode.NEXT}, {0xe, MyCmd.Keycode.PREVIOUS},
-
-    };
-
-    private final byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT},
-
-
-            {0x2c, MyCmd.Keycode.MODLE}, {0x3f, MyCmd.Keycode.HOME}, {0x43, MyCmd.Keycode.MUTE}, {0x47, MyCmd.Keycode.BT_DIAL}, {0x48, MyCmd.Keycode.BT_HANG},
-
-            {0x49, MyCmd.Keycode.RADIO}, {0x4a, MyCmd.Keycode.SETUP}, {0x4b, MyCmd.Keycode.NAVIGATION},
-    };
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0},
-    };
 
     private byte[] getCarTypeCmd() {
         if (CarUtil.getModelId() == 23) {

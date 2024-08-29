@@ -15,15 +15,13 @@ import com.zhuchao.android.car.R;
 
 public class WarningMsgManager {
     public final static String TAG = "WarningMsgManager";
+    public static boolean isShow = false;
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams mLayoutParams;
     private static View mView;
     private static TextView mTextWarn;
     private static ImageView mImageWarn;
     private static ImageView mImageWarn2;
-
-    public static boolean isShow = false;
-
 
     public static void init(Context context) {
         if (mView == null) {

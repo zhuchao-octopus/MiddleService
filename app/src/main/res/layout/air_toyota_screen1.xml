@@ -36,10 +36,10 @@
             android:layout_weight="6"
             android:background="@drawable/air_back1"
             android:orientation="vertical"
-            android:paddingBottom="5px"
             android:paddingLeft="5px"
+            android:paddingTop="5px"
             android:paddingRight="5px"
-            android:paddingTop="5px">
+            android:paddingBottom="5px">
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -233,10 +233,10 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="0px"
-                    android:layout_marginBottom="3px"
                     android:layout_marginLeft="5px"
-                    android:layout_marginRight="5px"
                     android:layout_marginTop="3px"
+                    android:layout_marginRight="5px"
+                    android:layout_marginBottom="3px"
                     android:layout_weight="1"
                     android:background="@drawable/air_button_back1"
                     android:orientation="horizontal">
@@ -253,8 +253,8 @@
                     <View
                         android:layout_width="2px"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="5px"
                         android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         android:background="#000000" />
 
                     <ImageView
@@ -269,8 +269,8 @@
                     <View
                         android:layout_width="2px"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="5px"
                         android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         android:background="#000000" />
 
                     <ImageView
@@ -285,8 +285,8 @@
                     <View
                         android:layout_width="2px"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="5px"
                         android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         android:background="#000000" />
 
                     <ImageView
@@ -302,10 +302,10 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="0px"
-                    android:layout_marginBottom="3px"
                     android:layout_marginLeft="5px"
-                    android:layout_marginRight="5px"
                     android:layout_marginTop="3px"
+                    android:layout_marginRight="5px"
+                    android:layout_marginBottom="3px"
                     android:layout_weight="1"
                     android:background="@drawable/air_button_back1"
                     android:orientation="horizontal">
@@ -322,8 +322,8 @@
                     <View
                         android:layout_width="2px"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="5px"
                         android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         android:background="#000000" />
 
                     <ImageView
@@ -338,8 +338,8 @@
                     <View
                         android:layout_width="2px"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="5px"
                         android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         android:background="#000000" />
 
                     <ImageView
@@ -354,8 +354,8 @@
                     <View
                         android:layout_width="2px"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="5px"
                         android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         android:background="#000000" />
 
                     <ImageView
@@ -445,8 +445,8 @@
                         android:id="@+id/wind_minus"
                         android:layout_width="80px"
                         android:layout_height="fill_parent"
-                        android:scaleType="center"
                         android:background="@drawable/button_click_back1"
+                        android:scaleType="center"
                         android:src="@drawable/air_wind_small"></ImageView>
 
                     <LinearLayout
@@ -549,8 +549,8 @@
                         android:id="@+id/wind_add"
                         android:layout_width="80px"
                         android:layout_height="fill_parent"
-                        android:scaleType="center"
                         android:background="@drawable/button_click_back1"
+                        android:scaleType="center"
                         android:src="@drawable/air_wind_large"></ImageView>
                 </LinearLayout>
 
@@ -809,8 +809,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_marginRight="0px"
                         android:layout_marginTop="5px"
+                        android:layout_marginRight="0px"
                         android:src="@drawable/air_content_max"></ImageView>
                 </FrameLayout>
 

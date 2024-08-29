@@ -11,6 +11,10 @@ import java.nio.charset.StandardCharsets;
 
 public class ZongTaiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x24, 0x40, 0x41, 0x38, 0x39, 0x47};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x4, MyCmd.Keycode.KEY_SEEK_PREV}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.NAVIGATION}, {0x11, MyCmd.Keycode.HOME}, {0x12, MyCmd.Keycode.AUDIO}, {0x13, MyCmd.Keycode.SETUP}, {0x14, MyCmd.Keycode.AUDIO}, {0x15, MyCmd.Keycode.SPEECH}, {0x16, MyCmd.Keycode.BT_DIAL}, {0x17, MyCmd.Keycode.BACK},};
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
     public ZongTaiRaise() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -33,14 +37,6 @@ public class ZongTaiRaise extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x24, 0x40, 0x41, 0x38, 0x39, 0x47};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x4, MyCmd.Keycode.KEY_SEEK_PREV}, {0x5, MyCmd.Keycode.BT},
-            {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.NAVIGATION}, {0x11, MyCmd.Keycode.HOME},
-            {0x12, MyCmd.Keycode.AUDIO}, {0x13, MyCmd.Keycode.SETUP}, {0x14, MyCmd.Keycode.AUDIO}, {0x15, MyCmd.Keycode.SPEECH}, {0x16, MyCmd.Keycode.BT_DIAL}, {0x17, MyCmd.Keycode.BACK},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xee, 0x02, (byte) 0x90, 0};
@@ -121,10 +117,6 @@ public class ZongTaiRaise extends Canbox {
         super.parseACInfo(airData);
     }
 
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
 
@@ -135,9 +127,7 @@ public class ZongTaiRaise extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 

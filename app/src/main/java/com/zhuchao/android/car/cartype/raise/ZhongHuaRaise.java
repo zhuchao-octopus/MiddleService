@@ -9,6 +9,12 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class ZhongHuaRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x4};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.SPEECH}, {0xa, MyCmd.Keycode.BT}, {0x10, MyCmd.Keycode.HOME}, {0x11, MyCmd.Keycode.AUDIO}, {0x12, MyCmd.Keycode.MULT_MUTE_AND_POWER}, {0x13, MyCmd.Keycode.RADIO}, {0x14, MyCmd.Keycode.BT}, {0x15, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x16, MyCmd.Keycode.VOLUME_ROLL_UP},};
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+
     public ZhongHuaRaise() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x6, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -23,14 +29,6 @@ public class ZhongHuaRaise extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x4};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.MUTE},
-            {0x7, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.BT_HANG}, {0x9, MyCmd.Keycode.SPEECH}, {0xa, MyCmd.Keycode.BT}, {0x10, MyCmd.Keycode.HOME}, {0x11, MyCmd.Keycode.AUDIO},
-            {0x12, MyCmd.Keycode.MULT_MUTE_AND_POWER}, {0x13, MyCmd.Keycode.RADIO}, {0x14, MyCmd.Keycode.BT}, {0x15, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x16, MyCmd.Keycode.VOLUME_ROLL_UP},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0x85, 0x01, 0};
@@ -98,7 +96,6 @@ public class ZhongHuaRaise extends Canbox {
 
     }
 
-
     public void sendId3(byte index, String num) {
 
         try {
@@ -144,11 +141,6 @@ public class ZhongHuaRaise extends Canbox {
             Log.d("Nissan2013Simple", "sendId3" + e);
         }
     }
-
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
 
     public void setSongName(String s) {
         sendId3((byte) 0x70, s);

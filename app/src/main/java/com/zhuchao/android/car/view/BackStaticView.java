@@ -13,27 +13,24 @@ import com.zhuchao.android.car.hardware.BackTrack;
 public class BackStaticView extends View {
 
     private static final String TAG = "BackStaticView";
+    private final static int PAINT_WIDTH = 6;
+    private final static int UP_Y = 0;
+    private final static double[] SAWTOOTH = new double[]{35, 35, 30, 20, 18, 15};
+    private BackTrack mBackTrack;
+    private Paint mPaint1;
+    private Paint mPaint2;
+    private Paint mPaint3;
+    private double[] xy_l_screen_x;
+    private double[] xy_l_screen_y;
+    private double[] xy_r_screen_x;
+    private double[] xy_r_screen_y;
+    private int[] sawtooth_l_point;
+    private int[] sawtooth_r_point;
 
     public BackStaticView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
-
-    private final static int PAINT_WIDTH = 6;
-
-    private BackTrack mBackTrack;
-    private Paint mPaint1;
-    private Paint mPaint2;
-    private Paint mPaint3;
-
-    private double[] xy_l_screen_x;
-    private double[] xy_l_screen_y;
-
-    private double[] xy_r_screen_x;
-    private double[] xy_r_screen_y;
-
-    private int[] sawtooth_l_point;
-    private int[] sawtooth_r_point;
 
     private void init() {
         mBackTrack = new BackTrack();
@@ -67,8 +64,6 @@ public class BackStaticView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec - UP_Y);
     }
-
-    private final static int UP_Y = 0;
 
     protected void onDraw(Canvas canvas) {
         // TODO Auto-generated method stub
@@ -210,8 +205,4 @@ public class BackStaticView extends View {
         mBackTrack.do_drack(0.5);
         invalidate();
     }
-
-    private final static double[] SAWTOOTH = new double[]{
-            35, 35, 30, 20, 18, 15
-    };
 }

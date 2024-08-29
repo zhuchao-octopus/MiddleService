@@ -7,6 +7,14 @@ import java.util.Locale;
 
 public class Mazda6Xinbas extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x3, 0x4, 0x7, 0x8, 0xa, 0xb};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE},
+
+            {0x13, MyCmd.Keycode.MUTE}, {0x14, MyCmd.Keycode.BT_DIAL}, {0x15, MyCmd.Keycode.BT_HANG},
+
+
+    };
+
     public Mazda6Xinbas() {
         buildCmdDoor((byte) 0x2, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
         //		buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0xa);
@@ -18,18 +26,6 @@ public class Mazda6Xinbas extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x3, 0x4, 0x7, 0x8, 0xa, 0xb
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE},
-
-            {0x13, MyCmd.Keycode.MUTE}, {0x14, MyCmd.Keycode.BT_DIAL}, {0x15, MyCmd.Keycode.BT_HANG},
-
-
-    };
 
     @Override
     public int getAngleValue(byte[] data) {

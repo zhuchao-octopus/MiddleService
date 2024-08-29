@@ -46,97 +46,15 @@ import java.util.Objects;
 
 
 public class MultimService extends MediaBrowserService implements PlayerCallback {
-    private static final String TAG = "MultimService";
-
-    private MediaSession mMediaSessionCompat;
-    ///private MediaBrowser mMediaBrowserCompat;
-    ///private MediaController mMediaControllerCompat;
-    private PlaybackState mPlaybackState;
-    private AudioManager mAudioManager;
-    //private MediaPlayer mMediaPlayer;
-
     ///private int mPosition = -1;
     public static final String MEDIA_ID_ROOT = "_ROOT_";
-    public boolean isHaveAudioFocus = false;
+    private static final String TAG = "MultimService";
     ///private VideoList mPlayBeanList = new VideoList();
     ///private Context mContext;
     @SuppressLint("StaticFieldLeak")
     private static TPlayManager tPlayManager = null;
     private final IBinderProxyMedia mIBinderProxyMedia = new IBinderProxyMedia();
-    ///private boolean mAutoPlay = false;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        MMLog.d(TAG, TAG + " onCreate! " + TAppProcessUtils.getCurrentProcessNameAndId(this));
-        Cabinet.getEventBus().registerEventObserver(this);
-        ///mContext = this;
-        mPlaybackState = new PlaybackState.Builder().setState(PlaybackState.STATE_NONE, 0, 1.0f).setActions(getAvailableActions(PlaybackState.STATE_NONE)).build();
-        ///mPlaybackState = new PlaybackState.Builder().setState(PlaybackState.STATE_NONE,0,1.0f).build();
-
-        mMediaSessionCompat = new MediaSession(this, TAG);
-        mMediaSessionCompat.setCallback(mSessionCallback);
-        mMediaSessionCompat.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
-        mMediaSessionCompat.setPlaybackState(mPlaybackState);
-        mMediaSessionCompat.setActive(true);
-        /// 设置token后会触发MediaBrowserCompat.ConnectionCallback的回调方法
-        /// 表示MediaBrowser与MediaBrowserService连接成功
-        setSessionToken(mMediaSessionCompat.getSessionToken());
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-
-        tPlayManager = TPlayManager.getInstance();
-        tPlayManager.registerStatusListener(this);
-        tPlayManager.initialMediaLibrary();///初始化媒体资源库
-        ///tPlayManager.printAllEventListener();
-        ///BlueToothManager.getBlueToothStatus();
-        registerUserEventReceiver();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        String action = null;
-        if (intent != null) action = intent.getAction();
-        ///MMLog.d(TAG, TAG + " onStartCommand action=" + action);
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        ///return super.onBind(intent);
-        return mIBinderProxyMedia;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mMediaSessionCompat != null) {
-            mMediaSessionCompat.release();
-            mMediaSessionCompat = null;
-            //mMediaControllerCompat.unregisterCallback(mMediaControllerCompatCallback);
-        }
-        Cabinet.getEventBus().unRegisterEventObserver(this);
-        unregisterUserEventBroadcastListener();
-        MMLog.d(TAG, TAG + " onDestroy!");
-    }
-
-    @Nullable
-    @Override
-    public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
-        MMLog.d(TAG, TAG + " onGetRoot! " + clientPackageName + " clientUid=" + clientUid);
-        return new BrowserRoot(MEDIA_ID_ROOT, null);
-    }
-
-    @Override
-    public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowser.MediaItem>> result) {
-        MMLog.d(TAG, TAG + " onLoadChildren!");
-        // 将信息从当前线程中移除，允许后续调用sendResult方法
-        result.detach();
-        // 我们模拟获取数据的过程，真实情况应该是异步从网络或本地读取数据
-        ArrayList<MediaBrowser.MediaItem> mediaItems = transformPlayList(null);
-        // 向Browser发送 播放列表数据
-        result.sendResult(mediaItems);
-    }
-
+    //private MediaPlayer mMediaPlayer;
     private final MediaSession.Callback mSessionCallback = new MediaSession.Callback() {
         @Override
         public void onPrepare() {
@@ -265,7 +183,45 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
             MMLog.d(TAG, "MediaSessionCompat.Callback onCommand");
         }
     };
+    private final BroadcastReceiver mUserEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MMLog.d(TAG, "mUserEventReceiver action=" + intent.getAction() + " " + TAppProcessUtils.getCurrentProcessNameAndId(context));
 
+            switch (Objects.requireNonNull(intent.getAction())) {
+
+                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PLAY_PAUSE:
+                    if (tPlayManager != null) tPlayManager.playPause();
+                    break;
+                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PLAY:
+                    if (tPlayManager != null) {
+                        String musicName = intent.getStringExtra("file-name");
+                        if (!FileUtils.EmptyString(musicName) && FileUtils.existFile(musicName)) tPlayManager.startPlay(musicName);
+                        else tPlayManager.autoPlay();
+                    }
+                    break;
+                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PAUSE:
+                    if (tPlayManager != null && tPlayManager.isPlaying()) tPlayManager.playPause();
+                    break;
+                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_NEXT:
+                    if (tPlayManager != null) tPlayManager.playNext();
+                    break;
+                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PREV:
+                    if (tPlayManager != null) tPlayManager.playPre();
+                    break;
+                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_AUTO_PLAY:
+                    if (tPlayManager != null) {
+                        tPlayManager.setPlayOrder(DataID.PLAY_MANAGER_PLAY_ORDER2);//循环顺序播放
+                        tPlayManager.setAutoPlaySource(DataID.SESSION_SOURCE_ALL);//自动播放源列表
+                        tPlayManager.autoPlay();
+                    }
+                    break;
+                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_DISABLE_AUTO_PLAY:
+                    break;
+            }
+        }
+    };
+    public boolean isHaveAudioFocus = false;
     AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
         public void onAudioFocusChange(int focusChange) {
@@ -295,32 +251,13 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
             }
         }
     };
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private int requestAudioFocus() {
-        int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        isHaveAudioFocus = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == result;
-        ///if (isHaveAudioFocus) {
-        ///    mAudioManager.registerMediaButtonEventReceiver(mMediaButtonReceive);
-        ///}
-        MMLog.d(TAG, "requestAudioFocus " + isHaveAudioFocus);
-        return result;
-    }
-
-    private void autoAudioFocus() {
-        int result = mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-        isHaveAudioFocus = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == result;
-    }
-
-    public long getAvailableActions(int state) {
-        long actions = PlaybackState.ACTION_SKIP_TO_PREVIOUS | ACTION_SKIP_TO_NEXT | PlaybackState.ACTION_REWIND | PlaybackState.ACTION_FAST_FORWARD;
-        if (state == PlaybackState.STATE_PLAYING) {
-            actions |= PlaybackState.ACTION_PAUSE;
-        } else {
-            actions |= PlaybackState.ACTION_PLAY;
-        }
-        return actions;
-    }
+    ///private boolean mAutoPlay = false;
+    private MediaSession mMediaSessionCompat;
+    ///private MediaBrowser mMediaBrowserCompat;
+    ///private MediaController mMediaControllerCompat;
+    private PlaybackState mPlaybackState;
+    private AudioManager mAudioManager;
+    private PlayerStatusInfo playerStatusInfo = null;
 
     /*
     private final MediaBrowser.SubscriptionCallback mBrowserSubscriptionCallback = new MediaBrowser.SubscriptionCallback() {
@@ -455,7 +392,103 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
         return new MediaBrowser.MediaItem(metadata.getDescription(), MediaBrowser.MediaItem.FLAG_PLAYABLE);
     }
 
-    private PlayerStatusInfo playerStatusInfo = null;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MMLog.d(TAG, TAG + " onCreate! " + TAppProcessUtils.getCurrentProcessNameAndId(this));
+        Cabinet.getEventBus().registerEventObserver(this);
+        ///mContext = this;
+        mPlaybackState = new PlaybackState.Builder().setState(PlaybackState.STATE_NONE, 0, 1.0f).setActions(getAvailableActions(PlaybackState.STATE_NONE)).build();
+        ///mPlaybackState = new PlaybackState.Builder().setState(PlaybackState.STATE_NONE,0,1.0f).build();
+
+        mMediaSessionCompat = new MediaSession(this, TAG);
+        mMediaSessionCompat.setCallback(mSessionCallback);
+        mMediaSessionCompat.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS | MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mMediaSessionCompat.setPlaybackState(mPlaybackState);
+        mMediaSessionCompat.setActive(true);
+        /// 设置token后会触发MediaBrowserCompat.ConnectionCallback的回调方法
+        /// 表示MediaBrowser与MediaBrowserService连接成功
+        setSessionToken(mMediaSessionCompat.getSessionToken());
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
+        tPlayManager = TPlayManager.getInstance();
+        tPlayManager.registerStatusListener(this);
+        tPlayManager.initialMediaLibrary();///初始化媒体资源库
+        ///tPlayManager.printAllEventListener();
+        ///BlueToothManager.getBlueToothStatus();
+        registerUserEventReceiver();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String action = null;
+        if (intent != null) action = intent.getAction();
+        ///MMLog.d(TAG, TAG + " onStartCommand action=" + action);
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        ///return super.onBind(intent);
+        return mIBinderProxyMedia;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mMediaSessionCompat != null) {
+            mMediaSessionCompat.release();
+            mMediaSessionCompat = null;
+            //mMediaControllerCompat.unregisterCallback(mMediaControllerCompatCallback);
+        }
+        Cabinet.getEventBus().unRegisterEventObserver(this);
+        unregisterUserEventBroadcastListener();
+        MMLog.d(TAG, TAG + " onDestroy!");
+    }
+
+    @Nullable
+    @Override
+    public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
+        MMLog.d(TAG, TAG + " onGetRoot! " + clientPackageName + " clientUid=" + clientUid);
+        return new BrowserRoot(MEDIA_ID_ROOT, null);
+    }
+
+    @Override
+    public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowser.MediaItem>> result) {
+        MMLog.d(TAG, TAG + " onLoadChildren!");
+        // 将信息从当前线程中移除，允许后续调用sendResult方法
+        result.detach();
+        // 我们模拟获取数据的过程，真实情况应该是异步从网络或本地读取数据
+        ArrayList<MediaBrowser.MediaItem> mediaItems = transformPlayList(null);
+        // 向Browser发送 播放列表数据
+        result.sendResult(mediaItems);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private int requestAudioFocus() {
+        int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        isHaveAudioFocus = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == result;
+        ///if (isHaveAudioFocus) {
+        ///    mAudioManager.registerMediaButtonEventReceiver(mMediaButtonReceive);
+        ///}
+        MMLog.d(TAG, "requestAudioFocus " + isHaveAudioFocus);
+        return result;
+    }
+
+    private void autoAudioFocus() {
+        int result = mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+        isHaveAudioFocus = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == result;
+    }
+
+    public long getAvailableActions(int state) {
+        long actions = PlaybackState.ACTION_SKIP_TO_PREVIOUS | ACTION_SKIP_TO_NEXT | PlaybackState.ACTION_REWIND | PlaybackState.ACTION_FAST_FORWARD;
+        if (state == PlaybackState.STATE_PLAYING) {
+            actions |= PlaybackState.ACTION_PAUSE;
+        } else {
+            actions |= PlaybackState.ACTION_PLAY;
+        }
+        return actions;
+    }
 
     @Override
     public void onEventPlayerStatus(PlayerStatusInfo playerStatusInfo) {
@@ -523,46 +556,6 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
         }
     }
 
-    private final BroadcastReceiver mUserEventReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MMLog.d(TAG, "mUserEventReceiver action=" + intent.getAction() + " " + TAppProcessUtils.getCurrentProcessNameAndId(context));
-
-            switch (Objects.requireNonNull(intent.getAction())) {
-
-                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PLAY_PAUSE:
-                    if (tPlayManager != null) tPlayManager.playPause();
-                    break;
-                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PLAY:
-                    if (tPlayManager != null) {
-                        String musicName = intent.getStringExtra("file-name");
-                        if (!FileUtils.EmptyString(musicName) && FileUtils.existFile(musicName))
-                            tPlayManager.startPlay(musicName);
-                        else tPlayManager.autoPlay();
-                    }
-                    break;
-                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PAUSE:
-                    if (tPlayManager != null && tPlayManager.isPlaying()) tPlayManager.playPause();
-                    break;
-                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_NEXT:
-                    if (tPlayManager != null) tPlayManager.playNext();
-                    break;
-                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PREV:
-                    if (tPlayManager != null) tPlayManager.playPre();
-                    break;
-                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_AUTO_PLAY:
-                    if (tPlayManager != null) {
-                        tPlayManager.setPlayOrder(DataID.PLAY_MANAGER_PLAY_ORDER2);//循环顺序播放
-                        tPlayManager.setAutoPlaySource(DataID.SESSION_SOURCE_ALL);//自动播放源列表
-                        tPlayManager.autoPlay();
-                    }
-                    break;
-                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_DISABLE_AUTO_PLAY:
-                    break;
-            }
-        }
-    };
-
     @TCourierSubscribe(threadMode = MethodThreadMode.threadMode.BACKGROUND)
     public boolean onTCourierSubscribeEvent(EventCourier eventCourier) {
         ///MMLog.d(TAG, eventCourier.toStr());
@@ -579,8 +572,7 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                 if (tPlayManager != null && subName != null) {
                     if (tPlayManager.getPlayingMedia() != null) {
                         if (tPlayManager.getPlayingMedia().getPathName() != null) {
-                            if (tPlayManager.isPlaying() && tPlayManager.getPlayingMedia().getPathName().contains(subName))
-                                tPlayManager.stopIdle();
+                            if (tPlayManager.isPlaying() && tPlayManager.getPlayingMedia().getPathName().contains(subName)) tPlayManager.stopIdle();
                         }
                     }
                 }
@@ -626,8 +618,7 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                 break;
 
             case MessageEvent.MESSAGE_EVENT_OCTOPUS_PLAYING_STATUS:
-                if (this.playerStatusInfo != null)
-                    mIBinderProxyMedia.notifyPlayerStatus(this.playerStatusInfo);
+                if (this.playerStatusInfo != null) mIBinderProxyMedia.notifyPlayerStatus(this.playerStatusInfo);
                 break;
         }
         return true;

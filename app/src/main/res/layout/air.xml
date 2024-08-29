@@ -234,8 +234,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginRight="60px"
                 android:layout_marginTop="5px"
+                android:layout_marginRight="60px"
                 android:src="@drawable/air_content_max"></ImageView>
 
             <ImageView
@@ -243,8 +243,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginRight="60px"
                 android:layout_marginTop="5px"
+                android:layout_marginRight="60px"
                 android:src="@drawable/air_title_ce_auto_mid"></ImageView>
 
             <LinearLayout

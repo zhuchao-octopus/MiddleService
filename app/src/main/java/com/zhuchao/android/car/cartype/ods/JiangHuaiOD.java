@@ -9,6 +9,12 @@ import java.util.Date;
 
 public class JiangHuaiOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x38, 0x39, 0x40};
+    private static final byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH}, {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.RADIO}, {(byte) 0x82, MyCmd.Keycode.PREVIOUS}, {(byte) 0x83, MyCmd.Keycode.NEXT}, {(byte) 0x84, MyCmd.Keycode.BACK}, {(byte) 0x85, MyCmd.Keycode.BT}, {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.AUDIO}, {(byte) 0x88, MyCmd.Keycode.SETUP}, {(byte) 0x89, MyCmd.Keycode.BT}, {(byte) 0x8a, MyCmd.Keycode.NEXT}, {(byte) 0x8b, MyCmd.Keycode.SETUP},};
+    private static final byte[][] KEYS_WHEEL_R3 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH}, {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.HOME}, {(byte) 0x82, MyCmd.Keycode.BACK}, {(byte) 0x83, MyCmd.Keycode.AUDIO}, {(byte) 0x84, MyCmd.Keycode.RADIO}, {(byte) 0x85, MyCmd.Keycode.BT}, {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.MUTE}, {(byte) 0x88, MyCmd.Keycode.KEY_DISPLAY}, {(byte) 0x89, MyCmd.Keycode.BT}, {(byte) 0x8a, MyCmd.Keycode.NEXT}, {(byte) 0x8b, MyCmd.Keycode.SETUP},};
+    private final static int AUTO_W = 1024;
+    private final static int AUTO_H = 600;
+
     public JiangHuaiOD() {
 
         buildCmdRepeatSendCarType(getCarTypeCmd());
@@ -28,8 +34,6 @@ public class JiangHuaiOD extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x38, 0x39, 0x40};
-
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xa7, 0x2, 0x11, 0};// x80
         if (CarUtil.getModelId() == 13) {
@@ -43,22 +47,6 @@ public class JiangHuaiOD extends Canbox {
         }
         return cmd;
     }
-
-    private static final byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL},
-            {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH}, {(byte) 0x80, MyCmd.Keycode.POWER},
-            {(byte) 0x81, MyCmd.Keycode.RADIO}, {(byte) 0x82, MyCmd.Keycode.PREVIOUS}, {(byte) 0x83, MyCmd.Keycode.NEXT}, {(byte) 0x84, MyCmd.Keycode.BACK}, {(byte) 0x85, MyCmd.Keycode.BT},
-            {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.AUDIO}, {(byte) 0x88, MyCmd.Keycode.SETUP}, {(byte) 0x89, MyCmd.Keycode.BT}, {(byte) 0x8a, MyCmd.Keycode.NEXT},
-            {(byte) 0x8b, MyCmd.Keycode.SETUP},
-    };
-
-    private static final byte[][] KEYS_WHEEL_R3 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL},
-            {0xa, MyCmd.Keycode.MULT_MUTE_AND_HANG}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0x12, MyCmd.Keycode.SPEECH}, {(byte) 0x80, MyCmd.Keycode.POWER},
-            {(byte) 0x81, MyCmd.Keycode.HOME}, {(byte) 0x82, MyCmd.Keycode.BACK}, {(byte) 0x83, MyCmd.Keycode.AUDIO}, {(byte) 0x84, MyCmd.Keycode.RADIO}, {(byte) 0x85, MyCmd.Keycode.BT},
-            {(byte) 0x86, MyCmd.Keycode.NAVIGATION}, {(byte) 0x87, MyCmd.Keycode.MUTE}, {(byte) 0x88, MyCmd.Keycode.KEY_DISPLAY}, {(byte) 0x89, MyCmd.Keycode.BT}, {(byte) 0x8a, MyCmd.Keycode.NEXT},
-            {(byte) 0x8b, MyCmd.Keycode.SETUP},
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -142,7 +130,6 @@ public class JiangHuaiOD extends Canbox {
     public void setMediaSrc(int source) {
     }
 
-
     @Override
     public void setVolume(int volume) {
 
@@ -181,10 +168,6 @@ public class JiangHuaiOD extends Canbox {
         sendDataToCanbox(buf, buf.length);
     }
 
-
-    private final static int AUTO_W = 1024;
-    private final static int AUTO_H = 600;
-
     public void touchInReverseEx(int x, int y, int w, int h, int down) {
         if (CarUtil.getModelId() == 13) {
             if (w == 0) {
@@ -197,9 +180,7 @@ public class JiangHuaiOD extends Canbox {
             int y1 = (y * AUTO_H) / h;
             byte[] buf;
 
-            buf = new byte[]{
-                    (byte) 0xa8, 0x6, (byte) down, (byte) ((x1 & 0xff00) >> 8), (byte) (x1 & 0xff), (byte) ((y1 & 0xff00) >> 8), (byte) (y1 & 0xff), 0
-            };
+            buf = new byte[]{(byte) 0xa8, 0x6, (byte) down, (byte) ((x1 & 0xff00) >> 8), (byte) (x1 & 0xff), (byte) ((y1 & 0xff00) >> 8), (byte) (y1 & 0xff), 0};
 
             sendDataToCanbox(buf, buf.length);
         }

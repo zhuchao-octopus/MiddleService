@@ -20,13 +20,55 @@ import java.util.Locale;
 
 
 public class ToyotaLuZheng extends Canbox {
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x4, MyCmd.Keycode.KEY_SEEK_PREV}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.SPEECH}, {0x8, MyCmd.Keycode.BT_DIAL}, {0x9, MyCmd.Keycode.BT_HANG}, {0xa, MyCmd.Keycode.HOME}, {0xb, MyCmd.Keycode.PREVIOUS}, {0xc, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.NAVIGATION}, {0x11, MyCmd.Keycode.AUDIO}, {0x12, MyCmd.Keycode.MENU}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.ROLL_NEXT}, {0x18, MyCmd.Keycode.ROLL_PREV}, {(byte) 0x81, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_DOWN}, {(byte) 0x84, MyCmd.Keycode.PREVIOUS}, {(byte) 0x83, MyCmd.Keycode.NEXT}, {(byte) 0x86, MyCmd.Keycode.PREVIOUS}, {(byte) 0x85, MyCmd.Keycode.NEXT}, {(byte) 0x87, MyCmd.Keycode.POWER}, {(byte) 0x88, MyCmd.Keycode.MODLE},
+
+    };
+    private final static int BUTTON_AUTO_W = 160;
+    private final static int BUTTON_AUTO_H = 120;
+    private final byte[] mAcDataEx = new byte[1];
+    private final int mVolume = -1;
+    byte[] airData = new byte[15];
+    byte[] dataAir = new byte[13];
+    //	private boolean mResetVolume = true;
+    Handler mHandlerSendEQ = new Handler() {
+        public void handleMessage(Message msg) {
+
+            //			int volume = MachineConfig
+            //					.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
+            //			if (volume == -1) {
+            //				volume = 45;
+            //			}
+            //			if (mResetVolume) {
+            //				sendEQ((byte) 0x8, (byte) 1);
+            //				sendEQ((byte) 0xa, (byte) 0);// unmute
+            //				mResetVolume = false;
+            //			}
+            //			setEQVolume(volume);
+            //
+            //			mHandlerSendEQ.removeMessages(0);
+            //			mHandlerSendEQ.sendEmptyMessageDelayed(0, 1000);
+        }
+    };
+    byte[] mEqData = new byte[6];
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private byte[] mAcData = new byte[1];
+    private boolean mIsOpenCamera = false;
+    private boolean m360Exit = false;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mDoorStatus;
+    private byte[] mData0x21;
+    private byte[] mData0x22;
+    private byte[] mData0x23;
+    private byte[] mData0x25;
+    private byte[] mData0x1f;
+    private int mPhoneStatus = -1;
+
     public ToyotaLuZheng() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
         //		if (CarUtil.getCarEQ() == 1) {
         //			CarUtil.mIsNeedSendEQ = true;
         //			CarUtil.setMcuEQZoneUsed(1);
@@ -82,9 +124,7 @@ public class ToyotaLuZheng extends Canbox {
         //		}
 
         if (CarUtil.getCarType() != 0) {
-            byte[] data = new byte[]{
-                    (byte) 0xCA, 0x1, (byte) (CarUtil.getCarType() - 1)
-            };
+            byte[] data = new byte[]{(byte) 0xCA, 0x1, (byte) (CarUtil.getCarType() - 1)};
             sendDataToCanbox(data, data.length);
         }
         udpateLang();
@@ -95,6 +135,19 @@ public class ToyotaLuZheng extends Canbox {
             mContext.sendBroadcast(i);
         }
     }
+
+    // public void setReverseRadaVol(byte param){
+    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x0, param};
+    // sendDataToCanbox(data, data.length);
+    // }
+    // public void setParkCarMode(byte param){
+    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x2, param};
+    // sendDataToCanbox(data, data.length);
+    // }
+    // public void requestInfo(byte param){
+    // byte []data = new byte[]{(byte)0x90, 0x2, param, 0};
+    // sendDataToCanbox(data, data.length);
+    // }
 
     public void stopConnect() {// default is simple box
         mHandlerSendEQ.removeMessages(0);
@@ -107,20 +160,6 @@ public class ToyotaLuZheng extends Canbox {
     private void startEQ() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x4, MyCmd.Keycode.KEY_SEEK_PREV}, {0x5, MyCmd.Keycode.MODLE},
-            {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.SPEECH}, {0x8, MyCmd.Keycode.BT_DIAL}, {0x9, MyCmd.Keycode.BT_HANG}, {0xa, MyCmd.Keycode.HOME}, {0xb, MyCmd.Keycode.PREVIOUS},
-            {0xc, MyCmd.Keycode.NEXT}, {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.NAVIGATION}, {0x11, MyCmd.Keycode.AUDIO}, {0x12, MyCmd.Keycode.MENU},
-            {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x15, MyCmd.Keycode.BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.ROLL_NEXT}, {0x18, MyCmd.Keycode.ROLL_PREV},
-            {(byte) 0x81, MyCmd.Keycode.VOLUME_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_DOWN}, {(byte) 0x84, MyCmd.Keycode.PREVIOUS}, {(byte) 0x83, MyCmd.Keycode.NEXT},
-            {(byte) 0x86, MyCmd.Keycode.PREVIOUS}, {(byte) 0x85, MyCmd.Keycode.NEXT}, {(byte) 0x87, MyCmd.Keycode.POWER}, {(byte) 0x88, MyCmd.Keycode.MODLE},
-
-    };
-
-
-    byte[] airData = new byte[15];
-
 
     private byte getACTempPriv(byte data, int unit) {
         if (unit == 0) {
@@ -138,9 +177,6 @@ public class ToyotaLuZheng extends Canbox {
 
         return data;
     }
-
-
-    byte[] dataAir = new byte[13];
 
     private void parseACInfo(byte[] data, int len) {
         int copy = data.length - 1;
@@ -193,30 +229,6 @@ public class ToyotaLuZheng extends Canbox {
             }
         }
     }
-
-    //	private boolean mResetVolume = true;
-    Handler mHandlerSendEQ = new Handler() {
-        public void handleMessage(Message msg) {
-
-            //			int volume = MachineConfig
-            //					.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
-            //			if (volume == -1) {
-            //				volume = 45;
-            //			}
-            //			if (mResetVolume) {
-            //				sendEQ((byte) 0x8, (byte) 1);
-            //				sendEQ((byte) 0xa, (byte) 0);// unmute
-            //				mResetVolume = false;
-            //			}
-            //			setEQVolume(volume);
-            //
-            //			mHandlerSendEQ.removeMessages(0);
-            //			mHandlerSendEQ.sendEmptyMessageDelayed(0, 1000);
-        }
-    };
-
-    private byte[] mAcData = new byte[1];
-    private final byte[] mAcDataEx = new byte[1];
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -472,8 +484,6 @@ public class ToyotaLuZheng extends Canbox {
         mIsOpenCamera = false;
     }
 
-    private boolean mIsOpenCamera = false;
-
     private void do360CameraSwitch(int s) {
 
         String top = AppConfig.getTopActivity();
@@ -502,10 +512,6 @@ public class ToyotaLuZheng extends Canbox {
         }
     }
 
-    private boolean m360Exit = false;
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
     public void updateOutDoorTemp(int temp) {
 
         if (temp == CarUtil.INVALID_OUT_DOOR_TEMP) {
@@ -528,13 +534,6 @@ public class ToyotaLuZheng extends Canbox {
 
     }
 
-    private int mDoorStatus;
-    private byte[] mData0x21;
-    private byte[] mData0x22;
-    private byte[] mData0x23;
-    private byte[] mData0x25;
-    private byte[] mData0x1f;
-
     public void sendDataToCanbox(byte[] data, int len) {
         if ((data[0] & 0xff) == 0xff) {
             if (data[1] == 0x25) {
@@ -554,19 +553,6 @@ public class ToyotaLuZheng extends Canbox {
 
     }
 
-    // public void setReverseRadaVol(byte param){
-    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x0, param};
-    // sendDataToCanbox(data, data.length);
-    // }
-    // public void setParkCarMode(byte param){
-    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x2, param};
-    // sendDataToCanbox(data, data.length);
-    // }
-    // public void requestInfo(byte param){
-    // byte []data = new byte[]{(byte)0x90, 0x2, param, 0};
-    // sendDataToCanbox(data, data.length);
-    // }
-
     private void sendEQ(byte cmd, byte param) {
         byte[] data = new byte[]{(byte) 0x84, 0x2, cmd, param};
         sendDataToCanbox(data, data.length);
@@ -577,8 +563,6 @@ public class ToyotaLuZheng extends Canbox {
         byte[] data = new byte[]{(byte) 0x84, 0x2, 0x07, (byte) volume};
         sendDataToCanbox(data, data.length);
     }
-
-    private final int mVolume = -1;
 
     public void setVolume(int volume) {
         //		if (CarUtil.mIsNeedSendEQ) {
@@ -596,8 +580,6 @@ public class ToyotaLuZheng extends Canbox {
         //			setEQVolume(volume);
         //		}
     }
-
-    byte[] mEqData = new byte[6];
 
     public void sendEqToCanbox(byte[] eq) {
         //		if (eq != null && eq.length >= 11) {
@@ -703,9 +685,6 @@ public class ToyotaLuZheng extends Canbox {
             sendDataToCanbox(buf, buf.length);
         }
     }
-
-    private final static int BUTTON_AUTO_W = 160;
-    private final static int BUTTON_AUTO_H = 120;
 
     public void touchInReverse(int x, int y, int w, int h) {
         if (!m360Exit) {
@@ -879,10 +858,6 @@ public class ToyotaLuZheng extends Canbox {
 
     }
 
-    byte[] data;
-
-    private int mPhoneStatus = -1;
-
     public void setPhoneEx(int status, String num, String name) {
         if (mPhoneStatus == status) {
             return;
@@ -933,9 +908,7 @@ public class ToyotaLuZheng extends Canbox {
                 num = " ";
             }
 
-            data2 = new byte[]{
-                    (byte) 0xc0, 0x8, 0x5, 0x40, (byte) status, 0, 0, 0, 0, 0
-            };
+            data2 = new byte[]{(byte) 0xc0, 0x8, 0x5, 0x40, (byte) status, 0, 0, 0, 0, 0};
             sendDataToCanbox(data2, data2.length);
         } else {
             if (data != null) {
@@ -971,10 +944,6 @@ public class ToyotaLuZheng extends Canbox {
             sendDataToCanbox(data, data.length);
         }
     }
-
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
 
     // public void setPhone(int status, String num) {
     // sendId3((byte)0x1, num);

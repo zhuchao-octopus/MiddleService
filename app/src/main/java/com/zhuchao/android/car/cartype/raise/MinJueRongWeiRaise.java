@@ -16,6 +16,23 @@ import java.util.Date;
 
 public class MinJueRongWeiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x39, 0x40, 0x41, 0x42, 0x52, 0x53, 0x54, 0x60, 0x61, 0x62, 0x63, 0x64};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_BT}, {0x7, MyCmd.Keycode.MODLE},
+            //		{ 0x8, MyCmd.Keycode },
+            {0x9, MyCmd.Keycode.BT}, {0x10, MyCmd.Keycode.SPEECH}, {0x11, MyCmd.Keycode.MENU}, {0x12, MyCmd.Keycode.BACK}, {0x13, MyCmd.Keycode.HOME}, {0x14, MyCmd.Keycode.CANBOX_OPEN_AC_VIEW}, {0x15, MyCmd.Keycode.KEY_CAR_SETTING}, {0x16, MyCmd.Keycode.MUTE}, {0x17, MyCmd.Keycode.KEY_360}, {0x1f, MyCmd.Keycode.NUMBER_STAR}, {0x20, MyCmd.Keycode.ROLL_PREV}, {0x21, MyCmd.Keycode.ROLL_NEXT}, {0x32, MyCmd.Keycode.NAVIGATION}, {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_DOWN},};
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (mContext != null) {
+                Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
+                i.putExtra("buf", (byte[]) msg.obj);
+                mContext.sendBroadcast(i);
+            }
+        }
+    };
+    byte[] airData = new byte[12];
+    private byte mDriverMode = 0;
+
     public MinJueRongWeiRaise() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xf8, (byte) 0x02);
@@ -32,18 +49,6 @@ public class MinJueRongWeiRaise extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x39, 0x40, 0x41, 0x42, 0x52, 0x53, 0x54, 0x60, 0x61, 0x62, 0x63, 0x64};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_BT},
-            {0x7, MyCmd.Keycode.MODLE},
-            //		{ 0x8, MyCmd.Keycode },
-            {0x9, MyCmd.Keycode.BT}, {0x10, MyCmd.Keycode.SPEECH}, {0x11, MyCmd.Keycode.MENU}, {0x12, MyCmd.Keycode.BACK}, {0x13, MyCmd.Keycode.HOME}, {0x14, MyCmd.Keycode.CANBOX_OPEN_AC_VIEW},
-            {0x15, MyCmd.Keycode.KEY_CAR_SETTING}, {0x16, MyCmd.Keycode.MUTE}, {0x17, MyCmd.Keycode.KEY_360}, {0x1f, MyCmd.Keycode.NUMBER_STAR}, {0x20, MyCmd.Keycode.ROLL_PREV},
-            {0x21, MyCmd.Keycode.ROLL_NEXT}, {0x32, MyCmd.Keycode.NAVIGATION}, {(byte) 0x80, MyCmd.Keycode.POWER}, {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_UP},
-            {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-    };
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xee, 0x02, 0, 0};
@@ -159,8 +164,6 @@ public class MinJueRongWeiRaise extends Canbox {
         return data;
     }
 
-    byte[] airData = new byte[12];
-
     public void parseACInfoEx(byte[] data) {
         switch ((data[4] & 0xf)) {
             case 0:
@@ -252,18 +255,6 @@ public class MinJueRongWeiRaise extends Canbox {
 
     public void setMediaSrc(int source) {
     }
-
-    private byte mDriverMode = 0;
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (mContext != null) {
-                Intent i = new Intent(MyCmd.BROADCAST_SEND_FROM_CAN);
-                i.putExtra("buf", (byte[]) msg.obj);
-                mContext.sendBroadcast(i);
-            }
-        }
-    };
 
     public void parseCanboxData(byte[] data, int len) {
         switch (data[0]) {

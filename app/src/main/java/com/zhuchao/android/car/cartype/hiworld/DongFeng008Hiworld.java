@@ -11,6 +11,16 @@ import java.util.Date;
 
 public class DongFeng008Hiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x48, 0x13, 0x32, 0x61, 0x1a, (byte) 0xed};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x2b, MyCmd.Keycode.HOME}, {0x2c, MyCmd.Keycode.MODLE}, {0x2f, MyCmd.Keycode.MENU}, {0x39, MyCmd.Keycode.KEY_DISPLAY},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
+
+
+            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
+
+            {0xc, MyCmd.Keycode.MODLE},};
+
     public DongFeng008Hiworld() {
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
         buildCmdAngle((byte) 0x1a, (byte) 0x0, 540);
@@ -32,9 +42,6 @@ public class DongFeng008Hiworld extends Canbox {
 
         buildCmdRepeatSendCarType(getCarTypeCmd());
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x48, 0x13, 0x32, 0x61, 0x1a, (byte) 0xed};
-
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x26};
@@ -75,25 +82,6 @@ public class DongFeng008Hiworld extends Canbox {
     public void stopConnect() {
 
     }
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x10, MyCmd.Keycode.PLAY_PAUSE}, {0x2b, MyCmd.Keycode.HOME}, {0x2c, MyCmd.Keycode.MODLE}, {0x2f, MyCmd.Keycode.MENU}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
-    };
-
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH}, {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
-
-
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-
-            {0xc, MyCmd.Keycode.MODLE},
-    };
-
 
     public void parseACInfo(byte[] data) {
 
@@ -184,9 +172,7 @@ public class DongFeng008Hiworld extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, s, 0, ampm, y, mon, d, format
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, s, 0, ampm, y, mon, d, format};
 
         sendDataToCanbox(buf, buf.length);
 

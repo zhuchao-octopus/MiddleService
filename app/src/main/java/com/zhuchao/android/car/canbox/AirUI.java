@@ -10,9 +10,20 @@ import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 
 public class AirUI extends UIBase implements View.OnClickListener {
-    private Canbox mCanBox;
-
+    // from air
+    public static final int STYLE_ALL = 1;
+    public static final int STYLE_INFO_ONLY = 2;
     private static final AirUI[] mUI = new AirUI[MAX_DISPLAY];
+    private static final int[] BUTTON_ON_CLICK = new int[]{R.id.wind_add, R.id.wind_add2, R.id.wind_minus, R.id.wind_minus2, R.id.left_temp_add, R.id.left_temp_minus, R.id.right_temp_add, R.id.right_temp_minus, R.id.left_temp_add2, R.id.left_temp_minus2, R.id.right_temp_add2, R.id.right_temp_minus2, R.id.wind_mode_add, R.id.wind_mode_minus, R.id.air_control_ac, R.id.air_control_auto, R.id.air_control_dual, R.id.air_control_rear, R.id.air_control_max, R.id.air_title_ce_inner_loop, R.id.air_control_ce_rear, R.id.air_control_power,};
+    public static int mStyle = 0;
+    private final byte[] mAirData = new byte[9];
+    private final int outDoorTemp = 0xff;
+    private Canbox mCanBox;
+    private int mSeatHeat = 0;
+
+    public AirUI(Context context, View view, int index) {
+        super(context, view, index);
+    }
 
     /**
      * Called when the activity is first created.
@@ -26,16 +37,6 @@ public class AirUI extends UIBase implements View.OnClickListener {
 
         return mUI[index];
     }
-
-    public AirUI(Context context, View view, int index) {
-        super(context, view, index);
-    }
-
-    private static final int[] BUTTON_ON_CLICK = new int[]{
-            R.id.wind_add, R.id.wind_add2, R.id.wind_minus, R.id.wind_minus2, R.id.left_temp_add, R.id.left_temp_minus, R.id.right_temp_add, R.id.right_temp_minus, R.id.left_temp_add2,
-            R.id.left_temp_minus2, R.id.right_temp_add2, R.id.right_temp_minus2, R.id.wind_mode_add, R.id.wind_mode_minus, R.id.air_control_ac, R.id.air_control_auto, R.id.air_control_dual,
-            R.id.air_control_rear, R.id.air_control_max, R.id.air_title_ce_inner_loop, R.id.air_control_ce_rear, R.id.air_control_power,
-    };
 
     public void onCreate() {
 
@@ -142,12 +143,6 @@ public class AirUI extends UIBase implements View.OnClickListener {
     public void showStyle() {
 
     }
-
-    // from air
-    public static final int STYLE_ALL = 1;
-    public static final int STYLE_INFO_ONLY = 2;
-    private final byte[] mAirData = new byte[9];
-    public static int mStyle = 0;
 
     private void setStyle(int style) {
         mStyle = style;
@@ -373,8 +368,6 @@ public class AirUI extends UIBase implements View.OnClickListener {
 
     }
 
-    private final int outDoorTemp = 0xff;
-
     void setAirCondtionTemperature(View view) {
         int leftTemp = mAirData[2] & 0xff;
         int rightTemp = mAirData[3] & 0xff;
@@ -468,8 +461,6 @@ public class AirUI extends UIBase implements View.OnClickListener {
             setViewVisible(view, R.id.air_action_seat_right, 0);
         }
     }
-
-    private int mSeatHeat = 0;
 
     void setAirCondtionAction(View view) {
         // ((ImageView)view.findViewById(R.id.air_action_user)).setVisibility(View.VISIBLE);

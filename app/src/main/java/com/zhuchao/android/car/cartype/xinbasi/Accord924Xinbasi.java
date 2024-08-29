@@ -10,6 +10,14 @@ import java.util.Date;
 
 public class Accord924Xinbasi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x3, 0x4, 0x7, 0x8, 0xa, 0xb};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.SPEECH}, {0x7, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.BT_HANG},
+
+            {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.MODLE},
+
+
+            {0x18, MyCmd.Keycode.KEY_SIDE_CAMERA},};
+
     public Accord924Xinbasi() {
         buildCmdDoor((byte) 0x2, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
         //		buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0xa);
@@ -21,20 +29,6 @@ public class Accord924Xinbasi extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x3, 0x4, 0x7, 0x8, 0xa, 0xb
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.SPEECH},
-            {0x7, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.BT_HANG},
-
-            {0x17, MyCmd.Keycode.HOME}, {0x18, MyCmd.Keycode.MODLE},
-
-
-            {0x18, MyCmd.Keycode.KEY_SIDE_CAMERA},
-    };
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -85,9 +79,7 @@ public class Accord924Xinbasi extends Canbox {
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
-        byte[] mData = new byte[]{
-                (byte) 0x82, 0x4, 4, 0, 0, 0
-        };
+        byte[] mData = new byte[]{(byte) 0x82, 0x4, 4, 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
 
     }
@@ -179,9 +171,7 @@ public class Accord924Xinbasi extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                (byte) 0x88, 0x06, y, mon, d, format, h, m
-        };
+        byte[] buf = new byte[]{(byte) 0x88, 0x06, y, mon, d, format, h, m};
 
         sendDataToCanbox(buf, buf.length);
     }

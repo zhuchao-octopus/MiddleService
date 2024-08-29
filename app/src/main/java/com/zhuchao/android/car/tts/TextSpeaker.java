@@ -12,15 +12,44 @@ import java.util.Locale;
  */
 
 public class TextSpeaker {
-    private TextToSpeech mTextToSpeech;
-    private final Context mContext;
-    private final OnTextSpeakerResult mOnTextSpeakerResult;
-
-    private static TextSpeaker mTextSpeaker;
     public static Locale mLocale = Locale.US;
     public static float mRate = 1.0f;
     public static float mPitch = 1.0f;
+    private static TextSpeaker mTextSpeaker;
     private static String mFisrtString = null;
+    private final Context mContext;
+    private final OnTextSpeakerResult mOnTextSpeakerResult;
+    private TextToSpeech mTextToSpeech;
+    private final OnInitListener mOnInitListener = new OnInitListener() {
+        @Override
+        public void onInit(int status) {
+            if (status == TextToSpeech.SUCCESS) {
+                mTextToSpeech.setSpeechRate(mRate);
+                mTextToSpeech.setPitch(mPitch);
+                int result = mTextToSpeech.setLanguage(mLocale);
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(mContext, "Data loss or unsupported", Toast.LENGTH_LONG).show();
+                    if (mOnTextSpeakerResult != null) mOnTextSpeakerResult.OnInit(-1);
+                } else if (result == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                    if (mFisrtString != null) {
+                        if (mTextToSpeech != null) {
+                            mTextToSpeech.speak(mFisrtString, TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                        mFisrtString = null;
+                    }
+                } else {
+                    if (mOnTextSpeakerResult != null) mOnTextSpeakerResult.OnInit(0);
+                }
+            }
+        }
+    };
+
+    TextSpeaker(Context context, Locale locale, OnTextSpeakerResult onResult) {
+        mContext = context;
+        if (locale != null) mLocale = locale;
+        mOnTextSpeakerResult = onResult;
+        mTextToSpeech = new TextToSpeech(context, mOnInitListener);
+    }
 
     public static void initDefault(Context context) {
         mTextSpeaker = new TextSpeaker(context, Locale.getDefault(), null);
@@ -54,13 +83,6 @@ public class TextSpeaker {
         return mTextSpeaker;
     }
 
-    TextSpeaker(Context context, Locale locale, OnTextSpeakerResult onResult) {
-        mContext = context;
-        if (locale != null) mLocale = locale;
-        mOnTextSpeakerResult = onResult;
-        mTextToSpeech = new TextToSpeech(context, mOnInitListener);
-    }
-
     public void speak(String text) {
         if (mTextToSpeech != null) {
             mTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
@@ -74,30 +96,6 @@ public class TextSpeaker {
             return false;
         }
     }
-
-    private final OnInitListener mOnInitListener = new OnInitListener() {
-        @Override
-        public void onInit(int status) {
-            if (status == TextToSpeech.SUCCESS) {
-                mTextToSpeech.setSpeechRate(mRate);
-                mTextToSpeech.setPitch(mPitch);
-                int result = mTextToSpeech.setLanguage(mLocale);
-                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Toast.makeText(mContext, "Data loss or unsupported", Toast.LENGTH_LONG).show();
-                    if (mOnTextSpeakerResult != null) mOnTextSpeakerResult.OnInit(-1);
-                } else if (result == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-                    if (mFisrtString != null) {
-                        if (mTextToSpeech != null) {
-                            mTextToSpeech.speak(mFisrtString, TextToSpeech.QUEUE_FLUSH, null);
-                        }
-                        mFisrtString = null;
-                    }
-                } else {
-                    if (mOnTextSpeakerResult != null) mOnTextSpeakerResult.OnInit(0);
-                }
-            }
-        }
-    };
 
     public void stop() {
         if (mTextToSpeech != null) mTextToSpeech.stop();

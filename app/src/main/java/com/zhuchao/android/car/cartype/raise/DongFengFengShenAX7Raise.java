@@ -6,6 +6,13 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class DongFengFengShenAX7Raise extends Canbox {
 
+    //	private int mRadarBack2;
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x29, 0x27};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BACK}, {0xb, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0xc, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0xd, MyCmd.Keycode.SPEECH},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0x20, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x21, MyCmd.Keycode.RADIO}, {0x22, MyCmd.Keycode.AS}, {0x23, MyCmd.Keycode.PREVIOUS}, {0x24, MyCmd.Keycode.NEXT}, {0x2b, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x2c, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x2d, MyCmd.Keycode.POWER}, {0x2f, MyCmd.Keycode.EQ}, {0x30, MyCmd.Keycode.SETUP}, {0x32, MyCmd.Keycode.EASY_CONNECT}, {0x33, MyCmd.Keycode.AUDIO}, {0x34, MyCmd.Keycode.BACK}, {0x35, MyCmd.Keycode.HOME}, {0x36, MyCmd.Keycode.NAVIGATION}, {0x37, MyCmd.Keycode.NAVIGATION}, {0x38, MyCmd.Keycode.NAVIGATION}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
+
+    };
+
     public DongFengFengShenAX7Raise() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -25,23 +32,6 @@ public class DongFengFengShenAX7Raise extends Canbox {
         //		mRadarBack2 = buildCmdRadar((byte) 0x24, (byte) 0x0, (byte) 255,
         //				(byte) 2);
     }
-
-    //	private int mRadarBack2;
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x29, 0x27};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BACK},
-            {0xb, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0xc, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0xd, MyCmd.Keycode.SPEECH},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-            {0x20, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x21, MyCmd.Keycode.RADIO}, {0x22, MyCmd.Keycode.AS}, {0x23, MyCmd.Keycode.PREVIOUS}, {0x24, MyCmd.Keycode.NEXT},
-            {0x2b, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x2c, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x2d, MyCmd.Keycode.POWER}, {0x2f, MyCmd.Keycode.EQ}, {0x30, MyCmd.Keycode.SETUP},
-            {0x32, MyCmd.Keycode.EASY_CONNECT}, {0x33, MyCmd.Keycode.AUDIO}, {0x34, MyCmd.Keycode.BACK}, {0x35, MyCmd.Keycode.HOME}, {0x36, MyCmd.Keycode.NAVIGATION}, {0x37, MyCmd.Keycode.NAVIGATION},
-            {0x38, MyCmd.Keycode.NAVIGATION}, {0x39, MyCmd.Keycode.KEY_DISPLAY},
-
-    };
 
     private byte[] getCarTypeCmd() {
         if (CarUtil.getCatelId() == 25) {

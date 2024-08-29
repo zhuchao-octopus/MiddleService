@@ -10,6 +10,9 @@ import java.util.Date;
 
 public class RongWeiRaise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_BT}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BACK}, {0x9, MyCmd.Keycode.EQ}, {0xa, MyCmd.Keycode.KEY_TURN_A}, {0xb, MyCmd.Keycode.KEY_TURN_D}, {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.NEXT}, {0x23, MyCmd.Keycode.PLAY_PAUSE}, {0x60, MyCmd.Keycode.SPEECH},};
+
+
     public RongWeiRaise() {
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
         buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 0x9, (byte) 1);
@@ -21,13 +24,6 @@ public class RongWeiRaise extends Canbox {
         mIdKey = 0x20;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MULT_MUTE_AND_BT},
-            {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BACK}, {0x9, MyCmd.Keycode.EQ}, {0xa, MyCmd.Keycode.KEY_TURN_A}, {0xb, MyCmd.Keycode.KEY_TURN_D}, {0xe, MyCmd.Keycode.PREVIOUS},
-            {0xf, MyCmd.Keycode.NEXT}, {0x23, MyCmd.Keycode.PLAY_PAUSE}, {0x60, MyCmd.Keycode.SPEECH},
-    };
 
     @Override
     public int getAngleValue(byte[] data) {

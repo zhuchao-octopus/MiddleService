@@ -8,6 +8,26 @@ import java.util.Date;
 
 public class YeMaOD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x1a};
+    private final static byte[][] KEYS_WHEEL = {{0x7, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.MUTE}, {0x14, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.NEXT}, {0x16, MyCmd.Keycode.RADIO}, {0x17, MyCmd.Keycode.POWER}, {0x1b, MyCmd.Keycode.SETUP}, {0x1e, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x1f, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x22, MyCmd.Keycode.ROLL_PREV}, {0x23, MyCmd.Keycode.ROLL_NEXT}, {0x24, MyCmd.Keycode.AS},
+
+    };
+    private final static byte[][] KEYS_WHEEL_HIGH = {{0x7, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.AS}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.BT}, {0x16, MyCmd.Keycode.RADIO}, {0x17, MyCmd.Keycode.POWER}, {0x1b, MyCmd.Keycode.MUTE}, {0x1e, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x1f, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x22, MyCmd.Keycode.ROLL_PREV}, {0x23, MyCmd.Keycode.ROLL_NEXT}, {0x24, MyCmd.Keycode.AS},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {
+
+            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.BT}, {0x8, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.MODLE}, {0x7, MyCmd.Keycode.SPEECH},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL3 = {
+
+            {0x1, MyCmd.Keycode.AS}, {0x2, MyCmd.Keycode.RADIO}, {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.NAVIGATION}, {0x6, MyCmd.Keycode.POWER}, {0x7, MyCmd.Keycode.KEYAMS_RPT}, {0x8, MyCmd.Keycode.BT}, {0x9, MyCmd.Keycode.VOLUME_ROLL_UP}, {0xa, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0xb, MyCmd.Keycode.ROLL_NEXT}, {0xc, MyCmd.Keycode.ROLL_PREV}, {0xd, MyCmd.Keycode.ROLL_PREV}, {0xe, MyCmd.Keycode.ROLL_NEXT}, {0xf, MyCmd.Keycode.BACK}, {0x10, MyCmd.Keycode.HOME}, {0x11, MyCmd.Keycode.SETUP}, {0x12, MyCmd.Keycode.AUDIO}, {0x13, MyCmd.Keycode.MODLE},
+
+
+    };
+
     public YeMaOD() {
 
         buildCmdVersion((byte) 0x30, (byte) 0x0);
@@ -32,40 +52,6 @@ public class YeMaOD extends Canbox {
         MAP_KEYS3 = KEYS_WHEEL3;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x1a};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x7, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.MUTE}, {0x14, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.NEXT}, {0x16, MyCmd.Keycode.RADIO}, {0x17, MyCmd.Keycode.POWER},
-            {0x1b, MyCmd.Keycode.SETUP}, {0x1e, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x1f, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x22, MyCmd.Keycode.ROLL_PREV}, {0x23, MyCmd.Keycode.ROLL_NEXT},
-            {0x24, MyCmd.Keycode.AS},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL_HIGH = {
-            {0x7, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.AS}, {0x14, MyCmd.Keycode.NAVIGATION}, {0x15, MyCmd.Keycode.BT}, {0x16, MyCmd.Keycode.RADIO}, {0x17, MyCmd.Keycode.POWER},
-            {0x1b, MyCmd.Keycode.MUTE}, {0x1e, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x1f, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x22, MyCmd.Keycode.ROLL_PREV}, {0x23, MyCmd.Keycode.ROLL_NEXT},
-            {0x24, MyCmd.Keycode.AS},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.BT}, {0x8, MyCmd.Keycode.MUTE},
-            {0x5, MyCmd.Keycode.MODLE}, {0x7, MyCmd.Keycode.SPEECH},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-
-            {0x1, MyCmd.Keycode.AS}, {0x2, MyCmd.Keycode.RADIO}, {0x3, MyCmd.Keycode.MODLE}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.NAVIGATION}, {0x6, MyCmd.Keycode.POWER},
-            {0x7, MyCmd.Keycode.KEYAMS_RPT}, {0x8, MyCmd.Keycode.BT}, {0x9, MyCmd.Keycode.VOLUME_ROLL_UP}, {0xa, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0xb, MyCmd.Keycode.ROLL_NEXT},
-            {0xc, MyCmd.Keycode.ROLL_PREV}, {0xd, MyCmd.Keycode.ROLL_PREV}, {0xe, MyCmd.Keycode.ROLL_NEXT}, {0xf, MyCmd.Keycode.BACK}, {0x10, MyCmd.Keycode.HOME}, {0x11, MyCmd.Keycode.SETUP},
-            {0x12, MyCmd.Keycode.AUDIO}, {0x13, MyCmd.Keycode.MODLE},
-
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {

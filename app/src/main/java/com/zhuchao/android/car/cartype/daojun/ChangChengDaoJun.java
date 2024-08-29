@@ -9,6 +9,12 @@ import java.util.Calendar;
 
 public class ChangChengDaoJun extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x4, 0x10, 0x11, 0x13};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.SPEECH}, {0x10, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x11, MyCmd.Keycode.KEY_AIR_CONTROL},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x2, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x3, MyCmd.Keycode.ROLL_NEXT}, {0x4, MyCmd.Keycode.ROLL_PREV}, {0x5, MyCmd.Keycode.POWER}, {0x6, MyCmd.Keycode.PLAY_PAUSE}, {0x7, MyCmd.Keycode.EJECT}, {0x8, MyCmd.Keycode.NAVIGATION}, {0x9, MyCmd.Keycode.HOME}, {0xa, MyCmd.Keycode.BACK}, {0xb, MyCmd.Keycode.BT}, {0xc, MyCmd.Keycode.AUDIO}, {0xd, MyCmd.Keycode.RADIO},};
+    private final byte[] airData = new byte[12];
+
+
     public ChangChengDaoJun() {
         buildCmdDoor((byte) 0x3, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
 
@@ -27,22 +33,6 @@ public class ChangChengDaoJun extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x4, 0x10, 0x11, 0x13};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, MyCmd.Keycode.SPEECH}, {0x10, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x11, MyCmd.Keycode.KEY_AIR_CONTROL},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x2, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x3, MyCmd.Keycode.ROLL_NEXT}, {0x4, MyCmd.Keycode.ROLL_PREV}, {0x5, MyCmd.Keycode.POWER},
-            {0x6, MyCmd.Keycode.PLAY_PAUSE}, {0x7, MyCmd.Keycode.EJECT}, {0x8, MyCmd.Keycode.NAVIGATION}, {0x9, MyCmd.Keycode.HOME}, {0xa, MyCmd.Keycode.BACK}, {0xb, MyCmd.Keycode.BT},
-            {0xc, MyCmd.Keycode.AUDIO}, {0xd, MyCmd.Keycode.RADIO},
-    };
-
-
-    private final byte[] airData = new byte[12];
 
     private void parseSeatHeat(byte[] data) {
         airData[4] = (byte) (((data[2] & 0x0f) << 4) | ((data[4] & 0x0f) >> 0));
@@ -191,9 +181,7 @@ public class ChangChengDaoJun extends Canbox {
     public void updateCompass(int compass) {
         int direction = compassAngleToDirectPriv(compass);
 
-        byte[] buf = new byte[]{
-                (byte) (0xc9), 0x3, (byte) (direction & 0xff), 0, 0
-        };
+        byte[] buf = new byte[]{(byte) (0xc9), 0x3, (byte) (direction & 0xff), 0, 0};
 
         sendDataToCanbox(buf, buf.length);
     }

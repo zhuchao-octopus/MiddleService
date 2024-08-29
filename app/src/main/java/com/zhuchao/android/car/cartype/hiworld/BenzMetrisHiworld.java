@@ -15,6 +15,24 @@ import java.util.Locale;
 
 public class BenzMetrisHiworld extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x32, 0x61, (byte) 0x9b};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
+
+            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
+
+
+            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
+
+            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK}, {0x18, MyCmd.Keycode.NAVIGATION}, {0x22, MyCmd.Keycode.HOME},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.SETUP}, {0x6, MyCmd.Keycode.BACK},
+
+            {0x28, MyCmd.Keycode.BT}, {0x2b, MyCmd.Keycode.HOME}, {0x2c, MyCmd.Keycode.MODLE}, {0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+    private int mSource;
+
+
     public BenzMetrisHiworld() {
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xfc, (byte) 0x04);
         buildCmdAngle((byte) 0x11, (byte) 0x0, 540);
@@ -36,7 +54,6 @@ public class BenzMetrisHiworld extends Canbox {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
     }
 
-
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{0x2, (byte) 0x24, 0x0, 0x17};
         switch (CarUtil.getModelId()) {
@@ -51,30 +68,6 @@ public class BenzMetrisHiworld extends Canbox {
         }
         return cmd;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x32, 0x61, (byte) 0x9b};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE}, {0x4, MyCmd.Keycode.SPEECH},
-
-            {0x5, MyCmd.Keycode.BT_DIAL}, {0x6, MyCmd.Keycode.BT_HANG},
-
-
-            {0x8, MyCmd.Keycode.PREVIOUS}, {0x9, MyCmd.Keycode.NEXT},
-
-            {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.BACK}, {0x18, MyCmd.Keycode.NAVIGATION}, {0x22, MyCmd.Keycode.HOME},
-
-    };
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.SETUP}, {0x6, MyCmd.Keycode.BACK},
-
-            {0x28, MyCmd.Keycode.BT}, {0x2b, MyCmd.Keycode.HOME}, {0x2c, MyCmd.Keycode.MODLE}, {0x45, MyCmd.Keycode.VOLUME_UP}, {0x46, MyCmd.Keycode.VOLUME_DOWN},
-    };
-
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
 
     public void parseCanboxData(byte[] data, int len) {
         if ((data[0] & 0xff) == 0xe0) {
@@ -154,7 +147,6 @@ public class BenzMetrisHiworld extends Canbox {
         super.parseACInfo(airData);
     }
 
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         //		byte type = 7;
         //		switch (source) {
@@ -172,8 +164,6 @@ public class BenzMetrisHiworld extends Canbox {
 
 
     }
-
-    private int mSource;
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         int freq = (b[1] & 0xff) | ((b[2] & 0xff) << 8);
@@ -409,9 +399,7 @@ public class BenzMetrisHiworld extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, format
-        };
+        byte[] buf = new byte[]{0x0a, (byte) 0xcb, 0, h, m, 0, 0, ampm, y, mon, d, format};
 
         sendDataToCanbox(buf, buf.length);
     }

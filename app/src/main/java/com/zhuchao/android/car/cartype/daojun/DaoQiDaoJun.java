@@ -19,6 +19,21 @@ import java.lang.reflect.Method;
 
 public class DaoQiDaoJun extends Canbox {
 
+    public final static String MSG_CAN_SEND_DATA_ALL_INFO = "com.choiceway.eventcenter.EventUtils.MSG_CAN_SEND_DATA_ALL_INFO";
+    public final static String CAR_AIR_DATA = "EventUtils.CAR_AIR_DATA";
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x36};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.SPEECH}, {0x24, MyCmd.Keycode.BT},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x18, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x19, MyCmd.Keycode.ROLL_NEXT}, {0x1a, MyCmd.Keycode.ROLL_PREV},};
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+
+            super.handleMessage(msg);
+            returnEQData(EQ_CMD_SET_ALL_DATA, mEQData);
+        }
+    };
+    byte[] airData = new byte[12];
+    private BroadcastReceiver mBroadcastReceiver;
+
     public DaoQiDaoJun() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -36,21 +51,8 @@ public class DaoQiDaoJun extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x36};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.SPEECH},
-            {0x24, MyCmd.Keycode.BT},
-    };
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x18, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x19, MyCmd.Keycode.ROLL_NEXT},
-            {0x1a, MyCmd.Keycode.ROLL_PREV},
-    };
-
     private byte[] getCarTypeCmd() {
-        byte[] cmd = new byte[]{
-                (byte) 0x72, 0x15, 0x14, 0x1, 0x1, 0x1, 0x3, (byte) 0xaf, (byte) 0xfb, (byte) 0xfb, (byte) 0xfb, 0, 0, 0, 0, 0, 0, 0, 0
-        };
+        byte[] cmd = new byte[]{(byte) 0x72, 0x15, 0x14, 0x1, 0x1, 0x1, 0x3, (byte) 0xaf, (byte) 0xfb, (byte) 0xfb, (byte) 0xfb, 0, 0, 0, 0, 0, 0, 0, 0};
         if (CarUtil.getModelId() == 0) {
             switch (CarUtil.getModelId()) {
                 case 1:
@@ -90,8 +92,6 @@ public class DaoQiDaoJun extends Canbox {
         }
         return data;
     }
-
-    byte[] airData = new byte[12];
 
     public void parseACInfo(byte[] data) {
 
@@ -179,7 +179,6 @@ public class DaoQiDaoJun extends Canbox {
         sendCanboxInfo(send);
     }
 
-
     private void parseCanboxDataFromCanApp(byte[] data) {
 
         if (data != null && data.length > 2) {
@@ -189,14 +188,6 @@ public class DaoQiDaoJun extends Canbox {
         }
 
     }
-
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-
-            super.handleMessage(msg);
-            returnEQData(EQ_CMD_SET_ALL_DATA, mEQData);
-        }
-    };
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -282,10 +273,6 @@ public class DaoQiDaoJun extends Canbox {
         super.stopConnect();
         unregisterReceiver();
     }
-
-    public final static String MSG_CAN_SEND_DATA_ALL_INFO = "com.choiceway.eventcenter.EventUtils.MSG_CAN_SEND_DATA_ALL_INFO";
-    public final static String CAR_AIR_DATA = "EventUtils.CAR_AIR_DATA";
-    private BroadcastReceiver mBroadcastReceiver;
 
     private void unregisterReceiver() {
         if (mBroadcastReceiver != null && mContext != null) {

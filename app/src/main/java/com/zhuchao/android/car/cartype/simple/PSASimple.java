@@ -19,6 +19,49 @@ import com.zhuchao.android.fbase.MMLog;
 
 public class PSASimple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL_NORMAL = {
+
+            {0x2, KEY_HOME}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x7, KEY_PLAYPAUSE}, {0x8, KEY_BACK}, {0x10, KEY_SOURCE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D}, {0x16, KEY_MUTE}, {0x1F, KEY_MIC}, {0x50, KEY_BT}, {0x20, MyCmd.Keycode.KEY_CAR_INFO}, {0x21, KEY_MODE}, {0x23, KEY_BT}, {0x30, MyCmd.Keycode.MULT_SOURCE_AND_BT},
+
+            {(byte) 0x17, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x18, MyCmd.Keycode.ROLL_PREV},
+
+            {0x19, AK_KEYPAD_VOLUME_A}, {0x1a, AK_KEYPAD_VOLUME_D}, {0x22, KEY_EJECT}, {(byte) 0x91, KEY_NUM_1}, {(byte) 0x92, KEY_NUM_2}, {(byte) 0x93, KEY_NUM_3}, {(byte) 0x94, KEY_NUM_4}, {(byte) 0x95, KEY_NUM_5}, {(byte) 0x96, KEY_NUM_6}, {(byte) 0x97, KEY_PREVIOUSSONG}, {(byte) 0x98, KEY_NEXTSONG}, {(byte) 0x99, KEY_FM}, {(byte) 0x9a, MyCmd.Keycode.BRIGHTNESS}, {(byte) 0x9b, KEY_HOME}, {(byte) 0x9c, KEY_PREVIOUSSONG}, {(byte) 0x9d, KEY_NEXTSONG}, {(byte) 0x9e, KEY_MODE}, {(byte) 0x9f, MyCmd.Keycode.KEY_RECENT_APPS},
+
+            {(byte) 0xa0, MyCmd.Keycode.MULT_SOURCE_AND_BT}, {(byte) 0xa1, KEY_MEDIA}, {(byte) 0xa2, KEY_PLAYPAUSE}, {(byte) 0xa3, KEY_BACK}, {(byte) 0xa4, KEY_MUTE},
+            // { (byte)0xa5, KEY_MODE },
+            {(byte) 0xa6, KEY_HOME},
+
+            {(byte) 0xb0, KEY_BT_DIAL}, {(byte) 0xb1, KEY_BT_HANG}, {(byte) 0xb2, KEY_BACK}, {(byte) 0xb3, KEY_GPS}, {(byte) 0xb4, MyCmd.Keycode.RDS_TA_SWITCH}, {(byte) 0xb5, KEY_FM}, {(byte) 0xb6, KEY_MEDIA}, {(byte) 0xb7, KEY_SET}, {(byte) 0xb8, MyCmd.Keycode.KEY_RECENT_APPS}, {(byte) 0xb9, KEY_PREVIOUSSONG}, {(byte) 0xba, KEY_NEXTSONG}, {(byte) 0xbb, KEY_SEEK_PREV}, {(byte) 0xbc, KEY_SEEK_NEXT}, {(byte) 0xbd, KEY_PLAYPAUSE}, {(byte) 0xbe, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0xbf, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_DOWN},
+
+            {(byte) 0xa5, MyCmd.Keycode.KEY_AIR_CONTROL},
+
+    };
+    private final byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
+    private final int mBaud = 0;
+    int caneq = 0;
+    byte[] airData = new byte[8];
+
+    //	private void intKeyType() {
+    //		switch (CarUtil.getModelId()) {
+    //		case 2:
+    //			cmd[3] = 1;
+    //			break;
+    //		case 3:
+    //			cmd[3] = 0;
+    //			break;
+    //		case 6:
+    //			cmd[3] = 2;
+    //			break;
+    //		}
+    //	}
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    byte[] mEqData = new byte[8];
+    private int showWarningMsg = -1;
+    private int mDoorStatus = 0;
+    private int mSource = MyCmd.SOURCE_NONE;
+
     public PSASimple() {
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
@@ -55,8 +98,6 @@ public class PSASimple extends Canbox {
         super.stopConnect();
     }
 
-    int caneq = 0;
-
     public void startConnect() {// default is simple box
         caneq = SettingProperties.getIntProperty(mContext, SettingProperties.KEY_CANBOX_EQ);
         if (CarUtil.getCarEQ() == 1 || caneq == 1 || CarUtil.getCanboxProVersion() >= 3) {
@@ -82,40 +123,6 @@ public class PSASimple extends Canbox {
                 break;
         }*/
     }
-
-    //	private void intKeyType() {
-    //		switch (CarUtil.getModelId()) {
-    //		case 2:
-    //			cmd[3] = 1;
-    //			break;
-    //		case 3:
-    //			cmd[3] = 0;
-    //			break;
-    //		case 6:
-    //			cmd[3] = 2;
-    //			break;
-    //		}
-    //	}
-
-    private final byte[][] KEYS_WHEEL = KEYS_WHEEL_NORMAL;
-
-    private final static byte[][] KEYS_WHEEL_NORMAL = {
-
-            {0x2, KEY_HOME}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x7, KEY_PLAYPAUSE}, {0x8, KEY_BACK}, {0x10, KEY_SOURCE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D}, {0x16, KEY_MUTE}, {0x1F, KEY_MIC}, {0x50, KEY_BT}, {0x20, MyCmd.Keycode.KEY_CAR_INFO}, {0x21, KEY_MODE}, {0x23, KEY_BT}, {0x30, MyCmd.Keycode.MULT_SOURCE_AND_BT},
-
-            {(byte) 0x17, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x18, MyCmd.Keycode.ROLL_PREV},
-
-            {0x19, AK_KEYPAD_VOLUME_A}, {0x1a, AK_KEYPAD_VOLUME_D}, {0x22, KEY_EJECT}, {(byte) 0x91, KEY_NUM_1}, {(byte) 0x92, KEY_NUM_2}, {(byte) 0x93, KEY_NUM_3}, {(byte) 0x94, KEY_NUM_4}, {(byte) 0x95, KEY_NUM_5}, {(byte) 0x96, KEY_NUM_6}, {(byte) 0x97, KEY_PREVIOUSSONG}, {(byte) 0x98, KEY_NEXTSONG}, {(byte) 0x99, KEY_FM}, {(byte) 0x9a, MyCmd.Keycode.BRIGHTNESS}, {(byte) 0x9b, KEY_HOME}, {(byte) 0x9c, KEY_PREVIOUSSONG}, {(byte) 0x9d, KEY_NEXTSONG}, {(byte) 0x9e, KEY_MODE}, {(byte) 0x9f, MyCmd.Keycode.KEY_RECENT_APPS},
-
-            {(byte) 0xa0, MyCmd.Keycode.MULT_SOURCE_AND_BT}, {(byte) 0xa1, KEY_MEDIA}, {(byte) 0xa2, KEY_PLAYPAUSE}, {(byte) 0xa3, KEY_BACK}, {(byte) 0xa4, KEY_MUTE},
-            // { (byte)0xa5, KEY_MODE },
-            {(byte) 0xa6, KEY_HOME},
-
-            {(byte) 0xb0, KEY_BT_DIAL}, {(byte) 0xb1, KEY_BT_HANG}, {(byte) 0xb2, KEY_BACK}, {(byte) 0xb3, KEY_GPS}, {(byte) 0xb4, MyCmd.Keycode.RDS_TA_SWITCH}, {(byte) 0xb5, KEY_FM}, {(byte) 0xb6, KEY_MEDIA}, {(byte) 0xb7, KEY_SET}, {(byte) 0xb8, MyCmd.Keycode.KEY_RECENT_APPS}, {(byte) 0xb9, KEY_PREVIOUSSONG}, {(byte) 0xba, KEY_NEXTSONG}, {(byte) 0xbb, KEY_SEEK_PREV}, {(byte) 0xbc, KEY_SEEK_NEXT}, {(byte) 0xbd, KEY_PLAYPAUSE}, {(byte) 0xbe, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0xbf, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x81, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_DOWN},
-
-            {(byte) 0xa5, MyCmd.Keycode.KEY_AIR_CONTROL},
-
-    };
 
     private void parseWheelKey(byte[] data, int len) {
         if (data[2] == (byte) 0xa5) {
@@ -178,8 +185,6 @@ public class PSASimple extends Canbox {
 
         }
     }
-
-    byte[] airData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
         boolean airControl = false;
@@ -389,16 +394,12 @@ public class PSASimple extends Canbox {
         super.parseCanboxData(data, len);
     }
 
-    private int showWarningMsg = -1;
-
     public void updateCanboxSettings() {
         showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SettingProperties.SHOW_FOCUS_CAR_WARNING_MSG, 0);
         if (showWarningMsg != 0) {
             WarningMsgManager.stop();
         }
     }
-
-    private int mDoorStatus = 0;
 
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
@@ -453,9 +454,6 @@ public class PSASimple extends Canbox {
         sendDataToCanbox(data, data.length);
 
     }
-
-    private int mSource = MyCmd.SOURCE_NONE;
-    private final int mBaud = 0;
 
     public void setVolume(int volume) {
 
@@ -539,10 +537,6 @@ public class PSASimple extends Canbox {
         mSource = source;
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
     public void setPhone(int status, String num) {
         sendId3((byte) 0x1, num);
     }
@@ -596,8 +590,6 @@ public class PSASimple extends Canbox {
         byte[] data = new byte[]{(byte) 0x84, 0x2, cmd, param};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] mEqData = new byte[8];
 
     public void sendEqToCanbox(byte[] eq) {
         //		if (caneq == 1 && eq != null && eq.length >= 12) {

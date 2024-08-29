@@ -28,19 +28,27 @@ import java.util.List;
 
 public class DebugMessage {
 
+    private final static int DEUBG_MAX = 2;
+    private final static int DEUBG_CANBOX = 1;
+    private final static int DEUBG_RXONLY = 2;
+    private final static int DEUBG_TXONLY = 1;
+    public static int mMsgType = DEUBG_CANBOX;
+    public static int mRXTX = 3;
     private static WindowManager mWindowManager;
     private static WindowManager.LayoutParams mLayoutParams;
     private static View mView;
-
     private static Context mContext;
-
     private static TextView mDebug;
-
     private static float mTouchX;
     private static float mTouchY;
     private static int mOldX;
     private static int mOldY;
     private static boolean mHaveMove;
+    private static ScrollView mScrollView;
+    private static int mTest = 0;
+    //listview
+    private static ListView mListView;
+    private static MyListViewAdapter mAdapter;
 
     private static void init(Context context) {
 
@@ -256,15 +264,6 @@ public class DebugMessage {
         initListView();
     }
 
-    private static ScrollView mScrollView;
-    private final static int DEUBG_MAX = 2;
-    private final static int DEUBG_CANBOX = 1;
-    public static int mMsgType = DEUBG_CANBOX;
-
-    private final static int DEUBG_RXONLY = 2;
-    private final static int DEUBG_TXONLY = 1;
-    public static int mRXTX = 3;
-
     public static String byteArrayToHex(byte[] b) {
         String hs = "";
         String stmp = "";
@@ -354,8 +353,6 @@ public class DebugMessage {
         return false;
     }
 
-    private static int mTest = 0;
-
     public static void start(Context context) {
         init(context);
         if (mView.getParent() == null) {
@@ -391,10 +388,6 @@ public class DebugMessage {
         Toast.makeText(mContext, "No USB Disk!", Toast.LENGTH_LONG).show();
 
     }
-
-    //listview
-    private static ListView mListView;
-    private static MyListViewAdapter mAdapter;
 
     private static void initListView() {
         mListView = mView.findViewById(R.id.tv_sd_list);

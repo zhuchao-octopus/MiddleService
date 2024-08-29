@@ -5,6 +5,29 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class FordFDP007Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+            {0x3, MyCmd.Keycode.MUTE},
+
+
+            {0x5, MyCmd.Keycode.BT_DIAL},
+
+            {0x6, MyCmd.Keycode.BT_HANG},
+
+            {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
+
+
+            {0xa, MyCmd.Keycode.MODLE}, {0x20, MyCmd.Keycode.KEY_AIR_CONTROL},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x11, MyCmd.Keycode.EJECT},
+
+
+            {0x2b, MyCmd.Keycode.HOME}, {0x39, MyCmd.Keycode.POWER}, {0x4b, MyCmd.Keycode.RADIO},};
+    private final static byte[][] KEYS_WHEEL3 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
+
+    };
+
     public FordFDP007Hiworld() {
         buildCmdDoor((byte) 0x12, (byte) 0x2, (byte) 0xf8, (byte) 0x04);
         buildCmdAngle((byte) 0x72, (byte) 0x0, 0xfe);
@@ -24,36 +47,6 @@ public class FordFDP007Hiworld extends Canbox {
         mIdKey3 = 0x021122;
         MAP_KEYS3 = KEYS_WHEEL3;
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-            {0x3, MyCmd.Keycode.MUTE},
-
-
-            {0x5, MyCmd.Keycode.BT_DIAL},
-
-            {0x6, MyCmd.Keycode.BT_HANG},
-
-            {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
-
-
-            {0xa, MyCmd.Keycode.MODLE}, {0x20, MyCmd.Keycode.KEY_AIR_CONTROL},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x11, MyCmd.Keycode.EJECT},
-
-
-            {0x2b, MyCmd.Keycode.HOME}, {0x39, MyCmd.Keycode.POWER}, {0x4b, MyCmd.Keycode.RADIO},
-    };
-
-    private final static byte[][] KEYS_WHEEL3 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP, 0}, {0x11, MyCmd.Keycode.VOLUME_ROLL_DOWN, 0}, {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {

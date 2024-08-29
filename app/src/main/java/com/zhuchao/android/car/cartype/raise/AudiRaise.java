@@ -7,6 +7,9 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class AudiRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x41, 0x25};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, KEY_BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE},};
+
     public AudiRaise() {
         mIdAC = 0x21;
         buildCmdDoor((byte) 0x41, (byte) 0x0, (byte) 0x1f, (byte) 0x13);
@@ -20,13 +23,6 @@ public class AudiRaise extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x41, 0x25};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC},
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0xb, KEY_BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE},
-    };
 
     public void parseACInfo(byte[] data) {
         if (data[4] == 0xfe) {
@@ -56,13 +52,9 @@ public class AudiRaise extends Canbox {
 
         if (MyCmd.SOURCE_DVD != source) {
             ++play;
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }

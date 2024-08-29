@@ -21,12 +21,31 @@ import java.util.ArrayList;
 
 public class TouchKeyProcessor {
 
+    public final static int HALF_MIN_SIDE = 10;
+    public final static int HALF_MAX_SIDE = 20;
     private final static String TAG = "TouchKeyProcessor";
-
+    private final static int LONG_CLICK_MOVE_4K = 1024 * 4;
+    private final static String TOUCH_KEY_MAPPING_FILE = MachineConfig.VENDOR_DIR + ".touch_key_mapping";
+    /**
+     * 调节系数，系数越大，速度越大
+     */
+    private final static int COEFFICIENT = 10;
+    private final static int DURATION_TIME = 1000;
+    private final static int MAX_TIMES = 20;
+    public static int HALF_SIDE = 10;
+    public static int HALF_CURRENT_SIDE = HALF_MIN_SIDE;
     private final Context mContext;
-
+    private final ArrayList<Keys> mKeyMappingMap = new ArrayList<Keys>();
+    private final ArrayList<Keys> mKeyMappingMapForStudy = new ArrayList<Keys>();
+    // private final static String DEFAULT_TOUCH_KEY_MAPPING_FILE =
+    // "touch_key_mapping.cfg";
+    private final File mMappingFile;
+    private final McuManager mMcuManager;
+    Rect mRectStudy;
+    int mPreIndex = -1;
+    int mPreClickX;
+    int mPreClickY;
     private IKeyCallback mKeyCallback;
-
     /**
      * 是否正在学习触摸按键
      */
@@ -35,43 +54,6 @@ public class TouchKeyProcessor {
      * 当前学习的触摸按键键值
      */
     private int mCurrentStudyTouchKeycode;
-
-    /**
-     * 已经学习的触摸按键
-     */
-    // private byte[] mAlreadyStudyTouchKeys = new byte[20];
-    // private List<Byte> mAlreadyStudyTouchKeys = new ArrayList<Byte>();
-
-    static class Keys {
-        public int mKey;
-        public Rect mRt;
-
-        public Keys(int key, Rect rt) {
-            mKey = key;
-            mRt = rt;
-        }
-    }
-
-    public boolean isExistStudyData() {
-        return mKeyMappingMap.size() > 0;
-    }
-
-    private final ArrayList<Keys> mKeyMappingMap = new ArrayList<Keys>();
-    private final ArrayList<Keys> mKeyMappingMapForStudy = new ArrayList<Keys>();
-
-    public final static int HALF_MIN_SIDE = 10;
-    public final static int HALF_MAX_SIDE = 20;
-
-    public static int HALF_SIDE = 10;
-    public static int HALF_CURRENT_SIDE = HALF_MIN_SIDE;
-
-    private final static int LONG_CLICK_MOVE_4K = 1024 * 4;
-
-    private final static String TOUCH_KEY_MAPPING_FILE = MachineConfig.VENDOR_DIR + ".touch_key_mapping";
-    // private final static String DEFAULT_TOUCH_KEY_MAPPING_FILE =
-    // "touch_key_mapping.cfg";
-    private final File mMappingFile;
-    private final McuManager mMcuManager;
 
     public TouchKeyProcessor(Context c) {
         Util.sudoExec("chmod:666:" + TOUCH_KEY_MAPPING_FILE);
@@ -82,11 +64,9 @@ public class TouchKeyProcessor {
 
     }
 
-    Rect mRectStudy;
-    int mPreIndex = -1;
-
-    int mPreClickX;
-    int mPreClickY;
+    public boolean isExistStudyData() {
+        return mKeyMappingMap.size() > 0;
+    }
 
     public void onClick(int x, int y) {
         // LOG.print("---onClick---isTouchKeyStudy = " + isTouchKeyStudy);
@@ -132,7 +112,6 @@ public class TouchKeyProcessor {
             }
         }
     }
-
 
     public void onLongClick(int x, int y) {// 长按的时候，统一加4k
         // LOG.print("---onLongClick---");
@@ -224,7 +203,6 @@ public class TouchKeyProcessor {
         }
     }
 
-
     public void onSendFixKey(byte key1, boolean longClick) {
 
         //		if(GlobalDef.mTouchKeyType == 0){
@@ -292,13 +270,6 @@ public class TouchKeyProcessor {
     }
 
     /**
-     * 调节系数，系数越大，速度越大
-     */
-    private final static int COEFFICIENT = 10;
-    private final static int DURATION_TIME = 1000;
-    private final static int MAX_TIMES = 20;
-
-    /**
      * 异步设置时间
      */
     private void asyncSetVolume(final int speed, final boolean isUp) {
@@ -328,7 +299,6 @@ public class TouchKeyProcessor {
             }
         }).start();
     }
-
 
     public void setTouchCurrentStudyKeycode(int keycode) {
         // LOG.print("---setTouchCurrentStudyKeycode---keycode = " + keycode);
@@ -499,16 +469,6 @@ public class TouchKeyProcessor {
 
     }
 
-    // private boolean removeMappingKeycodeStudy(int x, int y) {
-    // for (Integer keycode : mKeyMappingMapForStudy.keySet()) {
-    // if (mKeyMappingMapForStudy.get(keycode).contains(x, y)) {
-    // mKeyMappingMapForStudy.remove(keycode);
-    // return true;
-    // }
-    // }
-    // return false;
-    // }
-
     private Integer getMappingKeycodeStudy(int x, int y) {
 
         for (int i = 0; i < mKeyMappingMapForStudy.size(); ++i) {
@@ -520,6 +480,16 @@ public class TouchKeyProcessor {
         }
         return 0;
     }
+
+    // private boolean removeMappingKeycodeStudy(int x, int y) {
+    // for (Integer keycode : mKeyMappingMapForStudy.keySet()) {
+    // if (mKeyMappingMapForStudy.get(keycode).contains(x, y)) {
+    // mKeyMappingMapForStudy.remove(keycode);
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
 
     private Integer getIndexKeycodeStudy(int x, int y) {
 
@@ -658,5 +628,21 @@ public class TouchKeyProcessor {
         Intent it = new Intent(MyCmd.BROADCAST_RETURN_TOUCH_STUDY);
         it.putExtra(MyCmd.EXTRA_COMMON_CMD, cmd);
         mContext.sendBroadcast(it);
+    }
+
+    /**
+     * 已经学习的触摸按键
+     */
+    // private byte[] mAlreadyStudyTouchKeys = new byte[20];
+    // private List<Byte> mAlreadyStudyTouchKeys = new ArrayList<Byte>();
+
+    static class Keys {
+        public int mKey;
+        public Rect mRt;
+
+        public Keys(int key, Rect rt) {
+            mKey = key;
+            mRt = rt;
+        }
     }
 }

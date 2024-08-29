@@ -8,6 +8,9 @@ import java.util.Calendar;
 
 public class LuFengRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x27, 0x23, 0x24, 0x25};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.HOME}, {0x6, MyCmd.Keycode.SPEECH}, {0x7, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.BT_HANG},};
+
     public LuFengRaise() {
         //		buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x22, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
@@ -23,13 +26,6 @@ public class LuFengRaise extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x27, 0x23, 0x24, 0x25};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.HOME}, {0x6, MyCmd.Keycode.SPEECH},
-            {0x7, MyCmd.Keycode.BT_DIAL}, {0x8, MyCmd.Keycode.BT_HANG},
-    };
 
     @Override
     public int getACTemp(byte data) {

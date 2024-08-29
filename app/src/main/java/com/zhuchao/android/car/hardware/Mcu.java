@@ -7,15 +7,8 @@ import com.zhuchao.android.car.debug.DebugMessage;
 import com.zhuchao.android.fbase.MMLog;
 
 public class Mcu {
-    static {
-        System.loadLibrary("mcu");
-    }
-
-    private final static String TAG = "Mcu";
-
     public final static int MSG_RECEIVE_MCU_DATA = 0;
     public final static int MSG_RECEIVE_OS_DATA = 1;
-
     public static final int MCU_OPEN = 1;
     public static final int MCU_CLOSE = 2;
     public static final int MCU_WRITE_DATA = 3;
@@ -31,7 +24,6 @@ public class Mcu {
     // send
     public static final int CMD_ARM_READY = 0x01;
     public static final int CMD_SCR_MODE = 0x02;
-
     // param
     public static final int UP_KEY = 0x01;
     public static final int DOWN_KEY = 0x02;
@@ -44,11 +36,15 @@ public class Mcu {
     public static final int RIGHTTURN_KEY = 0x09;
     public static final int NAVI_KEY = 0x0A;
     public static final int SPEECH_KEY = 0x0B;
+    private final static String TAG = "Mcu";
+    public static Mcu mThis;
+
+    static {
+        System.loadLibrary("mcu");
+    }
 
     private Handler mHandler;
     private Handler mOsHandler;
-
-    public static Mcu mThis;
 
     public static Mcu getInstance() {
         if (mThis == null) {
@@ -80,7 +76,7 @@ public class Mcu {
         // Util.byteArrayCopy(param, param2, 0, 0, param2.length);
         // param[param2.length] = checkSum(param2, param2.length);
         ///if(param2.length >=2) {
-            ///if (param2[0] != 0x01 && param2[1] != 0x01) MMLog.d(TAG, "sendCmd:" + Util.byteArrayToHex(param2));
+        ///if (param2[0] != 0x01 && param2[1] != 0x01) MMLog.d(TAG, "sendCmd:" + Util.byteArrayToHex(param2));
         ///}
         DebugMessage.updateText(param2, false);
         return nativeSendCommand(MCU_WRITE_DATA, param2.length, param2);

@@ -309,8 +309,7 @@ import com.zhuchao.android.car.cartype.xinfeiyang.ToyotaXinFeiYang;
 public class CanboxToPro {
 
     //this index is the same as CanBus说明文档*.*
-    private final static Class<?>[] mAllCanbox = {
-            CarFordSimple.class,//1
+    private final static Class<?>[] mAllCanbox = {CarFordSimple.class,//1
             CarToyota2013.class, CarMazda.class, CarX80.class, CarTEANA.class, CarOPEL.class, CarVW.class, MitsubishiOutLanderSimple.class, CarHY.class, CarPSABagoo.class,//10
             CarGMSimple.class, CarHondaDASimple.class, VWGolfSimple.class, RamFIATSimple.class, RenaultMeganeFluenceSimple.class, BMWE90X1Union.class, FIATSimple.class, FordMondeoSimple.class, PSASimple.class, BenzBagoo.class,//20
             KadjarRaise.class, GMCSimple.class, BenzB200Union.class, CarMazdaBT50Simple.class, JeepSimple.class, Accord7ChangYuanTong.class, CarToyotaBinarytek.class, CarMazdaXinbas.class, Peugeot206Simple.class, Accord2013Simple.class,//30

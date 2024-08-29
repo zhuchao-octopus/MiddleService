@@ -10,6 +10,11 @@ import java.util.Date;
 
 public class Accord8XinChi extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x3, 0x4, 0x5, 0x7, 0x8, 0xa, 0xb, 0xe};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT}, {0xa, MyCmd.Keycode.MULT_BACK_AND_HANG},
+
+    };
+
     public Accord8XinChi() {
         buildCmdDoor((byte) 0x11, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
         //		buildCmdRadarFront((byte) 0xc, (byte) 0x0, (byte) 0x4, (byte) 3);
@@ -23,16 +28,6 @@ public class Accord8XinChi extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x3, 0x4, 0x5, 0x7, 0x8, 0xa, 0xb, 0xe
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
-            {0x9, MyCmd.Keycode.BT}, {0xa, MyCmd.Keycode.MULT_BACK_AND_HANG},
-
-    };
 
     //	@Override
     //	public int getAngleValue(byte[] data) {
@@ -79,9 +74,7 @@ public class Accord8XinChi extends Canbox {
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
-        byte[] mData = new byte[]{
-                (byte) 0x88, 0x4, 4, 0, 0, 0
-        };
+        byte[] mData = new byte[]{(byte) 0x88, 0x4, 4, 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
 
     }
@@ -137,9 +130,7 @@ public class Accord8XinChi extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                (byte) 0x87, 0x06, y, mon, d, format, h, m
-        };
+        byte[] buf = new byte[]{(byte) 0x87, 0x06, y, mon, d, format, h, m};
 
         sendDataToCanbox(buf, buf.length);
     }

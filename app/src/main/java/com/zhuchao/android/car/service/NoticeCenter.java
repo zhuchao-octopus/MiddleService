@@ -4,7 +4,6 @@ import static com.zhuchao.android.fbase.FileUtils.EmptyString;
 import static com.zhuchao.android.fbase.FileUtils.NotEmptyString;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.zhuchao.android.TPlatform;
 import com.zhuchao.android.fbase.DataID;
@@ -27,24 +25,14 @@ import com.zhuchao.android.fbase.TTask;
 import com.zhuchao.android.fbase.TTaskInterface;
 import com.zhuchao.android.fbase.ThreadUtils;
 import com.zhuchao.android.fbase.eventinterface.InvokeInterface;
-import com.zhuchao.android.fbase.eventinterface.TRequestEventInterface;
 import com.zhuchao.android.net.NetworkInformation;
 import com.zhuchao.android.net.TNetUtils;
-import com.zhuchao.android.session.TNetTask;
 import com.zhuchao.android.session.TTaskManager;
 import com.zhuchao.android.session.TTaskQueue;
-import com.zhuchao.android.session.TWatchManService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Objects;
 
 /*第一种方式：通过StartService启动Service
@@ -76,7 +64,8 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
 
     private final static String Action_SilentInstall1 = "android.intent.action.SILENT_INSTALL_PACKAGE1";
     private final static String Action_SilentInstall2 = "android.intent.action.SILENT_INSTALL_PACKAGE2";
-
+    private static final String NOTIFICATION_ID = "channelId";
+    private static final String NOTIFICATION_NAME = "channelId";
     private final TTaskQueue tTaskQueue = new TTaskQueue();
     private TNetUtils tNetUtils = null;
     private NetworkInformation networkInformation = null;
@@ -84,133 +73,10 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
     //private String pModel = null;//"A40I";
     private String pBrand = null;//"TianPu";
     private String pCustomer = null;//"TianPu";
-
     private boolean installedDeleteFile = false;
     private boolean installedReboot = false;
     private boolean watchManSwitchOnOff = true;
-
     private String VERSION_NAME = "1.0.0";
-    private NotificationManager notificationManager;
-    private static final String NOTIFICATION_ID = "channelId";
-    private static final String NOTIFICATION_NAME = "channelId";
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public NoticeCenter() {
-        //MMLog.i(TAG, "TWatchManService construct with no parameters.");//1 first call
-    }
-
-    private Notification getNotification() {
-        Notification.Builder builder = new Notification.Builder(this);
-        //.setSmallIcon(R.drawable.ic_launcher)
-        //.setContentTitle("测试服务")
-        //.setContentText("我正在运行");
-        //设置Notification的ChannelID,否则不能正常显示
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder.setChannelId(NOTIFICATION_ID);
-        }
-        return builder.build();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    public void start() {
-        ThreadUtils.runThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    VERSION_NAME = TAppUtils.getAppVersionName(NoticeCenter.this, NoticeCenter.this.getPackageName());
-                    ///tTaskManager = new TTaskManager(TWatchManService.this);
-                    tNetUtils = new TNetUtils(NoticeCenter.this);
-                    tNetUtils.registerNetStatusCallback(NoticeCenter.this);
-                    registerUserEventReceiver();
-                    MMLog.d(TAG, "NoticeCenter version:" + VERSION_NAME + ", " + getFWVersionName() + " starting...");//2 first call
-                    //TPlatform.SetSystemProperty("WatchMan.Service","true");//导致错误
-                } catch (Exception e) {
-                    //e.printStackTrace();
-                    MMLog.e(TAG, e.getMessage());
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-//        MMLog.setLogOnOff(false);
-        //MMLog.d(TAG, "onCreate()");//2 second call
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //创建NotificationChannel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_ID, NOTIFICATION_NAME, NotificationManager.IMPORTANCE_HIGH);
-            notificationManager.createNotificationChannel(channel);
-        }
-        //startForeground(1, getNotification());
-        start();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-        //MMLog.d(TAG, "onStartCommand()");//3 call
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        /// TODO: Return the communication channel to the service.
-        ///throw new UnsupportedOperationException("Not yet implemented");
-        ///MMLog.d(TAG, "WatchManService on bind");
-        return null;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //MMLog.d(TAG, "onDestroy()");
-        try {
-            unRegisterUserEventReceiver();
-            tNetUtils.free();
-        } catch (Exception e) {
-            ///e.printStackTrace();
-        }
-    }
-
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    private void registerUserEventReceiver() {
-        try {
-            IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addAction(Action_HELLO);//测试
-            intentFilter.addAction(Action_UPDATE_NET_STATUS);//测试
-            intentFilter.addAction(Action_GET_RUNNING_TASK);
-            intentFilter.addAction(Action_WATCHMAN_SWITCH_ONOFF);
-
-            intentFilter.addAction(Action_SystemShutdown);//关机
-            intentFilter.addAction(Action_SystemReboot);//重启
-
-            intentFilter.addAction(Action_SilentInstall);//静默安装
-            intentFilter.addAction(Action_SilentUninstall);//静默反安装
-            intentFilter.addAction(Action_SilentClose);//静默结束
-            intentFilter.addAction(Action_SetAudioOutputChannel);
-            intentFilter.addAction(Action_SetAudioInputChannel);
-
-            intentFilter.addAction(Action_SilentInstall1);//静默安装
-            intentFilter.addAction(Action_SilentInstall2);//静默安装
-            intentFilter.addAction(Action_SilentInstallComplete);//静默安装后删除文件
-
-            registerReceiver(UserEventReceiver, intentFilter);
-            //MMLog.d(TAG, "Register user event listener successfully.");
-        } catch (Exception e) {
-            MMLog.e(TAG, "Register user event listener failed!" + e.toString());
-        }
-    }
-
-    public void unRegisterUserEventReceiver() {
-        try {
-            unregisterReceiver(UserEventReceiver);
-        } catch (Exception e) {
-            //e.printStackTrace();
-        }
-    }
-
     private final BroadcastReceiver UserEventReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -339,6 +205,124 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
             }
         }
     };
+    private NotificationManager notificationManager;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public NoticeCenter() {
+        //MMLog.i(TAG, "TWatchManService construct with no parameters.");//1 first call
+    }
+
+    private Notification getNotification() {
+        Notification.Builder builder = new Notification.Builder(this);
+        //.setSmallIcon(R.drawable.ic_launcher)
+        //.setContentTitle("测试服务")
+        //.setContentText("我正在运行");
+        //设置Notification的ChannelID,否则不能正常显示
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder.setChannelId(NOTIFICATION_ID);
+        }
+        return builder.build();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public void start() {
+        ThreadUtils.runThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    VERSION_NAME = TAppUtils.getAppVersionName(NoticeCenter.this, NoticeCenter.this.getPackageName());
+                    ///tTaskManager = new TTaskManager(TWatchManService.this);
+                    tNetUtils = new TNetUtils(NoticeCenter.this);
+                    tNetUtils.registerNetStatusCallback(NoticeCenter.this);
+                    registerUserEventReceiver();
+                    MMLog.d(TAG, "NoticeCenter version:" + VERSION_NAME + ", " + getFWVersionName() + " starting...");//2 first call
+                    //TPlatform.SetSystemProperty("WatchMan.Service","true");//导致错误
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                    MMLog.e(TAG, e.getMessage());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //        MMLog.setLogOnOff(false);
+        //MMLog.d(TAG, "onCreate()");//2 second call
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //创建NotificationChannel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_ID, NOTIFICATION_NAME, NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
+        //startForeground(1, getNotification());
+        start();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return super.onStartCommand(intent, flags, startId);
+        //MMLog.d(TAG, "onStartCommand()");//3 call
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        /// TODO: Return the communication channel to the service.
+        ///throw new UnsupportedOperationException("Not yet implemented");
+        ///MMLog.d(TAG, "WatchManService on bind");
+        return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //MMLog.d(TAG, "onDestroy()");
+        try {
+            unRegisterUserEventReceiver();
+            tNetUtils.free();
+        } catch (Exception e) {
+            ///e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private void registerUserEventReceiver() {
+        try {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Action_HELLO);//测试
+            intentFilter.addAction(Action_UPDATE_NET_STATUS);//测试
+            intentFilter.addAction(Action_GET_RUNNING_TASK);
+            intentFilter.addAction(Action_WATCHMAN_SWITCH_ONOFF);
+
+            intentFilter.addAction(Action_SystemShutdown);//关机
+            intentFilter.addAction(Action_SystemReboot);//重启
+
+            intentFilter.addAction(Action_SilentInstall);//静默安装
+            intentFilter.addAction(Action_SilentUninstall);//静默反安装
+            intentFilter.addAction(Action_SilentClose);//静默结束
+            intentFilter.addAction(Action_SetAudioOutputChannel);
+            intentFilter.addAction(Action_SetAudioInputChannel);
+
+            intentFilter.addAction(Action_SilentInstall1);//静默安装
+            intentFilter.addAction(Action_SilentInstall2);//静默安装
+            intentFilter.addAction(Action_SilentInstallComplete);//静默安装后删除文件
+
+            registerReceiver(UserEventReceiver, intentFilter);
+            //MMLog.d(TAG, "Register user event listener successfully.");
+        } catch (Exception e) {
+            MMLog.e(TAG, "Register user event listener failed!" + e.toString());
+        }
+    }
+
+    public void unRegisterUserEventReceiver() {
+        try {
+            unregisterReceiver(UserEventReceiver);
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+    }
 
     private void Action_GETRUNNINGTASK() {
         TAppUtils.getRunningProcess(this).print();

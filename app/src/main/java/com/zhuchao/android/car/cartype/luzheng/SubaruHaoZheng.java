@@ -6,6 +6,14 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class SubaruHaoZheng extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x35, 0x38, 0x62};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+            {0x13, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x14, MyCmd.Keycode.KEY_SEEK_PREV}, {0x15, MyCmd.Keycode.NAVIGATION}, {0x16, MyCmd.Keycode.NAVIGATION}, {0x17, MyCmd.Keycode.AUDIO}, {0x18, MyCmd.Keycode.HOME},
+
+            {(byte) 0x87, MyCmd.Keycode.MUTE},};
+
+
     public SubaruHaoZheng() {
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
 
@@ -17,19 +25,6 @@ public class SubaruHaoZheng extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x35, 0x38, 0x62};
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-            {0x13, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x14, MyCmd.Keycode.KEY_SEEK_PREV}, {0x15, MyCmd.Keycode.NAVIGATION}, {0x16, MyCmd.Keycode.NAVIGATION}, {0x17, MyCmd.Keycode.AUDIO},
-            {0x18, MyCmd.Keycode.HOME},
-
-            {(byte) 0x87, MyCmd.Keycode.MUTE},
-    };
-
 
     @Override
     public int getACTemp(byte data) {

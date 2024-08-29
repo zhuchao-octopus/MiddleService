@@ -7,17 +7,6 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BenzBagoo extends Canbox {
 
-    public BenzBagoo() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-
-        // updateCanboxSettings();
-    }
-
     private final static byte[][] KEYS_WHEEL = {
 
             {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV},
@@ -27,6 +16,16 @@ public class BenzBagoo extends Canbox {
             {0x50, KEY_BT_DIAL}, {0x51, KEY_BT_HANG},
 
     };
+    private final int mBaud = 0;
+    byte[] data = new byte[11];
+    private int mSource = MyCmd.SOURCE_NONE;
+
+    public BenzBagoo() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+
+        // updateCanboxSettings();
+    }
 
     private void parseWheelKey(byte[] data, int len) {
 
@@ -82,16 +81,11 @@ public class BenzBagoo extends Canbox {
 
     }
 
-    private int mSource = MyCmd.SOURCE_NONE;
-    private final int mBaud = 0;
-
     public void setVolume(int volume) {
 
         byte[] data = new byte[]{(byte) 0xc4, 0x1, (byte) volume};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] data = new byte[11];
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         // setMediaSrc(0);

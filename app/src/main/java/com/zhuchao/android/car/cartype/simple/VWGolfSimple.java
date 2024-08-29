@@ -25,19 +25,46 @@ import java.util.Date;
 
 public class VWGolfSimple extends Canbox {
 
-    public VWGolfSimple() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC},
 
     };
+    private final static byte[][] KEYS_WHEEL2 = {{0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME}, {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final static int DEALY_SEND_TPMS = 1;
+    private final int[] mRadarColor = new int[8];
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HIDE_RADAR:
+                    RadarManager.stop();
+                    break;
+                case DEALY_SEND_TPMS:
+                    try {
+                        sendCanboxInfo("com.canboxsetting", (byte[]) (msg.obj));
+                    } catch (Exception e) {
+
+                    }
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private byte[] mBuf;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private byte mRadarSwitch = 0;
+    private int mDoorStatus = 0;
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    public VWGolfSimple() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
+    }
 
     private void parseWheelKey(byte[] data) {
         if (doKeyStudy(data[2], data[3])) {
@@ -60,12 +87,6 @@ public class VWGolfSimple extends Canbox {
         }
     }
 
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x2, KEY_NEXTSONG}, {0x1, KEY_PREVIOUSSONG}, {0x3, MyCmd.Keycode.FAST_F}, {0x4, MyCmd.Keycode.FAST_R}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x14, KEY_HOME},
-            {0x17, KEY_MIC}, {0x19, MyCmd.Keycode.KEY_BT_VOICE_SPEAKER}, {0x18, MyCmd.Keycode.KEY_BT_VOICE_PHONE}, {0x30, KEY_BACK},
-
-    };
-
     private void parseWheelKey2(byte[] data) {
         if (doKeyStudy(1, data[2], 1)) {
             doKeyStudy(1, data[2], 0);
@@ -84,7 +105,6 @@ public class VWGolfSimple extends Canbox {
             doKey(key, 0);
         }
     }
-
 
     private void parseACInfo(byte[] data, int len) {
         if (!isShowAir()) {
@@ -146,8 +166,6 @@ public class VWGolfSimple extends Canbox {
             handler.sendMessage(handler.obtainMessage(msg, airData));
         }
     }
-
-    private final int[] mRadarColor = new int[8];
 
     private int getRadarColor(int i) {
         int color = Color.GREEN;
@@ -430,10 +448,6 @@ public class VWGolfSimple extends Canbox {
         returnDriveData(data);
     }
 
-    private byte[] mBuf;
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -475,9 +489,6 @@ public class VWGolfSimple extends Canbox {
 
     }
 
-    private byte mRadarSwitch = 0;
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -492,10 +503,6 @@ public class VWGolfSimple extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -528,14 +535,10 @@ public class VWGolfSimple extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         }
 
         // if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -549,9 +552,7 @@ public class VWGolfSimple extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 
@@ -612,7 +613,6 @@ public class VWGolfSimple extends Canbox {
         sendDataToCanbox(mData, mData.length);
     }
 
-
     public void setVolume(int volume) {
 
         byte[] data = new byte[]{(byte) 0xc4, 0x1, (byte) volume};
@@ -623,26 +623,6 @@ public class VWGolfSimple extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final static int DEALY_SEND_TPMS = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_RADAR:
-                    RadarManager.stop();
-                    break;
-                case DEALY_SEND_TPMS:
-                    try {
-                        sendCanboxInfo("com.canboxsetting", (byte[]) (msg.obj));
-                    } catch (Exception e) {
-
-                    }
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     public void setPhone(int status, String num) {// default is simple box
         switch (status) {
@@ -731,13 +711,10 @@ public class VWGolfSimple extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                (byte) 0xa6, 0x07, y, mon, d, h, m, s, format
-        };
+        byte[] buf = new byte[]{(byte) 0xa6, 0x07, y, mon, d, h, m, s, format};
 
         sendDataToCanbox(buf, buf.length);
     }
-
 
     public void sendId3(byte index, String num) {
 
@@ -778,11 +755,6 @@ public class VWGolfSimple extends Canbox {
             Log.d("Nissan2013Simple", "sendId3" + e);
         }
     }
-
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
 
     public void setSongName(String s) {
         sendId3((byte) 0x70, s);

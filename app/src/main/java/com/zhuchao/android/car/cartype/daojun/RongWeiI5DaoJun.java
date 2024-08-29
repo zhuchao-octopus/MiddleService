@@ -9,6 +9,12 @@ import java.util.Calendar;
 
 public class RongWeiI5DaoJun extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x6, 0x16};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.SPEECH}, {0x7, MyCmd.Keycode.MUTE}, {0x24, MyCmd.Keycode.BT}, {0x25, MyCmd.Keycode.HOME},
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x2, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x5, MyCmd.Keycode.POWER},};
+
     public RongWeiI5DaoJun() {
         buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -27,22 +33,10 @@ public class RongWeiI5DaoJun extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x6, 0x16};
-
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0x85, 0x02, 1, 1};
         return cmd;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.MODLE}, {0x6, MyCmd.Keycode.SPEECH},
-            {0x7, MyCmd.Keycode.MUTE}, {0x24, MyCmd.Keycode.BT}, {0x25, MyCmd.Keycode.HOME},
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x2, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x5, MyCmd.Keycode.POWER},
-    };
 
     @Override
     public int getAngleValue(byte[] data) {

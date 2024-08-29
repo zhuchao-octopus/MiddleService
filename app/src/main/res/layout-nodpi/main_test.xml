@@ -59,18 +59,18 @@
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:visibility="gone"
                 android:orientation="vertical"
-                android:text="@string/log_button"></Button>
+                android:text="@string/log_button"
+                android:visibility="gone"></Button>
 
             <Button
                 android:id="@+id/testing"
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
-                android:visibility="gone"
                 android:orientation="vertical"
-                android:text="@string/testing"></Button>
+                android:text="@string/testing"
+                android:visibility="gone"></Button>
 
             <Button
                 android:id="@+id/start"

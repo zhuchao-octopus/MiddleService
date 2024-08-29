@@ -7,6 +7,15 @@ import java.util.Locale;
 
 public class FengJun6Xinbas extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS},
+
+
+            {0xb, MyCmd.Keycode.MUTE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+
+    };
+
+
     public FengJun6Xinbas() {
 
 
@@ -16,17 +25,6 @@ public class FengJun6Xinbas extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
 
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS},
-
-
-            {0xb, MyCmd.Keycode.MUTE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-
-    };
-
 
     @Override
     public int getACTemp(byte data) {

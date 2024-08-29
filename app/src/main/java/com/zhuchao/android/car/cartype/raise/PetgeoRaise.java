@@ -19,63 +19,6 @@ import java.util.Date;
 
 public class PetgeoRaise extends Canbox {
 
-    public PetgeoRaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x1, 0x3, 0x0, 0x0});
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x1, 0x1, 0x2, 0x1});
-
-        buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
-        // updateCanboxSettings();
-    }
-
-    public void startConnect() {// default is simple box
-        byte[] buf = new byte[]{0x4, (byte) 0x8f, 0x38};
-        updateTime();
-        Util.doSleep(20);
-        sendDataToCanbox(buf, buf.length);
-        Util.doSleep(20);
-        buf[2] = (byte) 0x7f;
-        sendDataToCanbox(buf, buf.length);
-    }
-
-    private byte[] getCarTypeCmd() {
-        byte[] cmd = new byte[]{0x6, (byte) 0xa7, 0x03, 3, 0};
-        switch (CarUtil.getModelId()) {
-            case 5:
-                cmd[2] = 0;
-                break;
-            case 8:
-            case 22:
-            case 21:
-                cmd[2] = 1;
-                break;
-            case 13:
-                cmd[2] = 2;
-                break;
-            case 40:
-                cmd[2] = 4;
-                break;
-            case 0x50:
-                cmd[2] = 0x50;
-                break;
-            default:
-                cmd[2] = 3;
-                break;
-        }
-
-        switch (CarUtil.getCarTypeConfig()) {
-            case 0:
-                cmd[3] = 1;
-                break;
-            case 1:
-                cmd[3] = 2;
-                break;
-            case 2:
-                cmd[3] = 3;
-                break;
-        }
-        return cmd;
-    }
-
     private final static byte[][] KEYS_WHEEL = {
 
             {0x2, KEY_HOME}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x7, KEY_PLAYPAUSE}, {0x8, KEY_BACK}, {0x10, KEY_SOURCE}, {0x11, KEY_SOURCE}, {0x12, KEY_SEEK_NEXT}, {0x13, KEY_SEEK_PREV}, {0x14, AK_KEYPAD_VOLUME_A}, {0x15, AK_KEYPAD_VOLUME_D}, {0x16, KEY_MUTE}, {0x17, KEY_PREVIOUSSONG}, {0x18, KEY_NEXTSONG}, {0x1F, KEY_MIC}, {0x50, KEY_BT}, {0x20, MyCmd.Keycode.KEY_CAR_INFO},
@@ -132,8 +75,73 @@ public class PetgeoRaise extends Canbox {
             {0x30, MyCmd.Keycode.BT_DIAL}, {0x31, MyCmd.Keycode.BT_HANG}, {0x51, MyCmd.Keycode.SETUP}, {0x61, MyCmd.Keycode.BACK},
 
     };
-
+    private final int mSource = MyCmd.SOURCE_NONE;
+    private final int mBaud = 0;
     int mKey;
+    byte[] airData = new byte[8];
+    int mRadarSwitch;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private int showWarningMsg = -1;
+    private int mDoorStatus = 0;
+
+    public PetgeoRaise() {
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x1, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x1, 0x1, 0x2, 0x1});
+
+        buildCmdRepeatSendCarType(getCarTypeCmd(), 3);
+        // updateCanboxSettings();
+    }
+
+    public void startConnect() {// default is simple box
+        byte[] buf = new byte[]{0x4, (byte) 0x8f, 0x38};
+        updateTime();
+        Util.doSleep(20);
+        sendDataToCanbox(buf, buf.length);
+        Util.doSleep(20);
+        buf[2] = (byte) 0x7f;
+        sendDataToCanbox(buf, buf.length);
+    }
+
+    private byte[] getCarTypeCmd() {
+        byte[] cmd = new byte[]{0x6, (byte) 0xa7, 0x03, 3, 0};
+        switch (CarUtil.getModelId()) {
+            case 5:
+                cmd[2] = 0;
+                break;
+            case 8:
+            case 22:
+            case 21:
+                cmd[2] = 1;
+                break;
+            case 13:
+                cmd[2] = 2;
+                break;
+            case 40:
+                cmd[2] = 4;
+                break;
+            case 0x50:
+                cmd[2] = 0x50;
+                break;
+            default:
+                cmd[2] = 3;
+                break;
+        }
+
+        switch (CarUtil.getCarTypeConfig()) {
+            case 0:
+                cmd[3] = 1;
+                break;
+            case 1:
+                cmd[3] = 2;
+                break;
+            case 2:
+                cmd[3] = 3;
+                break;
+        }
+        return cmd;
+    }
 
     private void parseWheelKey(byte[] data, int len) {
         //		if (data[2] == (byte) 0xa5) {
@@ -193,8 +201,6 @@ public class PetgeoRaise extends Canbox {
 
         //		}
     }
-
-    byte[] airData = new byte[8];
 
     private void parseACInfo(byte[] data, int len) {
         int windMode = 0;
@@ -286,8 +292,6 @@ public class PetgeoRaise extends Canbox {
         }
         return data;
     }
-
-    int mRadarSwitch;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -443,16 +447,12 @@ public class PetgeoRaise extends Canbox {
         }
     }
 
-    private int showWarningMsg = -1;
-
     public void updateCanboxSettings() {
         showWarningMsg = Settings.System.getInt(mContext.getContentResolver(), SettingProperties.SHOW_FOCUS_CAR_WARNING_MSG, 0);
         if (showWarningMsg != 0) {
             WarningMsgManager.stop();
         }
     }
-
-    private int mDoorStatus = 0;
 
     public void setReverseRadaVol(byte param) {
         //		byte[] data = new byte[] { (byte) 0xc6, 0x2, 0x0, param };
@@ -494,9 +494,6 @@ public class PetgeoRaise extends Canbox {
         data = new byte[]{0x9, (byte) 0xc0, s, 1, (byte) ((total & 0xff00) >> 8), (byte) (total & 0xff), (byte) ((play & 0xff00) >> 8), (byte) (play & 0xff)};
         sendDataToCanbox(data, data.length);
     }
-
-    private final int mSource = MyCmd.SOURCE_NONE;
-    private final int mBaud = 0;
 
     public void setVolume(int volume) {
         byte[] data = new byte[]{0x4, (byte) 0xc4, (byte) volume};
@@ -548,10 +545,6 @@ public class PetgeoRaise extends Canbox {
         data = new byte[]{0x9, (byte) 0xc0, s, 1, 0, 0, 0, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
 
     public void setPhone(int status, String num) {
         sendId3((byte) 0x1, num);

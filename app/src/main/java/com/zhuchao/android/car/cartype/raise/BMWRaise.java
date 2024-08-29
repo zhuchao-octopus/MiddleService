@@ -14,13 +14,24 @@ import java.util.Date;
 
 public class BMWRaise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL3 = {
+
+            {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.AUDIO}, {0x2, MyCmd.Keycode.HOME}, {0x3, MyCmd.Keycode.BT}, {0x4, MyCmd.Keycode.BACK}, {0x5, MyCmd.Keycode.SETUP}, {0x6, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.AUX_IN}, {0xc, MyCmd.Keycode.RADIO}, {0xd, MyCmd.Keycode.NAVIGATION}, {0x11, MyCmd.Keycode.ROLL_PREV}, {0x12, MyCmd.Keycode.ROLL_NEXT}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT}, {0x15, MyCmd.Keycode.PREVIOUS}, {0x16, MyCmd.Keycode.NEXT},};
+    private final static int HIDE_RADAR = 0;
+    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == HIDE_RADAR) {
+                RadarManager.stop();
+            }
+            super.handleMessage(msg);
+        }
+    };
+    private byte mDoorStatus = 0;
+
     public BMWRaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
 
 
         mIdKey = 0x27;
@@ -61,17 +72,6 @@ public class BMWRaise extends Canbox {
         }
         return cmd;
     }
-
-    private final static byte[][] KEYS_WHEEL3 = {
-
-            {0x2, MyCmd.Keycode.ROLL_NEXT, 0}, {0x12, MyCmd.Keycode.ROLL_PREV, 0},
-    };
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.AUDIO}, {0x2, MyCmd.Keycode.HOME}, {0x3, MyCmd.Keycode.BT}, {0x4, MyCmd.Keycode.BACK}, {0x5, MyCmd.Keycode.SETUP}, {0x6, MyCmd.Keycode.PREVIOUS},
-            {0x7, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.NEXT}, {0xb, MyCmd.Keycode.AUX_IN}, {0xc, MyCmd.Keycode.RADIO},
-            {0xd, MyCmd.Keycode.NAVIGATION}, {0x11, MyCmd.Keycode.ROLL_PREV}, {0x12, MyCmd.Keycode.ROLL_NEXT}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT},
-            {0x15, MyCmd.Keycode.PREVIOUS}, {0x16, MyCmd.Keycode.NEXT},
-    };
 
     private void parseWheelKey(byte[] data, int len) {
         if (doKeyStudy(data[2], data[3])) {
@@ -175,16 +175,6 @@ public class BMWRaise extends Canbox {
         mHandler.removeMessages(HIDE_RADAR);
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
-
-    private final static int HIDE_RADAR = 0;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == HIDE_RADAR) {
-                RadarManager.stop();
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -291,8 +281,6 @@ public class BMWRaise extends Canbox {
 
     }
 
-    private byte mDoorStatus = 0;
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
         byte min = (byte) ((time / 60) % 60);
         byte sec = (byte) ((time) % 60);
@@ -300,13 +288,9 @@ public class BMWRaise extends Canbox {
         byte[] data;
 
         if (MyCmd.SOURCE_DVD != source) {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }
@@ -407,9 +391,7 @@ public class BMWRaise extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                (byte) 0xa6, 0x7, 0x10, y, mon, d, h, m, s
-        };
+        byte[] buf = new byte[]{(byte) 0xa6, 0x7, 0x10, y, mon, d, h, m, s};
 
         sendDataToCanbox(buf, buf.length);
 

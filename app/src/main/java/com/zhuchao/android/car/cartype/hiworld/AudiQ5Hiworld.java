@@ -5,6 +5,19 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class AudiQ5Hiworld extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
+
+            {0x3, MyCmd.Keycode.MUTE},
+
+
+            {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
+
+            {0xb, MyCmd.Keycode.SPEECH}, {0xc, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.MODLE}, {0x11, MyCmd.Keycode.NAVIGATION},
+
+
+    };
+
+
     public AudiQ5Hiworld() {
         buildCmdDoor((byte) 0x73, (byte) 0x2, (byte) 0xf8, (byte) 0x09);
         buildCmdAngle((byte) 0x72, (byte) 0x0, 0xfe);
@@ -18,21 +31,6 @@ public class AudiQ5Hiworld extends Canbox {
 
         buildCmdKey((byte) 0x1, (byte) 5, (byte) 5, (byte) 0, KEYS_WHEEL);
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN},
-
-            {0x3, MyCmd.Keycode.MUTE},
-
-
-            {0x9, MyCmd.Keycode.NEXT}, {0x8, MyCmd.Keycode.PREVIOUS},
-
-            {0xb, MyCmd.Keycode.SPEECH}, {0xc, MyCmd.Keycode.PLAY_PAUSE}, {0x10, MyCmd.Keycode.MODLE}, {0x11, MyCmd.Keycode.NAVIGATION},
-
-
-    };
-
 
     @Override
     public int getAngleValue2(byte[] data) {

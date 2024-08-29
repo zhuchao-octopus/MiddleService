@@ -25,13 +25,32 @@ import java.util.Locale;
 
 public class CarHY extends Canbox {
 
+    private final static byte[][] KEYS_PANNEL_S_M = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE}, {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK}, {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG}, {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.RADIO}, {0x36, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT}, {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D}, {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},};
+    private final static byte[][] KEYS_PANNEL_S_HIDE = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE}, {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.BT}, {0xb, KEY_MENU}, {0xc, KEY_BACK}, {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG}, {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.RADIO}, {0x36, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT}, {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D}, {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},};
+
+    // private void requestVersion(){
+    // byte[] data = new byte[] { (byte) 0xc4, 0x1, (byte) volume };
+    // sendDataToCanbox(data, data.length);
+    // }
+    private final static byte[][] KEYS_PANNEL_NORMAL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE}, {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK}, {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG}, {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE}, {0x36, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT}, {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D}, {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},};
+    private final static byte[][] KEYS_PANNEL_KX5_M = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE}, {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK}, {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG}, {0x31, MyCmd.Keycode.AUDIO}, {0x32, MyCmd.Keycode.DARK}, {0x33, MyCmd.Keycode.SETUP}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE}, {0x36, MyCmd.Keycode.HOME}, {0x37, MyCmd.Keycode.RADIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT}, {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D}, {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},};
+    private final static byte[][] KEYS_PANNEL_KX5_H = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE}, {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK}, {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG}, {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.SETUP}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE}, {0x36, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT}, {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D}, {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},};
+    private final static byte[][] KEYS_SPORTAGE = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE}, {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK}, {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG}, {0x31, MyCmd.Keycode.HOME}, {0x32, MyCmd.Keycode.BT}, {0x33, MyCmd.Keycode.SETUP}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE}, {0x36, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT}, {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D}, {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},};
+    private static final byte mTst = -10;
+    private final static int HIDE_RADAR = 0;
+    private final static int SHOW_VOLUME_STEP = 1;
+    private final static int REPEAT_SEND_EQ = 2;
+    byte[] buf = new byte[8];
+    byte[] mEQData = new byte[]{10, 10, 10, 7, 7, 30};
+    private byte[][] mKeyPannel;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mDoorStatus = 0;
+    private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
+    private int mVolume = 30;
+
     public CarHY() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
         updateCanboxKeySettings();
 
         buildCmdAngle((byte) 0x26, (byte) 0x5, 0x1200);
@@ -45,11 +64,6 @@ public class CarHY extends Canbox {
             buf[i] = 10;
         }
     }
-
-    // private void requestVersion(){
-    // byte[] data = new byte[] { (byte) 0xc4, 0x1, (byte) volume };
-    // sendDataToCanbox(data, data.length);
-    // }
 
     public void updateCanboxKeySettings() {
         if (CarUtil.getKeyType() == 3) {
@@ -89,74 +103,10 @@ public class CarHY extends Canbox {
         }
 
         if (CarUtil.getCarType() >= 1 || CarUtil.getCarType() <= 3) {
-            byte[] buf = new byte[]{
-                    (byte) 0xca, 0x1, (byte) (CarUtil.getCarType() - 1)
-            };
+            byte[] buf = new byte[]{(byte) 0xca, 0x1, (byte) (CarUtil.getCarType() - 1)};
             sendDataToCanbox(buf, buf.length);
         }
     }
-
-    private byte[][] mKeyPannel;
-
-    private final static byte[][] KEYS_PANNEL_S_M = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE},
-            {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK},
-            {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG},
-            {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.RADIO}, {0x36, MyCmd.Keycode.RADIO},
-            {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D},
-            {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},
-    };
-
-    private final static byte[][] KEYS_PANNEL_S_HIDE = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE},
-            {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.BT}, {0xb, KEY_MENU}, {0xc, KEY_BACK},
-            {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG},
-            {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.RADIO}, {0x36, MyCmd.Keycode.RADIO},
-            {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D},
-            {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},
-    };
-
-    private final static byte[][] KEYS_PANNEL_NORMAL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE},
-            {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK},
-            {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG},
-            {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.NAVIGATION}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE},
-            {0x36, MyCmd.Keycode.RADIO}, {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D},
-            {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},
-    };
-
-    private final static byte[][] KEYS_PANNEL_KX5_M = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE},
-            {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK},
-            {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG},
-            {0x31, MyCmd.Keycode.AUDIO}, {0x32, MyCmd.Keycode.DARK}, {0x33, MyCmd.Keycode.SETUP}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE}, {0x36, MyCmd.Keycode.HOME},
-            {0x37, MyCmd.Keycode.RADIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D},
-            {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},
-    };
-
-    private final static byte[][] KEYS_PANNEL_KX5_H = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE},
-            {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK},
-            {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG},
-            {0x31, MyCmd.Keycode.NAVIGATION}, {0x32, MyCmd.Keycode.NAVIGATION}, {0x33, MyCmd.Keycode.SETUP}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE}, {0x36, MyCmd.Keycode.RADIO},
-            {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D},
-            {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},
-    };
-
-    private final static byte[][] KEYS_SPORTAGE = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_PREVIOUSSONG}, {0x4, KEY_NEXTSONG}, {0x5, KEY_BT}, {0xa, KEY_BT}, {0x38, KEY_BT}, {0x6, AK_KEYPAD_MUTE_FAKE},
-            {0x12, KEY_MIC}, {(byte) 0x89, AK_KEYPAD_MUTE_FAKE}, {0x7, KEY_MODE}, {(byte) 0x88, KEY_MODE}, {0x9, MyCmd.Keycode.DARK}, {0x30, MyCmd.Keycode.DARK}, {0xb, KEY_MENU}, {0xc, KEY_BACK},
-            {0x0d, KEY_CH_UP}, {(byte) 0x83, KEY_CH_UP}, {0x0e, KEY_CH_UP}, {(byte) 0x84, KEY_CH_DOWN}, {0x0f, KEY_POWER}, {0x3b, KEY_POWER}, {(byte) 0x87, KEY_POWER}, {0x10, KEY_BT_HANG},
-            {0x31, MyCmd.Keycode.HOME}, {0x32, MyCmd.Keycode.BT}, {0x33, MyCmd.Keycode.SETUP}, {0x34, MyCmd.Keycode.SETUP}, {0x35, MyCmd.Keycode.PLAY_PAUSE}, {0x36, MyCmd.Keycode.RADIO},
-            {0x37, MyCmd.Keycode.AUDIO}, {0x39, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x86, MyCmd.Keycode.KEY_SEEK_PREV}, {0x3a, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {(byte) 0x85, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3c, AK_KEYPAD_VOLUME_A}, {(byte) 0x81, AK_KEYPAD_VOLUME_A}, {(byte) 0x8a, AK_KEYPAD_VOLUME_A}, {0x3d, AK_KEYPAD_VOLUME_D},
-            {(byte) 0x82, AK_KEYPAD_VOLUME_D}, {(byte) 0x8b, AK_KEYPAD_VOLUME_D}, {(byte) 0x3e, MyCmd.Keycode.KEY_TURN_A}, {(byte) 0x3f, MyCmd.Keycode.KEY_TURN_D},
-    };
 
     private boolean isOneKey(byte b) {
         return ((b & 0xff) >= 0x81) || ((b & 0xff) == 0x3c) || ((b & 0xff) == 0x3d) || ((b & 0xff) == 0x3e) || ((b & 0xff) == 0x3f);
@@ -234,8 +184,6 @@ public class CarHY extends Canbox {
             }
         }
     }
-
-    private static final byte mTst = -10;
 
     private void parseACInfo(byte[] data, int len) {
         if (CarUtil.getAirCondition() == 4) {
@@ -464,8 +412,6 @@ public class CarHY extends Canbox {
         returnDriveData(data);
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
     public void updateOutDoorTemp(int temp) {
 
         if (temp == CarUtil.INVALID_OUT_DOOR_TEMP) {
@@ -488,8 +434,6 @@ public class CarHY extends Canbox {
 
 
     }
-
-    private int mDoorStatus = 0;
 
     public void updateTime() {
         Date curDate = new Date(System.currentTimeMillis());
@@ -525,32 +469,9 @@ public class CarHY extends Canbox {
         byte s = (byte) curDate.getSeconds();
 
 
-        byte[] buf = new byte[]{
-                (byte) 0xc6, 0x08, 0x01, 0x0, 0x0, 0x0, h, m, s, ampm
-        };
+        byte[] buf = new byte[]{(byte) 0xc6, 0x08, 0x01, 0x0, 0x0, 0x0, h, m, s, ampm};
         sendDataToCanbox(buf, buf.length);
-    }
-
-    private void checkHideRadar() {
-        mHandler.removeMessages(HIDE_RADAR);
-        mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
-    }
-
-    private final static int HIDE_RADAR = 0;
-    private final static int SHOW_VOLUME_STEP = 1;
-    private final static int REPEAT_SEND_EQ = 2;
-
-    private void doKeyStep(int key, int step) {
-        mHandler.removeMessages(SHOW_VOLUME_STEP);
-        doKey(key, 1);
-        doKey(key, 0);
-        --step;
-        if (step > 0) {
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
-        }
-    }
-
-    private final Handler mHandler = new Handler() {
+    }    private final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HIDE_RADAR:
@@ -569,6 +490,21 @@ public class CarHY extends Canbox {
         }
     };
 
+    private void checkHideRadar() {
+        mHandler.removeMessages(HIDE_RADAR);
+        mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
+    }
+
+    private void doKeyStep(int key, int step) {
+        mHandler.removeMessages(SHOW_VOLUME_STEP);
+        doKey(key, 1);
+        doKey(key, 0);
+        --step;
+        if (step > 0) {
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
+        }
+    }
+
     private void powerEQ(boolean power) {
         buf[0] = (byte) 0xc7;
         buf[1] = 0x6;
@@ -576,8 +512,6 @@ public class CarHY extends Canbox {
 
         sendDataToCanbox(buf, buf.length);
     }
-
-    byte[] buf = new byte[8];
 
     public void sendEqToCanbox(byte[] eq) {
         if (eq != null && eq.length >= 11) {
@@ -615,10 +549,6 @@ public class CarHY extends Canbox {
         }
     }
 
-    private byte[] mData = new byte[]{
-            (byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0
-    };
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
         byte h = (byte) ((time / 3600));
@@ -650,14 +580,10 @@ public class CarHY extends Canbox {
         }
 
         if (MyCmd.SOURCE_DVD == source) {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, 0, (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec};
 
         } else {
-            mData = new byte[]{
-                    (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-            };
+            mData = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         }
 
         // if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -671,9 +597,7 @@ public class CarHY extends Canbox {
         if (b[0] != 0x10) {
             b[0] += 1;
         }
-        mData = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0
-        };
+        mData = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], 0, 0, 0};
         sendDataToCanbox(mData, mData.length);
     }
 
@@ -848,8 +772,6 @@ public class CarHY extends Canbox {
         startEQ();
     }
 
-    private int mVolume = 30;
-
     public void stopConnect() {
         stopEQ();
         super.stopConnect();
@@ -926,9 +848,6 @@ public class CarHY extends Canbox {
         sendId3((byte) 0x1, s);
     }
 
-
-    byte[] mEQData = new byte[]{10, 10, 10, 7, 7, 30};
-
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
         if (cmd == EQ_REQUEST_ALL_MAX) {
@@ -989,4 +908,8 @@ public class CarHY extends Canbox {
     private void returnEQData() {
         super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQData);
     }
+
+
+
+
 }

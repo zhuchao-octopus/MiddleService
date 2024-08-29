@@ -9,43 +9,14 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class MitsubishiRaise extends Canbox {
 
-    public MitsubishiRaise() {
-        mIdAC = 0x21;
-
-        buildCmdRepeatSendCarType(getCarTypeCmd());
-        buildCmdRadarFront((byte) 0x23, (byte) 0x1, (byte) 0x4);
-        buildCmdRadarBack((byte) 0x22, (byte) 0x1, (byte) 0x4);
-        buildCmdEQ((byte) 0x17, (byte) 0x0, 6);
-        buildCmdVersion((byte) 0x7f, (byte) 0x0);
-        mIdKey = 0x20;
-        MAP_KEYS = KEYS_WHEEL;
-
-    }
-
-
-    private byte[] getCarTypeCmd() {
-
-        switch (CarUtil.getModelId()) {
-            case 2:
-            case 5:
-                byte[] cmd = new byte[]{(byte) 0x84, 0x02, 0x9, 0x1};
-                return cmd;
-        }
-        return null;
-    }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, MyCmd.Keycode.KEY_SEEK_PREV}, {0x6, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x7, KEY_SOURCE}, {0x8, KEY_MUTE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0x12, MyCmd.Keycode.SPEECH},
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG}, {0x5, MyCmd.Keycode.KEY_SEEK_PREV}, {0x6, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x7, KEY_SOURCE}, {0x8, KEY_MUTE}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG}, {0x12, MyCmd.Keycode.SPEECH},
 
             {0x15, KEY_BACK}, {0x16, MyCmd.Keycode.PLAY_PAUSE},
 
 
-            {(byte) 0x81, MyCmd.Keycode.POWER}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x83, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x84, MyCmd.Keycode.PLAY_PAUSE},
-            {(byte) 0x85, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x86, MyCmd.Keycode.ROLL_PREV}, {(byte) 0x87, MyCmd.Keycode.RADIO}, {(byte) 0x88, MyCmd.Keycode.AUDIO},
-            {(byte) 0x89, MyCmd.Keycode.NAVIGATION}, {(byte) 0x8a, MyCmd.Keycode.MENU}, {(byte) 0x8b, MyCmd.Keycode.HOME}, {(byte) 0x8c, MyCmd.Keycode.SETUP}, {(byte) 0x8d, MyCmd.Keycode.SETUP},
-            {(byte) 0x8e, MyCmd.Keycode.BACKLIGHT_OFF}, {(byte) 0x8f, MyCmd.Keycode.ALL_APP},
-    };
+            {(byte) 0x81, MyCmd.Keycode.POWER}, {(byte) 0x82, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0x83, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0x84, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x85, MyCmd.Keycode.ROLL_NEXT}, {(byte) 0x86, MyCmd.Keycode.ROLL_PREV}, {(byte) 0x87, MyCmd.Keycode.RADIO}, {(byte) 0x88, MyCmd.Keycode.AUDIO}, {(byte) 0x89, MyCmd.Keycode.NAVIGATION}, {(byte) 0x8a, MyCmd.Keycode.MENU}, {(byte) 0x8b, MyCmd.Keycode.HOME}, {(byte) 0x8c, MyCmd.Keycode.SETUP}, {(byte) 0x8d, MyCmd.Keycode.SETUP}, {(byte) 0x8e, MyCmd.Keycode.BACKLIGHT_OFF}, {(byte) 0x8f, MyCmd.Keycode.ALL_APP},};
+    byte[] mLcdInfo;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     //	public int getACTemp(byte data) {//
     //		if ((data & 0xff) >= 0x3 && (data & 0xff) <= 0x37) {
@@ -59,6 +30,31 @@ public class MitsubishiRaise extends Canbox {
     //		}
     //		return data & 0xff;
     //	}
+    private int mCallingTime;
+
+    public MitsubishiRaise() {
+        mIdAC = 0x21;
+
+        buildCmdRepeatSendCarType(getCarTypeCmd());
+        buildCmdRadarFront((byte) 0x23, (byte) 0x1, (byte) 0x4);
+        buildCmdRadarBack((byte) 0x22, (byte) 0x1, (byte) 0x4);
+        buildCmdEQ((byte) 0x17, (byte) 0x0, 6);
+        buildCmdVersion((byte) 0x7f, (byte) 0x0);
+        mIdKey = 0x20;
+        MAP_KEYS = KEYS_WHEEL;
+
+    }
+
+    private byte[] getCarTypeCmd() {
+
+        switch (CarUtil.getModelId()) {
+            case 2:
+            case 5:
+                byte[] cmd = new byte[]{(byte) 0x84, 0x02, 0x9, 0x1};
+                return cmd;
+        }
+        return null;
+    }
 
     public void parseACInfo(byte[] data) {
 
@@ -98,8 +94,6 @@ public class MitsubishiRaise extends Canbox {
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
     }
-
-    byte[] mLcdInfo;
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         mLcdInfo = new byte[]{(byte) 0xc0, 0x5, 0x1, b[0], b[1], b[2], (byte) (b[3] + 1)};
@@ -175,12 +169,6 @@ public class MitsubishiRaise extends Canbox {
     public void setSongAritst(String s) {
         sendId3((byte) 0x2, s);
     }
-
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
-
-
-    private int mCallingTime;
 
     public void setPhone(int status, String num) {// default is simple box
 

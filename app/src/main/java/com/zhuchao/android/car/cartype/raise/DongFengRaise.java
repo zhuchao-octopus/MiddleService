@@ -10,6 +10,10 @@ import java.util.Date;
 
 public class DongFengRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x29, 0x27};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH}, {0xb, MyCmd.Keycode.KEY_SEEK_PREV}, {0xc, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x32, MyCmd.Keycode.NAVIGATION}, {(byte) 0x80, MyCmd.Keycode.RADIO}, {(byte) 0x81, MyCmd.Keycode.HOME}, {(byte) 0x82, MyCmd.Keycode.BACK}, {(byte) 0x83, MyCmd.Keycode.AUDIO}, {(byte) 0x84, MyCmd.Keycode.KEY_DISPLAY}, {(byte) 0x85, MyCmd.Keycode.PREVIOUS}, {(byte) 0x86, MyCmd.Keycode.KEY_FM}, {(byte) 0x87, MyCmd.Keycode.POWER}, {(byte) 0x88, MyCmd.Keycode.NEXT}, {(byte) 0x89, MyCmd.Keycode.KEY_AM}, {(byte) 0x8a, MyCmd.Keycode.VIDEO}, {(byte) 0x8b, MyCmd.Keycode.BT}, {(byte) 0x8c, MyCmd.Keycode.SETUP}, {(byte) 0x8d, MyCmd.Keycode.EQ}, {(byte) 0x8e, MyCmd.Keycode.KEY_360}, {(byte) 0x8f, MyCmd.Keycode.AS}, {(byte) 0x90, MyCmd.Keycode.AUDIO}, {(byte) 0x91, MyCmd.Keycode.MENU}, {(byte) 0x92, MyCmd.Keycode.NEXT}, {(byte) 0x93, MyCmd.Keycode.PREVIOUS}, {(byte) 0x94, MyCmd.Keycode.KEY_SEEK_NEXT}, {(byte) 0x95, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x96, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x97, MyCmd.Keycode.MUTE}, {(byte) 0x98, MyCmd.Keycode.EQ}, {(byte) 0x99, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0xf2, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0xf1, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0xf3, MyCmd.Keycode.ROLL_PREV}, {(byte) 0xf4, MyCmd.Keycode.ROLL_NEXT},};
+    private final int mRadarBack2;
+
     public DongFengRaise() {
         buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -31,21 +35,6 @@ public class DongFengRaise extends Canbox {
         mRadarBack2 = buildCmdRadar((byte) 0x24, (byte) 0x0, (byte) 255, (byte) 2);
         setVoiceSupportRaise();
     }
-
-    private final int mRadarBack2;
-    private final static byte[] IDS_TO_CANBOXSETTING = {(byte) 0x29, 0x27};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.SPEECH},
-            {0xb, MyCmd.Keycode.KEY_SEEK_PREV}, {0xc, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x32, MyCmd.Keycode.NAVIGATION}, {(byte) 0x80, MyCmd.Keycode.RADIO}, {(byte) 0x81, MyCmd.Keycode.HOME},
-            {(byte) 0x82, MyCmd.Keycode.BACK}, {(byte) 0x83, MyCmd.Keycode.AUDIO}, {(byte) 0x84, MyCmd.Keycode.KEY_DISPLAY}, {(byte) 0x85, MyCmd.Keycode.PREVIOUS}, {(byte) 0x86, MyCmd.Keycode.KEY_FM},
-            {(byte) 0x87, MyCmd.Keycode.POWER}, {(byte) 0x88, MyCmd.Keycode.NEXT}, {(byte) 0x89, MyCmd.Keycode.KEY_AM}, {(byte) 0x8a, MyCmd.Keycode.VIDEO}, {(byte) 0x8b, MyCmd.Keycode.BT},
-            {(byte) 0x8c, MyCmd.Keycode.SETUP}, {(byte) 0x8d, MyCmd.Keycode.EQ}, {(byte) 0x8e, MyCmd.Keycode.KEY_360}, {(byte) 0x8f, MyCmd.Keycode.AS}, {(byte) 0x90, MyCmd.Keycode.AUDIO},
-            {(byte) 0x91, MyCmd.Keycode.MENU}, {(byte) 0x92, MyCmd.Keycode.NEXT}, {(byte) 0x93, MyCmd.Keycode.PREVIOUS}, {(byte) 0x94, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {(byte) 0x95, MyCmd.Keycode.KEY_SEEK_PREV}, {(byte) 0x96, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0x97, MyCmd.Keycode.MUTE}, {(byte) 0x98, MyCmd.Keycode.EQ},
-            {(byte) 0x99, MyCmd.Keycode.PLAY_PAUSE}, {(byte) 0xf2, MyCmd.Keycode.VOLUME_ROLL_UP}, {(byte) 0xf1, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {(byte) 0xf3, MyCmd.Keycode.ROLL_PREV},
-            {(byte) 0xf4, MyCmd.Keycode.ROLL_NEXT},
-    };
 
     private byte[] getCarTypeCmd() {
         if (CarUtil.getCatelId() == 40) {

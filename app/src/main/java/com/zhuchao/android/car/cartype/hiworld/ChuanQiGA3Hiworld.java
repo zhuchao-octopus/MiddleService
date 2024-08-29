@@ -7,23 +7,7 @@ import java.util.Locale;
 
 public class ChuanQiGA3Hiworld extends Canbox {
 
-    public ChuanQiGA3Hiworld() {
-        buildCmdAngle((byte) 0x72, (byte) 0x0, 780);
-        buildCmdRadarBack((byte) 0x72, (byte) 0x0, (byte) 0xfe);
-        buildCmdRadarFront((byte) 0x72, (byte) 0x0, (byte) 0xfe);
-
-        buildCmdRadarBackEx((byte) 6);
-        buildCmdRadarFrontEx((byte) 10);
-
-        buildCmdVersion((byte) 0xf0, (byte) 0x0);
-        mIdAC = 0x73;
-
-        buildCmdKey((byte) 0x72, (byte) 5, (byte) 4, (byte) 0, KEYS_WHEEL);
-    }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.MUTE},
 
             {0x5, MyCmd.Keycode.BT_DIAL},
 
@@ -37,7 +21,22 @@ public class ChuanQiGA3Hiworld extends Canbox {
             {0xd, MyCmd.Keycode.PREVIOUS}, {0xe, MyCmd.Keycode.NEXT}, {0xf, MyCmd.Keycode.PLAY_PAUSE},
 
     };
+    private final byte[] mLcdInfo = new byte[15];
 
+
+    public ChuanQiGA3Hiworld() {
+        buildCmdAngle((byte) 0x72, (byte) 0x0, 780);
+        buildCmdRadarBack((byte) 0x72, (byte) 0x0, (byte) 0xfe);
+        buildCmdRadarFront((byte) 0x72, (byte) 0x0, (byte) 0xfe);
+
+        buildCmdRadarBackEx((byte) 6);
+        buildCmdRadarFrontEx((byte) 10);
+
+        buildCmdVersion((byte) 0xf0, (byte) 0x0);
+        mIdAC = 0x73;
+
+        buildCmdKey((byte) 0x72, (byte) 5, (byte) 4, (byte) 0, KEYS_WHEEL);
+    }
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -95,7 +94,6 @@ public class ChuanQiGA3Hiworld extends Canbox {
         super.parseACInfo(airData);
     }
 
-
     public void startConnect() {
 
         copyLcdInfo(mLcdInfo, "");
@@ -124,8 +122,6 @@ public class ChuanQiGA3Hiworld extends Canbox {
             }
         }
     }
-
-    private final byte[] mLcdInfo = new byte[15];
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 

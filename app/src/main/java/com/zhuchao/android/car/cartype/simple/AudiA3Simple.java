@@ -10,29 +10,21 @@ import java.util.Locale;
 
 public class AudiA3Simple extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {
+
+            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, KEY_BT}, {0x4, KEY_MUTE}, {0x5, KEY_PREVIOUSSONG}, {0x6, KEY_NEXTSONG}, {0x7, KEY_SOURCE}, {0x13, KEY_PREVIOUSSONG}, {0x14, KEY_NEXTSONG}
+
+    };
+    private final byte[] data = new byte[13];
+
     public AudiA3Simple() {
 
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x3, 0x4, 0x3, 0x0
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x3, 0x4, 0x3, 0x0});
 
         data[0] = 12;
-    }
-
-    public void startConnect() {
-        data[1] = 0x53;
-        data[3] = 0;
-        sendDataToCanbox(data, data.length);
-    }
-
-    @Override
-    public void stopConnect() {
-        data[1] = 0;
-        data[3] = 0;
-        sendDataToCanbox(data, data.length);
     }
 
 
@@ -48,6 +40,19 @@ public class AudiA3Simple extends Canbox {
     //		sendCommonDataToCanbox(send);
     //	}
 
+    public void startConnect() {
+        data[1] = 0x53;
+        data[3] = 0;
+        sendDataToCanbox(data, data.length);
+    }
+
+    @Override
+    public void stopConnect() {
+        data[1] = 0;
+        data[3] = 0;
+        sendDataToCanbox(data, data.length);
+    }
+
     public void sendDataToCanbox(byte[] data, int len) {
         byte[] send = new byte[len + 4];
         send[0] = (byte) (len + 3);
@@ -59,7 +64,6 @@ public class AudiA3Simple extends Canbox {
         //		Log.d("cde", "sendCmd:" + Util.byteArrayToHex(send));
         sendCommonDataToCanbox(send);
     }
-
 
     private byte Sum(byte[] data, int len) {
         int l = (data[0] & 0x1f);
@@ -74,14 +78,6 @@ public class AudiA3Simple extends Canbox {
 
         return (byte) ((sum & 0xFF) - 1);
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, KEY_BT}, {0x4, KEY_MUTE}, {0x5, KEY_PREVIOUSSONG}, {0x6, KEY_NEXTSONG}, {0x7, KEY_SOURCE}, {0x13, KEY_PREVIOUSSONG}, {0x14, KEY_NEXTSONG}
-
-    };
 
     private void parseWheelKey(byte bkey) {
 
@@ -116,8 +112,6 @@ public class AudiA3Simple extends Canbox {
             parseWheelKey(data[4]);
         }
     }
-
-    private final byte[] data = new byte[13];
 
     public void setVolume(int volume) {
 

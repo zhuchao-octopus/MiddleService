@@ -15,61 +15,46 @@ public class BackTrack {
      * angle, byte[] left, byte[] right);
      */
 
+    // 推导出锯齿
+    public final static int SAWTOOTH_NUM = 7;
+    // #define TRACK_DEBG
+    public final static int SAWTOOTH_INTERVERL = 80;
+    public final static int SAWTOOTH_INTERVERL2 = 140;
+    static final double PI = 3.1415926;
     /*
 
      */
     private final static String TAG = "BackTrack";
-    // #define TRACK_DEBG
-
-    static final double PI = 3.1415926;
-
-    // #define ANGLE_TO_RADIAN(angle) (((angle)*PI)/180.0)
-    public static double ANGLE_TO_RADIAN(double angle) {
-        return (((angle) * PI) / 180.0);
-    }
-
     /*
      */
     private final static int DEFAULT_CAMERA_H = 800;
-
+    private static final String SAVE_DATA = "BackTrack";
+    private static final String SAVE_DATA_TIME = "time";
+    private static final String SAVE_FIRST_BOOT = "first_boot";
+    private static final String SAVE_DATA_FIRST_SYSTEM_BOOT = "first_system_boot";
+    public static int SAWTOOTH_STEP1 = 1400;
+    public static int SAWTOOTH_STEP2 = 2800;
+    public static int SAWTOOTH_STEP3 = 5800;
     static double angle_2a = (double) 120 / 2; // 摄像头可视角度2a,
-    static int camera_h = 800; // 摄像头距离地面距离h
-    static double angle_b = 25; // 摄像头中心线同水平面的夹角β
-    static int screen_w = 1024; // 屏幕输出的宽度
-    static int screen_h = 600; // 屏幕输出的高度
-    static int car_l = 2600; // 汽车前后轮轴距L
-    static int car_w = 1800; // 汽车轴长W，
-    private int car_d = 500; // 后轮距离车尾的距离D
-
-    double camera_k_x = 0.0000012;//畸变系数
-    double camera_k_y = camera_k_x;//0.0000008;//畸变系数
     /*
      */
 
     //	static int screen_w_px = 800; // 屏幕输出的分辨率
     //	static int screen_h_px = 480; // 屏幕输出的分辨率
-
-    static int vision_back = 6000;// 轨迹可视最远距离, 太远的距离点计算进来的话,会导航轨迹成像不真实.
+    static int camera_h = 800; // 摄像头距离地面距离h
 
     //static double angle_c = -280; // 前轮同水平方向的夹角
-
+    static double angle_b = 25; // 摄像头中心线同水平面的夹角β
+    static int screen_w = 1024; // 屏幕输出的宽度
+    public static int show_l_num = screen_w;
+    public static int show_r_num = screen_w;
+    static int screen_h = 600; // 屏幕输出的高度
+    static int car_l = 2600; // 汽车前后轮轴距L
+    static int car_w = 1800; // 汽车轴长W，
+    static int vision_back = 6000;// 轨迹可视最远距离, 太远的距离点计算进来的话,会导航轨迹成像不真实.
     static int show_w = screen_w / 2; // 显示轨迹的宽度
     static int show_h = screen_h; // 显示轨迹的高度
-
     static int caculate_x = car_w / 2; // 计算x点数
-
-    static double no_use_h;// = camera_h/Math.tan(radian_a+radian_b); //real y <
-    // no_use_h is盲区
-    static double no_use_h_shadow;
-
-    static double angle_a = angle_2a / 2;
-    static double radian_a = ANGLE_TO_RADIAN(angle_a);
-    static double radian_b = ANGLE_TO_RADIAN(angle_b);
-    static double screen_ratio_w = 1;// screen_w_px/screen_w;
-    static double screen_ratio_h = 1;// screen_h_px/screen_h;
-
-
-    private static int ext_y_move = 0;
     // static float ratio = show_w/screen_w ; //显示比例
 
     //	private CPoint xy_l_real[];
@@ -79,26 +64,191 @@ public class BackTrack {
     //	private CPoint xy_r_real[];
     //	private CPoint xy_r_shadow[];
     //	public CPoint xy_r_screen[];
-
+    static double no_use_h;// = camera_h/Math.tan(radian_a+radian_b); //real y <
+    // no_use_h is盲区
+    static double no_use_h_shadow;
+    static double angle_a = angle_2a / 2;
+    static double radian_a = ANGLE_TO_RADIAN(angle_a);
+    static double radian_b = ANGLE_TO_RADIAN(angle_b);
+    static double screen_ratio_w = 1;// screen_w_px/screen_w;
+    static double screen_ratio_h = 1;// screen_h_px/screen_h;
+    static double static_tan_a = 0;
+    private static int ext_y_move = 0;
+    private final int[] sawtooth_steps = new int[]{SAWTOOTH_STEP1 - SAWTOOTH_INTERVERL, SAWTOOTH_STEP1, SAWTOOTH_STEP1 + SAWTOOTH_INTERVERL, SAWTOOTH_STEP2 - SAWTOOTH_INTERVERL2, SAWTOOTH_STEP2, SAWTOOTH_STEP2 + SAWTOOTH_INTERVERL2, SAWTOOTH_STEP3};
+    private final double[] sawtooth_tan = new double[SAWTOOTH_NUM];
+    public double[] xy_l_screen_x;
+    public double[] xy_l_screen_y;
+    public double[] xy_r_screen_x;
+    public double[] xy_r_screen_y;
+    public int[] sawtooth_l_point = new int[SAWTOOTH_NUM];
+    public int[] sawtooth_r_point = new int[SAWTOOTH_NUM];
+    double camera_k_x = 0.0000012;//畸变系数
+    double camera_k_y = camera_k_x;//0.0000008;//畸变系数
+    private int car_d = 500; // 后轮距离车尾的距离D
     private double[] xy_l_real_x;
     private double[] xy_l_real_y;
     private double[] xy_l_shadow_x;
-    private double[] xy_l_shadow_y;
-    public double[] xy_l_screen_x;
-    public double[] xy_l_screen_y;
 
+    /*
+     *
+     * public
+     * */
+    private double[] xy_l_shadow_y;
     private double[] xy_r_real_x;
     private double[] xy_r_real_y;
     private double[] xy_r_shadow_x;
     private double[] xy_r_shadow_y;
-    public double[] xy_r_screen_x;
-    public double[] xy_r_screen_y;
+
+    // #define ANGLE_TO_RADIAN(angle) (((angle)*PI)/180.0)
+    public static double ANGLE_TO_RADIAN(double angle) {
+        return (((angle) * PI) / 180.0);
+    }
+
+    public static int get_track_car_w() {
+        return car_w;
+    }
+
+    public static void set_track_car_w(int w) {
+        if (car_w > 2000) return;
+        car_w = w;
+    }
+
+    public static int get_track_car_l() {
+        return car_l;
+    }
+
+    public static void set_track_car_l(int w) {
+        car_l = w;
+    }
+
+    //	public static int get_track_car_d()
+    //	{
+    //		return car_d;
+    //	}
+    public static int get_track_camera_h() {
+        return camera_h;
+    }
+
+    public static void set_track_camera_h(int w) {
+        camera_h = w;
+        int v = DEFAULT_CAMERA_H - w;
+        if (v < 0) {
+            ext_y_move = (v / 10) * 4;
+        } else {
+            ext_y_move = (v / 10) * 6;
+        }
+    }
+
+    public static int get_ext_y_move() {
+        return ext_y_move;
+    }
+
+    //	public static void set_track_car_d(int w)
+    //	{
+    //		car_d = w;
+    //	}
+    public static void set_ext_y_move(int y) {
+        ext_y_move = y;
+    }
+
+    public static double get_track_angle_2a() {
+        return angle_2a;
+    }
+
+    public static void set_track_angle_2a(double d) {
+        angle_2a = d;
+        angle_a = angle_2a / 2;
+        radian_a = ANGLE_TO_RADIAN(angle_a);
+    }
+
+    /*
+     * for c -> java
+     */
+
+    public static double get_track_angle_b() {
+        return angle_b;
+    }
+
+    public static void set_track_angle_b(double d) {
+        angle_b = d;
+        radian_b = ANGLE_TO_RADIAN(angle_b);
+    }
 
 
-    public static int show_l_num = screen_w;
-    public static int show_r_num = screen_w;
+    //以下这些计算是根据具体的UI效果而处理的,不属于通用轨迹算法
 
-    static double static_tan_a = 0;
+    public static int get_screen_w() {
+        return screen_w;
+    }
+
+    public static void set_screen_w(int w) {
+        screen_w = w;
+    }
+
+    private static void memset(double[] pIn, int data) {
+        for (double p : pIn) {
+            p = data;
+        }
+    }
+
+    public static double getScreenH() {
+        return screen_h;
+    }
+
+    public static void reset() {
+        // angle_2a = 120 / 2; // 摄像头可视角度2a,
+        camera_h = 800; // 摄像头距离地面距离h
+        // angle_b = 25; // 摄像头中心线同水平面的夹角β
+        screen_w = 1024; // 屏幕输出的宽度
+        // screen_h = 600; // 屏幕输出的高度
+        // car_l = 2600; // 汽车前后轮轴距L
+        car_w = 1800; // 汽车轴长W，
+        ext_y_move = 0;
+    }
+
+    public static void reloadConfig(Context c) {
+        if (c != null) {
+            long l;
+
+            l = getData(c, "car_w");
+            if (l != 0) {
+                car_w = (int) l;
+            }
+            l = getData(c, "screen_w");
+            if (l != 0) {
+                screen_w = (int) l;
+            }
+            l = getData(c, "camera_h");
+            if (l != 0) {
+                camera_h = (int) l;
+            }
+            l = getData(c, "ext_y_move");
+            //			if (l != 0) {
+            ext_y_move = (int) l;
+            //			}
+        }
+    }
+
+    public static void saveConfig(Context c) {
+        if (c != null) {
+            saveData(c, "car_w", car_w);
+            saveData(c, "screen_w", screen_w);
+            saveData(c, "camera_h", camera_h);
+            saveData(c, "ext_y_move", ext_y_move);
+        }
+    }
+
+    private static void saveData(Context c, String s, long v) {
+        SharedPreferences.Editor sharedata = c.getSharedPreferences(SAVE_DATA, 0).edit();
+
+        sharedata.putLong(s, v);
+        sharedata.commit();
+    }
+
+    private static long getData(Context c, String s) {
+        SharedPreferences sharedata = c.getSharedPreferences(SAVE_DATA, 0);
+        return sharedata.getLong(s, 0);
+    }
 
     public void init() {
         int w = screen_w, h = screen_h;
@@ -356,7 +506,6 @@ public class BackTrack {
         return x;
     }
 
-
     // 计算出显示屏幕上的坐标投影
     private void caculate_virtual_point(double angle) {
         double Yr, Xr, line_side, h;
@@ -537,12 +686,6 @@ public class BackTrack {
         }
     }
 
-    /*
-     *
-     * public
-     * */
-
-
     public void do_drack(double angle) {
         //	if (angle == 0)
         //		return;
@@ -566,114 +709,6 @@ public class BackTrack {
          */
 
     }
-
-    public static void set_track_car_w(int w) {
-        if (car_w > 2000) return;
-        car_w = w;
-    }
-
-    public static void set_track_car_l(int w) {
-        car_l = w;
-    }
-
-    //	public static void set_track_car_d(int w)
-    //	{
-    //		car_d = w;
-    //	}
-    public static void set_ext_y_move(int y) {
-        ext_y_move = y;
-    }
-
-    public static void set_track_camera_h(int w) {
-        camera_h = w;
-        int v = DEFAULT_CAMERA_H - w;
-        if (v < 0) {
-            ext_y_move = (v / 10) * 4;
-        } else {
-            ext_y_move = (v / 10) * 6;
-        }
-    }
-
-    public static void set_screen_w(int w) {
-        screen_w = w;
-    }
-
-    public static void set_track_angle_2a(double d) {
-        angle_2a = d;
-        angle_a = angle_2a / 2;
-        radian_a = ANGLE_TO_RADIAN(angle_a);
-    }
-
-    public static void set_track_angle_b(double d) {
-        angle_b = d;
-        radian_b = ANGLE_TO_RADIAN(angle_b);
-    }
-
-    public static int get_track_car_w() {
-        return car_w;
-    }
-
-    public static int get_track_car_l() {
-        return car_l;
-    }
-
-    //	public static int get_track_car_d()
-    //	{
-    //		return car_d;
-    //	}
-    public static int get_track_camera_h() {
-        return camera_h;
-    }
-
-    public static int get_ext_y_move() {
-        return ext_y_move;
-    }
-
-    public static double get_track_angle_2a() {
-        return angle_2a;
-    }
-
-    public static double get_track_angle_b() {
-        return angle_b;
-    }
-
-    public static int get_screen_w() {
-        return screen_w;
-    }
-
-    /*
-     * for c -> java
-     */
-
-    private static void memset(double[] pIn, int data) {
-        for (double p : pIn) {
-            p = data;
-        }
-    }
-
-    public static double getScreenH() {
-        return screen_h;
-    }
-
-
-    //以下这些计算是根据具体的UI效果而处理的,不属于通用轨迹算法
-
-    // 推导出锯齿
-    public final static int SAWTOOTH_NUM = 7;
-    public final static int SAWTOOTH_INTERVERL = 80;
-    public final static int SAWTOOTH_INTERVERL2 = 140;
-
-    public static int SAWTOOTH_STEP1 = 1400;
-    public static int SAWTOOTH_STEP2 = 2800;
-    public static int SAWTOOTH_STEP3 = 5800;
-
-    private final int[] sawtooth_steps = new int[]{
-            SAWTOOTH_STEP1 - SAWTOOTH_INTERVERL, SAWTOOTH_STEP1, SAWTOOTH_STEP1 + SAWTOOTH_INTERVERL, SAWTOOTH_STEP2 - SAWTOOTH_INTERVERL2, SAWTOOTH_STEP2, SAWTOOTH_STEP2 + SAWTOOTH_INTERVERL2,
-            SAWTOOTH_STEP3
-    };
-    public int[] sawtooth_l_point = new int[SAWTOOTH_NUM];
-    public int[] sawtooth_r_point = new int[SAWTOOTH_NUM];
-    private final double[] sawtooth_tan = new double[SAWTOOTH_NUM];
 
     private double double_abs(double d) {
         if (d < 0) return -d;
@@ -754,65 +789,5 @@ public class BackTrack {
                 sawtooth_r_point[j] = i;
             }
         }
-    }
-
-    public static void reset() {
-        // angle_2a = 120 / 2; // 摄像头可视角度2a,
-        camera_h = 800; // 摄像头距离地面距离h
-        // angle_b = 25; // 摄像头中心线同水平面的夹角β
-        screen_w = 1024; // 屏幕输出的宽度
-        // screen_h = 600; // 屏幕输出的高度
-        // car_l = 2600; // 汽车前后轮轴距L
-        car_w = 1800; // 汽车轴长W，
-        ext_y_move = 0;
-    }
-
-    public static void reloadConfig(Context c) {
-        if (c != null) {
-            long l;
-
-            l = getData(c, "car_w");
-            if (l != 0) {
-                car_w = (int) l;
-            }
-            l = getData(c, "screen_w");
-            if (l != 0) {
-                screen_w = (int) l;
-            }
-            l = getData(c, "camera_h");
-            if (l != 0) {
-                camera_h = (int) l;
-            }
-            l = getData(c, "ext_y_move");
-            //			if (l != 0) {
-            ext_y_move = (int) l;
-            //			}
-        }
-    }
-
-    public static void saveConfig(Context c) {
-        if (c != null) {
-            saveData(c, "car_w", car_w);
-            saveData(c, "screen_w", screen_w);
-            saveData(c, "camera_h", camera_h);
-            saveData(c, "ext_y_move", ext_y_move);
-        }
-    }
-
-    private static final String SAVE_DATA = "BackTrack";
-    private static final String SAVE_DATA_TIME = "time";
-    private static final String SAVE_FIRST_BOOT = "first_boot";
-    private static final String SAVE_DATA_FIRST_SYSTEM_BOOT = "first_system_boot";
-
-    private static void saveData(Context c, String s, long v) {
-        SharedPreferences.Editor sharedata = c.getSharedPreferences(SAVE_DATA, 0).edit();
-
-        sharedata.putLong(s, v);
-        sharedata.commit();
-    }
-
-    private static long getData(Context c, String s) {
-        SharedPreferences sharedata = c.getSharedPreferences(SAVE_DATA, 0);
-        return sharedata.getLong(s, 0);
     }
 }

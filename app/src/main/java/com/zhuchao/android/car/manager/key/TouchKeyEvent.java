@@ -22,64 +22,36 @@ public class TouchKeyEvent {
     private final static long LONG_PRESS_TIME = 5;// 50毫秒
     private final static long BEGIN_LONG_PRESS_TIME = 500;// 毫秒
     private final static long SECOND_2 = 1000;
-    private boolean triggerSecond2 = false;
     private final static long SECOND_5 = 5000;
-    private boolean triggerSecond5 = false;
     private final static long SECOND_8 = 6000;
-    private boolean triggerSecond8 = false;
-    private boolean triggerSlide = false;
-
     // 处理单击与双击事件
     private final static int MSG_CLICK = 0;
-
-    // 记录基础数据
-    private Action mCurrentAction = Action.UP;
-    private int x, y, startX, startY, endX, endY, minVolidX, minVolidY, maxVolidX, maxVolidY, slideX, slideY;
-    private long startTime, endTime, tmpTime;
+    private final static int START_TOUCH_INIT = 0;
+    private final static int START_TOUCH_DOWN = 1;
+    private final static int START_TOUCH_END_LONG_PRESS = 2;
+    private final static int START_TOUCH_END_LONG_CLICK = 3;
+    private final static int ROLL_MAX_TIME = 60;
+    private final static int LONG_PRESS_INT_TIME = 50;
+    private final static int LONG_PRESS_FOR_POWER = 3000;
     /**
      * 区域边长的一半
      */
     //	private final static int TouchKeyProcessor.HALF_SIDE = TouchKeyProcessor.TouchKeyProcessor.HALF_SIDE;
 
     public TouchKeyProcessor mTouchKeyProcessor;
-
-    private enum Action {
-        UP, // 抬起
-        DOWN, // 压下
-        MOVE, // 移动
-    }
-
-    private enum Event {
-        /**
-         * 单击
-         */
-        CLICK,
-        /**
-         * 长按,每LONG_PRESS_TIME毫秒发一次
-         */
-        LONG_PRESS, LONG_CLICK, SLIDE, // 划动
-        QUICK_SLIDE,// 快速划动
-        // /**长按5秒*/
-        // LONG_CLICK_5S,
-        // /**长按8秒*/
-        LONG_CLICK_8S,
-        // /**双击*/
-        // DOUBLECLICK,
-        // /**向上划动*/
-        // SLIDER_UP,
-        // /**向下划动*/
-        // SLIDER_DOWN,
-        // /**向左划动*/
-        // SLIDER_LEFT,
-        // /**向右划动*/
-        // SLIDER_RIGHT
-    }
-
+    private boolean triggerSecond2 = false;
+    private boolean triggerSecond5 = false;
+    private boolean triggerSecond8 = false;
+    private boolean triggerSlide = false;
+    // 记录基础数据
+    private Action mCurrentAction = Action.UP;
+    private int x, y, startX, startY, endX, endY, minVolidX, minVolidY, maxVolidX, maxVolidY, slideX, slideY;
+    private long startTime, endTime, tmpTime;
     private int mStartTouch = START_TOUCH_INIT;
-    private final static int START_TOUCH_INIT = 0;
-    private final static int START_TOUCH_DOWN = 1;
-    private final static int START_TOUCH_END_LONG_PRESS = 2;
-    private final static int START_TOUCH_END_LONG_CLICK = 3;
+    private int mRollMaxTime = 0;
+    private byte mKey = 0;
+    private long mStartTime = 0;
+    private boolean mLongPress = false;
 
     public TouchKeyEvent(Context c) {
         mTouchKeyProcessor = new TouchKeyProcessor(c);
@@ -87,7 +59,19 @@ public class TouchKeyEvent {
 
     public boolean isExistStudyData() {
         return mTouchKeyProcessor.isExistStudyData();
-    }
+    }    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    startSendLongPress(msg.arg1, msg.arg2);
+                    break;
+                case 1:
+                    startSendLongPressFixKey(msg.arg1);
+                    break;
+            }
+        }
+    };
 
     public void process(byte[] protocol) {
         x = JavaDecode.byteArrToInt(protocol, 2, 4, true);
@@ -220,24 +204,6 @@ public class TouchKeyEvent {
         }
     }
 
-    private final Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    startSendLongPress(msg.arg1, msg.arg2);
-                    break;
-                case 1:
-                    startSendLongPressFixKey(msg.arg1);
-                    break;
-            }
-        }
-    };
-
-    private int mRollMaxTime = 0;
-    private final static int ROLL_MAX_TIME = 60;
-    private final static int LONG_PRESS_INT_TIME = 50;
-
     private void startSendLongPress(int x, int y) {
         //		Log.d("dd", "startSendLongPress"+mRollMaxTime);
         mRollMaxTime++;
@@ -298,18 +264,11 @@ public class TouchKeyEvent {
         }
     }
 
+    //touch fix key
+
     private boolean isVolidPoint() {
         return endX > minVolidX && endY > minVolidY && endX < maxVolidX && endY < maxVolidY && !triggerSlide;
     }
-
-    //touch fix key
-
-
-    private byte mKey = 0;
-    private long mStartTime = 0;
-    private boolean mLongPress = false;
-
-    private final static int LONG_PRESS_FOR_POWER = 3000;
 
     public byte processTouchFixKey(byte[] protocol) {
         byte key = 0;
@@ -370,4 +329,38 @@ public class TouchKeyEvent {
             mHandler.removeMessages(1);
         }
     }
+
+    private enum Action {
+        UP, // 抬起
+        DOWN, // 压下
+        MOVE, // 移动
+    }
+
+    private enum Event {
+        /**
+         * 单击
+         */
+        CLICK,
+        /**
+         * 长按,每LONG_PRESS_TIME毫秒发一次
+         */
+        LONG_PRESS, LONG_CLICK, SLIDE, // 划动
+        QUICK_SLIDE,// 快速划动
+        // /**长按5秒*/
+        // LONG_CLICK_5S,
+        // /**长按8秒*/
+        LONG_CLICK_8S,
+        // /**双击*/
+        // DOUBLECLICK,
+        // /**向上划动*/
+        // SLIDER_UP,
+        // /**向下划动*/
+        // SLIDER_DOWN,
+        // /**向左划动*/
+        // SLIDER_LEFT,
+        // /**向右划动*/
+        // SLIDER_RIGHT
+    }
+
+
 }

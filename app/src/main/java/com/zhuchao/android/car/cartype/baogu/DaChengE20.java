@@ -12,6 +12,11 @@ import java.util.Date;
 
 public class DaChengE20 extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x24, 0x40, 0x41, 0x38, 0x39, 0x47};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC},
+
+            {0x13, KEY_NEXTSONG}, {0x14, KEY_PREVIOUSSONG},};
+
     public DaChengE20() {
         //		buildCmdDoor((byte) 0x41, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
         //		buildCmdRadarFront((byte) 0x23, (byte) 0x0, (byte) 15);
@@ -31,15 +36,6 @@ public class DaChengE20 extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x24, 0x40, 0x41, 0x38, 0x39, 0x47};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG}, {0x5, KEY_BT}, {0x6, KEY_MUTE}, {0x7, KEY_SOURCE}, {0x8, KEY_MIC},
-
-            {0x13, KEY_NEXTSONG}, {0x14, KEY_PREVIOUSSONG},
-    };
-
 
     @Override
     public int getAngleValue(byte[] data) {
@@ -124,13 +120,9 @@ public class DaChengE20 extends Canbox {
         byte[] data;
 
         if (MyCmd.SOURCE_DVD != source) {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (total & 0xFF), (byte) ((total >> 8) & 0xFF), (byte) (play & 0xFF), (byte) ((play >> 8) & 0xFF), min, sec};
         } else {
-            data = new byte[]{
-                    (byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec
-            };
+            data = new byte[]{(byte) 0xc3, 0x6, (byte) (1 & 0xFF), (byte) ((play) & 0xFF), (byte) (total & 0xFF), (byte) ((0) & 0xFF), min, sec};
         }
         sendDataToCanbox(data, data.length);
     }
@@ -220,9 +212,7 @@ public class DaChengE20 extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                (byte) 0xa6, 0x06, y, mon, d, h, m, s
-        };
+        byte[] buf = new byte[]{(byte) 0xa6, 0x06, y, mon, d, h, m, s};
 
         sendDataToCanbox(buf, buf.length);
     }

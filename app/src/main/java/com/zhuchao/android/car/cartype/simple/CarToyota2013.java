@@ -24,13 +24,72 @@ import java.util.Locale;
 
 
 public class CarToyota2013 extends Canbox {
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.KEY_AM}, {0x2, MyCmd.Keycode.KEY_FM}, {0x3, MyCmd.Keycode.DVD}, {0x4, MyCmd.Keycode.AUX_IN}, {0x5, MyCmd.Keycode.AUDIO}, {0x6, MyCmd.Keycode.AUDIO}, {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.KEY_TV}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT},};
+    private final static int DEFAULT_SCREEN_W = 1024;
+    private final static int DEFAULT_SCREEN_H = 600;
+    private final static int BUTTON_AUTO_W = 160;
+    private final static int BUTTON_AUTO_H = 120;
+    private final static int TNGA_TOUCH_WIDTH = 1024;
+    private final static int TNGA_TOUCH_HEIGHT = TNGA_TOUCH_WIDTH;
+    byte[] mEqData = new byte[6];
+    byte[] data;
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    ArrayList<String> list = null;
+    private byte mKey = 0;
+    private boolean mResetVolume = true;
+    private byte[] mAcData = new byte[1];    Handler mHandlerSendEQ = new Handler() {
+        public void handleMessage(Message msg) {
+
+            int volume = MachineConfig.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
+            if (volume == -1) {
+                volume = 45;
+            }
+            if (mResetVolume) {
+                sendEQ((byte) 0x8, (byte) 1);
+                sendEQ((byte) 0xa, (byte) 0);// unmute
+                mResetVolume = false;
+            }
+            setEQVolume(volume);
+
+            mHandlerSendEQ.removeMessages(0);
+            mHandlerSendEQ.sendEmptyMessageDelayed(0, 1000);
+        }
+    };
+    private boolean mIsOpenCamera = false;
+    private boolean m360Exit = false;
+    private boolean mTNGA360 = false;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mDoorStatus;
+    private byte[] mData0x21;
+    private byte[] mData0x22;
+    private byte[] mData0x23;
+    private byte[] mData0x25;
+    private byte[] mData0x1f;
+    private int mVolume = -1;
+    private int mButtonW = -1;
+    private int mButtonH = -1;
+    private int mPreSource = -1;
+    private int mPhoneStatus = -1;
+    // public void setReverseRadaVol(byte param){
+    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x0, param};
+    // sendDataToCanbox(data, data.length);
+    // }
+    // public void setParkCarMode(byte param){
+    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x2, param};
+    // sendDataToCanbox(data, data.length);
+    // }
+    // public void requestInfo(byte param){
+    // byte []data = new byte[]{(byte)0x90, 0x2, param, 0};
+    // sendDataToCanbox(data, data.length);
+    // }
+    private String mPhoneName = null;
+    private String mPhoneNum = null;
+    private int mBTStatusSend = -1;
     public CarToyota2013() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
 
         if (CarUtil.getCarEQ() == 1) {
             CarUtil.mIsNeedSendEQ = true;
@@ -119,9 +178,7 @@ public class CarToyota2013 extends Canbox {
         }
 
         if (CarUtil.getCarType() != 0) {
-            byte[] data = new byte[]{
-                    (byte) 0xCA, 0x1, (byte) (CarUtil.getCarType() - 1)
-            };
+            byte[] data = new byte[]{(byte) 0xCA, 0x1, (byte) (CarUtil.getCarType() - 1)};
             sendDataToCanbox(data, data.length);
         }
         udpateLang();
@@ -150,12 +207,6 @@ public class CarToyota2013 extends Canbox {
 
     }
 
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.KEY_AM}, {0x2, MyCmd.Keycode.KEY_FM}, {0x3, MyCmd.Keycode.DVD}, {0x4, MyCmd.Keycode.AUX_IN}, {0x5, MyCmd.Keycode.AUDIO}, {0x6, MyCmd.Keycode.AUDIO},
-            {0x7, MyCmd.Keycode.BT_MUSIC}, {0x8, MyCmd.Keycode.KEY_TV}, {0x11, MyCmd.Keycode.BT_DIAL}, {0x12, MyCmd.Keycode.BT_HANG}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT},
-    };
-
     private void parsePannelKey(byte[] data, int len) {
         if (data[2] >= 0x21 && data[2] <= 0x25) {
             doCallLogList(data[2] - 0x21);
@@ -175,8 +226,6 @@ public class CarToyota2013 extends Canbox {
 
         }
     }
-
-    private byte mKey = 0;
 
     private void parseWheelKey(byte[] data, int len) {
 
@@ -246,7 +295,6 @@ public class CarToyota2013 extends Canbox {
         }
     }
 
-
     public int getLongKey(int key) {
         int ret = 0;
         if (key == MyCmd.Keycode.MODLE) {
@@ -305,28 +353,6 @@ public class CarToyota2013 extends Canbox {
             handler.sendMessage(handler.obtainMessage(CANBOX_RETURN_AIR, airData));
         }
     }
-
-    private boolean mResetVolume = true;
-    Handler mHandlerSendEQ = new Handler() {
-        public void handleMessage(Message msg) {
-
-            int volume = MachineConfig.getIntProperty2(SettingProperties.CANBOX_EQ_VOLUME);
-            if (volume == -1) {
-                volume = 45;
-            }
-            if (mResetVolume) {
-                sendEQ((byte) 0x8, (byte) 1);
-                sendEQ((byte) 0xa, (byte) 0);// unmute
-                mResetVolume = false;
-            }
-            setEQVolume(volume);
-
-            mHandlerSendEQ.removeMessages(0);
-            mHandlerSendEQ.sendEmptyMessageDelayed(0, 1000);
-        }
-    };
-
-    private byte[] mAcData = new byte[1];
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -584,8 +610,6 @@ public class CarToyota2013 extends Canbox {
         mIsOpenCamera = false;
     }
 
-    private boolean mIsOpenCamera = false;
-
     private void do360CameraSwitch(int s) {
 
         String top = AppConfig.getTopActivity();
@@ -614,11 +638,6 @@ public class CarToyota2013 extends Canbox {
         }
     }
 
-    private boolean m360Exit = false;
-    private boolean mTNGA360 = false;
-
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-
     public void updateOutDoorTemp(int temp) {
 
         if (temp == CarUtil.INVALID_OUT_DOOR_TEMP) {
@@ -641,13 +660,6 @@ public class CarToyota2013 extends Canbox {
 
     }
 
-    private int mDoorStatus;
-    private byte[] mData0x21;
-    private byte[] mData0x22;
-    private byte[] mData0x23;
-    private byte[] mData0x25;
-    private byte[] mData0x1f;
-
     public void sendDataToCanbox(byte[] data, int len) {
         if ((data[0] & 0xff) == 0xff) {
             if (data[1] == 0x25) {
@@ -667,19 +679,6 @@ public class CarToyota2013 extends Canbox {
 
     }
 
-    // public void setReverseRadaVol(byte param){
-    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x0, param};
-    // sendDataToCanbox(data, data.length);
-    // }
-    // public void setParkCarMode(byte param){
-    // byte []data = new byte[]{(byte)0xc6, 0x2, 0x2, param};
-    // sendDataToCanbox(data, data.length);
-    // }
-    // public void requestInfo(byte param){
-    // byte []data = new byte[]{(byte)0x90, 0x2, param, 0};
-    // sendDataToCanbox(data, data.length);
-    // }
-
     private void sendEQ(byte cmd, byte param) {
         byte[] data = new byte[]{(byte) 0x84, 0x2, cmd, param};
         sendDataToCanbox(data, data.length);
@@ -690,8 +689,6 @@ public class CarToyota2013 extends Canbox {
         byte[] data = new byte[]{(byte) 0x84, 0x2, 0x07, (byte) volume};
         sendDataToCanbox(data, data.length);
     }
-
-    private int mVolume = -1;
 
     public void setVolume(int volume) {
         if (volume == 0) {
@@ -706,8 +703,6 @@ public class CarToyota2013 extends Canbox {
         byte[] data = new byte[]{(byte) 0xc4, 0x1, (byte) volume};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] mEqData = new byte[6];
 
     public void sendEqToCanbox(byte[] eq) {
         if (eq != null && eq.length >= 11) {
@@ -814,20 +809,6 @@ public class CarToyota2013 extends Canbox {
         }
     }
 
-
-    private final static int DEFAULT_SCREEN_W = 1024;
-    private final static int DEFAULT_SCREEN_H = 600;
-
-    private final static int BUTTON_AUTO_W = 160;
-    private final static int BUTTON_AUTO_H = 120;
-
-    private int mButtonW = -1;
-    private int mButtonH = -1;
-
-
-    private final static int TNGA_TOUCH_WIDTH = 1024;
-    private final static int TNGA_TOUCH_HEIGHT = TNGA_TOUCH_WIDTH;
-
     public void touchInReverse(int x, int y, int w, int h) {
         //if (!m360Exit) {
         //	return;
@@ -850,9 +831,7 @@ public class CarToyota2013 extends Canbox {
             x = (x * TNGA_TOUCH_WIDTH) / w;
             y = (y * TNGA_TOUCH_WIDTH) / h;
 
-            byte[] buf = new byte[]{
-                    (byte) 0x85, 0x5, (byte) ((x & 0xff00) >> 8), (byte) (x & 0xff), (byte) ((y & 0xff00) >> 8), (byte) (y & 0xff), 0
-            };
+            byte[] buf = new byte[]{(byte) 0x85, 0x5, (byte) ((x & 0xff00) >> 8), (byte) (x & 0xff), (byte) ((y & 0xff00) >> 8), (byte) (y & 0xff), 0};
 
             sendDataToCanbox(buf, buf.length);
 
@@ -921,9 +900,7 @@ public class CarToyota2013 extends Canbox {
                 if ((button & 0xff00) == 0) {
                     buf = new byte[]{(byte) 0x83, 0x2, 0x21, (byte) button};
                 } else {
-                    buf = new byte[]{
-                            (byte) 0x83, 0x2, (byte) ((button & 0xff00) >> 8), (byte) (button & 0xff)
-                    };
+                    buf = new byte[]{(byte) 0x83, 0x2, (byte) ((button & 0xff00) >> 8), (byte) (button & 0xff)};
                 }
                 sendDataToCanbox(buf, buf.length);
             }
@@ -965,9 +942,7 @@ public class CarToyota2013 extends Canbox {
         // (byte) ((play) & 0xFF), (byte) (total & 0xFF), h, min, sec };
         //
         // } else {
-        data = new byte[]{
-                (byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, s, s2, (byte) ((play) & 0xFF), (byte) ((play & 0xFF00) >> 8), 0, h, min, sec};
         // }
 
         if (mPhoneStatus < HFP_INFO_CALLED) {
@@ -975,8 +950,6 @@ public class CarToyota2013 extends Canbox {
             sendDataToCanbox(data, data.length);
         }
     }
-
-    private int mPreSource = -1;
 
     public void setMediaSrc(int source) {// default is simple box
         byte s;
@@ -1028,23 +1001,13 @@ public class CarToyota2013 extends Canbox {
         } else {
             b[3] = 0;
         }
-        data = new byte[]{
-                (byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], b[3], 0, 0
-        };
+        data = new byte[]{(byte) 0xc0, 0x8, 0x1, 0x1, b[0], b[1], b[2], b[3], 0, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] data;
-
-    private int mPhoneStatus = -1;
-    private String mPhoneName = null;
-    private String mPhoneNum = null;
 
     boolean isStringEqual(String s1, String s2) {
         return (s1 == null && s2 == null) || (s1 != null && s1.equals(s2));
     }
-
-    private int mBTStatusSend = -1;
 
     public void setPhoneEx(int status, String num, String name) {
         Log.d(TAG, "setPhoneEx:" + num);
@@ -1092,9 +1055,7 @@ public class CarToyota2013 extends Canbox {
 
         if (mBTStatusSend != s) {
             mBTStatusSend = s;
-            data2 = new byte[]{
-                    (byte) 0xc0, 0x8, 0x5, 0x40, (byte) s, 0, 0, 0, 0, 0
-            };
+            data2 = new byte[]{(byte) 0xc0, 0x8, 0x5, 0x40, (byte) s, 0, 0, 0, 0, 0};
             sendDataToCanbox(data2, data2.length);
 
             if (status >= HFP_INFO_CALLED && status <= HFP_INFO_CALLING) {
@@ -1164,18 +1125,14 @@ public class CarToyota2013 extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
-    // public void setPhone(int status, String num) {
-    // sendId3((byte)0x1, num);
-    // }
-
     public void setSongName(String s) {
         sendId3((byte) 0x3, s);
         mName = s;
     }
+
+    // public void setPhone(int status, String num) {
+    // sendId3((byte)0x1, num);
+    // }
 
     public void setSongAritst(String s) {
         sendId3((byte) 0x5, s);
@@ -1207,8 +1164,6 @@ public class CarToyota2013 extends Canbox {
         }
 
     }
-
-    ArrayList<String> list = null;
 
     public void updateCallLog(Object obj) {
         try {
@@ -1252,7 +1207,6 @@ public class CarToyota2013 extends Canbox {
 
         }
     }
-
 
     private void returnDriveData(byte[] buf) {
         if (mRequestDriveData > 0) {
@@ -1394,4 +1348,8 @@ public class CarToyota2013 extends Canbox {
 
         super.returnEQData(EQ_CMD_SET_ALL_DATA, data);
     }
+
+
+
+
 }

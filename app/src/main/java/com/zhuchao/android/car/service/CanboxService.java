@@ -22,6 +22,19 @@ public class CanboxService extends Service {
     private static final String TAG = "Can-boxService";
     public static CanboxService mThis;
     private final IBinderProxy mCarIBinderProxy = new IBinderProxy();
+    private final BroadcastReceiver mUserEventReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MMLog.d(TAG, "mUserEventReceiver action=" + intent.getAction() + " " + TAppProcessUtils.getCurrentProcessNameAndId(context));
+            switch (Objects.requireNonNull(intent.getAction())) {
+                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_CAR_SERVICE:
+                case MessageEvent.MESSAGE_EVENT_LINK_Z:
+                case MessageEvent.MESSAGE_EVENT_LINK_CARLETTER:
+                case MessageEvent.MESSAGE_EVENT_MACHINE_ACTION_CONFIG_UPDATE:
+                    break;
+            }
+        }
+    };
 
     public CanboxService() {
     }
@@ -71,20 +84,6 @@ public class CanboxService extends Service {
         intentFilter.addAction(MessageEvent.MESSAGE_EVENT_LINK_CARLETTER);
         registerReceiver(mUserEventReceiver, intentFilter);
     }
-
-    private final BroadcastReceiver mUserEventReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            MMLog.d(TAG, "mUserEventReceiver action=" + intent.getAction() + " " + TAppProcessUtils.getCurrentProcessNameAndId(context));
-            switch (Objects.requireNonNull(intent.getAction())) {
-                case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_CAR_SERVICE:
-                case MessageEvent.MESSAGE_EVENT_LINK_Z:
-                case MessageEvent.MESSAGE_EVENT_LINK_CARLETTER:
-                case MessageEvent.MESSAGE_EVENT_MACHINE_ACTION_CONFIG_UPDATE:
-                    break;
-            }
-        }
-    };
 
     private void unregisterUserEventBroadcastListener() {
         try {

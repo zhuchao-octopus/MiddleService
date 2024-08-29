@@ -8,6 +8,9 @@ import java.util.Locale;
 
 public class Mazda6ChangYuanTong extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.MUTE}, {0x14, MyCmd.Keycode.BT_DIAL}, {0x15, MyCmd.Keycode.BT_HANG}, {0x20, MyCmd.Keycode.MULT_MUTE_AND_POWER}, {0x21, MyCmd.Keycode.PLAY_PAUSE}, {0x22, MyCmd.Keycode.BT}, {0x23, MyCmd.Keycode.AUDIO}, {0x24, MyCmd.Keycode.NAVIGATION}, {0x25, MyCmd.Keycode.RADIO},};
+    private final byte[] mLcdInfo = new byte[14];
+
     public Mazda6ChangYuanTong() {
         buildCmdDoor((byte) 0x24, (byte) 0x0, (byte) 0x3f, (byte) 0x02);
 
@@ -16,12 +19,6 @@ public class Mazda6ChangYuanTong extends Canbox {
         mIdKey = 0x1;
         MAP_KEYS = KEYS_WHEEL;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.NEXT}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x7, MyCmd.Keycode.MODLE}, {0x13, MyCmd.Keycode.MUTE},
-            {0x14, MyCmd.Keycode.BT_DIAL}, {0x15, MyCmd.Keycode.BT_HANG}, {0x20, MyCmd.Keycode.MULT_MUTE_AND_POWER}, {0x21, MyCmd.Keycode.PLAY_PAUSE}, {0x22, MyCmd.Keycode.BT},
-            {0x23, MyCmd.Keycode.AUDIO}, {0x24, MyCmd.Keycode.NAVIGATION}, {0x25, MyCmd.Keycode.RADIO},
-    };
 
     @Override
     public int getACTemp(byte data) {
@@ -71,8 +68,6 @@ public class Mazda6ChangYuanTong extends Canbox {
         byte[] buf = new byte[]{(byte) 0x82, 0x2, b, 0};
         sendDataToCanbox(buf, buf.length);
     }
-
-    private final byte[] mLcdInfo = new byte[14];
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         int freq = (b[1] & 0xff) | ((b[2] & 0xff) << 8);

@@ -3,14 +3,14 @@
     android:id="@+id/screen1_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="8"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:tag="8">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:background="#000000"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="#000000">
 
         <SurfaceView
             android:id="@+id/camera_surfaceview"
@@ -27,9 +27,9 @@
             android:id="@+id/no_signal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#000000"
             android:gravity="center"
             android:orientation="vertical"
-            android:background="#000000"
             android:visibility="gone">
 
             <ImageView
@@ -83,10 +83,10 @@
 
         <View
             android:id="@+id/only_black"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#000001" />
+            android:background="#000001"
+            android:visibility="gone" />
 
         <!--         <include -->
         <!--             layout="@layout/radar" -->
@@ -94,36 +94,36 @@
 
         <LinearLayout
             android:id="@+id/camera4"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="60px"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="60px"
+            android:orientation="horizontal"
             android:paddingRight="8px"
-            android:visibility="visible"
-            android:orientation="horizontal">
+            android:visibility="visible">
 
             <TextView
-                android:focusable="false"
                 android:id="@+id/cam1"
                 style="@style/FrontCameraButton"
+                android:focusable="false"
                 android:text="@string/cam1" />
 
             <TextView
-                android:focusable="false"
                 android:id="@+id/cam2"
                 style="@style/FrontCameraButton"
+                android:focusable="false"
                 android:text="@string/cam2" />
 
             <TextView
-                android:focusable="false"
                 android:id="@+id/cam3"
                 style="@style/FrontCameraButton"
+                android:focusable="false"
                 android:text="@string/cam3" />
 
             <TextView
-                android:focusable="false"
                 android:id="@+id/cam4"
                 style="@style/FrontCameraButton"
+                android:focusable="false"
                 android:text="@string/cam4" />
 
         </LinearLayout>

@@ -11,6 +11,9 @@ import java.util.Date;
 
 public class BydSongRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0xb, 0xd, 0xe, 0x10, 0x11};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.BT_DIAL}, {0x9, MyCmd.Keycode.BT_HANG}, {0xa, MyCmd.Keycode.SPEECH},};
+
     public BydSongRaise() {
         buildCmdDoor((byte) 0x8, (byte) 0x2, (byte) 0xfc, (byte) 0x02);
         buildCmdRadarFront((byte) 0x4, (byte) 0x0, (byte) 4);
@@ -24,13 +27,6 @@ public class BydSongRaise extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0xb, 0xd, 0xe, 0x10, 0x11};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x4, MyCmd.Keycode.NEXT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
-            {0x8, MyCmd.Keycode.BT_DIAL}, {0x9, MyCmd.Keycode.BT_HANG}, {0xa, MyCmd.Keycode.SPEECH},
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -180,9 +176,7 @@ public class BydSongRaise extends Canbox {
         byte y = (byte) (curDate.getYear() - 100);
         byte mon = (byte) (curDate.getMonth() + 1);
         byte d = (byte) curDate.getDate();
-        byte[] buf = new byte[]{
-                (byte) 0x87, 0x05, y, mon, d, h, m
-        };
+        byte[] buf = new byte[]{(byte) 0x87, 0x05, y, mon, d, h, m};
 
         sendDataToCanbox(buf, buf.length);
     }

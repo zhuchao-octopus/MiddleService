@@ -14,9 +14,23 @@ import com.zhuchao.android.car.R;
 import com.zhuchao.android.car.cartype.CarUtil;
 
 public class RadarUI extends UIBase {
-    private Canbox mCanBox;
-
     private static final RadarUI[] mUI = new RadarUI[MAX_DISPLAY];
+    private final static int MSG_HIDE_FRONT_CAMRA_BY_OPEN = 0xfffff;
+    private final static int TIME_HIDE_FRONT_CAMRA_BY_OPEN = 3000;
+    private final static int MSG_BEEP = 0xFFFF;
+    private final static int TIME_BEEP_LONG = 2000;
+    private final static int TIME_BEEP_SHORT = 201;
+    private final static int TIME_BEEP_DANGER = 200;
+    // private ReverseLocus mImageViewLocus;
+    String mSystemUI;
+    private Canbox mCanBox;
+    private RadarView1 mImageViewCarLeft;
+    private boolean mShow = true;
+    private int mBeepType = 0;
+
+    public RadarUI(Context context, View view, int index) {
+        super(context, view, index);
+    }
 
     /**
      * Called when the activity is first created.
@@ -29,10 +43,6 @@ public class RadarUI extends UIBase {
         mUI[index] = new RadarUI(context, view, index);
 
         return mUI[index];
-    }
-
-    public RadarUI(Context context, View view, int index) {
-        super(context, view, index);
     }
 
     public void onCreate() {
@@ -50,70 +60,7 @@ public class RadarUI extends UIBase {
     public void onPause() {
         clearBeep();
         super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        GlobalDefinition.mAutoFrontCameraStatus = 0;
-        mMainView.setVisibility(View.GONE);
-    }
-
-    public void onDestroy() {
-        Canbox.removeHandler(RadarManager.TAG);
-        super.onDestroy();
-    }
-
-    private RadarView1 mImageViewCarLeft;
-
-    // private ReverseLocus mImageViewLocus;
-    String mSystemUI;
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private void initRadarView() {
-        mImageViewCarLeft = mMainView.findViewById(R.id.reverse_left_image);
-        mMainView.findViewById(R.id.radar_switch).setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                mShow = !mShow;
-                if (mShow) {
-                    //							mMainView.findViewById(R.id.reverse_left_image)
-                    //									.setVisibility(View.VISIBLE);
-                    RadarManager.updateView(0);
-                } else {
-                    //							mMainView.findViewById(R.id.reverse_left_image)
-                    //									.setVisibility(View.GONE);
-                    RadarManager.updateView(1);
-                }
-            }
-        });
-
-
-        if (GlobalDefinition.mSystemUI != null && GlobalDefinition.mSystemUI.equals(MachineConfig.VALUE_SYSTEM_UI_KLD7_1992)) {
-            Drawable d = mContext.getResources().getDrawable(R.drawable.reverse_left_pickup, null);
-            if (d != null) {
-                mImageViewCarLeft.setImageDrawable(d);
-            }
-        }
-    }
-
-    private boolean mShow = true;
-
-    private final static int MSG_HIDE_FRONT_CAMRA_BY_OPEN = 0xfffff;
-    private final static int TIME_HIDE_FRONT_CAMRA_BY_OPEN = 3000;
-
-    private void showFrontCamera() {
-        if (GlobalDefinition.mSettingRadarFrontCamera == 1) {
-            if ((GlobalDefinition.mAutoFrontCameraStatus == 0) && (mCanBox.mRadar[4] != 0 || mCanBox.mRadar[5] != 0 || mCanBox.mRadar[6] != 0 || mCanBox.mRadar[7] != 0 || mCanBox.mRadarFontEx[0] != 0 || mCanBox.mRadarFontEx[1] != 0)) {
-                GlobalDefinition.autoOpenFrontByGpsSpeed();
-            }
-            if (GlobalDefinition.mAutoFrontCameraStatus == 1) {
-                mHandlerCanbox.removeMessages(MSG_HIDE_FRONT_CAMRA_BY_OPEN);
-                mHandlerCanbox.sendEmptyMessageDelayed(MSG_HIDE_FRONT_CAMRA_BY_OPEN, TIME_HIDE_FRONT_CAMRA_BY_OPEN);
-            }
-        }
-    }
-
-    private final Handler mHandlerCanbox = new Handler() {
+    }    private final Handler mHandlerCanbox = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Canbox.CANBOX_RADAR_FRONT: {
@@ -222,6 +169,57 @@ public class RadarUI extends UIBase {
         }
     };
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        GlobalDefinition.mAutoFrontCameraStatus = 0;
+        mMainView.setVisibility(View.GONE);
+    }
+
+    public void onDestroy() {
+        Canbox.removeHandler(RadarManager.TAG);
+        super.onDestroy();
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void initRadarView() {
+        mImageViewCarLeft = mMainView.findViewById(R.id.reverse_left_image);
+        mMainView.findViewById(R.id.radar_switch).setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                mShow = !mShow;
+                if (mShow) {
+                    //							mMainView.findViewById(R.id.reverse_left_image)
+                    //									.setVisibility(View.VISIBLE);
+                    RadarManager.updateView(0);
+                } else {
+                    //							mMainView.findViewById(R.id.reverse_left_image)
+                    //									.setVisibility(View.GONE);
+                    RadarManager.updateView(1);
+                }
+            }
+        });
+
+
+        if (GlobalDefinition.mSystemUI != null && GlobalDefinition.mSystemUI.equals(MachineConfig.VALUE_SYSTEM_UI_KLD7_1992)) {
+            Drawable d = mContext.getResources().getDrawable(R.drawable.reverse_left_pickup, null);
+            if (d != null) {
+                mImageViewCarLeft.setImageDrawable(d);
+            }
+        }
+    }
+
+    private void showFrontCamera() {
+        if (GlobalDefinition.mSettingRadarFrontCamera == 1) {
+            if ((GlobalDefinition.mAutoFrontCameraStatus == 0) && (mCanBox.mRadar[4] != 0 || mCanBox.mRadar[5] != 0 || mCanBox.mRadar[6] != 0 || mCanBox.mRadar[7] != 0 || mCanBox.mRadarFontEx[0] != 0 || mCanBox.mRadarFontEx[1] != 0)) {
+                GlobalDefinition.autoOpenFrontByGpsSpeed();
+            }
+            if (GlobalDefinition.mAutoFrontCameraStatus == 1) {
+                mHandlerCanbox.removeMessages(MSG_HIDE_FRONT_CAMRA_BY_OPEN);
+                mHandlerCanbox.sendEmptyMessageDelayed(MSG_HIDE_FRONT_CAMRA_BY_OPEN, TIME_HIDE_FRONT_CAMRA_BY_OPEN);
+            }
+        }
+    }
+
     private void showRadarOSD() {
 
         if (mCanBox != null) {
@@ -233,12 +231,6 @@ public class RadarUI extends UIBase {
         }
 
     }
-
-    private int mBeepType = 0;
-    private final static int MSG_BEEP = 0xFFFF;
-    private final static int TIME_BEEP_LONG = 2000;
-    private final static int TIME_BEEP_SHORT = 201;
-    private final static int TIME_BEEP_DANGER = 200;
 
     private void clearBeep() {
         mBeepType = 0;
@@ -287,5 +279,7 @@ public class RadarUI extends UIBase {
             }
         }
     }
+
+
 
 }

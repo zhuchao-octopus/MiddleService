@@ -6,6 +6,19 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class BiSuRaise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
+
+            {0x5, MyCmd.Keycode.MUTE}, {0x6, KEY_SOURCE},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
+
+            {0x5, MyCmd.Keycode.MUTE}, {0x6, MyCmd.Keycode.PLAY_PAUSE}, {0x7, MyCmd.Keycode.HOME}, {0x8, MyCmd.Keycode.AUDIO}, {0x9, MyCmd.Keycode.RADIO}, {0xa, MyCmd.Keycode.BT_MUSIC}, {0xb, MyCmd.Keycode.BT_DIAL}, {0xc, MyCmd.Keycode.BT_HANG}, {0xd, MyCmd.Keycode.BACK}, {0xe, MyCmd.Keycode.POWER}, {0xf, MyCmd.Keycode.SETUP}, {0x10, MyCmd.Keycode.EASY_CONNECT}, {0x11, MyCmd.Keycode.NAVIGATION},
+
+    };
+
     public BiSuRaise() {
         mIdAC = 0x26;
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -19,26 +32,6 @@ public class BiSuRaise extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
 
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
-
-            {0x5, MyCmd.Keycode.MUTE}, {0x6, KEY_SOURCE},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
-
-            {0x5, MyCmd.Keycode.MUTE}, {0x6, MyCmd.Keycode.PLAY_PAUSE}, {0x7, MyCmd.Keycode.HOME}, {0x8, MyCmd.Keycode.AUDIO}, {0x9, MyCmd.Keycode.RADIO}, {0xa, MyCmd.Keycode.BT_MUSIC},
-            {0xb, MyCmd.Keycode.BT_DIAL}, {0xc, MyCmd.Keycode.BT_HANG}, {0xd, MyCmd.Keycode.BACK}, {0xe, MyCmd.Keycode.POWER}, {0xf, MyCmd.Keycode.SETUP}, {0x10, MyCmd.Keycode.EASY_CONNECT},
-            {0x11, MyCmd.Keycode.NAVIGATION},
-
-    };
 
 
     //	public int getAngleValue(byte[] data) {
@@ -59,7 +52,6 @@ public class BiSuRaise extends Canbox {
     //
     //		return angle;
     //	}
-
 
     @Override
     public int getACTemp(byte data) {

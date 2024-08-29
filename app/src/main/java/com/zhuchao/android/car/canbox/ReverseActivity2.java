@@ -17,9 +17,8 @@ public class ReverseActivity2 extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.back);
         mRadioUI = ReverseUI.getInstance(this, findViewById(R.id.screen1_main), 0);
-        if(mRadioUI != null)
-           mRadioUI.onCreate();
-        MMLog.d("ReverseActivity2", "onCreate tag="+findViewById(R.id.screen1_main).getTag());
+        if (mRadioUI != null) mRadioUI.onCreate();
+        MMLog.d("ReverseActivity2", "onCreate tag=" + findViewById(R.id.screen1_main).getTag());
     }
 
     @Override

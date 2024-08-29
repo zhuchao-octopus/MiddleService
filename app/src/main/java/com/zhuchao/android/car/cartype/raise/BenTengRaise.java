@@ -7,6 +7,22 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class BenTengRaise extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x52};
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG},
+
+            {0x6, KEY_MUTE}, {0x7, KEY_SOURCE},
+
+            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+    };
+    private final byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.AS}, {0x6, MyCmd.Keycode.KEY_SEEK_PREV}, {0x7, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, MyCmd.Keycode.KEY_TURN_A}, {0xa, MyCmd.Keycode.KEY_TURN_D}, {0xb, MyCmd.Keycode.NUMBER1}, {0xc, MyCmd.Keycode.NUMBER2}, {0xd, MyCmd.Keycode.NUMBER3}, {0xe, MyCmd.Keycode.NUMBER4}, {0xf, MyCmd.Keycode.NUMBER5}, {0x10, MyCmd.Keycode.NUMBER6}, {0x11, MyCmd.Keycode.PREVIOUS}, {0x12, MyCmd.Keycode.NEXT}, {0x13, MyCmd.Keycode.RADIO}, {0x14, MyCmd.Keycode.AUDIO}, {0x15, MyCmd.Keycode.KEY_SHUFFLE}, {0x16, MyCmd.Keycode.KEY_REPEAT}, {0x17, MyCmd.Keycode.EASY_CONNECT}, {0x18, MyCmd.Keycode.AUDIO}, {0x19, MyCmd.Keycode.SPEECH}, {0x1a, MyCmd.Keycode.BT}, {0x1b, MyCmd.Keycode.KEY_RADIO_SCAN}, {0x1c, MyCmd.Keycode.BACKLIGHT_OFF}, {0x1d, MyCmd.Keycode.BT_DIAL}, {0x1e, MyCmd.Keycode.BT_HANG}, {0x1f, MyCmd.Keycode.BACK}, {0x20, MyCmd.Keycode.HOME}, {0x21, MyCmd.Keycode.EASY_CONNECT}, {0x22, MyCmd.Keycode.AUDIO},
+
+    };
+    private final int mPhoneStatus = HFP_INFO_INITIAL;
+    byte[] mLcdInfo = new byte[]{(byte) 0xc0, 0x08, 0, 0, 0, 0, 0, 0, 0, 0};
+    private int mCallingTime;
+
+
     public BenTengRaise() {
         mIdAC = 0x21;
         buildCmdDoor((byte) 0x28, (byte) 0x1, (byte) 0xfc, (byte) 0x2);
@@ -46,28 +62,6 @@ public class BenTengRaise extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x52};
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x4, KEY_NEXTSONG}, {0x3, KEY_PREVIOUSSONG},
-
-            {0x6, KEY_MUTE}, {0x7, KEY_SOURCE},
-
-            {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-    };
-
-    private final byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.POWER}, {0x2, MyCmd.Keycode.VOLUME_ROLL_UP}, {0x3, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x4, MyCmd.Keycode.MUTE}, {0x5, MyCmd.Keycode.AS},
-            {0x6, MyCmd.Keycode.KEY_SEEK_PREV}, {0x7, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x8, MyCmd.Keycode.PLAY_PAUSE}, {0x9, MyCmd.Keycode.KEY_TURN_A}, {0xa, MyCmd.Keycode.KEY_TURN_D},
-            {0xb, MyCmd.Keycode.NUMBER1}, {0xc, MyCmd.Keycode.NUMBER2}, {0xd, MyCmd.Keycode.NUMBER3}, {0xe, MyCmd.Keycode.NUMBER4}, {0xf, MyCmd.Keycode.NUMBER5}, {0x10, MyCmd.Keycode.NUMBER6},
-            {0x11, MyCmd.Keycode.PREVIOUS}, {0x12, MyCmd.Keycode.NEXT}, {0x13, MyCmd.Keycode.RADIO}, {0x14, MyCmd.Keycode.AUDIO}, {0x15, MyCmd.Keycode.KEY_SHUFFLE}, {0x16, MyCmd.Keycode.KEY_REPEAT},
-            {0x17, MyCmd.Keycode.EASY_CONNECT}, {0x18, MyCmd.Keycode.AUDIO}, {0x19, MyCmd.Keycode.SPEECH}, {0x1a, MyCmd.Keycode.BT}, {0x1b, MyCmd.Keycode.KEY_RADIO_SCAN},
-            {0x1c, MyCmd.Keycode.BACKLIGHT_OFF}, {0x1d, MyCmd.Keycode.BT_DIAL}, {0x1e, MyCmd.Keycode.BT_HANG}, {0x1f, MyCmd.Keycode.BACK}, {0x20, MyCmd.Keycode.HOME},
-            {0x21, MyCmd.Keycode.EASY_CONNECT}, {0x22, MyCmd.Keycode.AUDIO},
-
-    };
-
     public int getAngleValue(byte[] data) {
 
         int angle;
@@ -86,7 +80,6 @@ public class BenTengRaise extends Canbox {
 
         return angle;
     }
-
 
     private int getACTempPriv(byte data) {
         if ((data & 0xff) == 0xf1) {
@@ -143,12 +136,9 @@ public class BenTengRaise extends Canbox {
         super.parseACInfo(airData);
     }
 
-
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
     }
-
-    byte[] mLcdInfo = new byte[]{(byte) 0xc0, 0x08, 0, 0, 0, 0, 0, 0, 0, 0};
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         mLcdInfo[2] = 1;
@@ -185,12 +175,6 @@ public class BenTengRaise extends Canbox {
             sendDataToCanbox(mLcdInfo, mLcdInfo.length);
         }
     }
-
-
-    private final int mPhoneStatus = HFP_INFO_INITIAL;
-
-
-    private int mCallingTime;
 
     public void setPhone(int status, String num) {// default is simple box
 

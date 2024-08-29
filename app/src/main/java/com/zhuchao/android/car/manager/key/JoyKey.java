@@ -26,20 +26,29 @@ public class JoyKey {
     private static final String TAG = "JoyKey";
 
     private final static String TOUCH_KEY_MAPPING_FILE = MachineConfig.VENDOR_DIR + ".joy_key_mapping";
-    private static final int[] KEYS = new int[]{
-            MyCmd.Keycode.KEY_JOY_UP, MyCmd.Keycode.KEY_JOY_DOWN, MyCmd.Keycode.KEY_JOY_LEFT, MyCmd.Keycode.KEY_JOY_RIGHT, MyCmd.Keycode.KEY_JOY_ENTER, MyCmd.Keycode.KEY_JOY_ROLL_LEFT,
-            MyCmd.Keycode.KEY_JOY_ROLL_RIGHT, MyCmd.Keycode.KEY_JOY_HOME, MyCmd.Keycode.KEY_JOY_BACK
-    };
-
+    private static final int[] KEYS = new int[]{MyCmd.Keycode.KEY_JOY_UP, MyCmd.Keycode.KEY_JOY_DOWN, MyCmd.Keycode.KEY_JOY_LEFT, MyCmd.Keycode.KEY_JOY_RIGHT, MyCmd.Keycode.KEY_JOY_ENTER, MyCmd.Keycode.KEY_JOY_ROLL_LEFT, MyCmd.Keycode.KEY_JOY_ROLL_RIGHT, MyCmd.Keycode.KEY_JOY_HOME, MyCmd.Keycode.KEY_JOY_BACK};
+    private final static int LONG_CLICK_TIME = 1500;
+    private final Context mContext;
     private int[] mMapKey;
     private int[] mMapKeyStudy;
-
-    private final Context mContext;
+    private int mJoyKeyType = 0;
+    private int mDownKey;
+    private long mDownTime;
+    private BroadcastReceiver mReceiver = null;
 
     public JoyKey(Context c) {
         mContext = c;
         initMapKey();
         registerListener();
+    }
+
+    public static boolean isJoyKey(int key) {
+        for (int i = 0; i < KEYS.length; ++i) {
+            if (key == KEYS[i]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void initMapKey() {
@@ -134,17 +143,6 @@ public class JoyKey {
         }
     }
 
-    public static boolean isJoyKey(int key) {
-        for (int i = 0; i < KEYS.length; ++i) {
-            if (key == KEYS[i]) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private int mJoyKeyType = 0;
-
     private int toMapShortKey(int key) {
         if (mMapKey != null) {
             for (int i = 0; i < mMapKey.length; ++i) {
@@ -176,10 +174,6 @@ public class JoyKey {
     private boolean isContinueNoLongKey(int key) { // only volume now
         return key == MyCmd.Keycode.VOLUME_DOWN || key == MyCmd.Keycode.VOLUME_UP || key == MyCmd.Keycode.KEY_JOY_LEFT || key == MyCmd.Keycode.KEY_JOY_RIGHT;
     }
-
-    private int mDownKey;
-    private long mDownTime;
-    private final static int LONG_CLICK_TIME = 1500;
 
     public int doKey(int key, boolean down) {
         if (mJoyKeyType == 0) {
@@ -245,6 +239,13 @@ public class JoyKey {
 
     }
 
+    // private void sendStudyMsg(int key) {
+    // Intent it = new Intent(MyCmd.BROADCAST_RETURN_JOY_STUDY);
+    // it.putExtra(MyCmd.EXTRA_COMMON_CMD, key);
+    // it.putExtra(MyCmd.EXTRA_COMMON_DATA, key);
+    // mContext.sendBroadcast(it);
+    // }
+
     private void doTouchStudy(int cmd, int key, int keyStudy) {
         switch (cmd) {
             case MyCmd.Cmd.TOUCH_STUDY_START:
@@ -297,15 +298,6 @@ public class JoyKey {
                 mJoyKeyType = 0;
         }
     }
-
-    // private void sendStudyMsg(int key) {
-    // Intent it = new Intent(MyCmd.BROADCAST_RETURN_JOY_STUDY);
-    // it.putExtra(MyCmd.EXTRA_COMMON_CMD, key);
-    // it.putExtra(MyCmd.EXTRA_COMMON_DATA, key);
-    // mContext.sendBroadcast(it);
-    // }
-
-    private BroadcastReceiver mReceiver = null;
 
     private void registerListener() {
         if (mReceiver == null) {

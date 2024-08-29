@@ -10,6 +10,12 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class OpelHaoZheng extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x1, 0x7, 0xb, 0x12, 0x13, 0x14};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.PLAY_PAUSE}, {0x4, MyCmd.Keycode.VOLUME_UP}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x2, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x3, MyCmd.Keycode.KEY_SEEK_PREV},
+
+            {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.KEY_TURN_D}, {0x9, MyCmd.Keycode.KEY_TURN_A},};
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.HOME}, {0xb, MyCmd.Keycode.PLAY_PAUSE}, {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.NEXT},};
+
     public OpelHaoZheng() {
         buildCmdDoor((byte) 0x25, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
 
@@ -24,11 +30,6 @@ public class OpelHaoZheng extends Canbox {
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
 
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x1, 0x7, 0xb, 0x12, 0x13, 0x14
-    };
-
-
     private void setSource() {
         byte[] cmd = new byte[]{(byte) 0x82, 0x01, 0xa};
 
@@ -42,9 +43,7 @@ public class OpelHaoZheng extends Canbox {
     private void startSetSource() {
         mHandlerSetSource.removeMessages(0);
         mHandlerSetSource.sendEmptyMessageDelayed(0, 1100);
-    }
-
-    private final Handler mHandlerSetSource = new Handler() {
+    }    private final Handler mHandlerSetSource = new Handler() {
         public void handleMessage(Message msg) {
             setSource();
             startSetSource();
@@ -63,17 +62,6 @@ public class OpelHaoZheng extends Canbox {
         mHandlerSetSource.removeMessages(0);
         super.stopConnect();
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.PLAY_PAUSE}, {0x4, MyCmd.Keycode.VOLUME_UP}, {0x5, MyCmd.Keycode.VOLUME_DOWN}, {0x6, MyCmd.Keycode.MUTE}, {0x2, MyCmd.Keycode.KEY_SEEK_NEXT},
-            {0x3, MyCmd.Keycode.KEY_SEEK_PREV},
-
-            {0x7, MyCmd.Keycode.MODLE}, {0x8, MyCmd.Keycode.KEY_TURN_D}, {0x9, MyCmd.Keycode.KEY_TURN_A},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.HOME}, {0xb, MyCmd.Keycode.PLAY_PAUSE}, {0xe, MyCmd.Keycode.PREVIOUS}, {0xf, MyCmd.Keycode.NEXT},
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -130,10 +118,11 @@ public class OpelHaoZheng extends Canbox {
     public void setMediaSrc(int source) {// default is simple box
     }
 
-
     public void setVolume(int volume) {
 
     }
+
+
 
 
 }

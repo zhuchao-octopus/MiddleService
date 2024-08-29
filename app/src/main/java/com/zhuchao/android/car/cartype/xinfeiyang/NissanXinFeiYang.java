@@ -9,6 +9,25 @@ import com.zhuchao.android.car.cartype.CarUtil;
 
 public class NissanXinFeiYang extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x35, 0x6c, 0x6d, 0x6e, 0x6b};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x7, MyCmd.Keycode.MODLE},
+
+            {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
+
+            {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT},
+
+            {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.MUTE}, {0x18, MyCmd.Keycode.BACK},
+
+
+    };
+    private final static byte[][] KEYS_WHEEL2 = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.RADIO}, {0x6, MyCmd.Keycode.SETUP}, {0x7, MyCmd.Keycode.AUDIO}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.POWER}, {0x11, MyCmd.Keycode.NUMBER1}, {0x12, MyCmd.Keycode.NUMBER2}, {0x13, MyCmd.Keycode.NUMBER3}, {0x14, MyCmd.Keycode.NUMBER4}, {0x15, MyCmd.Keycode.NUMBER5}, {0x16, MyCmd.Keycode.NUMBER6}, {0x20, MyCmd.Keycode.KEY_DISPLAY}, {0x21, MyCmd.Keycode.AUDIO}, {0x22, MyCmd.Keycode.MODLE}, {0x23, MyCmd.Keycode.BT}, {0x24, MyCmd.Keycode.BACK}, {0x25, MyCmd.Keycode.SETUP}, {0x26, MyCmd.Keycode.PLAY_PAUSE}, {0x27, MyCmd.Keycode.PREVIOUS}, {0x28, MyCmd.Keycode.NEXT}, {0x29, MyCmd.Keycode.PREVIOUS}, {0x2a, MyCmd.Keycode.NEXT}, {0x2b, MyCmd.Keycode.ROLL_PREV}, {0x2c, MyCmd.Keycode.ROLL_NEXT}, {0x2d, MyCmd.Keycode.ALL_APP}, {0x2e, MyCmd.Keycode.SETUP},
+            //		{ 0x2f, MyCmd.Keycode. },
+            {0x30, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x31, MyCmd.Keycode.AS}, {0x32, MyCmd.Keycode.KEY_REPEAT}, {0x33, MyCmd.Keycode.KEY_CAMERA}, {0x34, MyCmd.Keycode.NAVIGATION}, {0x35, MyCmd.Keycode.SPEECH},
+
+    };
+    private final static int SET_EQ_STEP = 1;
+    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
+
     public NissanXinFeiYang() {
 
         buildCmdRepeatSendCarType(getCarTypeCmd(), 5);
@@ -27,8 +46,6 @@ public class NissanXinFeiYang extends Canbox {
 
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {0x35, 0x6c, 0x6d, 0x6e, 0x6b};
 
     private byte[] getCarTypeCmd() {
         byte[] cmd = new byte[]{(byte) 0xe2, 0x01, 0};
@@ -59,31 +76,6 @@ public class NissanXinFeiYang extends Canbox {
         }
         return cmd;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x7, MyCmd.Keycode.MODLE},
-
-            {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT_DIAL}, {0xa, MyCmd.Keycode.BT_HANG},
-
-            {0x13, MyCmd.Keycode.PREVIOUS}, {0x14, MyCmd.Keycode.NEXT},
-
-            {0x16, MyCmd.Keycode.PLAY_PAUSE}, {0x17, MyCmd.Keycode.MUTE}, {0x18, MyCmd.Keycode.BACK},
-
-
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.PREVIOUS}, {0x3, MyCmd.Keycode.NEXT}, {0x5, MyCmd.Keycode.RADIO}, {0x6, MyCmd.Keycode.SETUP},
-            {0x7, MyCmd.Keycode.AUDIO}, {0x8, MyCmd.Keycode.NEXT}, {0x9, MyCmd.Keycode.PREVIOUS}, {0xa, MyCmd.Keycode.POWER}, {0x11, MyCmd.Keycode.NUMBER1}, {0x12, MyCmd.Keycode.NUMBER2},
-            {0x13, MyCmd.Keycode.NUMBER3}, {0x14, MyCmd.Keycode.NUMBER4}, {0x15, MyCmd.Keycode.NUMBER5}, {0x16, MyCmd.Keycode.NUMBER6}, {0x20, MyCmd.Keycode.KEY_DISPLAY}, {0x21, MyCmd.Keycode.AUDIO},
-            {0x22, MyCmd.Keycode.MODLE}, {0x23, MyCmd.Keycode.BT}, {0x24, MyCmd.Keycode.BACK}, {0x25, MyCmd.Keycode.SETUP}, {0x26, MyCmd.Keycode.PLAY_PAUSE}, {0x27, MyCmd.Keycode.PREVIOUS},
-            {0x28, MyCmd.Keycode.NEXT}, {0x29, MyCmd.Keycode.PREVIOUS}, {0x2a, MyCmd.Keycode.NEXT}, {0x2b, MyCmd.Keycode.ROLL_PREV}, {0x2c, MyCmd.Keycode.ROLL_NEXT}, {0x2d, MyCmd.Keycode.ALL_APP},
-            {0x2e, MyCmd.Keycode.SETUP},
-            //		{ 0x2f, MyCmd.Keycode. },
-            {0x30, MyCmd.Keycode.KEY_AIR_CONTROL}, {0x31, MyCmd.Keycode.AS}, {0x32, MyCmd.Keycode.KEY_REPEAT}, {0x33, MyCmd.Keycode.KEY_CAMERA}, {0x34, MyCmd.Keycode.NAVIGATION},
-            {0x35, MyCmd.Keycode.SPEECH},
-
-    };
 
     @Override
     public int getAngleValue2(byte[] data) {
@@ -216,17 +208,6 @@ public class NissanXinFeiYang extends Canbox {
 
     }
 
-
-    private final static int SET_EQ_STEP = 1;
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == SET_EQ_STEP) {
-                sendEQCmd((byte) msg.arg1, msg.arg2);
-            }
-            super.handleMessage(msg);
-        }
-    };
-
     private void sendEQCmd(byte id, int step) {
         byte data;
         if (step == 0) {
@@ -245,9 +226,14 @@ public class NissanXinFeiYang extends Canbox {
         if (step != 0) {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(SET_EQ_STEP, id, step), 200);
         }
-    }
-
-    byte[] mEQBuf = new byte[]{5, 0, 5, 5, 5, 0};
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SET_EQ_STEP) {
+                sendEQCmd((byte) msg.arg1, msg.arg2);
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public int doEQCmd(int cmd, int data) {
         int ret = 0;
@@ -302,4 +288,8 @@ public class NissanXinFeiYang extends Canbox {
         mEQBuf[5] = buf[7];
         super.returnEQData(EQ_CMD_SET_ALL_DATA, mEQBuf);
     }
+
+
+
+
 }

@@ -6,6 +6,13 @@ import com.zhuchao.android.car.canbox.Canbox;
 
 public class HaiMaM8Raise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
+
+            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
+
+            {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE},};
+
+
     public HaiMaM8Raise() {
         mIdAC = 0x21;
         buildCmdDoor((byte) 0x24, (byte) 0x0, (byte) 0x1f, (byte) 0x3);
@@ -17,16 +24,6 @@ public class HaiMaM8Raise extends Canbox {
         MAP_KEYS = KEYS_WHEEL;
 
     }
-
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D},
-
-            {0x3, KEY_NEXTSONG}, {0x4, KEY_PREVIOUSSONG},
-
-            {0x5, MyCmd.Keycode.BT}, {0x6, MyCmd.Keycode.MUTE}, {0x7, KEY_SOURCE},
-    };
-
 
     @Override
     public void startConnect() {

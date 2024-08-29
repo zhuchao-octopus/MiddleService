@@ -24,13 +24,39 @@ import java.util.Locale;
 
 public class OuShangRaise extends Canbox {
 
+    private final static byte[][] KEYS_WHEEL = {{0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x21, AK_KEYPAD_VOLUME_A}, {0x22, AK_KEYPAD_VOLUME_D}, {0x3, MyCmd.Keycode.MULT_NEXT_AND_HANG}, {0x4, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x5, KEY_MUTE}, {0x6, KEY_SOURCE}, {0x7, MyCmd.Keycode.BT_DIAL}, {0x7, MyCmd.Keycode.BT_HANG}, {(byte) 0x88, KEY_MIC}, {0x9, MyCmd.Keycode.RADIO}, {0xa, MyCmd.Keycode.POWER},
+
+            {0x11, AK_KEYPAD_VOLUME_A}, {0x12, AK_KEYPAD_VOLUME_D}, {0x13, KEY_HOME}, {0x14, KEY_MEDIA},
+
+            {0x23, MyCmd.Keycode.PLAY_PAUSE}, {0x24, MyCmd.Keycode.KEY_TURN_A}, {0x25, MyCmd.Keycode.KEY_TURN_D},
+
+            {0x27, KEY_NEXTSONG}, {0x26, KEY_PREVIOUSSONG}, {0x28, KEY_SET}, {0x29, KEY_GPS}, {0x2A, MyCmd.Keycode.DARK},
+
+            {0x2b, MyCmd.Keycode.AS}, {0x2c, MyCmd.Keycode.KEY_LIST}, {0x2d, MyCmd.Keycode.BT},
+
+            {0x2e, KEY_GPS}, {0x2f, KEY_EQ}, {0x30, KEY_MENU}, {0x31, MyCmd.Keycode.PLAY_PAUSE},
+
+
+            {0x1A, MyCmd.Keycode.NUMBER1}, {0x1B, MyCmd.Keycode.NUMBER2}, {0x1C, MyCmd.Keycode.NUMBER3}, {0x1D, MyCmd.Keycode.NUMBER4}, {0x1E, MyCmd.Keycode.NUMBER5}, {0x1F, MyCmd.Keycode.NUMBER6},
+
+    };
+    private final static int HIDE_RADAR = 0;
+    private final static int SHOW_VOLUME_STEP = 1;
+    private final byte mRadarSwitch = 0;
+    byte[] data;
+    byte[] data75 = new byte[]{(byte) 0x75, 0x8, 0, 0, 0, 0, 0, 0, 0, 1};
+    String mName = null;
+    String mArtist = null;
+    String mAlbum = null;
+    private int mShowExRadar = 0;
+    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
+    private int mUnit = 0;
+    private int mDoorStatus = 0;
+    private int mPhoneStatus = HFP_INFO_INITIAL;
+
     public OuShangRaise() {
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x01, 0x2, 0x3, 0x0, 0x0
-        });
-        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{
-                0x05, 0x02, 0x0, 0x0, 0x0, 0x1
-        });
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
+        sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});
 
         buildCmdRepeatSendCarType(getCarTypeCmd());
 
@@ -47,26 +73,6 @@ public class OuShangRaise extends Canbox {
         }
         return null;
     }
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, AK_KEYPAD_VOLUME_A}, {0x2, AK_KEYPAD_VOLUME_D}, {0x21, AK_KEYPAD_VOLUME_A}, {0x22, AK_KEYPAD_VOLUME_D}, {0x3, MyCmd.Keycode.MULT_NEXT_AND_HANG},
-            {0x4, MyCmd.Keycode.MULT_PREV_AND_RECEIVE}, {0x5, KEY_MUTE}, {0x6, KEY_SOURCE}, {0x7, MyCmd.Keycode.BT_DIAL}, {0x7, MyCmd.Keycode.BT_HANG}, {(byte) 0x88, KEY_MIC},
-            {0x9, MyCmd.Keycode.RADIO}, {0xa, MyCmd.Keycode.POWER},
-
-            {0x11, AK_KEYPAD_VOLUME_A}, {0x12, AK_KEYPAD_VOLUME_D}, {0x13, KEY_HOME}, {0x14, KEY_MEDIA},
-
-            {0x23, MyCmd.Keycode.PLAY_PAUSE}, {0x24, MyCmd.Keycode.KEY_TURN_A}, {0x25, MyCmd.Keycode.KEY_TURN_D},
-
-            {0x27, KEY_NEXTSONG}, {0x26, KEY_PREVIOUSSONG}, {0x28, KEY_SET}, {0x29, KEY_GPS}, {0x2A, MyCmd.Keycode.DARK},
-
-            {0x2b, MyCmd.Keycode.AS}, {0x2c, MyCmd.Keycode.KEY_LIST}, {0x2d, MyCmd.Keycode.BT},
-
-            {0x2e, KEY_GPS}, {0x2f, KEY_EQ}, {0x30, KEY_MENU}, {0x31, MyCmd.Keycode.PLAY_PAUSE},
-
-
-            {0x1A, MyCmd.Keycode.NUMBER1}, {0x1B, MyCmd.Keycode.NUMBER2}, {0x1C, MyCmd.Keycode.NUMBER3}, {0x1D, MyCmd.Keycode.NUMBER4}, {0x1E, MyCmd.Keycode.NUMBER5}, {0x1F, MyCmd.Keycode.NUMBER6},
-
-    };
 
     private void parseWheelKey(byte[] data) {
 
@@ -199,8 +205,6 @@ public class OuShangRaise extends Canbox {
         }
         return data;
     }
-
-    private int mShowExRadar = 0;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -440,9 +444,6 @@ public class OuShangRaise extends Canbox {
         }
     }
 
-    private int mTempOutDoor = CarUtil.INVALID_OUT_DOOR_TEMP;
-    private int mUnit = 0;
-
     @SuppressLint("DefaultLocale")
     public void updateOutDoorTemp(int temp) {
 
@@ -484,9 +485,6 @@ public class OuShangRaise extends Canbox {
 
     }
 
-    private final byte mRadarSwitch = 0;
-    private int mDoorStatus = 0;
-
     public void setReverseRadaVol(byte param) {
         byte[] data = new byte[]{(byte) 0xc6, 0x2, 0x0, param};
         sendDataToCanbox(data, data.length);
@@ -501,8 +499,6 @@ public class OuShangRaise extends Canbox {
         byte[] data = new byte[]{(byte) 0x90, 0x2, param, 0};
         sendDataToCanbox(data, data.length);
     }
-
-    byte[] data;
 
     public void setMediaMoreInfo(int source, int play, int total, int time, int total_time) {
 
@@ -538,15 +534,13 @@ public class OuShangRaise extends Canbox {
             sendDataToCanbox(data75, data75.length);
         } else {
 
-            data = new byte[]{
-                    (byte) 0xc0, 0xa, s, 0, (byte) ((total & 0xFF) >> 8), (byte) (total & 0xFF),
+            data = new byte[]{(byte) 0xc0, 0xa, s, 0, (byte) ((total & 0xFF) >> 8), (byte) (total & 0xFF),
 
                     (byte) ((play & 0xFF) >> 8), (byte) (play & 0xFF),
 
                     (byte) ((total_time & 0xFF) >> 8), (byte) (total_time & 0xFF),
 
-                    (byte) ((time & 0xFF) >> 8), (byte) (time & 0xFF),
-            };
+                    (byte) ((time & 0xFF) >> 8), (byte) (time & 0xFF),};
 
             if (mPhoneStatus < HFP_INFO_CALLED) {
 
@@ -554,6 +548,10 @@ public class OuShangRaise extends Canbox {
             }
         }
     }
+
+    // public void setPhone(int status, String num) {
+    // sendId3((byte)0x1, num);
+    // }
 
     public void setMediaSrc(int source, byte type, byte[] b) {
         // if (b[0] >= 0x10) {
@@ -592,8 +590,6 @@ public class OuShangRaise extends Canbox {
         }
     }
 
-    byte[] data75 = new byte[]{(byte) 0x75, 0x8, 0, 0, 0, 0, 0, 0, 0, 1};
-
     public void setMediaSrc(int source) {// default is simple box
         byte s;
 
@@ -621,9 +617,7 @@ public class OuShangRaise extends Canbox {
             } else {
                 return;
             }
-            data = new byte[]{
-                    (byte) 0xc0, 0xa, s, 0, 0, 0, 0, 0, 0, 0, 0, 0
-            };
+            data = new byte[]{(byte) 0xc0, 0xa, s, 0, 0, 0, 0, 0, 0, 0, 0, 0};
             sendDataToCanbox(data, data.length);
         }
 
@@ -666,14 +660,6 @@ public class OuShangRaise extends Canbox {
         }
     }
 
-    String mName = null;
-    String mArtist = null;
-    String mAlbum = null;
-
-    // public void setPhone(int status, String num) {
-    // sendId3((byte)0x1, num);
-    // }
-
     public void setSongName(String s) {
         sendId3((byte) 0x1, s);
         mName = s;
@@ -688,8 +674,6 @@ public class OuShangRaise extends Canbox {
         //		sendId3((byte) 0x3, s);
         //		mAlbum = s;
     }
-
-    private int mPhoneStatus = HFP_INFO_INITIAL;
 
     public void setPhone(int status, String num) {// default is simple box
 
@@ -765,9 +749,6 @@ public class OuShangRaise extends Canbox {
         mHandler.sendEmptyMessageDelayed(HIDE_RADAR, 2000);
     }
 
-    private final static int HIDE_RADAR = 0;
-    private final static int SHOW_VOLUME_STEP = 1;
-
     private void doKeyStep(int key, int step) {
         mHandler.removeMessages(SHOW_VOLUME_STEP);
         doKey(key, 1);
@@ -777,21 +758,6 @@ public class OuShangRaise extends Canbox {
             mHandler.sendMessageDelayed(mHandler.obtainMessage(SHOW_VOLUME_STEP, key, step), 30);
         }
     }
-
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_RADAR:
-                    mShowExRadar = 0;
-                    RadarManager.stop();
-                    break;
-                case SHOW_VOLUME_STEP:
-                    doKeyStep(msg.arg1, msg.arg2);
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
 
     public void setContext(Context c) {
         super.setContext(c);
@@ -824,7 +790,20 @@ public class OuShangRaise extends Canbox {
 
         byte[] buf = new byte[]{(byte) 0xc8, 0x03, m, h, format};
         sendDataToCanbox(buf, buf.length);
-    }
+    }    private final Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HIDE_RADAR:
+                    mShowExRadar = 0;
+                    RadarManager.stop();
+                    break;
+                case SHOW_VOLUME_STEP:
+                    doKeyStep(msg.arg1, msg.arg2);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
 
     public void udpateLang() {
         int lang = -1;
@@ -845,4 +824,8 @@ public class OuShangRaise extends Canbox {
     public int getUpdateTime() {
         return 60000;
     }
+
+
+
+
 }

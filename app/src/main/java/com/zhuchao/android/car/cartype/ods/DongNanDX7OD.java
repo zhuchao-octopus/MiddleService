@@ -18,6 +18,31 @@ import java.util.Locale;
 
 public class DongNanDX7OD extends Canbox {
 
+    private final static byte[] IDS_TO_CANBOXSETTING = {0x24, 0x25, 0x32, 0x33, 0x40, 0x41, 0x34};
+    private final static byte[][] KEYS_WHEEL = {{0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
+
+            {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT},};
+    private final static byte[][] KEYS_WHEEL2 = {
+
+            {0x1, MyCmd.Keycode.HOME}, {0x2, MyCmd.Keycode.NAVIGATION}, {0x3, MyCmd.Keycode.AUDIO}, {0x4, MyCmd.Keycode.NAVIGATION}, {0x5, MyCmd.Keycode.BACK}, {0x6, MyCmd.Keycode.SETUP}, {0x7, MyCmd.Keycode.PLAY_PAUSE},
+
+            {0x8, MyCmd.Keycode.ROLL_PREV}, {0x9, MyCmd.Keycode.ROLL_NEXT},
+
+            {0xa, MyCmd.Keycode.RADIO}, {0xb, MyCmd.Keycode.AUDIO}, {0xc, MyCmd.Keycode.NAVIGATION}, {0xd, MyCmd.Keycode.BT},
+
+            {0xe, MyCmd.Keycode.MODLE}, {0xf, MyCmd.Keycode.KEY_SEEK_PREV}, {0x10, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x11, MyCmd.Keycode.KEY_DISPLAY}, {0x12, MyCmd.Keycode.SETUP},
+
+            {0x14, MyCmd.Keycode.NEXT}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.POWER}, {0x16, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x17, MyCmd.Keycode.VOLUME_ROLL_UP},
+
+
+            {0x18, MyCmd.Keycode.SPEECH},
+
+    };
+    Toast mToast = null;
+    private int mSpeed = 0;
+    private int mSaft = 0;
+    private long mLastWarning = 0;
+
     public DongNanDX7OD() {
         // buildCmdRepeatSendCarType(getCarTypeCmd());
         buildCmdDoor((byte) 0x24, (byte) 0x1, (byte) 0xfc, (byte) 0x02);
@@ -35,35 +60,6 @@ public class DongNanDX7OD extends Canbox {
         MAP_KEYS2 = KEYS_WHEEL2;
         IDS_TO_CANBOXSETTINGS = IDS_TO_CANBOXSETTING;
     }
-
-    private final static byte[] IDS_TO_CANBOXSETTING = {
-            0x24, 0x25, 0x32, 0x33, 0x40, 0x41, 0x34
-    };
-
-    private final static byte[][] KEYS_WHEEL = {
-            {0x1, MyCmd.Keycode.VOLUME_UP}, {0x2, MyCmd.Keycode.VOLUME_DOWN}, {0x4, MyCmd.Keycode.NEXT}, {0x3, MyCmd.Keycode.PREVIOUS}, {0x6, MyCmd.Keycode.MUTE}, {0x7, MyCmd.Keycode.MODLE},
-
-            {0x8, MyCmd.Keycode.SPEECH}, {0x9, MyCmd.Keycode.BT},
-    };
-
-    private final static byte[][] KEYS_WHEEL2 = {
-
-            {0x1, MyCmd.Keycode.HOME}, {0x2, MyCmd.Keycode.NAVIGATION}, {0x3, MyCmd.Keycode.AUDIO}, {0x4, MyCmd.Keycode.NAVIGATION}, {0x5, MyCmd.Keycode.BACK}, {0x6, MyCmd.Keycode.SETUP},
-            {0x7, MyCmd.Keycode.PLAY_PAUSE},
-
-            {0x8, MyCmd.Keycode.ROLL_PREV}, {0x9, MyCmd.Keycode.ROLL_NEXT},
-
-            {0xa, MyCmd.Keycode.RADIO}, {0xb, MyCmd.Keycode.AUDIO}, {0xc, MyCmd.Keycode.NAVIGATION}, {0xd, MyCmd.Keycode.BT},
-
-            {0xe, MyCmd.Keycode.MODLE}, {0xf, MyCmd.Keycode.KEY_SEEK_PREV}, {0x10, MyCmd.Keycode.KEY_SEEK_NEXT}, {0x11, MyCmd.Keycode.KEY_DISPLAY}, {0x12, MyCmd.Keycode.SETUP},
-
-            {0x14, MyCmd.Keycode.NEXT}, {0x13, MyCmd.Keycode.PREVIOUS}, {0x15, MyCmd.Keycode.POWER}, {0x16, MyCmd.Keycode.VOLUME_ROLL_DOWN}, {0x17, MyCmd.Keycode.VOLUME_ROLL_UP},
-
-
-            {0x18, MyCmd.Keycode.SPEECH},
-
-    };
-
 
     @Override
     public int getACTemp(byte data) {
@@ -164,15 +160,10 @@ public class DongNanDX7OD extends Canbox {
     public void updateCompass(int compass) {
         int direction = compassAngleToDirect(compass);
 
-        byte[] buf = new byte[]{
-                (byte) (0xa7), 0x2, (byte) (direction & 0xff), (byte) compass
-        };
+        byte[] buf = new byte[]{(byte) (0xa7), 0x2, (byte) (direction & 0xff), (byte) compass};
 
         sendDataToCanbox(buf, buf.length);
     }
-
-    private int mSpeed = 0;
-    private int mSaft = 0;
 
     @Override
     public void parseCanboxData(byte[] data, int len) {
@@ -198,9 +189,10 @@ public class DongNanDX7OD extends Canbox {
         super.parseCanboxData(data, len);
     }
 
-    private long mLastWarning = 0;
-
-    private final Handler mHandlerSaft = new Handler() {
+    public void stopConnect() {
+        clearVoice();
+        super.stopConnect();
+    }    private final Handler mHandlerSaft = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
@@ -217,11 +209,6 @@ public class DongNanDX7OD extends Canbox {
         }
     };
 
-    public void stopConnect() {
-        clearVoice();
-        super.stopConnect();
-    }
-
     @Override
     public void startConnect() {
         // TODO Auto-generated method stub
@@ -232,8 +219,6 @@ public class DongNanDX7OD extends Canbox {
         sendDataToCanbox(data, data.length);
 
     }
-
-    Toast mToast = null;
 
     private void clearVoice() {
 
@@ -277,5 +262,8 @@ public class DongNanDX7OD extends Canbox {
         }
 
     }
+
+
+
 
 }
