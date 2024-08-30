@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.zhuchao.android.car.cartype.CarUtil;
 import com.zhuchao.android.car.manager.OSProManager;
 
 import java.util.Date;
+import java.util.Objects;
 
 
 public class VWGolfSimple extends Canbox {
@@ -34,23 +36,7 @@ public class VWGolfSimple extends Canbox {
     private final static int HIDE_RADAR = 0;
     private final static int DEALY_SEND_TPMS = 1;
     private final int[] mRadarColor = new int[8];
-    private final Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case HIDE_RADAR:
-                    RadarManager.stop();
-                    break;
-                case DEALY_SEND_TPMS:
-                    try {
-                        sendCanboxInfo("com.canboxsetting", (byte[]) (msg.obj));
-                    } catch (Exception e) {
 
-                    }
-                    break;
-            }
-            super.handleMessage(msg);
-        }
-    };
     String mName = null;
     String mArtist = null;
     String mAlbum = null;
@@ -61,6 +47,23 @@ public class VWGolfSimple extends Canbox {
     private int mDoorStatus = 0;
     private byte[] mData = new byte[]{(byte) 0xc0, 0x8, 0, 0, 0, 0, 0, 0, 0, 0};
 
+    private final Handler mHandler = new Handler(Objects.requireNonNull(Looper.myLooper())) {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case HIDE_RADAR:
+                    RadarManager.stop();
+                    break;
+                case DEALY_SEND_TPMS:
+                    try {
+                        sendCanboxInfo("com.canboxsetting", (byte[]) (msg.obj));
+                    } catch (Exception ignored) {
+                    }
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+    
     public VWGolfSimple() {
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x01, 0x2, 0x3, 0x0, 0x0});
         sendCmd(CANBOX_WRITE_MCU_DATA, 0, new byte[]{0x05, 0x02, 0x0, 0x0, 0x0, 0x1});

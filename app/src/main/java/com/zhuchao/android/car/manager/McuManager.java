@@ -1727,14 +1727,9 @@ public class McuManager {
     private final static int MSG_AFTER_FATE_POWEROFF = 1;
     private final static int MSG_ANDROID_POWER_OFF = 2;
     private final static int MSG_ACC_POWEROFF = 3;
-
     private final static int MSG_ACC_POWEROFF_PX5 = 4;
-
     private final static int MSG_ACC_POWERON_PX5 = 6;
-
     private final static int MSG_RECOVER_BT = 5;
-
-
     private final static int MSG_UPDATE_8600_LCD = 10;
     private final static int MSG_UPDATE_8600_LCD_TIME = 11;
 

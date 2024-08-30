@@ -309,68 +309,349 @@ import com.zhuchao.android.car.cartype.xinfeiyang.ToyotaXinFeiYang;
 public class CanboxToPro {
 
     //this index is the same as CanBus说明文档*.*
-    private final static Class<?>[] mAllCanbox = {CarFordSimple.class,//1
-            CarToyota2013.class, CarMazda.class, CarX80.class, CarTEANA.class, CarOPEL.class, CarVW.class, MitsubishiOutLanderSimple.class, CarHY.class, CarPSABagoo.class,//10
-            CarGMSimple.class, CarHondaDASimple.class, VWGolfSimple.class, RamFIATSimple.class, RenaultMeganeFluenceSimple.class, BMWE90X1Union.class, FIATSimple.class, FordMondeoSimple.class, PSASimple.class, BenzBagoo.class,//20
-            KadjarRaise.class, GMCSimple.class, BenzB200Union.class, CarMazdaBT50Simple.class, JeepSimple.class, Accord7ChangYuanTong.class, CarToyotaBinarytek.class, CarMazdaXinbas.class, Peugeot206Simple.class, Accord2013Simple.class,//30
-            Nissan2013Simple.class, PorscheUnionSimple.class, Mazda3BinarytekSimple.class, BravoUnionSimple.class, TouaregHiworld.class, DaciaSimple.class, NissanRaise.class, PetgeoRaise.class, FordExplorerSimple.class, AccordBinarytek.class,//40
-            AudiA3Simple.class, SubrauODS.class, MiniHiword.class, NissanBinarytek.class, CarBenzVito.class, VWMQBRaise.class, CheryOD.class, ChryslerSimple.class, Mazda3Simple.class, CarOBDBinarytek.class,//50
-            HaferH3Xinbas.class, HondaRaise.class, PetgeoScreenRaise.class, CarFordRaise.class, SmartHaozheng.class, LandRoverHaozheng.class, PetgeoScreenUnion.class, MazdaCX5Simple.class, RX330HaoZheng.class, Peugeot206307OldSimple.class,//60
-            X30Raise.class, MondeoDaojun.class, JeepXinbas.class, OuShangRaise.class, FiatEGEARaise.class, HYRaise.class, AlphaBagoo.class, ToyotaRaise.class, MiniHaoZheng.class, SubaruSimple.class,
-            //70
-            GMOD.class, MazdaRaise.class, GMRaise.class, AudiRaise.class, Q3Raise.class,//75
-            JeepRaise.class, LiFanRaise.class, BeiQiRaise.class, BeiQiM200Raise.class, ChangChengRaise.class,//80
-            ChangChengC30Raise.class, ChangChengFengJun6Raise.class, HaiMaRaise.class, HaiMaM8Raise.class, BiSuRaise.class,//85
-            BenzRaise.class, SiWeiRaise.class, ChuanQiRaise.class, MitsubishiRaise.class, QiRuiRaise.class,//90
-            BenTengRaise.class, JiLiRaise.class, YueXiangV7.class, BaoJunRaise.class, DaTongRaise.class,//95
-            RongWeiRaise.class, MinJueRongWeiRaise.class, QiChengRaise.class, JiangHuaiRaise.class, DongFengRaise.class,//100
-            DongFengFengShenAX7Raise.class, DongFengJingYiX5Raise.class, DongFengS560Raise.class, VWHiworld.class, ZongTaiRaise.class,//105
-            VWMQBHiworld.class, ToyotaHiworld.class, HYHiworld.class, HondaDAHiworld.class, NissanHiworld.class, //110
-            GMHiworld.class, ZhongHuaRaise.class, LuFengRaise.class, HanTengRaise.class, DongNanRaise.class, //115
-            InfinitiQX50.class, FordHiworld.class, VolvoRaise.class, JeepHiworld.class, Jeep002Hiworld.class, //120
-            PSAHiworld.class, MazdaHiworld.class, QiRuiHiworld.class, QiRuiJieTuHiworld.class, ChangChengHiworld.class, //125
-            ChangChengH2Hiworld.class, ShangQiBaoJunHiworld.class, ShangQiSAP006Hiworld.class, ShangQiSAP004Hiworld.class, ShangQiSAP003Hiworld.class,//130
-            ShangQiSAP005Hiworld.class, ShangQiSAP007Hiworld.class, ShangQiSAP001Hiworld.class, ChuanQiHiworld.class, FiatHiworld.class,//135
-            IvecoSimple.class, JiLiHiworld.class, BYDHiworld.class, JiangHuaiRuiFengHiworld.class, HaiMaFuLaiMeiRaise.class,//140
-            BeiQiEC180Raise.class, Accord7DaoJun.class, VolvoXC60.class, PG360Test.class, AudiBagoo.class,//145
-            BMWNbtEvo.class, RanualtHiworld.class, HondaHaoZheng.class, LC100XinChi.class, DaoQiDaoJun.class,//150
-            FordQuanXunOD.class, Accord9Xinbasi.class, Accord924Xinbasi.class, FordXinChi.class, Accord8XinChi.class, //155
-            Sorento13XinChi.class, TeanaXinChi.class, HondaDAXinbasi.class, SaicOD.class, BydODS.class, //160
-            FordXinbasi.class, JaingLingBNR.class, HuaTaiBNR.class, HummerODS.class, OutlanderHiworld.class,//165
-            BenzB200Hiworld.class, QiChengT90Hiworld.class, BeiQiBAP002Hiworld.class, BeiQiBAP001Hiworld.class, ChuanQiGA3Hiworld.class,//170
-            DongFeng002Hiworld.class, DongFeng003Hiworld.class, NissanDaoJun.class, SpiriorDaoJun.class, GMDaoJun.class,//175
-            BMW001Hiworld.class, Teana2008XinChi.class, ChangAnCNP005Hiworld.class, LuxgenOD.class, DongFeng005Hiworld.class,//180
-            DongFeng007Hiworld.class, DongFeng008Hiworld.class, Odyssey04Hiworld.class, ChangChengH9OD.class, CRV12Simple.class,//185
-            JeepBNR.class, BMW002Hiworld.class, Ford003Hiworld.class, Honda003Hiworld.class, LuFengOD.class,//190
-            BenzG350Hiworld.class, ZTP001Hiworld.class, BeiQiBAP003Hiworld.class, AudiA3Hiworld.class, AudiQ5Hiworld.class,//195
-            Odyssey09_14BNR.class, FordBinarytek.class, BydS6DaoJun.class, OpelHaoZheng.class, ChangChengH9Hiworld.class, //200
-            GuanZhiBNR.class, DaChengE20.class, BydF6DaoJun.class, BydM6DaoJun.class, BydG6DaoJun.class,//205
-            BydHCY.class, NissanTeana08Hiworld.class, BenzMetrisHiworld.class, FordFDP007Hiworld.class, VWBNR.class,//210
-            VWMQBBNR.class, Mazda6ChangYuanTong.class, ChangChengBNR.class, Haima003Hiworld.class, Haima001Hiworld.class,//215
-            Infiniti001Hiworld.class, ChangAnCNP004Hiworld.class, ChangAnCNP001Hiworld.class, CadillacKaiLeiDeOD.class, RongWeiI5DaoJun.class,//220
-            ChangAnCNP002Hiworld.class, HondaDABNR.class, Toyota002Hiworld.class, TuoLaJiRaise.class, JiangHuaiOD.class,//225
-            Mazda6Xinbas.class, ToyotaLuZheng.class, SubaruHaoZheng.class, Ford005Hiworld.class, BydCYT.class,//230
-            Mazda6LuZheng.class, BentengFWP006Hiworld.class, BentengFWP007Hiworld.class, BentengFWP009Hiworld.class, BentengFWP005Hiworld.class,//235
-            BentengFWP00AHiworld.class, BentengFWP003Hiworld.class, BentengFWP008Hiworld.class, ChangChengHiworldCCP003.class, CaloraDaoJun.class,//240
-            NissanXinbas.class, DongNanDX7OD.class, DongNanA5OD.class, GMBinarytek.class, Sorento13DaoJun.class,//245
-            JinBeiDaoJun.class, FiestaDaojun.class, YeMaOD.class, DongNanDX7DaoJun.class, ZongTaiBNR.class,//250
-            OpelOD.class, UAZ001Hiworld.class, FremontXinChi.class, GMXinChi.class, HyBNR.class,//255
-            HyXinbasi.class, FiatBagoo.class, ToyotaTD.class, BMWRaise.class, WeiChaiJMP001Hiworld.class,//260
-            TataTAP001Hiworld.class, RenaultBNR.class, IVT001Hiworld.class, MAP001Hiworld.class, Accord7ChangYuanTong9600.class,//265
-            IsuzuSimple.class, BiSuOD.class, ZhidouOD.class, NaZhaOD.class, FutianOD.class,//270
-            FengJun6Xinbas.class, JiangHuaiDaoJun.class, X80Xinbas.class, ChangChengDaoJun.class, ChangAnBNR.class,//275
-            HoldenXinbasi.class, BeiQiH3HeChi.class, BydSongRaise.class, ChuanQiBNR.class, MitsubishiTD.class,//280
-            SubaruX3XinFeiYang.class, RenaultXinFeiYang.class, HondaXinFeiYang.class, NissanXinFeiYang.class, ToyotaXinFeiYang.class,//285
-            KeyPannel1.class, KeyPannelHiworld.class, KeyPannelHiworld.class, SkyworthET5.class,
+    private final static Class<?>[] mAllCanbox = {//
+            CarFordSimple.class,//1
+            CarToyota2013.class,//
+            CarMazda.class,     //
+            CarX80.class,       //
+            CarTEANA.class,     //
+            CarOPEL.class,      //
+            CarVW.class,        //
+            MitsubishiOutLanderSimple.class, //
+            CarHY.class,            //
+            CarPSABagoo.class,      //10
+            CarGMSimple.class,      //
+            CarHondaDASimple.class, //
+            VWGolfSimple.class,     //
+            RamFIATSimple.class,    //
+            RenaultMeganeFluenceSimple.class,//
+            BMWE90X1Union.class,        //
+            FIATSimple.class,           //
+            FordMondeoSimple.class,     //
+            PSASimple.class,            //
+            BenzBagoo.class,            //20
+            KadjarRaise.class,          //
+            GMCSimple.class,            //
+            BenzB200Union.class,        //
+            CarMazdaBT50Simple.class,   //
+            JeepSimple.class,           //
+            Accord7ChangYuanTong.class, //
+            CarToyotaBinarytek.class,   //
+            CarMazdaXinbas.class,       //
+            Peugeot206Simple.class,     //
+            Accord2013Simple.class,     //30
+            Nissan2013Simple.class,     //
+            PorscheUnionSimple.class,   //
+            Mazda3BinarytekSimple.class,//
+            BravoUnionSimple.class,     //
+            TouaregHiworld.class,       //
+            DaciaSimple.class,          //
+            NissanRaise.class,          //
+            PetgeoRaise.class,          //
+            FordExplorerSimple.class,   //
+            AccordBinarytek.class,      //40
+            AudiA3Simple.class,         //
+            SubrauODS.class,            //
+            MiniHiword.class,           //
+            NissanBinarytek.class,      //
+            CarBenzVito.class,          //
+            VWMQBRaise.class,           //
+            CheryOD.class,              //
+            ChryslerSimple.class,       //
+            Mazda3Simple.class,         //
+            CarOBDBinarytek.class,      //50
+            HaferH3Xinbas.class,
+            HondaRaise.class,
+            PetgeoScreenRaise.class,
+            CarFordRaise.class,
+            SmartHaozheng.class,
+            LandRoverHaozheng.class,
+            PetgeoScreenUnion.class,
+            MazdaCX5Simple.class,
+            RX330HaoZheng.class,
+            Peugeot206307OldSimple.class,//60
+            X30Raise.class,
+            MondeoDaojun.class,
+            JeepXinbas.class,
+            OuShangRaise.class,
+            FiatEGEARaise.class,
+            HYRaise.class,
+            AlphaBagoo.class,
+            ToyotaRaise.class,
+            MiniHaoZheng.class,
+            SubaruSimple.class,        //70
+            GMOD.class,
+            MazdaRaise.class,
+            GMRaise.class,
+            AudiRaise.class,
+            Q3Raise.class,             //75
+            JeepRaise.class,
+            LiFanRaise.class,
+            BeiQiRaise.class,
+            BeiQiM200Raise.class,
+            ChangChengRaise.class,     //80
+            ChangChengC30Raise.class,
+            ChangChengFengJun6Raise.class,
+            HaiMaRaise.class,
+            HaiMaM8Raise.class,
+            BiSuRaise.class,           //85
+            BenzRaise.class,
+            SiWeiRaise.class,
+            ChuanQiRaise.class,
+            MitsubishiRaise.class,
+            QiRuiRaise.class,         //90
+            BenTengRaise.class,
+            JiLiRaise.class,
+            YueXiangV7.class,
+            BaoJunRaise.class,
+            DaTongRaise.class,        //95
+            RongWeiRaise.class,
+            MinJueRongWeiRaise.class,
+            QiChengRaise.class,
+            JiangHuaiRaise.class,
+            DongFengRaise.class,     //100
+            DongFengFengShenAX7Raise.class,
+            DongFengJingYiX5Raise.class,
+            DongFengS560Raise.class,
+            VWHiworld.class,
+            ZongTaiRaise.class,      //105
+            VWMQBHiworld.class,
+            ToyotaHiworld.class,
+            HYHiworld.class,
+            HondaDAHiworld.class,
+            NissanHiworld.class,     //110
+            GMHiworld.class,
+            ZhongHuaRaise.class,
+            LuFengRaise.class,
+            HanTengRaise.class,
+            DongNanRaise.class,      //115
+            InfinitiQX50.class,
+            FordHiworld.class,
+            VolvoRaise.class,
+            JeepHiworld.class,
+            Jeep002Hiworld.class,    //120
+            PSAHiworld.class,
+            MazdaHiworld.class,
+            QiRuiHiworld.class,
+            QiRuiJieTuHiworld.class,
+            ChangChengHiworld.class, //125
+
+            ChangChengH2Hiworld.class,
+            ShangQiBaoJunHiworld.class,
+            ShangQiSAP006Hiworld.class,
+            ShangQiSAP004Hiworld.class,
+            ShangQiSAP003Hiworld.class,//130
+            ShangQiSAP005Hiworld.class,
+            ShangQiSAP007Hiworld.class,
+            ShangQiSAP001Hiworld.class,
+            ChuanQiHiworld.class,
+            FiatHiworld.class,        //135
+            IvecoSimple.class,
+            JiLiHiworld.class,
+            BYDHiworld.class,
+            JiangHuaiRuiFengHiworld.class,
+            HaiMaFuLaiMeiRaise.class, //140
+            BeiQiEC180Raise.class,
+            Accord7DaoJun.class,
+            VolvoXC60.class,
+            PG360Test.class,
+            AudiBagoo.class,          //145
+            BMWNbtEvo.class,
+            RanualtHiworld.class,
+            HondaHaoZheng.class,
+            LC100XinChi.class,
+            DaoQiDaoJun.class,        //150
+            FordQuanXunOD.class,
+            Accord9Xinbasi.class,
+            Accord924Xinbasi.class,
+            FordXinChi.class,
+            Accord8XinChi.class,       //155
+            Sorento13XinChi.class,
+            TeanaXinChi.class,
+            HondaDAXinbasi.class,
+            SaicOD.class,
+            BydODS.class,          //160
+            FordXinbasi.class,
+            JaingLingBNR.class,
+            HuaTaiBNR.class,
+            HummerODS.class,
+            OutlanderHiworld.class, //165
+
+            BenzB200Hiworld.class,
+            QiChengT90Hiworld.class,
+            BeiQiBAP002Hiworld.class,
+            BeiQiBAP001Hiworld.class,
+            ChuanQiGA3Hiworld.class, //170
+
+            DongFeng002Hiworld.class,
+            DongFeng003Hiworld.class,
+            NissanDaoJun.class,
+            SpiriorDaoJun.class,
+            GMDaoJun.class,
+            //175
+            BMW001Hiworld.class,
+            Teana2008XinChi.class,
+            ChangAnCNP005Hiworld.class,
+            LuxgenOD.class,
+            DongFeng005Hiworld.class,
+            //180
+            DongFeng007Hiworld.class,
+            DongFeng008Hiworld.class,
+            Odyssey04Hiworld.class,
+            ChangChengH9OD.class,
+            CRV12Simple.class,
+            //185
+            JeepBNR.class,
+            BMW002Hiworld.class,
+            Ford003Hiworld.class,
+            Honda003Hiworld.class,
+            LuFengOD.class,
+            //190
+            BenzG350Hiworld.class,
+            ZTP001Hiworld.class,
+            BeiQiBAP003Hiworld.class,
+            AudiA3Hiworld.class,
+            AudiQ5Hiworld.class,
+            //195
+            Odyssey09_14BNR.class,
+            FordBinarytek.class,
+            BydS6DaoJun.class,
+            OpelHaoZheng.class,
+            ChangChengH9Hiworld.class,
+            //200
+            GuanZhiBNR.class,
+            DaChengE20.class,
+            BydF6DaoJun.class,
+            BydM6DaoJun.class,
+            BydG6DaoJun.class,
+            //205
+            BydHCY.class,
+            NissanTeana08Hiworld.class,
+            BenzMetrisHiworld.class,
+            FordFDP007Hiworld.class,
+            VWBNR.class,
+            //210
+            VWMQBBNR.class,
+            Mazda6ChangYuanTong.class,
+            ChangChengBNR.class,
+            Haima003Hiworld.class,
+            Haima001Hiworld.class,
+            //215
+            Infiniti001Hiworld.class,
+            ChangAnCNP004Hiworld.class,
+            ChangAnCNP001Hiworld.class,
+            CadillacKaiLeiDeOD.class,
+            RongWeiI5DaoJun.class,
+            //220
+            ChangAnCNP002Hiworld.class,
+            HondaDABNR.class,
+            Toyota002Hiworld.class,
+            TuoLaJiRaise.class,
+            JiangHuaiOD.class,
+            //225
+            Mazda6Xinbas.class,
+            ToyotaLuZheng.class,
+            SubaruHaoZheng.class,
+            Ford005Hiworld.class,
+            BydCYT.class,
+            //230
+            Mazda6LuZheng.class,
+            BentengFWP006Hiworld.class,
+            BentengFWP007Hiworld.class,
+            BentengFWP009Hiworld.class,
+            BentengFWP005Hiworld.class,
+            //235
+            BentengFWP00AHiworld.class,
+            BentengFWP003Hiworld.class,
+            BentengFWP008Hiworld.class,
+            ChangChengHiworldCCP003.class,
+            CaloraDaoJun.class,
+            //240
+            NissanXinbas.class,
+            DongNanDX7OD.class,
+            DongNanA5OD.class,
+            GMBinarytek.class,
+            Sorento13DaoJun.class,
+            //245
+            JinBeiDaoJun.class,
+            FiestaDaojun.class,
+            YeMaOD.class,
+            DongNanDX7DaoJun.class,
+            ZongTaiBNR.class,
+            //250
+            OpelOD.class,
+            UAZ001Hiworld.class,
+            FremontXinChi.class,
+            GMXinChi.class,
+            HyBNR.class,
+            //255
+            HyXinbasi.class,
+            FiatBagoo.class,
+            ToyotaTD.class,
+            BMWRaise.class,
+            WeiChaiJMP001Hiworld.class,
+            //260
+            TataTAP001Hiworld.class,
+            RenaultBNR.class,
+            IVT001Hiworld.class,
+            MAP001Hiworld.class,
+            Accord7ChangYuanTong9600.class,
+            //265
+            IsuzuSimple.class,
+            BiSuOD.class,
+            ZhidouOD.class,
+            NaZhaOD.class,
+            FutianOD.class,
+            //270
+            FengJun6Xinbas.class,
+            JiangHuaiDaoJun.class,
+            X80Xinbas.class,
+            ChangChengDaoJun.class,
+            ChangAnBNR.class,
+            //275
+            HoldenXinbasi.class,
+            BeiQiH3HeChi.class,
+            BydSongRaise.class,
+            ChuanQiBNR.class,
+            MitsubishiTD.class,
+            //280
+            SubaruX3XinFeiYang.class,
+            RenaultXinFeiYang.class,
+            HondaXinFeiYang.class,
+            NissanXinFeiYang.class,
+            ToyotaXinFeiYang.class,
+            //285
+            KeyPannel1.class,
+            KeyPannelHiworld.class,
+            KeyPannelHiworld.class,
+            SkyworthET5.class,
             /*from 90*/
-            BeiqiDianDongCheOther.class,//290
-            QQiceScreamOD.class, WeiChaiU70OD.class, JeepBNR2.class, DongFengOD.class, CarMazda.class, // 3->295 (38400)
-            NaZhiJieU6Raise.class, JiLiBoRuiOD.class, DongFengXinNengYuanOD.class, SaiOu3Hiworld.class, TestKLD.class, //300
-            BMWE46LuZheng.class, Megane3.class, Teana2005XinChi.class, ZHONGXINGOD.class};
+            BeiqiDianDongCheOther.class,
+            //290
+            QQiceScreamOD.class,
+            WeiChaiU70OD.class,
+            JeepBNR2.class,
+            DongFengOD.class,
+            CarMazda.class,
+            // 3->295 (38400)
+            NaZhiJieU6Raise.class,
+            JiLiBoRuiOD.class,
+            DongFengXinNengYuanOD.class,
+            SaiOu3Hiworld.class,
+            TestKLD.class,
+            //300
+            BMWE46LuZheng.class,
+            Megane3.class,
+            Teana2005XinChi.class,
+            ZHONGXINGOD.class
+    };
 
-    private final static String[] RETURN_TYPE = {"3,4,6,231,295", "299,287,288,252,264,263,261,260,239,238,237,236,235,234,233,232,229,223,221,218,217,216,214,209,104,106,107,108,109,110,111,117,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,137,138,139,147,165,166,167,168,169,170,171,172,174,176,178,180,181,182,183,187,188,189,191,192,193,194,195,200,207,208", "215", "302",};
+    private final static String[] RETURN_TYPE = {"3,4,6,231,295",
+            "299,287,288,252,264,263,261,260,239,238,237,236,235,234,233,232,229,223,221,218,217,216,214,209,104,106,107,108,109,110,111,117,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,137,138,139,147,165,166,167,168,169,170,171,172,174,176,178,180,181,182,183,187,188,189,191,192,193,194,195,200,207,208",
+            "215",
+            "302",};
 
-    public final static Canbox getPro(String mCanboxType, int version, int index) {
+    public static Canbox getPro(String mCanboxType, int version, int index) {
         Canbox mCanbox = null;
 
         if (version >= 3) {
@@ -385,162 +666,240 @@ public class CanboxToPro {
 
         if (mCanbox == null) {
             if (mCanboxType != null) {
-                if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_FORD_SIMPLE)) {
-                    mCanbox = new CarFordSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOYOTA)) {
-                    mCanbox = new CarToyota2013();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA)) {
-                    mCanbox = new CarMazda();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_BESTURN_X80)) {
-                    mCanbox = new CarX80();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TEANA_2013)) {
-                    mCanbox = new CarTEANA();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_OPEL)) {
-                    mCanbox = new CarOPEL();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_VW)) {
-                    mCanbox = new CarVW();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MITSUBISHI_OUTLANDER_SIMPLE)) {
-                    mCanbox = new MitsubishiOutLanderSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_HY)) {
-                    mCanbox = new CarHY();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PSA_BAGOO)) { //10
-                    mCanbox = new CarPSABagoo();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_GM_SIMPLE)) {
-                    mCanbox = new CarGMSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_GM_RAISE)) {
-                    mCanbox = new GMRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_HONDA_DA_SIMPLE)) {
-                    mCanbox = new CarHondaDASimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_VW_GOLF_SIMPLE)) {
-                    mCanbox = new VWGolfSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_RAM_FIAT)) {
-                    mCanbox = new RamFIATSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_RENAULT_MEGANE_FLUENCE_SMPLE)) {
-                    mCanbox = new RenaultMeganeFluenceSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_BMW_E90X1_UNION)) {
-                    mCanbox = new BMWE90X1Union();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_FIAT)) {
-                    mCanbox = new FIATSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_FORD_MONDEO)) {
-                    mCanbox = new FordMondeoSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PSA)) {
-                    mCanbox = new PSASimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_BENZ_BAGOO)) {
-                    mCanbox = new BenzBagoo();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_KADJAR_RAISE)) {
-                    mCanbox = new KadjarRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_GMC_SIMPLE)) {
-                    mCanbox = new GMCSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_BENZ_B200_UNION)) {
-                    mCanbox = new BenzB200Union();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA_BT50_SIMPLE)) {
-                    mCanbox = new CarMazdaBT50Simple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_JEEP_SIMPLE)) {
-                    mCanbox = new JeepSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ACCORD7_CHANGYUANTONG)) {
-                    mCanbox = new Accord7ChangYuanTong();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOYOTA_BINARYTEK)) {
-                    mCanbox = new CarToyotaBinarytek();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA_XINBAS)) {
-                    mCanbox = new CarMazdaXinbas();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PEUGEOT206)) {
-                    mCanbox = new Peugeot206Simple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ACCORD2013)) {
-                    mCanbox = new Accord2013Simple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_NISSAN2013)) {
-                    mCanbox = new Nissan2013Simple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PORSCHE_UNION)) {
-                    mCanbox = new PorscheUnionSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA3_BINARYTEK)) {
-                    mCanbox = new Mazda3BinarytekSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_BRAVO_UNION)) {
-                    mCanbox = new BravoUnionSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOUAREG_HIWORLD)) {
-                    mCanbox = new TouaregHiworld();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_DACIA_SIMPLE)) {
-                    mCanbox = new DaciaSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_NISSAN_RAISE)) {
-                    mCanbox = new NissanRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PETGEO_RAISE)) {
-                    mCanbox = new PetgeoRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_FORD_EXPLORER_SIMPLE)) {
-                    mCanbox = new FordExplorerSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ACCORD_BINARYTEK)) {
-                    mCanbox = new AccordBinarytek();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_AUDI_SIMPLE)) {
-                    mCanbox = new AudiA3Simple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_SUBARU_ODS)) {
-                    mCanbox = new SubrauODS();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MINI_HIWORD)) {
-                    mCanbox = new MiniHiword();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_NISSAN_BINARYTEK)) {
-                    mCanbox = new NissanBinarytek();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_BENZ_VITO_SIMPLE)) {
-                    mCanbox = new CarBenzVito();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_VW_MQB_RAISE)) {
-                    mCanbox = new VWMQBRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_CHERY_OD)) {
-                    mCanbox = new CheryOD();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_CHRYSLER_SIMPLE)) {
-                    mCanbox = new ChryslerSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA3_SIMPLE)) {
-                    mCanbox = new Mazda3Simple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_OBD_BINARUI)) {
-                    mCanbox = new CarOBDBinarytek();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_HAFER_H2)) {
-                    mCanbox = new HaferH3Xinbas();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_HONDA_RAISE)) {
-                    mCanbox = new HondaRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PETGEO_SCREEN_RAISE)) {
-                    mCanbox = new PetgeoScreenRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_FORD_RAISE)) {
-                    mCanbox = new CarFordRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_SMART_HAOZHENG)) {
-                    mCanbox = new SmartHaozheng();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_LANDROVER_HAOZHENG)) {
-                    mCanbox = new LandRoverHaozheng();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PEUGEOT307_UNION)) {
-                    mCanbox = new PetgeoScreenUnion();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA_CX5_SIMPLE)) {
-                    mCanbox = new MazdaCX5Simple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_RX330_HAOZHENG)) {
-                    mCanbox = new RX330HaoZheng();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_PSA206_SIMPLE)) {
-                    mCanbox = new Peugeot206307OldSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_X30_RAISE)) {
-                    mCanbox = new X30Raise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MONDEO_DAOJUN)) {
-                    mCanbox = new MondeoDaojun();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_JEEP_XINBAS)) {
-                    mCanbox = new JeepXinbas();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_OUSHANG_RAISE)) {
-                    mCanbox = new OuShangRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_FIAT_EGEA_RAISE)) {
-                    mCanbox = new FiatEGEARaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_HY_RAISE)) {
-                    mCanbox = new HYRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ALPHA_BAGOO)) {
-                    mCanbox = new AlphaBagoo();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOYOTA_RAISE)) {
-                    mCanbox = new ToyotaRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MINI_HAOZHENG)) {
-                    mCanbox = new MiniHaoZheng();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_SUBARU_SIMPLE)) {
-                    mCanbox = new SubaruSimple();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_GM_OD)) {
-                    mCanbox = new GMOD();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_MAZDA_RAISE)) {
-                    mCanbox = new MazdaRaise();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_TOYOTA_LOW)) {
-                    mCanbox = new CarToyota2013Low();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_ZHONGXING_OD)) {
-                    mCanbox = new ZHONGXINGOD();
-                } else if (mCanboxType.equals(MachineConfig.VALUE_CANBOX_SLIMKEY2)) {
-                    mCanbox = new SlimKeyCF006();
-                } else {
-                    mCanboxType = null;
-                    mCanbox = new CarNone();
-                    mCanbox = null;
+                switch (mCanboxType) {
+                    case MachineConfig.VALUE_CANBOX_FORD_SIMPLE:
+                        mCanbox = new CarFordSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_TOYOTA:
+                        mCanbox = new CarToyota2013();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MAZDA:
+                        mCanbox = new CarMazda();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_BESTURN_X80:
+                        mCanbox = new CarX80();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_TEANA_2013:
+                        mCanbox = new CarTEANA();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_OPEL:
+                        mCanbox = new CarOPEL();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_VW:
+                        mCanbox = new CarVW();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MITSUBISHI_OUTLANDER_SIMPLE:
+                        mCanbox = new MitsubishiOutLanderSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_HY:
+                        mCanbox = new CarHY();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_PSA_BAGOO:  //10
+                        mCanbox = new CarPSABagoo();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_GM_SIMPLE:
+                        mCanbox = new CarGMSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_GM_RAISE:
+                        mCanbox = new GMRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_HONDA_DA_SIMPLE:
+                        mCanbox = new CarHondaDASimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_VW_GOLF_SIMPLE:
+                        mCanbox = new VWGolfSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_RAM_FIAT:
+                        mCanbox = new RamFIATSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_RENAULT_MEGANE_FLUENCE_SMPLE:
+                        mCanbox = new RenaultMeganeFluenceSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_BMW_E90X1_UNION:
+                        mCanbox = new BMWE90X1Union();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_FIAT:
+                        mCanbox = new FIATSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_FORD_MONDEO:
+                        mCanbox = new FordMondeoSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_PSA:
+                        mCanbox = new PSASimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_BENZ_BAGOO:
+                        mCanbox = new BenzBagoo();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_KADJAR_RAISE:
+                        mCanbox = new KadjarRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_GMC_SIMPLE:
+                        mCanbox = new GMCSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_BENZ_B200_UNION:
+                        mCanbox = new BenzB200Union();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MAZDA_BT50_SIMPLE:
+                        mCanbox = new CarMazdaBT50Simple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_JEEP_SIMPLE:
+                        mCanbox = new JeepSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_ACCORD7_CHANGYUANTONG:
+                        mCanbox = new Accord7ChangYuanTong();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_TOYOTA_BINARYTEK:
+                        mCanbox = new CarToyotaBinarytek();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MAZDA_XINBAS:
+                        mCanbox = new CarMazdaXinbas();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_PEUGEOT206:
+                        mCanbox = new Peugeot206Simple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_ACCORD2013:
+                        mCanbox = new Accord2013Simple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_NISSAN2013:
+                        mCanbox = new Nissan2013Simple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_PORSCHE_UNION:
+                        mCanbox = new PorscheUnionSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MAZDA3_BINARYTEK:
+                        mCanbox = new Mazda3BinarytekSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_BRAVO_UNION:
+                        mCanbox = new BravoUnionSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_TOUAREG_HIWORLD:
+                        mCanbox = new TouaregHiworld();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_DACIA_SIMPLE:
+                        mCanbox = new DaciaSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_NISSAN_RAISE:
+                        mCanbox = new NissanRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_PETGEO_RAISE:
+                        mCanbox = new PetgeoRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_FORD_EXPLORER_SIMPLE:
+                        mCanbox = new FordExplorerSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_ACCORD_BINARYTEK:
+                        mCanbox = new AccordBinarytek();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_AUDI_SIMPLE:
+                        mCanbox = new AudiA3Simple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_SUBARU_ODS:
+                        mCanbox = new SubrauODS();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MINI_HIWORD:
+                        mCanbox = new MiniHiword();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_NISSAN_BINARYTEK:
+                        mCanbox = new NissanBinarytek();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_BENZ_VITO_SIMPLE:
+                        mCanbox = new CarBenzVito();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_VW_MQB_RAISE:
+                        mCanbox = new VWMQBRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_CHERY_OD:
+                        mCanbox = new CheryOD();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_CHRYSLER_SIMPLE:
+                        mCanbox = new ChryslerSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MAZDA3_SIMPLE:
+                        mCanbox = new Mazda3Simple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_OBD_BINARUI:
+                        mCanbox = new CarOBDBinarytek();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_HAFER_H2:
+                        mCanbox = new HaferH3Xinbas();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_HONDA_RAISE:
+                        mCanbox = new HondaRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_PETGEO_SCREEN_RAISE:
+                        mCanbox = new PetgeoScreenRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_FORD_RAISE:
+                        mCanbox = new CarFordRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_SMART_HAOZHENG:
+                        mCanbox = new SmartHaozheng();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_LANDROVER_HAOZHENG:
+                        mCanbox = new LandRoverHaozheng();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_PEUGEOT307_UNION:
+                        mCanbox = new PetgeoScreenUnion();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MAZDA_CX5_SIMPLE:
+                        mCanbox = new MazdaCX5Simple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_RX330_HAOZHENG:
+                        mCanbox = new RX330HaoZheng();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_PSA206_SIMPLE:
+                        mCanbox = new Peugeot206307OldSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_X30_RAISE:
+                        mCanbox = new X30Raise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MONDEO_DAOJUN:
+                        mCanbox = new MondeoDaojun();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_JEEP_XINBAS:
+                        mCanbox = new JeepXinbas();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_OUSHANG_RAISE:
+                        mCanbox = new OuShangRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_FIAT_EGEA_RAISE:
+                        mCanbox = new FiatEGEARaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_HY_RAISE:
+                        mCanbox = new HYRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_ALPHA_BAGOO:
+                        mCanbox = new AlphaBagoo();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_TOYOTA_RAISE:
+                        mCanbox = new ToyotaRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MINI_HAOZHENG:
+                        mCanbox = new MiniHaoZheng();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_SUBARU_SIMPLE:
+                        mCanbox = new SubaruSimple();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_GM_OD:
+                        mCanbox = new GMOD();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_MAZDA_RAISE:
+                        mCanbox = new MazdaRaise();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_TOYOTA_LOW:
+                        mCanbox = new CarToyota2013Low();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_ZHONGXING_OD:
+                        mCanbox = new ZHONGXINGOD();
+                        break;
+                    case MachineConfig.VALUE_CANBOX_SLIMKEY2:
+                        mCanbox = new SlimKeyCF006();
+                        break;
+                    default:
+                        mCanboxType = null;
+                        mCanbox = new CarNone();
+                        mCanbox = null;
+                        break;
                 }
             } else {
                 mCanboxType = null;
@@ -553,7 +912,7 @@ public class CanboxToPro {
     }
 
 
-    public final static int getReturnMsgType(String mCanboxType, int version, int index) {
+    public static int getReturnMsgType(String mCanboxType, int version, int index) {
         int type = 0;
 
         if (version >= 3) {
