@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues name="AGP (8.2.2)" by="lint 8.2.2" client="gradle" dependencies="false" format="6" type="baseline" variant="fatal" version="8.2.2">
+<issues name="AGP (8.2.2)" by="lint 8.2.2" client="gradle" dependencies="false" format="6"
+    type="baseline" variant="fatal" version="8.2.2">
 
-    <issue errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>" errorLine2="            ~~~~~~~~~~~~~~"
-        id="ExtraTranslation" message="&quot;careful&quot; is translated here but not found in default locale">
+    <issue errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~" id="ExtraTranslation"
+        message="&quot;careful&quot; is translated here but not found in default locale">
         <location column="13" file="src/main/res/values-zh-rTW/strings.xml" line="100" />
     </issue>
 
-    <issue errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>" errorLine2="            ~~~~~~~~~~~~~~"
-        id="ExtraTranslation" message="&quot;careful&quot; is translated here but not found in default locale">
+    <issue errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~" id="ExtraTranslation"
+        message="&quot;careful&quot; is translated here but not found in default locale">
         <location column="13" file="src/main/res/values-zh-rHK/strings.xml" line="101" />
     </issue>
 
-    <issue errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>" errorLine2="            ~~~~~~~~~~~~~~"
-        id="ExtraTranslation" message="&quot;careful&quot; is translated here but not found in default locale">
+    <issue errorLine1="    &lt;string name=&quot;careful&quot;>注意&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~" id="ExtraTranslation"
+        message="&quot;careful&quot; is translated here but not found in default locale">
         <location column="13" file="src/main/res/values-zh-rCN/strings.xml" line="194" />
     </issue>
 

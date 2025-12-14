@@ -1,6 +1,6 @@
 package com.zhuchao.android.car.service;
 
-import com.zhuchao.android.session.MApplication;
+import com.zhuchao.android.session.base.MApplication;
 
 public class SApplication extends MApplication {
     @Override

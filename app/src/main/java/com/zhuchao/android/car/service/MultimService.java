@@ -17,7 +17,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.ResultReceiver;
+import android.os.SystemClock;
 import android.service.media.MediaBrowserService;
+import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +35,7 @@ import com.zhuchao.android.fbase.PlaybackEvent;
 import com.zhuchao.android.fbase.PlayerStatusInfo;
 import com.zhuchao.android.fbase.TAppProcessUtils;
 import com.zhuchao.android.fbase.TCourierSubscribe;
+import com.zhuchao.android.fbase.eventinterface.EventCourierInterface;
 import com.zhuchao.android.fbase.eventinterface.PlayerCallback;
 import com.zhuchao.android.session.Cabinet;
 import com.zhuchao.android.session.TPlayManager;
@@ -46,11 +49,11 @@ import java.util.Objects;
 
 
 public class MultimService extends MediaBrowserService implements PlayerCallback {
-    ///private int mPosition = -1;
+    /// private int mPosition = -1;
     public static final String MEDIA_ID_ROOT = "_ROOT_";
     private static final String TAG = "MultimService";
-    ///private VideoList mPlayBeanList = new VideoList();
-    ///private Context mContext;
+    /// private VideoList mPlayBeanList = new VideoList();
+    /// private Context mContext;
     @SuppressLint("StaticFieldLeak")
     private static TPlayManager tPlayManager = null;
     private final IBinderProxyMedia mIBinderProxyMedia = new IBinderProxyMedia();
@@ -196,7 +199,8 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                 case MessageEvent.MESSAGE_EVENT_OCTOPUS_ACTION_PLAY:
                     if (tPlayManager != null) {
                         String musicName = intent.getStringExtra("file-name");
-                        if (!FileUtils.EmptyString(musicName) && FileUtils.existFile(musicName)) tPlayManager.startPlay(musicName);
+                        if (!FileUtils.EmptyString(musicName) && FileUtils.existFile(musicName))
+                            tPlayManager.startPlay(musicName);
                         else tPlayManager.autoPlay();
                     }
                     break;
@@ -251,124 +255,14 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
             }
         }
     };
-    ///private boolean mAutoPlay = false;
+    /// private boolean mAutoPlay = false;
     private MediaSession mMediaSessionCompat;
-    ///private MediaBrowser mMediaBrowserCompat;
-    ///private MediaController mMediaControllerCompat;
+    /// private MediaBrowser mMediaBrowserCompat;
+    /// private MediaController mMediaControllerCompat;
     private PlaybackState mPlaybackState;
     private AudioManager mAudioManager;
     private PlayerStatusInfo playerStatusInfo = null;
 
-    /*
-    private final MediaBrowser.SubscriptionCallback mBrowserSubscriptionCallback = new MediaBrowser.SubscriptionCallback() {
-        @Override
-        public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowser.MediaItem> children) {
-            ///Log.e(TAG, "onChildrenLoaded------" + children);
-            ///list.clear();
-            //children 即为Service发送回来的媒体数据集合
-            ///for (MediaBrowser.MediaItem item : children) {
-            ///Log.e(TAG, (String) item.getDescription().getTitle());
-            ///list.add(item);
-            ///}
-            ///demoAdapter.notifyDataSetChanged();
-        }
-    };*/
-    /*
-    private final MediaController.Callback mMediaControllerCompatCallback = new MediaController.Callback() {
-        //蓝牙音乐信息变化之后在这里进行回调
-        @Override
-        public void onPlaybackStateChanged(PlaybackState state) {
-            updatePlayState(state);
-        }
-
-        @Override
-        public void onSessionDestroyed() {
-            super.onSessionDestroyed();
-        }
-
-        @Override
-        public void onSessionEvent(@NonNull String event, @Nullable Bundle extras) {
-            super.onSessionEvent(event, extras);
-        }
-
-        @Override
-        public void onQueueChanged(@Nullable List<MediaSession.QueueItem> queue) {
-            super.onQueueChanged(queue);
-        }
-
-        @Override
-        public void onQueueTitleChanged(@Nullable CharSequence title) {
-            super.onQueueTitleChanged(title);
-        }
-
-        @Override
-        public void onExtrasChanged(@Nullable Bundle extras) {
-            super.onExtrasChanged(extras);
-        }
-
-        @Override
-        public void onAudioInfoChanged(MediaController.PlaybackInfo info) {
-            super.onAudioInfoChanged(info);
-        }
-
-        @Override
-        public void onMetadataChanged(MediaMetadata metadata) {
-            updatePlayMetadata(metadata);
-        }
-    };*/
-    /*
-    private final MediaBrowser.ConnectionCallback mBrowserConnectionCallback = new MediaBrowser.ConnectionCallback() {
-        @Override
-        public void onConnected() {
-            MMLog.d(TAG, "MediaBrowserCompat.ConnectionCallback onConnected!");
-            if (mMediaBrowserCompat.isConnected()) {
-                String mMediaId = mMediaBrowserCompat.getRoot();
-                mMediaBrowserCompat.unsubscribe(mMediaId);
-                mMediaBrowserCompat.subscribe(mMediaId, mBrowserSubscriptionCallback);
-
-                mMediaControllerCompat = new MediaController(mContext, mMediaSessionCompat.getSessionToken());
-                //注册蓝牙音乐信息状态监听
-                mMediaControllerCompat.registerCallback(mMediaControllerCompatCallback);
-                if (mMediaControllerCompat.getMetadata() != null) {
-                    updatePlayMetadata(mMediaControllerCompat.getMetadata());
-                    updatePlayState(mMediaControllerCompat.getPlaybackState());
-                }
-            }
-        }
-
-        @Override
-        public void onConnectionFailed() {
-            MMLog.d(TAG, "onConnectionFailed！");
-        }
-    };*/
-    /*
-    private void updatePlayState(PlaybackState state) {
-        if (state == null) {
-            return;
-        }
-        switch (state.getState()) {
-            case PlaybackState.STATE_NONE://无任何状态
-                break;
-            case PlaybackState.STATE_PAUSED:
-            case PlaybackState.STATE_PLAYING:
-            case PlaybackState.STATE_BUFFERING:
-            case PlaybackState.STATE_CONNECTING:
-            case PlaybackState.STATE_ERROR:
-            case PlaybackState.STATE_FAST_FORWARDING:
-            case PlaybackState.STATE_REWINDING:
-            case PlaybackState.STATE_SKIPPING_TO_NEXT:
-            case PlaybackState.STATE_SKIPPING_TO_PREVIOUS:
-            case PlaybackState.STATE_SKIPPING_TO_QUEUE_ITEM:
-            case PlaybackState.STATE_STOPPED:
-                break;
-        }
-    }*/
-    /*
-    private void updatePlayMetadata(MediaMetadata metadata) {
-        if (metadata == null) return;
-        ///更新曲目信息
-    }
-    */
     public static ArrayList<MediaBrowser.MediaItem> transformPlayList(VideoList videoList) {
         ArrayList<MediaBrowser.MediaItem> mediaItems = new ArrayList<>();
         if (videoList != null) {
@@ -395,7 +289,9 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
     @Override
     public void onCreate() {
         super.onCreate();
-        MMLog.d(TAG, TAG + " onCreate! " + TAppProcessUtils.getCurrentProcessNameAndId(this));
+        //MMLog.d(TAG, TAG + " onCreate! " + TAppProcessUtils.getCurrentProcessNameAndId(this));
+        String VERSION_NAME = TAppProcessUtils.getCurrentProcessNameAndId(this);
+        MMLog.d(TAG, "MultimService version:" + VERSION_NAME + ", " + SApplication.getFWVersionName() + " starting...");//2 first call
         Cabinet.getEventBus().registerEventObserver(this);
         ///mContext = this;
         mPlaybackState = new PlaybackState.Builder().setState(PlaybackState.STATE_NONE, 0, 1.0f).setActions(getAvailableActions(PlaybackState.STATE_NONE)).build();
@@ -464,7 +360,7 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
         result.sendResult(mediaItems);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private int requestAudioFocus() {
         int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         isHaveAudioFocus = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == result;
@@ -559,29 +455,28 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
     @TCourierSubscribe(threadMode = MethodThreadMode.threadMode.BACKGROUND)
     public boolean onTCourierSubscribeEvent(EventCourier eventCourier) {
         ///MMLog.d(TAG, eventCourier.toStr());
-        switch (eventCourier.getId()) {
-            case MessageEvent.MESSAGE_EVENT_USB_EJECT:
-                String subName = null;
-                if (eventCourier.getObj() != null) {
-                    Intent intent = (Intent) eventCourier.getObj();
-                    Bundle bundle = intent.getExtras();
-                    Uri data = intent.getData();
-                    if (data != null) subName = data.getPath();
-                    //MMLog.d(TAG,"url="+data.getPath());
-                }
-                if (tPlayManager != null && subName != null) {
-                    if (tPlayManager.getPlayingMedia() != null) {
-                        if (tPlayManager.getPlayingMedia().getPathName() != null) {
-                            if (tPlayManager.isPlaying() && tPlayManager.getPlayingMedia().getPathName().contains(subName)) tPlayManager.stopIdle();
-                        }
+        if (eventCourier.getId() == MessageEvent.MESSAGE_EVENT_USB_EJECT) {
+            String subName = null;
+            if (eventCourier.getObj() != null) {
+                Intent intent = (Intent) eventCourier.getObj();
+                Bundle bundle = intent.getExtras();
+                Uri data = intent.getData();
+                if (data != null) subName = data.getPath();
+                //MMLog.d(TAG,"url="+data.getPath());
+            }
+            if (tPlayManager != null && subName != null) {
+                if (tPlayManager.getPlayingMedia() != null) {
+                    if (tPlayManager.getPlayingMedia().getPathName() != null) {
+                        if (tPlayManager.isPlaying() && tPlayManager.getPlayingMedia().getPathName().contains(subName))
+                            tPlayManager.stopIdle();
                     }
                 }
-                break;
+            }
         }
         return true;
     }
 
-    ///ADIL 跨进程通信
+    /// ADIL 跨进程通信
     @TCourierSubscribe(threadMode = MethodThreadMode.threadMode.BACKGROUND)
     public boolean onTCourierSubscribeEventAidl(PEventCourier pEventCourier) {
         ///MMLog.d(TAG, pEventCourier.toStr());
@@ -618,9 +513,94 @@ public class MultimService extends MediaBrowserService implements PlayerCallback
                 break;
 
             case MessageEvent.MESSAGE_EVENT_OCTOPUS_PLAYING_STATUS:
-                if (this.playerStatusInfo != null) mIBinderProxyMedia.notifyPlayerStatus(this.playerStatusInfo);
+                if (this.playerStatusInfo != null)
+                    mIBinderProxyMedia.notifyPlayerStatus(this.playerStatusInfo);
                 break;
         }
         return true;
     }
+
+    private static final long USB_DEDUP_WINDOW_MS = 1500;
+    //private static final Map<String, Long> sUsbEventDedupMap = new HashMap<>();
+    private static final ArrayMap<String, Long> sUsbEventDedupMap = new ArrayMap<>();
+
+    private boolean shouldIgnoreUsbEvent(int eventId, @Nullable String usbPath, long dedupMs) {
+        if (usbPath == null) return false;
+        long now = SystemClock.uptimeMillis();
+        synchronized (sUsbEventDedupMap) {
+            Long last = sUsbEventDedupMap.get(usbPath);
+            if (last != null && now - last < dedupMs) {
+                return true;
+            }
+            sUsbEventDedupMap.put(usbPath, now);
+
+            if (sUsbEventDedupMap.size() > 32) {
+                sUsbEventDedupMap.entrySet().removeIf(e -> now - e.getValue() > 10_000);
+            }
+        }
+        return false;
+    }
+
+    @TCourierSubscribe(threadMode = MethodThreadMode.threadMode.BACKGROUND)
+    public boolean onTCourierSubscribeEvent(EventCourierInterface courierInterface) {
+        ///MMLog.d(TAG, courierInterface.toStr());
+        String usbPath = null;
+        if (courierInterface == null) return false;
+        Intent intent = (Intent) courierInterface.getObj();
+        if (intent == null) return false;
+        Bundle bundle = intent.getExtras();
+        Uri data = intent.getData();
+        if (data != null)
+            usbPath = data.getPath();
+
+        switch (courierInterface.getId()) {
+            case MessageEvent.MESSAGE_EVENT_USB_MOUNTED:
+                if (courierInterface.getObj() == null) return true;
+                if (!(courierInterface.getObj() instanceof Intent)) return true;
+                if (usbPath == null) return true;
+
+                if (shouldIgnoreUsbEvent(MessageEvent.MESSAGE_EVENT_USB_MOUNTED, usbPath, USB_DEDUP_WINDOW_MS)) {
+                    return true;
+                }
+
+                if (bundle != null) {
+                    for (String key : bundle.keySet())
+                        MMLog.log(TAG, "MOUNTED:" + key + ":" + bundle.toString());
+                }
+                tPlayManager.getMediaLibraryManager().setMobileUSBDiscs(FileUtils.getMountedStorageDevices(this));
+                //tPlayManager.getMediaLibraryManager().printUSBList();
+                tPlayManager.getMediaLibraryManager().singleTaskSearchMobileDisc(tPlayManager.getMediaLibraryManager().getUSBNameByValue(usbPath), usbPath);
+                ///mMyHandler.sendEmptyMessage(MessageEvent.MESSAGE_EVENT_USB_MOUNTED);
+                break;
+            case MessageEvent.MESSAGE_EVENT_USB_EJECT:
+            case MessageEvent.MESSAGE_EVENT_USB_UNMOUNT:
+                tPlayManager.getMediaLibraryManager().setMobileUSBDiscs(FileUtils.getMountedStorageDevices(this));
+                String usbName = null;
+                if (usbPath == null) return true;
+                usbName = tPlayManager.getMediaLibraryManager().getUSBNameByValue(usbPath);
+                if (bundle != null) {
+                    for (String key : bundle.keySet())
+                        MMLog.log(TAG, "MOUNTED:" + key + ":" + bundle.toString());
+                }
+
+                MMLog.log(TAG, "MOUNTED Path:" + usbPath + " Name:" + usbName);
+                if (FileUtils.EmptyString(usbName)) {
+                    tPlayManager.getMediaLibraryManager().getSessions().delete(tPlayManager.getMediaLibraryManager().makeSessionName(usbName, DataID.MEDIA_TYPE_ID_VIDEO));
+                    tPlayManager.getMediaLibraryManager().getSessions().delete(tPlayManager.getMediaLibraryManager().makeSessionName(usbName, DataID.MEDIA_TYPE_ID_AUDIO));
+                    tPlayManager.getMediaLibraryManager().userSessionCallback(null, MessageEvent.MESSAGE_EVENT_USB_VIDEO, usbName + ":" + usbPath);
+                    tPlayManager.getMediaLibraryManager().userSessionCallback(null, MessageEvent.MESSAGE_EVENT_USB_AUDIO, usbName + ":" + usbPath);
+                }
+
+                break;
+            case MessageEvent.MESSAGE_EVENT_USB_SCANNING_FINISHED:
+                if (usbPath == null) return true;
+                if (shouldIgnoreUsbEvent(MessageEvent.MESSAGE_EVENT_USB_SCANNING_FINISHED, usbPath, 1000)) {
+                    return true;
+                }
+                tPlayManager.getMediaLibraryManager().singleTaskSearchLocalDisc();
+                break;
+        }
+        return true;
+    }
+
 }

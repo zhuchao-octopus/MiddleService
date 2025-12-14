@@ -27,6 +27,7 @@ import com.zhuchao.android.fbase.ThreadUtils;
 import com.zhuchao.android.fbase.eventinterface.InvokeInterface;
 import com.zhuchao.android.net.NetworkInformation;
 import com.zhuchao.android.net.TNetUtils;
+import com.zhuchao.android.session.Cabinet;
 import com.zhuchao.android.session.TTaskManager;
 import com.zhuchao.android.session.TTaskQueue;
 
@@ -86,8 +87,9 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
             switch (Objects.requireNonNull(action)) {
                 case Action_HELLO:
                     MMLog.setLogOnOff(true);
-                    MMLog.log(TAG, "Hello it is ready! version:" + VERSION_NAME + ", " + getFWVersionName() + " SwitchOnOff=" + watchManSwitchOnOff);
-                    if (networkInformation != null) MMLog.d(TAG, "HOST:" + networkInformation.toString());
+                    MMLog.log(TAG, "Hello it is ready! version:" + VERSION_NAME + ", " + SApplication.getFWVersionName() + " SwitchOnOff=" + watchManSwitchOnOff);
+                    if (networkInformation != null)
+                        MMLog.d(TAG, "HOST:" + networkInformation.toString());
                     else MMLog.d(TAG, "sorry!! networkInformation = null");
 
                     tTaskQueue.printQueue();
@@ -100,7 +102,8 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
                     }
                     break;
                 case Action_UPDATE_NET_STATUS://
-                    if (networkInformation != null) MMLog.d(TAG, "HOST:" + networkInformation.toString());
+                    if (networkInformation != null)
+                        MMLog.d(TAG, "HOST:" + networkInformation.toString());
                     else MMLog.d(TAG, "sorry!! networkInformation = null");
                     session_jhz_test_update_session(true);
                     break;
@@ -136,7 +139,7 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
                         installedReboot = intent.getExtras().getBoolean("installedReboot", false);
                         if (EmptyString(apkFilePathName)) return;
                         tTaskQueue.setMaxConcurrencyCount(1);
-                        TTask tTask = TTaskManager.getSingleTaskFor("Silent install " + apkFilePathName);
+                        TTask tTask = Cabinet.getTaskManager().getSingleTaskFor("Silent install " + apkFilePathName);
                         tTask.reset();
                         tTask.invoke(new InvokeInterface() {
                             @Override
@@ -176,14 +179,16 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
                         String packageName = intent.getExtras().getString("packageName");
                         String packageName2 = intent.getExtras().getString("uninstall_pkg");
                         if (NotEmptyString(packageName)) Action_SilentUnInstallAction(packageName);
-                        else if (NotEmptyString(packageName2)) Action_SilentUnInstallAction(packageName2);
+                        else if (NotEmptyString(packageName2))
+                            Action_SilentUnInstallAction(packageName2);
                         else MMLog.log(TAG, "uninstall package name = null");
                     }
                     break;
                 case Action_SilentClose:
                     if (intent.getExtras() != null) {
                         String packageName = intent.getExtras().getString("packageName");
-                        if (EmptyString(packageName)) packageName = intent.getExtras().getString("close_pkg");
+                        if (EmptyString(packageName))
+                            packageName = intent.getExtras().getString("close_pkg");
                         Action_SilentCLOSEAction(packageName);
                     }
                     break;
@@ -205,10 +210,9 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
             }
         }
     };
-    private NotificationManager notificationManager;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /// /////////////////////////////////////////////////////////////////////////////////////////////
+    /// /////////////////////////////////////////////////////////////////////////////////////////////
     public NoticeCenter() {
         //MMLog.i(TAG, "TWatchManService construct with no parameters.");//1 first call
     }
@@ -225,7 +229,7 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
         return builder.build();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    /// /////////////////////////////////////////////////////////////////////////////////////////////
     public void start() {
         ThreadUtils.runThread(new Runnable() {
             @Override
@@ -236,7 +240,7 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
                     tNetUtils = new TNetUtils(NoticeCenter.this);
                     tNetUtils.registerNetStatusCallback(NoticeCenter.this);
                     registerUserEventReceiver();
-                    MMLog.d(TAG, "NoticeCenter version:" + VERSION_NAME + ", " + getFWVersionName() + " starting...");//2 first call
+                    MMLog.d(TAG, "NoticeCenter version:" + VERSION_NAME + ", " + SApplication.getFWVersionName() + " starting...");//2 first call
                     //TPlatform.SetSystemProperty("WatchMan.Service","true");//导致错误
                 } catch (Exception e) {
                     //e.printStackTrace();
@@ -249,9 +253,9 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
     @Override
     public void onCreate() {
         super.onCreate();
-        //        MMLog.setLogOnOff(false);
+        //MMLog.setLogOnOff(false);
         //MMLog.d(TAG, "onCreate()");//2 second call
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //创建NotificationChannel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(NOTIFICATION_ID, NOTIFICATION_NAME, NotificationManager.IMPORTANCE_HIGH);
@@ -419,11 +423,6 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
         }
     }
 
-    private String getFWVersionName() {
-        //读取固件的MODEL 那么getString("ro.product.model");
-        return Build.MODEL + "," + Build.MANUFACTURER + "," + Build.BRAND + "," + Build.DEVICE + "," + Build.VERSION.SDK_INT + "," + Build.VERSION.RELEASE + "," + VERSION_NAME; //wms version
-    }
-
     private String getRequestJSON() {
         JSONObject jsonObj = new JSONObject();
         //networkInformation.getMAC(), networkInformation.getInternetIP(), networkInformation.regionToJson()
@@ -442,7 +441,7 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
                 }
             }
             jsonObj.put("appVersion", VERSION_NAME);//VERSION_NAME
-            jsonObj.put("fwVersion", getFWVersionName());
+            jsonObj.put("fwVersion", SApplication.getFWVersionName());
         } catch (JSONException e) {
             //e.printStackTrace();
         }
@@ -450,7 +449,7 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
     }
 
     private void session_jhz_test_update_session(boolean startAgainFlag) {
-        TTaskInterface tTask = TTaskManager.getObjectByName(DataID.SESSION_UPDATE_JHZ_TEST_UPDATE_NAME);
+        TTaskInterface tTask = Cabinet.getTaskManager().getObjectByName(DataID.SESSION_UPDATE_JHZ_TEST_UPDATE_NAME);
         if (tTask == null) {
             MMLog.i(TAG, "NOT FOUND TASK SESSION_UPDATE_JHZ_TEST_UPDATE_NAME!!");
             return;
@@ -473,7 +472,8 @@ public class NoticeCenter extends Service implements TNetUtils.NetworkStatusList
     public void onNetStatusChanged(NetworkInformation networkInformation) {
         if (tNetUtils != null && tNetUtils.isAvailable()) {
             this.networkInformation = networkInformation;
-            if (networkInformation.getAction() == NetworkInformation.NetworkInformation_onCONNECTIVITY) doNetStatusChangedFunction();
+            if (networkInformation.getAction() == NetworkInformation.NetworkInformation_onCONNECTIVITY)
+                doNetStatusChangedFunction();
         }
     }
 

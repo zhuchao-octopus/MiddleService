@@ -218,7 +218,8 @@ public class MyGLSurfaceView {
         String cmd;
         if (x == -1 && y == -1 && width == -1 && height == -1)
             cmd = String.format(Locale.ENGLISH, "%s %d %d %d %d", start ? "11" : "10", screenX, screenY, screenWidth, screenHeight);
-        else cmd = String.format(Locale.ENGLISH, "%s %d %d %d %d", start ? "11" : "10", x, y, width, height);
+        else
+            cmd = String.format(Locale.ENGLISH, "%s %d %d %d %d", start ? "11" : "10", x, y, width, height);
         boolean result = setFileValue("/dev/vehicle", cmd);
         Log.d("GLSufaceView", "send:" + cmd + ", result=" + result);
         return result;

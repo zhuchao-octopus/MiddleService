@@ -3,7 +3,8 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven { url '\\\\192.168.10.93\\smb\\OctopusFrameworkLibs'}
+        //maven { url '\\\\192.168.10.93\\smb\\OctopusFrameworkLibs'}
+        maven { url 'E:\\\\Android-Projects\\\\OpenAndroidFrameworkToolkitsLibs'}
     }
 }
 
@@ -12,9 +13,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url '\\\\192.168.10.93\\smb\\OctopusFrameworkLibs'}
+        //maven { url '\\\\192.168.10.93\\smb\\OctopusFrameworkLibs'}
+        maven { url 'E:\\\\Android-Projects\\\\OpenAndroidFrameworkToolkitsLibs'}
     }
 }
 
-rootProject.name = "MiddleServices"
+rootProject.name = "AndroidVehicleMiddleServicesToolkits"
 include ':app'

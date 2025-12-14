@@ -5,189 +5,99 @@
     android:sharedUserMaxSdkVersion="32"
     tools:targetApi="tiramisu">
 
-    <uses-permission
-        android:name="android.permission.INTERACT_ACROSS_USERS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission
-        android:name="android.permission.WRITE_SECURE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.SET_TIME_ZONE"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"
-        tools:ignore="CoarseFineLocation" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission
-        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"
-        tools:ignore="ScopedStorage" />
-    <uses-permission
-        android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.SET_TIME"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.INSTALL_PACKAGES"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.DELETE_PACKAGES"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.SHUTDOWN"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.CONTROL_DISPLAY_BRIGHTNESS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- ================== 基础权限 ================== -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <!-- ================== 位置/相机 ================== -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        tools:ignore="CoarseFineLocation"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
+    <!-- ================== 用户跨进程 ================== -->
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS"
+        tools:ignore="ProtectedPermissions"/>
+
+    <!-- ================== 写入系统设置/安全设置（系统级） ================== -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions"/>
+
+    <!-- ================== 包管理权限（系统签名才有效） ================== -->
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES"
+        tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.DELETE_PACKAGES"
+        tools:ignore="ProtectedPermissions"/>
+
+    <!-- ================== 存储（Android 13+) ================== -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="AllFilesAccessPolicy,ScopedStorage"/>
+
+    <!-- ================== 其它系统权限 ================== -->
+    <uses-permission android:name="android.permission.SET_TIME"
+        tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.SET_TIME_ZONE"
+        tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.CONTROL_DISPLAY_BRIGHTNESS"
+        tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.REBOOT"
+        tools:ignore="ProtectedPermissions"/>
+
+    <!-- ================== 网络权限 ================== -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
+    <!-- ================== 蓝牙权限 ================== -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+
+    <!-- ================== 自定义权限（你的应用用来保护自己服务） ================== -->
+    <permission android:name="com.octopus.android.action.OCTOPUS.PERMISSION"/>
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <permission android:name="com.octopus.android.action.OCTOPUS.PERMISSION" />
-
-    <uses-permission
-        android:name="android.permission.INSTALL_PACKAGES"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.DELETE_PACKAGES"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.CLEAR_APP_CACHE"
-        tools:ignore="ProtectedPermissions" />
-
-    <uses-permission
-        android:name="android.permission.REBOOT"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.SET_TIME"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.WRITE_SECURE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-
+    <!-- ================== APP 本体 ================== -->
     <application
         android:name=".service.SApplication"
         android:directBootAware="true"
         android:persistent="true"
         tools:replace="android:name">
-        <activity
-            android:name="com.zhuchao.android.car.out.OutApp"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.out.SERVICE" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            </intent-filter>
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="com.my.car.service.BROADCAST_START_BACKLIGHTSETTINGS_SYSTEM_UI" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".canbox.ReverseActivity"
-            android:exported="true"
-            android:label="@string/f_camera"
-            android:launchMode="singleTask"
-            android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            </intent-filter>
-        </activity>
-
-        <service
-            android:name="com.zhuchao.android.car.service.CanboxService"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION"
-            android:persistent="true">
-            <intent-filter>
-                <action
-                    android:name="com.zhuchao.android.car.action.CANBOX_SERVICE"
-                    android:exported="true" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </service>
-
+        <!-- ========== 多媒体服务 ========== -->
         <service
             android:name="com.zhuchao.android.car.service.MultimService"
             android:enabled="true"
             android:exported="true"
-            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION"
-            android:persistent="true">
+            android:persistent="true"
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
+
             <intent-filter>
-                <action
-                    android:name="com.zhuchao.android.car.action.MULTIMEDIA_SERVICE"
-                    android:exported="true" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.zhuchao.android.car.action.MULTIMEDIA_SERVICE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </service>
 
-        <service
-            android:name="com.zhuchao.android.car.service.MyCarService"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION"
-            android:persistent="true">
-            <intent-filter>
-                <action
-                    android:name="com.zhuchao.android.car.action.MyCarService"
-                    android:exported="true" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </service>
-
+        <!-- ========== 通知中心服务 ========== -->
         <service
             android:name="com.zhuchao.android.car.service.NoticeCenter"
             android:enabled="true"
             android:exported="true"
-            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION"
-            android:persistent="true">
+            android:persistent="true"
+            android:permission="com.octopus.android.action.OCTOPUS.PERMISSION">
+
             <intent-filter>
-                <action
-                    android:name="com.zhuchao.android.car.action.NoticeCenter"
-                    android:exported="true" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.zhuchao.android.car.action.NoticeCenter"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+
         </service>
+
     </application>
 
 </manifest>

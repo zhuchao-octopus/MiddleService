@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/air_condition"
     android:layout_width="fill_parent"
-    android:layout_height="280px"
+    android:layout_height="186dp"
     android:background="#cc222222"
+    android:baselineAligned="false"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -20,7 +22,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0.0dip"
             android:layout_weight="1.0"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="NestedWeights">
 
             <ImageView
                 android:id="@+id/number1"
@@ -35,6 +38,7 @@
                 android:layout_width="0.0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.0"
+                android:contentDescription="@string/cds_todo"
                 android:src="@drawable/odyssey2"
                 android:visibility="visible" />
 
@@ -43,6 +47,7 @@
                 android:layout_width="0.0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.0"
+                android:contentDescription="@string/cds_todo"
                 android:src="@drawable/odyssey3"
                 android:visibility="visible" />
 
@@ -56,6 +61,7 @@
                 android:layout_width="0.0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.0"
+                android:contentDescription="@string/cds_todo"
                 android:src="@drawable/odyssey4"
                 android:visibility="visible" />
 
@@ -64,6 +70,7 @@
                 android:layout_width="0.0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.0"
+                android:contentDescription="@string/cds_todo"
                 android:src="@drawable/odyssey5"
                 android:visibility="visible" />
 
@@ -72,6 +79,7 @@
                 android:layout_width="0.0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2.0"
+                android:contentDescription="@string/cds_todo"
                 android:src="@drawable/odyssey6"
                 android:visibility="visible" />
         </LinearLayout>
@@ -80,6 +88,7 @@
             android:layout_width="fill_parent"
             android:layout_height="0.0dip"
             android:layout_weight="3.0"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -101,7 +110,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
                         android:src="@drawable/odyssey11"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        tools:ignore="NestedWeights" />
 
                     <ImageView
                         android:id="@+id/number12"
@@ -109,6 +119,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
                         android:src="@drawable/odyssey12"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
 
                     <ImageView
@@ -117,6 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
                         android:src="@drawable/odyssey13"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
 
                     <ImageView
@@ -125,6 +137,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
                         android:src="@drawable/odyssey14"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
 
                     <ImageView
@@ -133,6 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
                         android:src="@drawable/odyssey15"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
 
                     <ImageView
@@ -141,6 +155,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0"
                         android:src="@drawable/odyssey16"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
                 </LinearLayout>
 
@@ -150,31 +165,31 @@
                     android:layout_weight="3.0"
                     android:orientation="horizontal">
 
-                    <com.my.view.LedView
+                    <com.zhuchao.android.car.view.LedView
                         android:id="@+id/odyssey19"
                         android:layout_width="0.0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0" />
 
-                    <com.my.view.LedView
+                    <com.zhuchao.android.car.view.LedView
                         android:id="@+id/odyssey20"
                         android:layout_width="0.0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0" />
 
-                    <com.my.view.LedView
+                    <com.zhuchao.android.car.view.LedView
                         android:id="@+id/odyssey21"
                         android:layout_width="0.0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0" />
 
-                    <com.my.view.LedView
+                    <com.zhuchao.android.car.view.LedView
                         android:id="@+id/odyssey22"
                         android:layout_width="0.0dip"
                         android:layout_height="wrap_content"
                         android:layout_weight="1.0" />
 
-                    <com.my.view.LedView
+                    <com.zhuchao.android.car.view.LedView
                         android:id="@+id/odyssey23"
                         android:layout_width="0.0dip"
                         android:layout_height="wrap_content"
@@ -190,13 +205,15 @@
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    tools:ignore="UselessParent">
 
                     <ImageView
                         android:id="@+id/number24_st"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/odysseyst"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
 
                     <ImageView
@@ -204,6 +221,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/zhong1"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
 
                     <ImageView
@@ -211,6 +229,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/zhong2"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
 
                     <ImageView
@@ -218,6 +237,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ch"
+                        android:contentDescription="@string/cds_todo"
                         android:visibility="visible" />
                 </RelativeLayout>
             </LinearLayout>
@@ -243,7 +263,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0.0dip"
             android:layout_weight="1.0"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="NestedWeights">
 
             <ImageView
                 android:id="@+id/number7"
@@ -251,6 +272,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:src="@drawable/odyssey7"
+                android:contentDescription="@string/cds_todo"
                 android:visibility="visible" />
 
             <ImageView
@@ -259,6 +281,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:src="@drawable/odyssey8"
+                android:contentDescription="@string/cds_todo"
                 android:visibility="visible" />
 
             <ImageView
@@ -267,6 +290,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:src="@drawable/odyssey9"
+                android:contentDescription="@string/cds_todo"
                 android:visibility="visible" />
 
             <ImageView
@@ -275,6 +299,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:src="@drawable/odyssey10"
+                android:contentDescription="@string/cds_todo"
                 android:visibility="visible" />
         </LinearLayout>
 
@@ -289,7 +314,7 @@
             android:gravity="bottom"
             android:orientation="horizontal">
 
-            <com.my.view.LedView
+            <com.zhuchao.android.car.view.LedView
                 android:id="@+id/odyssey25"
                 android:layout_width="0.0dip"
                 android:layout_height="fill_parent"
@@ -301,7 +326,7 @@
                 android:layout_width="15.0sp"
                 android:layout_height="wrap_content" />
 
-            <com.my.view.LedView
+            <com.zhuchao.android.car.view.LedView
                 android:id="@+id/odyssey26"
                 android:layout_width="0.0dip"
                 android:layout_height="fill_parent"
@@ -313,7 +338,7 @@
                 android:layout_width="15.0sp"
                 android:layout_height="wrap_content" />
 
-            <com.my.view.LedView
+            <com.zhuchao.android.car.view.LedView
                 android:id="@+id/odyssey27"
                 android:layout_width="0.0dip"
                 android:layout_height="fill_parent"
@@ -336,6 +361,7 @@
                     android:layout_height="0.0dip"
                     android:layout_weight="1.0"
                     android:src="@drawable/odyssey18"
+                    android:contentDescription="@string/cds_todo"
                     android:visibility="visible" />
 
                 <ImageView
@@ -344,6 +370,7 @@
                     android:layout_height="0.0dip"
                     android:layout_weight="1.0"
                     android:src="@drawable/odyssey18"
+                    android:contentDescription="@string/cds_todo"
                     android:visibility="visible" />
 
                 <ImageView
@@ -352,6 +379,7 @@
                     android:layout_height="0.0dip"
                     android:layout_weight="1.0"
                     android:src="@drawable/odyssey18"
+                    android:contentDescription="@string/cds_todo"
                     android:visibility="visible" />
 
                 <Space
@@ -359,7 +387,7 @@
                     android:layout_height="20.0px" />
             </LinearLayout>
 
-            <com.my.view.LedView
+            <com.zhuchao.android.car.view.LedView
                 android:id="@+id/odyssey28"
                 android:layout_width="0.0dip"
                 android:layout_height="fill_parent"
@@ -376,9 +404,10 @@
                 android:layout_weight="0.25"
                 android:scaleType="centerInside"
                 android:src="@drawable/odyssey18"
+                android:contentDescription="@string/cds_todo"
                 android:visibility="visible" />
 
-            <com.my.view.LedView
+            <com.zhuchao.android.car.view.LedView
                 android:id="@+id/odyssey29"
                 android:layout_width="0.0dip"
                 android:layout_height="fill_parent"

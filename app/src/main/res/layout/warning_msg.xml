@@ -10,32 +10,34 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5px">
+        android:layout_marginTop="3dp">
 
         <ImageView
             android:id="@+id/waring_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/w1" />
+            android:background="@drawable/w1"
+            android:contentDescription="@string/cds_todo" />
 
         <ImageView
             android:id="@+id/waring_image2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
-            android:background="@drawable/w_red" />
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/w_red"
+            android:contentDescription="@string/cds_todo" />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/warning_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5px"
-        android:layout_marginTop="5px"
-        android:layout_marginRight="5px"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="3dp"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#ffffff"
@@ -45,12 +47,12 @@
         android:id="@+id/warning_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="5px"
-        android:layout_marginBottom="5px"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         android:background="@drawable/button_click_back2"
-        android:onClick="onCickReverse"
         android:text="@android:string/ok"
-        android:textSize="24sp"></Button>
+        android:textSize="24sp">
+
+    </Button>
 
 </LinearLayout>
